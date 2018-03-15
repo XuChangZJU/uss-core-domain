@@ -1,18 +1,70 @@
 /**
- * Created by Administrator on 2018/3/4.
+ * Created by Administrator on 2016/12/25.
  */
+"use strict";
+
 const state = {
     unpaid: 1,
     paying: 3,
+    partialPaid: 5,
     paid: 10,
     toBeRefunded: 91,
     refunding: 99,
     refunded: 201,
     closed: 501,
-    expired: 888,
+    outDated: 888,
     finished: 999
+};
+
+const origin = {
+    weChat: "weChat",
+    weChatPro: "weChatPro",
+};
+
+const STRING_OF_STATES = {
+    [state.unpaid]: '待支付',
+    [state.paying]: '支付中',
+    [state.partialPaid]: '部分支付',
+    [state.paid]: '支付成功',
+    [state.toBeRefunded]: '退款中',    // 这个状态是开始退款的状态，为了实现合并退款
+    [state.refunding]: '退款中',
+    [state.refunded]: '退款成功',
+    [state.closed]: '已关闭',
+    [state.outDated]: '已过期',        //  红包order特有
+    [state.finished]: '已完成',
+
+};
+
+const decodeState = (s) =>{
+    return STRING_OF_STATES[s];
+};
+
+const type = {
+    weChatProOrder: 13, //  微信商城订单
+};
+
+const STRING_OF_TYPES = {
+    [type.weChatProOrder]: "订单",
+};
+
+const decodeType = (t) =>{
+    return STRING_OF_TYPES[t];
+};
+
+
+const getOrderTypesByPlf = (platform) =>{
+    switch (platform) {
+        case origin.weChat:
+            return [];
+        case origin.weChatPro:
+            return [type.weChatProOrder];
+    }
 };
 
 module.exports = {
     state,
+    type,
+    decodeState,
+    decodeType,
+    getOrderTypesByPlf
 };
