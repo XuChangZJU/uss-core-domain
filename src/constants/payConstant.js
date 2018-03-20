@@ -14,6 +14,7 @@ const state = {
 };
 
 const STRINGS_OF_STATES = {
+    [state.unpaid]: "未支付",
     [state.paying]: "正在支付",
     [state.paid]: "支付完成",
     [state.refunding]: "正在退款",
