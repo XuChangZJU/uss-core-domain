@@ -9,6 +9,9 @@ const isAvailable = (cuRelation) => {
     return [relationState.avail, relationState.root].includes(cuRelation.state);
 };
 
+const AvailableStatesWhere = { $in: [relationState.avail, relationState.root] };
+
 module.exports = {
     isAvailable,
+    AvailableStatesWhere,
 };
