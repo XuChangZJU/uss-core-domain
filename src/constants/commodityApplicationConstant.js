@@ -97,6 +97,21 @@ const decodeBonusState = (s) => {
     return STRING[s];
 };
 
+const evaluate = {
+    good: 2,
+    neutral: 1,
+    bad: 0,
+};
+
+const decodeEvaluate = (r) => {
+    const STRING = {
+        [evaluate.good]: '好评',
+        [evaluate.neutral]: '中评',
+        [evaluate.bad]: '差评',
+    };
+    return STRING[r];
+}
+
 module.exports = {
     state,
     decodeState,
@@ -106,4 +121,6 @@ module.exports = {
     decodeBonusType,
     bonusState,
     decodeBonusState,
+    evaluate,
+    decodeEvaluate,
 };
