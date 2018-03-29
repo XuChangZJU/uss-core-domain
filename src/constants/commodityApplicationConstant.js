@@ -80,6 +80,21 @@ const decodeBonusType = (b) => {
     return STRING[b];
 };
 
+const bonusState = {
+    paid: 1,
+    extractable: 101,
+    refunded: 201,
+};
+
+const decodeBonusState = (s) => {
+    const STRING = {
+        [bonusState.paid]: '已结算',
+        [bonusState.extractable]: '可提取',
+        [bonusState.refunded]: '已退款',
+    };
+    return STRING[s];
+};
+
 module.exports = {
     state,
     decodeState,
@@ -87,4 +102,6 @@ module.exports = {
     decodeRelationState,
     bonusType,
     decodeBonusType,
+    bonusState,
+    decodeBonusState,
 };
