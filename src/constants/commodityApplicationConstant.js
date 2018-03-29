@@ -47,11 +47,28 @@ const decodeState = (s) => {
 const relationState = {
     init: 0,    //  不可分享，等待购买
     avail: 1,   //  可分享
-    root: 2     //  可分享（管理员添加）
+    root: 2,     //  可分享（管理员添加）
+    refunded: 201,      // 不可分享（订单已退款）
+    unavailable: 202,   // 不可分享（商品已下架）
+    disabled: 203,      // 不可分享（用户被禁用及其它）
 };
+
+const decodeRelationState = (s) => {
+    const STRING_OF_RS = {
+        [relationState.init]: '等待购买',
+        [relationState.avail]: '可分享',
+        [relationState.root]: 'VIP',
+        [relationState.refunded]: '已退款',
+        [relationState.unavailable]: '已下架',
+        [relationState.disabled]: '已禁止',
+    };
+
+    return STRING_OF_RS[s];
+}
 
 module.exports = {
     state,
     decodeState,
-    relationState
+    relationState,
+    decodeRelationState,
 };
