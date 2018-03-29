@@ -51,6 +51,7 @@ const relationState = {
     refunded: 201,      // 不可分享（订单已退款）
     unavailable: 202,   // 不可分享（商品已下架）
     disabled: 203,      // 不可分享（用户被禁用及其它）
+    outDated: 204,      // 不可分享（过期）
 };
 
 const decodeRelationState = (s) => {
@@ -61,6 +62,7 @@ const decodeRelationState = (s) => {
         [relationState.refunded]: '已退款',
         [relationState.unavailable]: '已下架',
         [relationState.disabled]: '已禁止',
+        [relationState.outDated]: '已过期',
     };
 
     return STRING_OF_RS[s];
