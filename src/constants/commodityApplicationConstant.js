@@ -3,8 +3,9 @@
  */
 "use strict";
 const state = {
-    unpaid: 1,
+    init: 1,
     inShopCart: 2,
+    unpaid: 5,
     paid: 10,
     gettingRidOf: 20,
     sending: 30,
@@ -19,6 +20,7 @@ const state = {
 };
 
 const STRING_OF_STATES = {
+    [state.init]: "初始",
     [state.inShopCart]: "购物车中",
     [state.unpaid]: "未支付",
     [state.paid]: "已支付",
