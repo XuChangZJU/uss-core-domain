@@ -14,7 +14,28 @@ const ParamUpdateMatrix = {
         State.init, State.inShopCart
     ],
     remark: [
-        State.init, State.unpaid, State.inShopCart, State.paid,
+        State.init, State.unpaid, State.inShopCart, State.paid
+    ],
+    orderId: [
+        State.unpaid
+    ],
+    transit: [
+        State.gettingRidOf, State.sending
+    ],
+    transitNo: [
+        State.gettingRidOf, State.sending
+    ],
+    finishLine: [
+        State.sending
+    ],
+    evaluate: [
+        State.confirmed, State.finished
+    ],
+    comment: [
+        State.confirmed, State.finished
+    ],
+    groupBy: [
+        State.init, State.inShopCart
     ],
 };
 
