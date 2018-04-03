@@ -5,7 +5,7 @@
 
 const { available: Available } = require('../constants/commodityConstant');
 const isAvailable = (commodity) => {
-    return (commodity.state < Available.unavailable);
+    return (commodity.available < Available.unavailable);
 };
 
 const AvailableStatesWhere = {
