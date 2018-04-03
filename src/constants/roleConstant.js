@@ -9,5 +9,8 @@ module.exports = {
     ROOT: "ROOT",
     LOGGEDIN: "LOGGEDIN",
     CLIENT: "CLIENT",
-    EXTERNALUSER: "EXTERNALUSER"
+    EXTERNALUSER: "EXTERNALUSER",
+    
+    BUYER: 'buyer',
+    SELLER: 'seller',
 };
