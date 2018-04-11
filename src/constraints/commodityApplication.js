@@ -1,7 +1,7 @@
 /**
  * Created by Administrator on 2018/3/31.
  */
-const { state: State } = require('../constants/commodityApplicationConstant');
+const {state: State} = require('../constants/commodityApplicationConstant');
 
 const ParamUpdateMatrix = {
     params: [
@@ -34,6 +34,7 @@ const ParamUpdateMatrix = {
     comment: [
         State.confirmed, State.finished
     ],
+    commentTime: [State.confirmed, State.finished],
     groupBy: [
         State.init, State.inShopCart
     ],
