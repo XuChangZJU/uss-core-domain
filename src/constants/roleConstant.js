@@ -10,7 +10,7 @@ module.exports = {
     LOGGEDIN: "LOGGEDIN",
     CLIENT: "CLIENT",
     EXTERNALUSER: "EXTERNALUSER",
-    
+
     BUYER: 'buyer',
     SELLER: 'seller',
 };
