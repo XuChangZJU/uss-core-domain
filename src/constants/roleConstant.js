@@ -13,4 +13,5 @@ module.exports = {
 
     BUYER: 'buyer',
     SELLER: 'seller',
+    SKUMANAGER: 'skuManager',
 };
