@@ -2,11 +2,11 @@
  * Created by Administrator on 2018/3/31.
  */
 const { state: State } = require('../constants/tradeConstant');
-const Roles = require('../constants/roleConstant');
+const { Roles } = require('../constants/roleConstant2');
 
 // 属性允许更新矩阵
 const AttrsUpdateMatrix = {
-    [Roles.BUYER]: {
+    [Roles.BUYER.name]: {
         params: [
             State.init, State.inShopCart
         ],
@@ -26,7 +26,7 @@ const AttrsUpdateMatrix = {
             State.confirmed, State.finished
         ],
     },
-    [Roles.SELLER]: {
+    [Roles.SELLER.name]: {
         transit: [
             State.gettingRidOf, State.sending
         ],
@@ -38,13 +38,13 @@ const AttrsUpdateMatrix = {
 
 // 状态允许更新矩阵
 const StateTransformMatrix = {
-    [Roles.BUYER]: {
+    [Roles.BUYER.name]: {
         [State.init]: [ State.inShopCart, State.unpaid, State.closed ],
         [State.inShopCart]: [ State.unpaid, State.closed ],
         [State.inShopCart]: [ State.closed ],
         [State.sending]: [ State.confirmed, State.applyingForRefunding, State.changing ],
     },
-    [Roles.SELLER]: {
+    [Roles.SELLER.name]: {
         [State.paid]: [ State.gettingRidOf ],
         [State.gettingRidOf]: [ State.sending ],
         [State.applyingForRefunding]: [ State.refunding ],

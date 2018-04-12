@@ -4,7 +4,7 @@
 'use strict';
 
 const { state: State } = require('../constants/skuConstant');
-const Roles = require('../constants/roleConstant');
+const { Roles } = require('../constants/roleConstant2');
 const isAvailable = (sku) => {
     return (sku.available < State.unavailable);
 };
@@ -14,20 +14,20 @@ const AvailableStatesWhere = {
 };
 
 const AttrsUpdateMatrix = {
-    [Roles.SKUMANAGER]: {
+    [Roles.SKUMANAGER.name]: {
         // todo
     }
 };
 
 
 const StateTransformMatrix = {
-    [Roles.SELLER]: {
+    [Roles.SELLER.name]: {
         [State.available]: [ State.few, State.willOff, State.off, State.lack ],
         [State.lack]: [State.available, State.few, State.willOff],
         [State.willOff]: [State.available, State.off, State.few, State.lack],
         [State.few]: [State.available, State.willOff, , State.off, State.lack ],
     },
-    [Roles.SKUMANAGER]: {
+    [Roles.SKUMANAGER.name]: {
         [State.unavailable]: [ State.available ],
         [State.available]: [ State.off, State.forbidden ],
         [State.off]: [ State.available, State.forbidden ],
