@@ -52,7 +52,16 @@ const StateTransformMatrix = {
     },
 };
 
+
+// 检查对象是否合法
+const checkValid = (trade, assertFn) => {
+    assertFn(trade.price > 0, 'trade must have price');
+    assertFn(trade.transitCost >= 0, 'trade must have transitCost');
+    assertFn(trade.number >0, 'trade must have number');
+};
+
 module.exports = {
     AttrsUpdateMatrix,
     StateTransformMatrix,
+    checkValid,
 };
