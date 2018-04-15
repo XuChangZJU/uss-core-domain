@@ -18,6 +18,7 @@ const origin = {
     withdrawFailure: "withdrawFailure",
     orderRefund: "orderRefund",
     payRefund: "payRefund",
+    compensate: 'compensate',
 };
 
 
@@ -28,6 +29,7 @@ const STRINGS_OF_ORIGINS = {
     [origin.withdrawFailure]: "提现失败",
     [origin.orderRefund]: "订单退款",
     [origin.payRefund]: "支付退款",
+    [origin.compensate]: '补偿退款',
 };
 
 const relation = {
@@ -35,6 +37,7 @@ const relation = {
     pay: 'pay',
     refund: 'refund',
     withdraw: 'withdraw',
+    compensate: 'compensate',
 }
 
 function decodeOrigin(o) {
