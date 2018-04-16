@@ -46,6 +46,7 @@ const type = {
     weChatProOrder: 13,     //  微信商城订单
     bonus: 18,              // 推广奖金
     goods: 20,               // 货款
+    couponRefund: 30,       // 红包退款
 };
 
 
@@ -55,6 +56,7 @@ const decodeType = (t) =>{
         [type.weChatProOrder]: "订单",
         [type.bonus]: '奖金',
         [type.goods]: '货款',
+        [type.couponRefund]: '红包退款',
     };
     return STRING_OF_TYPES[t];
 };
