@@ -6,7 +6,7 @@ Promise.oneByOne = (promises) => {
         if (idx === promises.length){
             return Promise.resolve();
         }
-        return promises[idx]
+        return promises[idx]()
             .then(
                 ()=>iterator(idx + 1)
             )
