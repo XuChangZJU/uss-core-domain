@@ -40,6 +40,7 @@ const origin = {
  */
 const RefundAllowedWindow = {
     [origin.alipay]: 3600 * 1000,       // todo 这个值没有测试过，如果在1小时内就不能退款的话，这里会失败导致整个系统完蛋！！！
+    [origin.weChat]: 3600 * 1000,       // todo 同样没测过
     [origin.account]: 24 * 3600 * 1000,
 };
 
@@ -49,6 +50,7 @@ const RefundAllowedWindow = {
  */
 const RefundWeightOfOrigins = {
     [origin.alipay]: 100,
+    [origin.weChat]: 100,
     [origin.account]: 999,
 };
 
