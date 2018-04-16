@@ -49,9 +49,9 @@ const RefundAllowedWindow = {
  * @type {{}}
  */
 const RefundWeightOfOrigins = {
-    [origin.alipay]: 100,
-    [origin.weChat]: 100,
-    [origin.account]: 999,
+    [origin.alipay]: 999,
+    [origin.weChat]: 999,
+    [origin.account]: 100,
 };
 
 const STRINGS_OF_ORIGINS = {
