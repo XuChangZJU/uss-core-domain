@@ -14,6 +14,7 @@ const state = {
 const origin = {
     order: "order",
     pay: "pay",
+    payClosed: "payClosed",
     withdraw: "withdraw",
     withdrawFailure: "withdrawFailure",
     orderRefund: "orderRefund",
@@ -25,6 +26,7 @@ const origin = {
 const STRINGS_OF_ORIGINS = {
     [origin.order]: "订单收款",
     [origin.pay]: "订单付款",
+    [origin.payClosed]: "订单取消",
     [origin.withdraw]: "提现",
     [origin.withdrawFailure]: "提现失败",
     [origin.orderRefund]: "订单退款",
