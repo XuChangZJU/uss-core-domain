@@ -6,11 +6,11 @@
 const { state: State } = require('../constants/skuConstant');
 const { Roles } = require('../constants/roleConstant2');
 const isAvailable = (sku) => {
-    return (sku.available < State.unavailable);
+    return (sku.state < State.unavailable);
 };
 
 const AvailableStatesWhere = {
-    $lt: State.unavailable,
+    $lt: State.state,
 };
 
 const AttrsUpdateMatrix = {

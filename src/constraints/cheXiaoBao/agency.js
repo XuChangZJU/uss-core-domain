@@ -7,6 +7,14 @@ const { Roles } = require('../../constants/roleConstant2');
 
 const { checkConditionThrowString } = require('../../utils/checkValidUtils');
 
+const isAvailable = (agency) => {
+    return (agency.state < State.cancelled1);
+};
+
+const AvailableStatesWhere = {
+    $lt: State.cancelled1,
+};
+
 // 属性允许更新矩阵
 const AttrsUpdateMatrix = {
     [Roles.CXBCUSTOMER.name]: {
@@ -67,6 +75,8 @@ const checkValid = (agency, assertFn) => {
 };
 
 module.exports = {
+    isAvailable,
+    AvailableStatesWhere,
     AttrsUpdateMatrix,
     StateTransformMatrix,
     checkValid,
