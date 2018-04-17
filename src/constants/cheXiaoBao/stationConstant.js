@@ -27,6 +27,27 @@ const decodeWorkerState = (ws) => {
     };
 
     return STRINGS[ws];
+};
+
+// station的options格式，暂时没提供给用户选择
+/*
+{
+    services: [
+        {
+            name: '车辆年检',
+            price: 150,
+        }
+    ]
+}
+*/
+
+
+
+const getEstimatePrice = (vehicle, agency) => {
+    const { options } = agency;
+    const { type, params } = vehicle;
+
+    return options.services[0].price;
 }
 
 
@@ -35,4 +56,5 @@ module.exports = {
     decodeType,
     workerState,
     decodeWorkerState,
+    getEstimatePrice,
 };
