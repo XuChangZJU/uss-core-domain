@@ -14,4 +14,7 @@ module.exports = {
     BUYER: 'buyer',
     SELLER: 'seller',
     SKUMANAGER: 'skuManager',
+
+    CXBWORKER: 'cxbWorker',
+    CXBCUSTOMER: 'cxbCustomer',
 };
