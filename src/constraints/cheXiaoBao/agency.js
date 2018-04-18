@@ -22,10 +22,16 @@ const AttrsUpdateMatrix = {
             State.init, State.unpaid, State.paid, State.wfd1
         ],
         fetchId: [
-            State.init
+            State.init, State.unpaid
         ],
         revertId: [
-            State.init
+            State.init, State.unpaid
+        ],
+        fetchTime: [
+            State.init, State.unpaid
+        ],
+        params: [
+            State.init, State.unpaid
         ],
     },
 };
@@ -46,12 +52,14 @@ const StateTransformMatrix = {
     [Roles.ROOT.name]: {
         [State.unpaid]: [ State.paid, State.expired ],
         [State.paid]: [ State.wfd1, State.failed1 ],
-        [State.wfd1]: [ State.da1, State.recall ],
+        [State.wfd1]: [ State.da1, State.recall1 ],
+        [State.recall1]: [ State.wfd1, State.failed1 ],
         [State.da1]: [ State.onWay1 ],
         [State.onWay1]: [ State.wfs ],
         [State.serveEnd]: [ State.wfd2, State.emergent ],
         [State.emergent]: [ State.end2 ],
-        [State.wfd2]: [ State.da2 ],
+        [State.wfd2]: [ State.da2, State.recall2 ],
+        [State.recall2]: [ State.wfd2, State.emergent ],
         [State.da2]: [ State.onWay2 ],
         [State.onWay2]: [ State.wfr ],
     },
