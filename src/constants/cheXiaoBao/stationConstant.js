@@ -58,13 +58,35 @@ const decodeWorkerState = (ws) => {
 */
 
 
-
-const getEstimatePrice = (vehicle, agency) => {
-    const { options } = agency;
+/**
+ * 估算价格
+ * @param vehicle
+ * @param station
+ * @returns {*}
+ */
+const getEstimatePrice = (vehicle, station) => {
+    const { options } = station;
     const { type, params } = vehicle;
 
     return options.services[0].price;
-}
+};
+
+/**
+ * 估算时间
+ * 这个时间需要把路上也计算进去
+ * @param vehicle
+ * @param station
+ * @param agency
+ */
+const getEstimateRevertTime = (vehicle, station, agency) => {
+    // 先使用简单规则，上午10点前取车的，下午2点，上午10点后的，下午4点
+    const { fetchTime } = agency;
+    const fetchTime2 = new Date(fetchTime);
+    if (fetchTime2.getHours() < 10) {
+        return fetchTime2.setHours(14);
+    }
+    return fetchTime2.setHours(16);
+};
 
 
 module.exports = {
@@ -75,4 +97,5 @@ module.exports = {
     workerState,
     decodeWorkerState,
     getEstimatePrice,
+    getEstimateRevertTime,
 };
