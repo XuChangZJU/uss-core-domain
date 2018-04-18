@@ -15,9 +15,25 @@ const decodeType = (t) => {
     return STRINGS[t];
 };
 
+const state = {
+    online: 1,
+    offline: 101,
+    closed: 102,
+};
+
+const decodeState = (ws) => {
+    const STRINGS = {
+        [state.online]: '在线',
+        [state.offline]: '停业',
+        [state.closed]: '关闭',
+    };
+
+    return STRINGS[ws];
+};
+
 const workerState = {
     online: 1,          // 工作中
-    offline: 2,         // 不工作
+    offline: 101,         // 不工作
 };
 
 const decodeWorkerState = (ws) => {
@@ -54,6 +70,8 @@ const getEstimatePrice = (vehicle, agency) => {
 module.exports = {
     type,
     decodeType,
+    state,
+    decodeState,
     workerState,
     decodeWorkerState,
     getEstimatePrice,
