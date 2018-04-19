@@ -38,6 +38,8 @@ const state = {
     started:    6,     // 开始服务
     finished:   7,     // 服务完成
     cleared:    8,     // 计费完成
+
+    driverCancelled: 101,       // 司机取消
 };
 
 const decodeState = (s) => {
@@ -50,6 +52,7 @@ const decodeState = (s) => {
         [state.started]:         '服务开始',
         [state.finished]:        '服务结束',
         [state.cleared]:         '结算完成',
+        [state.driverCancelled]: '司机取消',
     };
     return STRINGS[s];
 };
