@@ -15,6 +15,20 @@ const decodeSource = (s) => {
     return STRING[s];
 };
 
+const type = {
+    realTime: 0,
+    booking: 1,
+};
+
+const decodeType = (t) => {
+    const STRING = {
+        [type.realTime]: '实时单',
+        [type.booking]: '预约单',
+    };
+
+    return STRING[t];
+};
+
 const state = {
     fresh:       1,       // 新单
     cancelled:  2,     // 已取消
@@ -43,6 +57,8 @@ const decodeState = (s) => {
 module.exports = {
     source,
     decodeSource,
+    type,
+    decodeType,
     state,
     decodeState,
 };
