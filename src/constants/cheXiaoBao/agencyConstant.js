@@ -22,8 +22,6 @@ const state = {
     end:        400,     // 收车完成
     end2:       401,     // 人工介入完成
 
-    recall1:     601,    // 司机取消，重新召唤司机（取车时）
-    recall2:     602,     // 司机取消，重新召唤司机（还车时）
     emergent:   701,  // 服务完没有司机接单（必须人工介入处理）
 
     cancelled1:  1001,   // 主动放弃
@@ -51,8 +49,6 @@ const decodeState = (s) => {
         [state.end]:            '已完成',
         [state.end2]:            '已完成',
 
-        [state.recall1]:         '重新寻找司机',
-        [state.recall2]:         '重新寻找司机',
         [state.emergent]:       '等待人工处理',
 
         [state.cancelled1]:    '已放弃',
