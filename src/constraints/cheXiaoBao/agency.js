@@ -8,11 +8,11 @@ const { Roles } = require('../../constants/roleConstant2');
 const { checkConditionThrowString } = require('../../utils/checkValidUtils');
 
 const isAvailable = (agency) => {
-    return (agency.state < State.cancelled1);
+    return (agency.state < State.init);
 };
 
 const AvailableStatesWhere = {
-    $lt: State.cancelled1,
+    $lt: State.init,
 };
 
 // 属性允许更新矩阵

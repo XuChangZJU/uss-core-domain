@@ -6,7 +6,6 @@
 const { type: StationType } = require('./stationConstant');
 
 const state = {
-    init:       1,       // 初始
     unpaid:     10,     // 未支付
     paid:       20,     // 已支付
     wfd1:       30,     // 等待司机（取车）
@@ -24,10 +23,12 @@ const state = {
 
     emergent:   701,  // 服务完没有司机接单（必须人工介入处理）
 
-    cancelled1:  1001,   // 主动放弃
-    expired:    1002,   // 超时
     cancelled2: 1003,   // 支付后放弃
     failed1:     1004,  // 没有司机接单
+
+    init:       10000,       // 初始
+    cancelled1:  10001,   // 主动放弃
+    expired:    10002,   // 超时
 
 };
 
