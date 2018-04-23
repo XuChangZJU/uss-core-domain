@@ -30,6 +30,7 @@ const decodeType = (t) => {
 };
 
 const state = {
+    init:       0,      // 未下单
     fresh:       1,       // 新单
     cancelled:  2,     // 已取消
     expired:    3,     // 已超时
@@ -44,7 +45,8 @@ const state = {
 
 const decodeState = (s) => {
     const STRINGS = {
-        [state.fresh]:            '新单',
+        [state.init]:             '初始',
+        [state.fresh]:            '已下单',
         [state.cancelled]:       '已取消',
         [state.expired]:         '已过期',
         [state.accepted]:        '已接单',
