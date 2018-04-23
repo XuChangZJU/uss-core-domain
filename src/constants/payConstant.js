@@ -2,6 +2,23 @@
  * Created by Administrator on 2016/11/1.
  */
 "use strict";
+const type = {
+    app: 1,          // 直接唤起sdk支付
+    jsApi: 2,       // 在内部环境下的支付（小程序，公众号）
+    native: 3,      // 扫码支付
+};
+
+const decodeType = (t) => {
+    const STRINGS = {
+        [type.app]:  '唤起APP支付',
+        [type.jsApi]: '内部环境下支付',
+        [type.native]: '扫码支付',
+    };
+
+    return STRINGS[t];
+};
+
+
 const state = {
     init: 1,
     paying: 3,
@@ -65,6 +82,8 @@ function decodeOrigin(o) {
 }
 
 module.exports = {
+    type,
+    decodeType,
     state,
     decodeState,
     origin,
