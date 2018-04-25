@@ -28,6 +28,7 @@ const state = {
     partialRefunded: 202,
     closed: 501,
     finished: 999,
+    unexisted: 1099,            // 为了兼容外部订单号不存在的情况
 };
 
 const STRINGS_OF_STATES = {
@@ -39,6 +40,7 @@ const STRINGS_OF_STATES = {
     [state.refunded]: "已退款",
     [state.closed]: "已关闭",
     [state.finished]: "已结束",
+    [state.unexisted]: '不存在',
 };
 
 function decodeState(s) {
