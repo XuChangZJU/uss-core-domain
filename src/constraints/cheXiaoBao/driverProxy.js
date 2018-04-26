@@ -27,8 +27,8 @@ const StateTransformMatrix = {
     [Roles.ROOT.name]: {
         [State.init]: [State.cancelled, State.fresh],
         [State.fresh]: [ State.cancelled, State.expired, State.accepted ],
-        [State.accepted]: [ State.cancelled, State.arrived ],
-        [State.arrived]: [ State.cancelled, State.started ],
+        [State.accepted]: [ State.cancelled, State.arrived, State.driverCancelled ],
+        [State.arrived]: [ State.cancelled, State.started, State.driverCancelled ],
         [State.started]: [ State.finished ],
         [State.finished]: [ State.cleared ],
     },
