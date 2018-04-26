@@ -7,6 +7,15 @@ const { Roles } = require('../../constants/roleConstant2');
 
 const { checkMobile } = require('../../utils/stringUtils');
 const { checkConditionThrowString } = require('../../utils/checkValidUtils');
+
+const isAvailable = (dp) => {
+    return [State.accepted, State.arrived, State.started, State.finished].includes(dp.state);
+};
+
+const AvailableStatesWhere = {
+    $in: [State.accepted, State.arrived, State.started, State.finished],
+};
+
 // 属性允许更新矩阵
 const AttrsUpdateMatrix = {
     [Roles.ROOT.name]: {
@@ -54,6 +63,8 @@ const checkValid = (driverProxy, assertFn) => {
 
 
 module.exports = {
+    isAvailable,
+    AvailableStatesWhere,
     AttrsUpdateMatrix,
     StateTransformMatrix,
     checkValid,
