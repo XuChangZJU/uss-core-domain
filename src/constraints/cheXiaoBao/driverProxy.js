@@ -19,6 +19,9 @@ const AttrsUpdateMatrix = {
         data: [
             State.fresh,
         ],
+        externalOid: [
+            State.init,
+        ],
     },
 };
 
