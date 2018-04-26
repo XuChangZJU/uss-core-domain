@@ -27,6 +27,7 @@ const state = {
 
     cancelled2: 1003,   // 支付后放弃
     failed1:     1004,  // 没有司机接单
+    over2: 1005,        // 支付后放弃并已结清
 
     init:       10000,       // 初始
     cancelled1:  10001,   // 主动放弃
@@ -55,10 +56,11 @@ const decodeState = (s) => {
         [state.end2]:            '已完成',
 
         [state.emergent]:       '等待人工处理',
+        [state.over2]:          '取水后已结算',
 
         [state.cancelled1]:    '已放弃',
         [state.expired]:         '已超时',
-        [state.cancelled2]:    '已放弃',
+        [state.cancelled2]:    '已取消',
         [state.failed1]:        '已关闭'
     };
 
