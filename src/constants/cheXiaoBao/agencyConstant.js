@@ -57,13 +57,13 @@ const decodeState = (s) => {
         [state.end2]:            '已完成',
 
         [state.emergent]:       '等待人工处理',
-        [state.over2]:          '取消后已结算',
-        [state.over3]:          '超时后已结算',
+        [state.over2]:          '取消后已结算',       // 如果已经付过款了，取消后要退款
+        [state.over3]:          '失败后已结算',       // 如果因为没司机接单到达failed1，后续也要退款
 
         [state.cancelled1]:    '已取消',
         [state.expired]:         '已超时',
         [state.cancelled2]:    '已取消',
-        [state.failed1]:        '已关闭'
+        [state.failed1]:        '找不到司机'
     };
 
     return STRINGS[s];
