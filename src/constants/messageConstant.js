@@ -18,10 +18,10 @@ const origin = {
 };
 
 const state = {
-    init: 0,
-    sending: 1,
-    success: 2,
-    failure: 3,
+    init: 1,
+    sending: 11,
+    success: 21,
+    failure: 31,
     fatal: 127
 };
 
