@@ -10,7 +10,7 @@ const { checkConditionThrowString } = require('../utils/checkValidUtils');
 // 状态允许更新矩阵
 const StateTransformMatrix = {
     [Roles.ROOT.name]: {
-        [State.init]: [State.sending, State.fatal],
+        [State.init]: [State.sending, State.fatal, State.success, State.failure],
         [State.sending]: [ State.failure, State.success, State.fatal ],
         [State.failure]: [ State.sending],
     },
