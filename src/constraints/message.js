@@ -22,9 +22,8 @@ const checkValid = (message, assertFn) => {
     const assertFn2 = assertFn || checkConditionThrowString;
 
     assertFn2(message.typeId, 'message must have type');
-    assertFn2(message.state, 'message must have weight');
+    assertFn2(message.userId, 'message must have user');
     assertFn2(message.state, 'message must have state');
-    assertFn2(values(Weight).includes(message.weight), 'invalid weight');
 };
 
 

@@ -13,7 +13,8 @@ const weight = {
 
 const origin = {
     jPush: "jPush",
-    weChat: "weChat",
+    weChat: "weChat",           // 公众号
+    miniProgram: 'mp',          // 小程序
 };
 
 const state = {
