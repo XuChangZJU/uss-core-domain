@@ -33,6 +33,9 @@ const AttrsUpdateMatrix = {
         params: [
             State.init, State.unpaid
         ],
+        done: [
+            State.served,
+        ],
     },
 };
 
