@@ -33,6 +33,8 @@ const AttrsUpdateMatrix = {
         params: [
             State.init, State.unpaid
         ],
+    },
+    [Roles.CXBWORKER.name]: {
         done: [
             State.served,
         ],
