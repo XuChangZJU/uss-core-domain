@@ -37,7 +37,7 @@ const AttrsUpdateMatrix = {
 // 状态允许更新矩阵
 const StateTransformMatrix = {
     [Roles.ROOT.name]: {
-        [State.init]: [State.cancelled, State.fresh],
+        [State.init]: [State.cancelled, State.fresh, State.expired],
         [State.fresh]: [ State.cancelled, State.expired, State.accepted ],
         [State.accepted]: [ State.cancelled, State.arrived, State.driverCancelled ],
         [State.arrived]: [ State.cancelled, State.started, State.driverCancelled ],

@@ -56,6 +56,7 @@ const StateTransformMatrix = {
         [State.served]: [ State.serveEnd ],
     },
     [Roles.ROOT.name]: {
+        [State.init]: [ State.expired],
         [State.unpaid]: [ State.paid, State.expired ],
         [State.paid]: [ State.matching1, State.failed1 ],
         [State.matching1]: [State.wfd1, State.failed1, State.paid],
