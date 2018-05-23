@@ -40,25 +40,25 @@ const decodeState = (s) => {
     const STRINGS = {
         [state.init]:            '初始',
         [state.unpaid]:          '未支付',
-        [state.paid]:            '寻找司机',
-        [state.matching1]:      '正在寻找司机',
+        [state.paid]:            '已支付',
+        [state.matching1]:      '寻找司机',
         [state.wfd1]:            '等待司机取车',
         [state.da1]:             '司机到达取车点',
         [state.onWay1]:          '去目的地途中',
         [state.wfs]:             '等待服务',
         [state.served]:         '正在服务中',
-        [state.matching2]:      '正在寻找司机',
         [state.serveEnd]:       '服务完成',
+        [state.matching2]:      '寻找返程司机',
         [state.wfd2]:            '等待司机还车',
-        [state.da2]:             '司机到达还车点',
+        [state.da2]:             '司机到达取车点',
         [state.onWay2]:         '归途中',
         [state.wfr]:            '等待车主收车',
         [state.end]:            '已完成',
         [state.end2]:            '已完成',
 
         [state.emergent]:       '等待人工处理',
-        [state.over2]:          '取消后已结算',       // 如果已经付过款了，取消后要退款
-        [state.over3]:          '失败后已结算',       // 如果因为没司机接单到达failed1，后续也要退款
+        [state.over2]:          '取消后已退款',       // 如果已经付过款了，取消后要退款
+        [state.over3]:          '失败后已退款',       // 如果因为没司机接单到达failed1，后续也要退款
 
         [state.cancelled1]:    '已取消',
         [state.expired]:         '已超时',
