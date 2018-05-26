@@ -48,7 +48,8 @@ const StateTransformMatrix = {
         [State.unpaid]: [ State.cancelled1 ],
         [State.paid]: [ State.cancelled2 ],
         [State.matching1]: [State.cancelled2],
-        [State.wfd1]: [ State.cancelled1 ],
+        [State.wfd1]: [ State.cancelled2 ],
+        // [State.da1]: [State.cancelled2],     // 司机到了还能否取消，要看滴滴那边的限制
         [State.wfr]: [ State.end ],
     },
     [Roles.CXBWORKER.name]: {
