@@ -39,6 +39,14 @@ const AttrsUpdateMatrix = {
             State.served,
         ],
     },
+    [Roles.ROOT.name]: {
+        fee: [
+            State.failed1, State.cancelled2
+        ],
+        feeDetail: [
+            State.failed1, State.cancelled2
+        ],
+    },
 };
 
 // 状态允许更新矩阵
