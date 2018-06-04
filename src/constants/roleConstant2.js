@@ -34,6 +34,12 @@ const Roles = {
     },
 
 
+    // for 文章管理
+    EDITOR: {
+        name: editor,
+    },
+
+
     // for 车小宝
     CXBCUSTOMER:{
         name: 'cxbCustomer',
@@ -42,7 +48,7 @@ const Roles = {
     CXBWORKER: {
         name: 'cxbWorker',
         logic: true,
-    }
+    },
 };
 module.exports = {
     Roles,
