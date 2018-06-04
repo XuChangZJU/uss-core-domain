@@ -36,7 +36,7 @@ const Roles = {
 
     // for 文章管理
     EDITOR: {
-        name: editor,
+        name: 'editor',
     },
 
 
