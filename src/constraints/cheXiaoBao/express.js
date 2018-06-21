@@ -33,7 +33,7 @@ const AttrsUpdateMatrix = {
 const StateTransformMatrix = {
     [Roles.ROOT.name]: {
         [State.unpost]: [ State.posted],
-        [State.posted]: [ State.sending],
+        [State.posted]: [ State.sending, State.end],
         [State.sending]: [ State.end ],
     },
 };
