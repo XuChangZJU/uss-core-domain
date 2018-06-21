@@ -12,19 +12,19 @@ const { checkConditionThrowString } = require('../../utils/checkValidUtils');
 const AttrsUpdateMatrix = {
     [Roles.ROOT.name]: {
         price: [
-            State.unpost
+            State.unposted
         ],
         from: [
-            State.unpost
+            State.unposted
         ],
         to: [
-            State.unpost
+            State.unposted
         ],
         name: [
-            State.unpost
+            State.unposted
         ],
         number: [
-            State.unpost
+            State.unposted
         ],
     },
 };
@@ -32,7 +32,7 @@ const AttrsUpdateMatrix = {
 // 状态允许更新矩阵
 const StateTransformMatrix = {
     [Roles.ROOT.name]: {
-        [State.unpost]: [ State.posted],
+        [State.unposted]: [ State.posted],
         [State.posted]: [ State.sending, State.end],
         [State.sending]: [ State.end ],
     },

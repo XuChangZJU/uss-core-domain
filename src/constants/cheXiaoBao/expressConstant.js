@@ -4,7 +4,7 @@
 'use strict';
 
 const state = {
-    unpost: 10,         // 未投递
+    unposted: 10,         // 未投递
     posted: 30,         // 已投递（下了快递单）
     sending: 40,        // 寄送中
     end: 400,           // 接收完成
@@ -12,7 +12,7 @@ const state = {
 
 const decodeState = (s) => {
     const STRINGS = {
-        [state.unpost]: '未投递',
+        [state.unposted]: '未投递',
         [state.posted]: '已投递',
         [state.sending]: '寄送中',
         [state.end]: '已完成',
