@@ -26,6 +26,7 @@ const decodeState = (s) => {
     const STRINGS = {
         [state.unpaid]: '未支付',
         [state.paid]: '已支付',
+        [state.posted]: '已投递',
         [state.sending]: '寄送中',
         [state.accepted]: '检查中',
         [state.sendingBack]: '寄还中',
