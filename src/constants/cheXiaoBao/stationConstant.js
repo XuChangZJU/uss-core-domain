@@ -4,12 +4,14 @@
 'use strict';
 
 const type = {
-    check: 1,       // 检查站
+    check: 1,                // 检查站
+    materialCheck: 2,       // 材料检查站
 };
 
 const decodeType = (t) => {
     const STRINGS = {
         [type.check]: '检查站',
+        [type.materialCheck]: '服务站',
     };
 
     return STRINGS[t];
