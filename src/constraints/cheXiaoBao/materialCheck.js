@@ -92,7 +92,7 @@ const checkValid = (mc, assertFn) => {
     assertFn2(mc.cityId, 'mc must have city');
     assertFn2(mc.address, 'mc must have address');
     assertFn2(mc.fetchTime, 'mc must have fetchTime');
-    assertFn2(mc.fetchTime > Date.now(), 'fetchTime must be larger than now');
+    // assertFn2(mc.fetchTime > Date.now(), 'fetchTime must be larger than now');
 };
 
 module.exports = {

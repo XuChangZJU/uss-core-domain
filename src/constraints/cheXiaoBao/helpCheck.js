@@ -2,7 +2,7 @@
  * Created by Administrator on 2018/4/17.
  */
 const values = require('lodash/values');
-const { state: State } = require('../../constants/cheXiaoBao/mcConstant');
+const { state: State } = require('../../constants/cheXiaoBao/helpCheck');
 const { Roles } = require('../../constants/roleConstant2');
 
 const { checkConditionThrowString } = require('../../utils/checkValidUtils');
@@ -28,6 +28,9 @@ const AttrsUpdateMatrix = {
             State.init, State.unpaid
         ],
         params: [
+            State.init, State.unpaid
+        ],
+        time: [
             State.init, State.unpaid
         ],
     },
@@ -70,12 +73,13 @@ const StateTransformMatrix = {
 const checkValid = (helpCheck, assertFn) => {
     const assertFn2 = assertFn || checkConditionThrowString;
 
-    assertFn2(helpCheck.state, 'agency must have state');
+    assertFn2(helpCheck.state, 'helpCheck must have state');
     assertFn2(values(State).includes(helpCheck.state), 'invalid state');
-    assertFn2(helpCheck.userId, 'agency must have user');
-    assertFn2(helpCheck.stationId, 'agency must have station');
-    assertFn2(helpCheck.vehicleId, 'agency must have vehicle');
-    assertFn2(helpCheck.price > 0, 'agency must have positive price');
+    assertFn2(helpCheck.userId, 'helpCheck must have user');
+    assertFn2(helpCheck.stationId, 'helpCheck must have station');
+    assertFn2(helpCheck.vehicleId, 'helpCheck must have vehicle');
+    assertFn2(helpCheck.price > 0, 'helpCheck must have positive price');
+    assertFn2(helpCheck.time, 'helpCheck must have time');
 };
 
 module.exports = {
