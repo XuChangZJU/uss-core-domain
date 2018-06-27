@@ -27,18 +27,9 @@ const AttrsUpdateMatrix = {
         stationId: [
             State.init, State.unpaid
         ],
-        cityId: [
-            State.init, State.unpaid
-        ],
-        address: [
-            State.init, State.unpaid
-        ],
         params: [
             State.init, State.unpaid
         ],
-        fetchTime: [
-            State.init, State.unpaid
-        ]
     },
     [Roles.CXBWORKER.name]: {
         done: [
@@ -61,38 +52,30 @@ const StateTransformMatrix = {
         [State.init]: [ State.unpaid, State.cancelled1 ],
         [State.unpaid]: [ State.cancelled1 ],
         [State.paid]: [ State.cancelled2 ],
-        [State.sendingBack]: [ State.end ],
     },
     [Roles.CXBWORKER.name]: {
-        [State.sending]: [ State.accepted ],
+        [State.paid]: [ State.inServe ],
+        [State.inServe]: [State.end ],
     },
     [Roles.ROOT.name]: {
         [State.init]: [ State.expired],
         [State.unpaid]: [ State.paid, State.expired ],
-        [State.paid]: [ State.posted ],
-        [State.posted]: [State.sending ],
-        [State.sending]: [ State.accepted ],
-        [State.accepted]: [ State.sendingBack ],
-        [State.sendingBack]: [ State.end ],
-        [State.cancelled2]: [State.over2 ],
+        [State.paid]: [ State.inServe ],
+        [State.inServe]: [State.end ],
     },
 };
 
 
 // 检查对象是否合法
-const checkValid = (mc, assertFn) => {
+const checkValid = (helpCheck, assertFn) => {
     const assertFn2 = assertFn || checkConditionThrowString;
 
-    assertFn2(mc.state, 'agency must have state');
-    assertFn2(values(State).includes(mc.state), 'invalid state');
-    assertFn2(mc.userId, 'agency must have user');
-    assertFn2(mc.stationId, 'agency must have station');
-    assertFn2(mc.vehicleId, 'agency must have vehicle');
-    assertFn2(mc.price > 0, 'agency must have positive price');
-    assertFn2(mc.cityId, 'mc must have city');
-    assertFn2(mc.address, 'mc must have address');
-    assertFn2(mc.fetchTime, 'mc must have fetchTime');
-    assertFn2(mc.fetchTime > Date.now(), 'fetchTime must be larger than now');
+    assertFn2(helpCheck.state, 'agency must have state');
+    assertFn2(values(State).includes(helpCheck.state), 'invalid state');
+    assertFn2(helpCheck.userId, 'agency must have user');
+    assertFn2(helpCheck.stationId, 'agency must have station');
+    assertFn2(helpCheck.vehicleId, 'agency must have vehicle');
+    assertFn2(helpCheck.price > 0, 'agency must have positive price');
 };
 
 module.exports = {
