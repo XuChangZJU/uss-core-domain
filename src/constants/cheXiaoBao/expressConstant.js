@@ -32,7 +32,9 @@ const decodeType = (t) => {
     const STRINGS = {
         [type.sendTo]: '寄送',
         [type.return]: '寄还',
-    }
+    };
+    
+    return STRINGS[t];
 }
 
 module.exports = {
