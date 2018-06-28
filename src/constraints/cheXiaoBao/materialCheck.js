@@ -70,7 +70,7 @@ const StateTransformMatrix = {
         [State.init]: [ State.expired],
         [State.unpaid]: [ State.paid, State.expired ],
         [State.paid]: [ State.posted ],
-        [State.posted]: [State.sending ],
+        [State.posted]: [State.sending, State.accepted ],
         [State.sending]: [ State.accepted ],
         [State.accepted]: [ State.sendingBack ],
         [State.sendingBack]: [ State.end ],
