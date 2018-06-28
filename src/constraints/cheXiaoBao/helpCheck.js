@@ -36,7 +36,7 @@ const AttrsUpdateMatrix = {
     },
     [Roles.CXBWORKER.name]: {
         done: [
-            State.accepted,
+            State.inServe,
         ],
     },
     [Roles.ROOT.name]: {
