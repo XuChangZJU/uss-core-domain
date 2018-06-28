@@ -54,16 +54,17 @@ const StateTransformMatrix = {
     [Roles.CXBCUSTOMER.name]: {
         [State.init]: [ State.unpaid, State.cancelled1 ],
         [State.unpaid]: [ State.cancelled1 ],
-        [State.paid]: [ State.cancelled2 ],
+        [State.paid]: [ State.cancelled2, State.arrived ],
     },
     [Roles.CXBWORKER.name]: {
-        [State.paid]: [ State.inServe ],
+        [State.arrived]: [ State.inServe ],
         [State.inServe]: [State.end ],
     },
     [Roles.ROOT.name]: {
         [State.init]: [ State.expired],
         [State.unpaid]: [ State.paid, State.expired ],
-        [State.paid]: [ State.inServe ],
+        [State.paid]: [State.arrived, State.inServe],
+        [State.arrived]: [ State.inServe ],
         [State.inServe]: [State.end ],
         [State.cancelled2]: [State.over2],
     },

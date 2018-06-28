@@ -4,6 +4,7 @@
 const state = {
     unpaid: 10,         // 未支持
     paid: 20,           // 已支付
+    arrived: 30,        // 已到达
     inServe: 50,        // 开始年检
     end: 400,           // 年检完成
 
@@ -21,6 +22,7 @@ const decodeState = (s) => {
         [state.unpaid]: '未支付',
         [state.paid]: '已支付',
         [state.inServe]: '年检中',
+        [state.arrived]: '已到达',
         [state.end]: '已完成',
 
         [state.cancelled2]: '待退款',
