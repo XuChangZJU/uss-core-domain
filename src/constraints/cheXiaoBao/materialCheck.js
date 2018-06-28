@@ -46,6 +46,9 @@ const AttrsUpdateMatrix = {
         ],
     },
     [Roles.ROOT.name]: {
+        done: [
+            State.accepted,
+        ],
         fee: [
             State.cancelled2
         ],
