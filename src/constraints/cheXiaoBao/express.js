@@ -32,7 +32,7 @@ const AttrsUpdateMatrix = {
 // 状态允许更新矩阵
 const StateTransformMatrix = {
     [Roles.ROOT.name]: {
-        [State.unposted]: [ State.posted],
+        [State.unposted]: [ State.posted, State.cancelled],
         [State.posted]: [ State.sending, State.end],
         [State.sending]: [ State.end ],
     },
