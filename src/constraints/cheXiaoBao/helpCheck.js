@@ -65,6 +65,7 @@ const StateTransformMatrix = {
         [State.unpaid]: [ State.paid, State.expired ],
         [State.paid]: [ State.inServe ],
         [State.inServe]: [State.end ],
+        [State.cancelled2]: [State.over2],
     },
 };
 
