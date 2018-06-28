@@ -33,7 +33,7 @@ const decodeType = (t) => {
         [type.sendTo]: '寄送',
         [type.return]: '寄还',
     };
-    
+
     return STRINGS[t];
 }
 
