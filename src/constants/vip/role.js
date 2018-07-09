@@ -1,7 +1,7 @@
 /**
  * Created by Administrator on 2018/7/9.
  */
-const commonRoles = require('../roleConstant2');
+const { Roles: commonRoles } = require('../roleConstant2');
 
 const Roles = {
     // 品牌创始人
@@ -17,8 +17,8 @@ const Roles = {
         name: 'vipShopKeeper',
         logic: true,
     },
-    VIPSALER: {
-        name: 'vipSaler',
+    VIPWORKER: {
+        name: 'vipWorker',
         logic: true,
     },
 };
