@@ -12,25 +12,15 @@ const systemUsers = {
 		mobile: "13000000001",
 		nickname: "核心服务器后台进程"
 	},
-	martianRent: {
+	coreAuditor: {
+		id: 3,
+		mobile: "13000000002",
+		nickname: "核心服务器审计进程"
+	},
+	account: {
 		id: 1001,
-		mobile: "13000001001",
-		nickname: "帮租侠"
-	},
-	martianRentBackend: {
-		id: 1002,
-		mobile: "13000001002",
-		nickname: "帮租侠后台进程"
-	},
-	ussCore: {
-		id: 5,
-		mobile: "13000002001",
-		nickname: "帮租侠商城进程"
-	},
-	ussCoreBackend: {
-		id: 6,
-		mobile: "13000002002",
-		nickname: "帮租侠商城后台进程"
+		mobile: "13000000003",
+		nickname: "平台帐户"
 	}
 };
 
