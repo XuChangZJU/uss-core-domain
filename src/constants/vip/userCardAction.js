@@ -19,7 +19,8 @@ const action = {
 
     expires: 1001,
     forbid: 1002,
-    drop: 1003,
+    dropBySelf: 1003,
+    dropByShop: 1004,
 };
 
 const decodeAction = (a) => {
@@ -37,7 +38,8 @@ const decodeAction = (a) => {
         [action.send]: '转赠',
         [action.expires]: '过期',
         [action.forbid]: '禁用',
-        [action.drop]: '丢弃',
+        [action.dropBySelf]: '自丢弃',
+        [action.dropByShop]: '店家删除',
     };
 
     return STRING[a];
