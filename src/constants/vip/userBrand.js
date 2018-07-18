@@ -1,23 +1,42 @@
 /**
  * Created by Administrator on 2018/7/9.
  */
-const type = {
-    owner: 1,       // 创始人
-    partner: 2,     // 合伙人
-    manager: 3,     // 管理员
-};
+const {
+    action: commonAction,
+    decodeAction: decodeCommonAction,
+    relation: commonRelation,
+    decodeRelation: decodeCommonRelation,
+    } = require('../action');
 
-const decodeType = (t) => {
+const relation = Object.assign({
+    partner: 1001,     // 合伙人
+    manager: 1002,      // 管理员
+}, commonRelation);
+
+const decodeRelation = (t) => {
     const STRING = {
-        [type.owner]: '创始人',
-        [type.partner]: '合伙人',
-        [type.manager]: '管理员',
+        [relation.partner]: '合伙人',
+        [relation.manager]: '管理员',
     };
 
-    return STRING[t];
+    return STRING[t] || decodeCommonRelation(t);
 };
 
+const action = Object.assign({
+}, commonAction);
+
+const decodeAction = (a) => {
+    const STRINGS = {
+    };
+
+    const s = STRINGS[a] || decodeCommonAction(a);
+
+    return s;
+}
+
 module.exports = {
-    type,
-    decodeType,
+    relation,
+    decodeRelation,
+    action,
+    decodeAction,
 };
