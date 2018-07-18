@@ -2,19 +2,19 @@
  * Created by Administrator on 2018/7/9.
  */
 const state = {
+    fresh: 1,
     free: 10,
     bound: 101,
 };
 
 const entity = {
-    platform: "platform",
-    shop: "shop",
-    vip: "vip",
-    manager: "manager"
+    shop: 1,
+    useCard: 2,
 };
 
 const decodeState = (s) => {
     const STRING = {
+        [state.fresh]: '新鲜的',
         [state.free]: '空闲的',
         [state.bound]: '绑定的',
     };
@@ -24,10 +24,8 @@ const decodeState = (s) => {
 
 const decodeEntity = (s) => {
     const STRING = {
-        [entity.platform]: '平台',
         [entity.shop]: '门店',
-        [entity.vip]: '会员',
-        [entity.manager]: '管理员',
+        [entity.useCard]: '会员卡使用',
     };
 
     return STRING[s];
