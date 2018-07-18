@@ -22,7 +22,31 @@ const decodeType = (t) => {
     return STRING[t];
 };
 
+const { action: commonAction, decodeAction: decodeCommonAction } = require('../action');
+
+const action = Object.assign({
+    addPartner: 101,
+    removePartner: 102,
+    addManager: 201,
+    removeManager: 202,
+}, commonAction);
+
+const decodeAction = (a) => {
+    const STRINGS = {
+        [action.addPartner]: '增加合伙人',
+        [action.removePartner]: '移除合伙人',
+        [action.addManager]: '增加管理员',
+        [action.removeManager]: '移除管理员',
+    };
+
+    const s = STRINGS[a] || decodeCommonAction(a);
+
+    return s;
+}
+
 module.exports = {
     type,
     decodeType,
+    action,
+    decodeAction,
 };
