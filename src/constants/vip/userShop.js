@@ -1,42 +1,32 @@
 /**
  * Created by Administrator on 2018/7/9.
  */
-const type = {
-    owner: 1,       // 创始人
-    partner: 2,     // 合伙人
-    manager: 3,     // 管理员
+const {
+    action: commonAction,
+    decodeAction: decodeCommonAction,
+    relation: commonRelation,
+    decodeRelation: decodeCommonRelation,
+} = require('../action');
 
-    keeper: 11,     // 店长
-    worker: 12,      // 店员
-};
+const relation = Object.assign({
+    keeper: 1001,     // 店长
+    worker: 1002,      // 店员
+}, commonRelation);
 
-const decodeType = (t) => {
+const decodeRelation = (t) => {
     const STRING = {
-        [type.owner]: '创始人',
-        [type.partner]: '合伙人',
-        [type.manager]: '管理员',
-        [type.keeper]: !'店长',
-        [type.worker]: '店员',
+        [relation.keeper]: !'店长',
+        [relation.worker]: '店员',
     };
 
-    return STRING[t];
+    return STRING[t] || decodeCommonRelation(t);
 };
 
-const { action: commonAction, decodeAction: decodeCommonAction } = require('../action');
-
 const action = Object.assign({
-    addPartner: 101,
-    removePartner: 102,
-    addManager: 201,
-    removeManager: 202,
 }, commonAction);
 
 const decodeAction = (a) => {
     const STRINGS = {
-        [action.addPartner]: '增加合伙人',
-        [action.removePartner]: '移除合伙人',
-        [action.addManager]: '增加管理员',
-        [action.removeManager]: '移除管理员',
     };
 
     const s = STRINGS[a] || decodeCommonAction(a);
@@ -45,8 +35,8 @@ const decodeAction = (a) => {
 }
 
 module.exports = {
-    type,
-    decodeType,
+    relation,
+    decodeRelation,
     action,
     decodeAction,
 };
