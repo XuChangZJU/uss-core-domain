@@ -8,6 +8,7 @@ const action = {
     remove: 3,
     grant: 11,
     revoke: 12,
+    abandon: 13,
 };
 
 // 全局抽象的关系 0-1000
@@ -22,6 +23,7 @@ const decodeAction = (a) => {
         [action.remove]: '删除',
         [action.grant]: '授予',
         [action.revoke]: '回收',
+        [action.abandon]: '放弃',
     };
 
     return STRINGS[a];
