@@ -4,6 +4,7 @@
 const state = {
     fresh: 1,
     free: 10,
+    reserved: 50,
     bound: 101,
 };
 
@@ -16,6 +17,7 @@ const decodeState = (s) => {
     const STRING = {
         [state.fresh]: '新鲜的',
         [state.free]: '空闲的',
+        [state.reserved]: '保留的',
         [state.bound]: '绑定的',
     };
 
