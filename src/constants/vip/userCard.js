@@ -29,6 +29,8 @@ const action = Object.assign({
     consumeScore: 2002,
     consumeTimes: 2003,
 
+    createCard: 5001,
+
     expires: 10001,
     forbid: 10002,
     dropBySelf: 10003,
@@ -43,6 +45,8 @@ const decodeAction = (a) => {
         [action.consumeAmount]: '消费余额',
         [action.consumeScore]: '消费积分',
         [action.consumeTimes]: '消费次数',
+
+        [action.createCard]: '开卡',
 
         [action.expires]: '过期',
         [action.forbid]: '禁用',
