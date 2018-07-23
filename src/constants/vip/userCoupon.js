@@ -22,7 +22,6 @@ const decodeRelation = (t) => {
 
 const action = Object.assign({
     use: 1001,
-    dispatch: 1002,
 
     send: 3001,
 
@@ -35,7 +34,6 @@ const action = Object.assign({
 const decodeAction = (a) => {
     const STRINGS = {
         [action.use]: '使用',
-        [action.dispatch]: '发放',
         [action.send]: '转赠',
         [action.expires]: '过期',
         [action.forbid]: '禁用',
@@ -48,9 +46,29 @@ const decodeAction = (a) => {
     return s;
 }
 
+const state = {
+    available: 10,
+    expired: 1001,
+    used: 1002,
+    forbidden: 1003,
+};
+
+const decodeState = (s) => {
+    const STRINGS = {
+        [state.available]: '可用的',
+        [state.expired]: '过期的',
+        [state.used]: '用过的',
+        [state.forbidden]: '禁用的',
+    };
+
+    return STRINGS[s];
+}
+
 module.exports = {
     relation,
     decodeRelation,
     action,
     decodeAction,
+    state,
+    decodeState,
 };
