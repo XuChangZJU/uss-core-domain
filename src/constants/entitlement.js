@@ -88,7 +88,7 @@ const decodePeriod = (p) => {
     return STRING[p];
 };
 
-const getEndOf = (ba, p) => {
+const getEndsAt = (ba, p) => {
     if (isNaN(ba)) {
         throw new Error('illegal beginsAt');
     }
@@ -153,5 +153,5 @@ module.exports = {
     period,
     decodePeriod,
     getBeginsAt,
-    getEndOf,
+    getEndsAt,
 }
