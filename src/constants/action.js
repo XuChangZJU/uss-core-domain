@@ -56,7 +56,7 @@ const decodeAction = (a) => {
         [action.cancel]: '取消支付',
         [action.abort]: '中止',
         [action.expire]: '过期',
-        [action.makePaid]: '管理员确认支付',
+        [action.makePaid]: '自动支付',
     };
 
     return STRINGS[a];
@@ -72,7 +72,8 @@ const decodeRelation = (r) => {
 module.exports = {
     action,
     decodeAction,
-
+    state,
+    decodeState,
     relation,
     decodeRelation,
 };
