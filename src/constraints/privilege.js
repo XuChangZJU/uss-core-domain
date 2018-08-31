@@ -25,12 +25,7 @@ const AttrsUpdateMatrix = {
 };
 
 // 状态允许更新矩阵
-const StateTransformMatrix = {
-    [Roles.ROOT.name]: {
-        [State.unpaid]: [ State.paid, State.cancelled],
-        [State.paid]: [ State.expired, State.aborted],
-    },
-};
+const { StateTransformMatrix } = require('./action');
 
 
 // 检查对象是否合法
