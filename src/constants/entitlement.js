@@ -63,6 +63,7 @@ const period = {
     fourYears: 304,
     fiveYears: 305,
     tenYears: 310,
+    unlimited: 1001,
 };
 
 const decodePeriod = (p) => {
@@ -83,6 +84,7 @@ const decodePeriod = (p) => {
         [period.fourYears]: '四年',
         [period.fiveYears]: '五年',
         [period.tenYears]: '十年',
+        [period.unlimited]: '不限制',
     };
 
     return STRING[p];
@@ -140,6 +142,9 @@ const getEndsAt = (ba, p) => {
         }
         case period.tenYears: {
             return moment(ba).add(10, 'y').values();
+        }
+        case period.unlimited: {
+            return undefined;
         }
         default: {
             throw new Error('illegal periods');
