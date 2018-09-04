@@ -114,16 +114,16 @@ const getEndsAt = (ba, p) => {
             return ba + 14 * 24 * 3600 * 1000;
         }
         case period.oneMonth: {
-            return moment(ba).add(1, 'm').valueOf();
+            return moment(ba).add(1, 'M').valueOf();
         }
         case period.twoMonths: {
-            return moment(ba).add(2, 'm').valueOf();
+            return moment(ba).add(2, 'M').valueOf();
         }
         case period.threeMonths: {
-            return moment(ba).add(3, 'm').valueOf();
+            return moment(ba).add(3, 'M').valueOf();
         }
         case period.sixMonths: {
-            return moment(ba).add(6, 'm').valueOf();
+            return moment(ba).add(6, 'M').valueOf();
         }
         case period.oneYear: {
             return moment(ba).add(1, 'y').valueOf();
