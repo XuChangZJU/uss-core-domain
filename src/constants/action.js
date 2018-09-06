@@ -6,14 +6,18 @@ const action = {
     create: 1,
     update: 2,
     remove: 3,
-    grant: 11,
-    revoke: 12,
-    abandon: 13,
+
+    authGrant: 11,
+    authRevoke: 12,
+    authAbandon: 13,
+    authExpire: 14,
+    authConfirm: 15,
+
     confirmToPay: 31,       // 确认下单
     cancel: 32,             // 取消
     pay: 33,                  // 支付
     abort: 34,                  // 中断
-    expire: 35,             // 过期
+    payExpire: 35,             // 过期
     makePaid: 36,           // 管理员确认支付
 };
 
@@ -25,11 +29,12 @@ const relation = {
 // 全局抽象的状态 0 - 100
 const state = {
     init: 1,
-    unpaid: 10,
-    legal: 20,
-    expired: 30,
-    aborted: 40,
-    cancelled: 50,
+
+    unpaid: 31,
+    legal: 32,
+    expired: 33,
+    aborted: 34,
+    cancelled: 35,
 };
 
 const decodeState = (s) => {
@@ -48,14 +53,18 @@ const decodeAction = (a) => {
         [action.create]: '创建',
         [action.update]: '更新数据',
         [action.remove]: '删除',
-        [action.grant]: '授予',
-        [action.revoke]: '回收',
-        [action.abandon]: '放弃',
+
+        [action.authGrant]: '授予权限',
+        [action.authRevoke]: '回收权限',
+        [action.authAbandon]: '放弃权限',
+        [action.authExpire]: '过期权限',
+        [action.authConfirm]: '确认权限',
+
         [action.confirmToPay]: '确认下单',
         [action.pay]: '支付成功',
         [action.cancel]: '取消支付',
         [action.abort]: '中止',
-        [action.expire]: '过期',
+        [action.payExpire]: '过期',
         [action.makePaid]: '自动支付',
     };
 
