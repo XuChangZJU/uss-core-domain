@@ -10,7 +10,7 @@ const action = {
     authGrant: 11,
     authRevoke: 12,
     authAbandon: 13,
-    authExpire: 14,
+    // authExpire: 14,
     authConfirm: 15,
 
     confirmToPay: 31,       // 确认下单
@@ -30,11 +30,17 @@ const relation = {
 const state = {
     init: 1,
 
+    // pay相关的
     unpaid: 31,
     legal: 32,
-    expired: 33,
     aborted: 34,
     cancelled: 35,
+
+    // userEntityGrant相关的
+    confirmed: 1001,
+
+    // 公共的
+    expired: 100001,
 };
 
 const decodeState = (s) => {
@@ -57,7 +63,7 @@ const decodeAction = (a) => {
         [action.authGrant]: '授予权限',
         [action.authRevoke]: '回收权限',
         [action.authAbandon]: '放弃权限',
-        [action.authExpire]: '过期权限',
+        // [action.authExpire]: '过期权限',
         [action.authConfirm]: '确认权限',
 
         [action.confirmToPay]: '确认下单',

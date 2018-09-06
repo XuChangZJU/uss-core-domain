@@ -7,14 +7,23 @@ const { Roles } = require('../constants/roleConstant2');
 const { state: State } = require('../constants/action');
 
 // 状态允许更新矩阵
-const StateTransformMatrix = {
+const StateTransformMatrixForPaid = {
     [Roles.ROOT.name]: {
-        [State.init]: [State.paid, State.cancelled],
-        [State.unpaid]: [ State.paid, State.cancelled],
-        [State.paid]: [ State.expired, State.aborted],
+        [State.init]: [State.unpaid, State.cancelled, State.expired],
+        [State.unpaid]: [ State.legal, State.aborted, State.expired],
     },
 };
 
+const StateTransformMatrixForGrant = {
+    [Roles.ROOT.name]: {
+        [State.init]: [State.expired],
+    },
+    [Roles.LOGGEDIN.name]: {
+        [State.init]: [State.confirmed],
+    }
+}
+
 module.exports = {
-    StateTransformMatrix,
+    StateTransformMatrixForPaid,
+    StateTransformMatrixForGrant
 };
