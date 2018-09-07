@@ -57,11 +57,16 @@ const decodeAction = (a) => {
     const s = STRINGS[a] || decodeCommonAction(a);
 
     return s;
-}
+};
+
+const grantMatrix = {
+    [relation.owner]: [relation.grantee],
+};
 
 module.exports = {
     relation,
     decodeRelation,
     action,
     decodeAction,
+    grantMatrix,
 };
