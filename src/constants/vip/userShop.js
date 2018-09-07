@@ -15,7 +15,7 @@ const relation = Object.assign({
 
 const decodeRelation = (t) => {
     const STRING = {
-        [relation.keeper]: !'店长',
+        [relation.keeper]: '店长',
         [relation.worker]: '店员',
     };
 
