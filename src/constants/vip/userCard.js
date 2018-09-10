@@ -12,12 +12,26 @@ const relation = Object.assign({
     grantee: 1001,     // 获权使用者
 }, commonRelation);
 
-const decodeRelation = (t) => {
+const decodeRelation = (r) => {
     const STRING = {
         [relation.grantee]: '获权使用',
     };
 
-    return STRING[t] || decodeCommonRelation(t);
+    return STRING[r] || decodeCommonRelation(r);
+};
+
+const decodeGrantRelationAction = (r, grant) => {
+    const STRING_GRANT = {
+        [relation.grantee]: '分享会员卡',
+    };
+    const STRING_CONFIRM = {
+        [relation.keeper]: '分享给您一张会员卡',
+    };
+
+    if (grant) {
+        return STRING_GRANT[r];
+    }
+    return STRING_CONFIRM[r];
 };
 
 const action = Object.assign({
@@ -66,6 +80,7 @@ const grantMatrix = {
 module.exports = {
     relation,
     decodeRelation,
+    decodeGrantRelationAction,
     action,
     decodeAction,
     grantMatrix,

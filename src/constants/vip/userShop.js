@@ -13,13 +13,29 @@ const relation = Object.assign({
     worker: 1002,      // 店员
 }, commonRelation);
 
-const decodeRelation = (t) => {
+const decodeRelation = (r) => {
     const STRING = {
         [relation.keeper]: '店长',
         [relation.worker]: '店员',
     };
 
-    return STRING[t] || decodeCommonRelation(t);
+    return STRING[r] || decodeCommonRelation(r);
+};
+
+const decodeGrantRelationAction = (r, grant) => {
+    const STRING_GRANT = {
+        [relation.keeper]: '邀请店长',
+        [relation.worker]: '邀请店员',
+    };
+    const STRING_CONFIRM = {
+        [relation.keeper]: '邀请您成为店长',
+        [relation.worker]: '邀请您成为店员',
+    };
+
+    if (grant) {
+        return STRING_GRANT[r];
+    }
+    return STRING_CONFIRM[r];
 };
 
 const action = Object.assign({
@@ -42,6 +58,7 @@ const grantMatrix = {
 module.exports = {
     relation,
     decodeRelation,
+    decodeGrantRelationAction,
     action,
     decodeAction,
     grantMatrix,
