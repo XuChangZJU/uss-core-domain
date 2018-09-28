@@ -13,6 +13,8 @@ const action = {
     // authExpire: 14,
     authConfirm: 15,
 
+    transfer: 21,           // 转让
+
     confirmToPay: 31,       // 确认下单
     cancel: 32,             // 取消
     pay: 33,                  // 支付
@@ -24,6 +26,7 @@ const action = {
 // 全局抽象的关系 0-1000
 const relation = {
     owner: 1,
+    grantee: 11,        // 被授权者（泛义上的)
 };
 
 // 全局抽象的状态 0 - 100
@@ -69,6 +72,8 @@ const decodeAction = (a) => {
         // [action.authExpire]: '过期权限',
         [action.authConfirm]: '确认权限',
 
+        [action.transfer]: '转让',
+
         [action.confirmToPay]: '确认下单',
         [action.pay]: '支付成功',
         [action.cancel]: '取消支付',
@@ -83,6 +88,7 @@ const decodeAction = (a) => {
 const decodeRelation = (r) => {
     const STRINGS = {
         [relation.owner]: '所有者',
+        [relation.grantee]: '被授权者',
     };
     return STRINGS[r];
 }

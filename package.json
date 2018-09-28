@@ -1,7 +1,7 @@
 {
   "name": "uss-core-domain",
-  "version": "3.0.0",
-  "description": "basic library of martian",
+  "version": "4.0.0",
+  "description": "basic library of Xc",
   "files": [
     "src/*",
     "lib/*"
