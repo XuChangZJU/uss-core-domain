@@ -23,7 +23,7 @@ const decodeGrantRelationAction = (r, grant) => {
         [relation.grantee]: '分享会员卡',
     };
     const STRING_CONFIRM = {
-        [relation.owner]: '分享给您一张会员卡',
+        [relation.grantee]: '分享给您一张会员卡',
     };
 
     if (grant) {
