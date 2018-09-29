@@ -15,12 +15,14 @@ const decodeRelation = decodeCommonRelation;
 const action = Object.assign({
     send: 1001,
     answer: 1002,
+    answer2: 1003,
 }, commonAction);
 
 const decodeAction = (a) => {
     const STRINGS = {
         [action.send]: '发起请求',
-        [action.answer]: '已响应',
+        [action.answer]: '响应',
+        [action.answer2]: '代响应',
     };
 
     const s = STRINGS[a] || decodeCommonAction(a);
