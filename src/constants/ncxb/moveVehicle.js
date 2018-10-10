@@ -29,11 +29,13 @@ const decodeState = (s) => {
 const StateTransformMatrix = {
     [Roles.LOGGEDIN.name]: {
         [state.init]: [ state.send ],
-        [state.answered]: [ state.end ],
+        [state.answered]: [ state.end, state.send ],
+        [state.answered2]: [ state.end, state.send ],
     },
     [Roles.VehicleManager.name]: {
         [state.send]: [ state.answered],
         [state.answered]: [ state.end ],
+        [state.answered2]: [ state.end ],
     },
     [Roles.MoveVehicleOperator.name]: {
         [state.send]: [ state.answered2],
