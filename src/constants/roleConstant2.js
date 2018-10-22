@@ -10,6 +10,7 @@ const Roles = {
     },
     ROOT: {
         name: 'root',
+        id: 1,
     },
     LOGGEDIN: {
         name: 'loggedIn',
@@ -17,6 +18,7 @@ const Roles = {
     },
     CLIENT: {
         name: 'client',
+        id: 2,
     },
 
 
@@ -31,12 +33,14 @@ const Roles = {
     },
     SKUMANAGER: {
         name: 'skuManager',
+        id: 1001,
     },
 
 
     // for 文章管理
     EDITOR: {
         name: 'editor',
+        id: 1101,
     },
 
 

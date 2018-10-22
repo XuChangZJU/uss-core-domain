@@ -14,6 +14,11 @@ const Roles = {
     },
     MoveVehicleOperator: {
         name: 'MoveVehicleOperator',
+        id: 10001,
+    },
+    MpCodeManufacture: {
+        name: 'MpCodeManufacture',
+        id: 10002,
     }
 };
 
