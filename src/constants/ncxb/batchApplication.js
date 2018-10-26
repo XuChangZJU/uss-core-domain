@@ -12,6 +12,7 @@ const state = assign({
     // legal
     ready: 10001,
     end: 10101,
+    reserved: 11001,
 }, CommonState);
 
 const decodeState = (s) => {
@@ -22,6 +23,7 @@ const decodeState = (s) => {
         [state.ready]: '生产中',
         [state.end]: '已完成',
         [state.expired]: '已过期',
+        [state.reserved]: '后台生成',
     };
 
     return STRING[s];
