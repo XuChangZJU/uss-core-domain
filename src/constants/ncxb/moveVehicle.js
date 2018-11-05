@@ -12,6 +12,7 @@ const state = {
     failed: 201,
     end: 1001,
     end2: 1002,
+    end3: 1003,
 };
 
 const decodeState = (s) => {
@@ -23,6 +24,7 @@ const decodeState = (s) => {
         [state.failed]: '已失败',
         [state.end]: '已结束',
         [state.end2]: '已被动结束',
+        [state.end3]: '未成功就结束',
     };
     return STRING[s];
 };
@@ -40,10 +42,11 @@ const StateTransformMatrix = {
         [state.send]: [ state.answered2, state.failed ],
     },
     [Roles.ROOT.name]: {
-        [state.init]: [ state.end2 ],
+        [state.init]: [ state.end3 ],
         [state.send]: [ state.end2, state.failed ],
         [state.answered]: [ state.end2 ],
         [state.answered2]: [ state.end2 ],
+        [state.failed]: [ state.end3 ],
     },
 };
 
