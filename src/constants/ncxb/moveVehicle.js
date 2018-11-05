@@ -47,8 +47,28 @@ const StateTransformMatrix = {
     },
 };
 
+const event = {
+    autoCallMaster: 1,
+    callMasterYourself: 2,
+    noticeFirstTime: 3,
+    noticeSecondTime: 4,
+};
+
+const decodeEvent = (e) => {
+    const STRING = {
+        [event.autoCallMaster]: '正为您拨打车主电话',
+        [event.callMasterYourself]: '请手动拨打车主电话',
+        [event.noticeFirstTime]: '正在为您第一次通知车主',
+        [event.noticeSecondTime]: '正在为您第二次通知车主',
+    };
+
+    return STRING[e];
+}
+
 module.exports = {
     state,
     decodeState,
     StateTransformMatrix,
+    event,
+    decodeEvent,
 };
