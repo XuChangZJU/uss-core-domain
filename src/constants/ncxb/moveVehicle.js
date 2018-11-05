@@ -36,10 +36,11 @@ const StateTransformMatrix = {
         [state.send]: [ state.answered],
         [state.answered]: [ state.end, state.send ],
         [state.answered2]: [ state.end, state.send ],
-        [state.failed]: [ state.send ],
+        [state.failed]: [ state.send, state.answered ],
     },
     [Roles.MoveVehicleOperator.name]: {
-        [state.send]: [ state.answered2, state.failed ],
+        [state.send]: [ state.answered2 ],
+        [state.failed]: [ state.answered2 ]
     },
     [Roles.ROOT.name]: {
         [state.init]: [ state.end3 ],
