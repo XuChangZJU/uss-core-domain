@@ -42,21 +42,27 @@ const decodeState = (s) =>{
 };
 
 const type = {
-    coupon: 6,              // 平台红包
-    weChatProOrder: 13,     //  微信商城订单
-    bonus: 18,              // 推广奖金
-    goods: 20,               // 货款
-    couponRefund: 30,       // 红包退款
+    coupon: 6,                          // 平台红包
+    weChatProOrder: 13,                //  微信商城订单
+    buyServiceOfPlatform: 14,          // 用户购买平台服务
+    bonus: 18,                          // 推广奖金
+    goods: 20,                          // 货款
+    settlement: 22,                     // 与提供平台服务的商家结算
+    couponRefund: 30,                 // 红包退款
+    refund: 101,                       // 退款
 };
 
 
 const decodeType = (t) =>{
     const STRING_OF_TYPES = {
         [type.coupon]: "红包",
-        [type.weChatProOrder]: "订单",
+        [type.weChatProOrder]: "商城订单",
+        [type.buyServiceOfPlatform]: '订单',
         [type.bonus]: '奖金',
         [type.goods]: '货款',
+        [type.settlement]: '结算款',
         [type.couponRefund]: '红包退款',
+        [type.refund]: '退款',
     };
     return STRING_OF_TYPES[t];
 };
