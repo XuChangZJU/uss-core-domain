@@ -120,6 +120,30 @@ function compareVersion(version1, version2) {
     return 0;
 }
 
+const action = {
+    unlock: 1,
+    confirm: 2,
+    dfu: 3,
+    getKeyWord: 4,
+    confirmOutdate: 5,
+    clearBonds: 6,
+    resetConstantKeyWord: 7,
+    syncTime: 8,
+};
+
+const decodeAction = (a) => {
+    const STRING = {
+        [action.unlock]: '开门',
+        [action.confirm]: '确认',
+        [action.dfu]: 'DFU',
+        [action.getKeyWord]: '获取钥匙原语',
+        [action.confirmOutdate]: '确认过期',
+        [action.clearBonds]: '清除bonds',
+        [action.resetConstantKeyWord]: '重置持久性钥匙原语',
+        [action.syncTime]: '同步时间',
+    }
+};
+
 module.exports = {
     wordType,
     event,
@@ -129,4 +153,6 @@ module.exports = {
     category,
     decodeCategory,
     compareVersion,
+    action,
+    decodeAction,
 };
