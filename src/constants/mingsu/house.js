@@ -4,6 +4,8 @@
 const {
     category,
     decodeCategory,
+    state,
+    decodeState,
 } = require('../ble/houseConstant');
 
 const membership = {
@@ -25,6 +27,8 @@ const decodeMembership = (ms) => {
 module.exports = {
     category,
     decodeCategory,
+    state,
+    decodeState,
     membership,
     decodeMembership,
 };

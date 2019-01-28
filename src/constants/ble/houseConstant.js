@@ -25,7 +25,27 @@ const decodeCategory = (c) => {
     return CATEGORY_MATRIX[c];
 };
 
+const state = {
+    uncompleted: 1,
+    online: 11,
+    offline: 12,
+    offlineByPlatform: 101,
+};
+
+const decodeState = (s) => {
+    const STRING = {
+        [state.uncompleted]: '未完成',
+        [state.online]: '已上线',
+        [state.offline]: '已下线',
+        [state.offlineByPlatform]: '被下线'
+    };
+
+    return STRING[s];
+}
+
 module.exports = {
     category,
     decodeCategory,
+    state,
+    decodeState,
 };
