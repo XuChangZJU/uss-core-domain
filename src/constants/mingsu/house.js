@@ -6,17 +6,17 @@ const {
     decodeCategory,
 } = require('../ble/houseConstant');
 
-const memberShip = {
+const membership = {
     level0: 1,
     level1: 10,
     level2: 100,
 };
 
-const decodeMemberShip = (ms) => {
+const decodeMembership = (ms) => {
     const STRING = {
-        [memberShip.level0]: '普通民宿',
-        [memberShip.level1]: 'B级会员民宿',
-        [memberShip.level2]: 'B级共享会员',
+        [membership.level0]: '普通民宿',
+        [membership.level1]: 'B级会员民宿',
+        [membership.level2]: 'B级共享会员',
     };
 
     return STRING[ms];
@@ -25,6 +25,6 @@ const decodeMemberShip = (ms) => {
 module.exports = {
     category,
     decodeCategory,
-    memberShip,
-    decodeMemberShip,
+    membership,
+    decodeMembership,
 };
