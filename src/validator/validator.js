@@ -30,6 +30,10 @@ function isNickname(str) {
     return str && typeof str === "string" && str.trim().length > 0 && str.length < 16;
 }
 
+function isSizedCaptcha(text, size) {
+    return typeof text === 'string' && text.length === size && !isNan(parseInt(text, 10));
+}
+
 function isDigital(digital) {
     return /^\d{6,12}$/.test(digital);
 }
@@ -43,4 +47,5 @@ module.exports = {
     isUrl,
     isNickname,
     isDigital,
+    isSizedCaptcha,
 };
