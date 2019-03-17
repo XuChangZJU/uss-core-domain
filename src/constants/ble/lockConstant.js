@@ -129,6 +129,9 @@ const action = {
     clearBonds: 6,
     resetConstantKeyWord: 7,
     syncTime: 8,
+
+    create: 101,
+    drop: 102,
 };
 
 const decodeAction = (a) => {
@@ -141,7 +144,10 @@ const decodeAction = (a) => {
         [action.clearBonds]: '清除bonds',
         [action.resetConstantKeyWord]: '重置持久性钥匙原语',
         [action.syncTime]: '同步时间',
-    }
+        [action.create]: '创建',
+        [action.drop]: '删除',
+    };
+    return STRING[a];
 };
 
 module.exports = {
