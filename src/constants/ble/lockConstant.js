@@ -132,6 +132,9 @@ const action = {
 
     create: 101,
     drop: 102,
+
+    dfuSuccess: 201,
+    dfuFailure: 202,
 };
 
 const decodeAction = (a) => {
@@ -146,6 +149,8 @@ const decodeAction = (a) => {
         [action.syncTime]: '同步时间',
         [action.create]: '创建',
         [action.drop]: '删除',
+        [action.dfuSuccess]: 'DFU成功',
+        [action.dfuFailure]: 'DFU失败',
     };
     return STRING[a];
 };
