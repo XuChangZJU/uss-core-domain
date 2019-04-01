@@ -3,7 +3,7 @@
  */
 "use strict";
 const assert = require('assert');
-const { timerType: TimerType } = require('../constants/bleConstant');
+const { timerType: TimerType } = require('../constants/ble/lockConstant');
 
 function encodeTime(time, timerType) {
     let time2;
