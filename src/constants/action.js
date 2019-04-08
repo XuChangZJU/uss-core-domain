@@ -39,12 +39,15 @@ const state = {
     aborted: 34,
     cancelled: 35,
     cantPaid: 36,           // 当unpaid的支付因为某个实体的状态暂时无法支付时可以使用这个状态储存一下（比如相关产品没有库存了）
+    refunding: 51,
+    refunded: 52,
 
     // userEntityGrant相关的
     confirmed: 1001,
 
     // 公共的
     expired: 100001,
+    completed: 100002,
 };
 
 const decodeState = (s) => {
@@ -56,9 +59,12 @@ const decodeState = (s) => {
         [state.aborted]: '中止的',
         [state.cancelled]: '取消的',
         [state.cantPaid]: '暂不可支付的',
+        [state.refunding]: '退款中',
+        [state.refunded]: '已退款',
 
         [state.confirmed]: '确认的',
         [state.expired]: '过期的',
+        [state.completed]: '已完成',
     }
 };
 

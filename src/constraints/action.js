@@ -10,7 +10,9 @@ const { state: State } = require('../constants/action');
 const StateTransformMatrixForPaid = {
     [Roles.ROOT.name]: {
         [State.init]: [State.unpaid, State.cancelled, State.expired],
-        [State.unpaid]: [ State.legal, State.aborted, State.expired],
+        [State.unpaid]: [ State.legal, State.aborted, State.expired, State.cantPaid],
+        [State.legal]: [State.refunding, State.completed],
+        [State.refunding]: [State.refunded],
     },
 };
 
