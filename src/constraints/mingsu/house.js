@@ -12,7 +12,7 @@ const isAvailable = (house) => {
 };
 
 const AvailableStatesWhere = {
-    $eq: State.online,
+    state: State.online,
 };
 
 // 状态允许更新矩阵
