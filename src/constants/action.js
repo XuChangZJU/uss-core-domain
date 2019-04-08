@@ -38,6 +38,7 @@ const state = {
     legal: 32,
     aborted: 34,
     cancelled: 35,
+    cantPaid: 36,           // 当unpaid的支付因为某个实体的状态暂时无法支付时可以使用这个状态储存一下（比如相关产品没有库存了）
 
     // userEntityGrant相关的
     confirmed: 1001,
@@ -54,6 +55,7 @@ const decodeState = (s) => {
         [state.legal]: '生效的',
         [state.aborted]: '中止的',
         [state.cancelled]: '取消的',
+        [state.cantPaid]: '暂不可支付的',
 
         [state.confirmed]: '确认的',
         [state.expired]: '过期的',
