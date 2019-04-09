@@ -19,7 +19,7 @@ const action = {
     cancel: 32,             // 取消
     pay: 33,                  // 支付
     abort: 34,                  // 中断
-    payExpire: 35,             // 过期
+    expire: 35,             // 过期
     makePaid: 36,           // 管理员确认支付
     abandon: 37,            // 卖方主动中止
 };
@@ -88,7 +88,7 @@ const decodeAction = (a) => {
         [action.pay]: '支付成功',
         [action.cancel]: '取消支付',
         [action.abort]: '中止',
-        [action.payExpire]: '过期',
+        [action.expire]: '过期',
         [action.makePaid]: '自动支付',
     };
 
