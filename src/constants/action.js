@@ -22,6 +22,7 @@ const action = {
     expire: 35,             // 过期
     makePaid: 36,           // 管理员确认支付
     abandon: 37,            // 卖方主动中止
+    complete: 38,           // 完成
 };
 
 // 全局抽象的关系 0-1000
@@ -90,6 +91,7 @@ const decodeAction = (a) => {
         [action.abort]: '中止',
         [action.expire]: '过期',
         [action.makePaid]: '自动支付',
+        [action.complete]: '完成',
     };
 
     return STRINGS[a];
