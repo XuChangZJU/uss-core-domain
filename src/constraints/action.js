@@ -13,6 +13,7 @@ const StateTransformMatrixForPaid = {
         [State.unpaid]: [ State.legal, State.aborted, State.expired, State.cantPaid],
         [State.legal]: [State.refunding, State.completed, State.abandoned],
         [State.refunding]: [State.refunded],
+        [State.cantPaid]: [State.paid, State.expired],
     },
 };
 
