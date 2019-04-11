@@ -101,6 +101,34 @@ const decodeRelation = (r) => {
     return STRING[r] || decodeCommonRelation(r);
 };
 
+const BookingInfoEnum = {
+    Price: 1.00,                // 价格
+    FactorOfHoliday: {      // 节假日上涨幅度
+        fifteen: 15,
+        twenty: 20,
+        fifty: 50,
+        double: 100,
+        doubleAndHalf: 150,
+        triple: 200,
+    },
+    RefundForFree: {        // 免费提前退款（距离入住日的天数）
+        oneDay: 1,
+        twoDays: 2,
+        ThreeDays: 3,
+        oneWeek: 7,
+    },
+    RefundPenalty: {        // 超过限制后的退款政策
+        fifteen: 15,
+        twenty: 20,
+        fifty: 50,
+        all: 100,
+    },
+    AllowRefundAfterCheckIn: true,       // 入住提前退订仍然退款（退款自商议）
+    AllowRefundForHoliday: true,        // 节假日的预订仍然可提前退款
+    CheckInTime:  14,                       // 入住时间
+    CheckOutTime: 12,                       // 退订时间
+};
+
 module.exports = {
     category,
     decodeCategory,
@@ -112,4 +140,5 @@ module.exports = {
     decodeAction,
     relation,
     decodeRelation,
+    BookingInfoEnum,
 };
