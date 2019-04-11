@@ -91,7 +91,7 @@ const decodeAction = (a) => {
 
 const relation = Object.assign({
     cleaner: 1001,          // 清洁人员
-});
+}, CommonRelation);
 
 const decodeRelation = (r) => {
     const STRING = {
