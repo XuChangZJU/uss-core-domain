@@ -1,4 +1,4 @@
-/**
+    /**
  * Created by Administrator on 2018/8/31.
  * 本文件定义是公共有支付对象的状态变化矩阵
  */
@@ -11,8 +11,9 @@ const StateTransformMatrixForPaid = {
     [Roles.ROOT.name]: {
         [State.init]: [State.unpaid, State.cancelled, State.expired],
         [State.unpaid]: [ State.legal, State.aborted, State.expired, State.cantPaid],
-        [State.legal]: [State.refunding, State.completed],
+        [State.legal]: [State.refunding, State.completed, State.abandoned],
         [State.refunding]: [State.refunded],
+        [State.cantPaid]: [State.paid, State.expired],
     },
 };
 

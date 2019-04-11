@@ -19,8 +19,10 @@ const action = {
     cancel: 32,             // 取消
     pay: 33,                  // 支付
     abort: 34,                  // 中断
-    payExpire: 35,             // 过期
+    expire: 35,             // 过期
     makePaid: 36,           // 管理员确认支付
+    abandon: 37,            // 卖方主动中止
+    complete: 38,           // 完成
 };
 
 // 全局抽象的关系 0-1000
@@ -36,9 +38,10 @@ const state = {
     // pay相关的
     unpaid: 31,
     legal: 32,
-    aborted: 34,
-    cancelled: 35,
+    aborted: 34,            // 支付后取消
+    cancelled: 35,          // 未支付放弃
     cantPaid: 36,           // 当unpaid的支付因为某个实体的状态暂时无法支付时可以使用这个状态储存一下（比如相关产品没有库存了）
+    abandoned: 37,          // 卖方中止（pay在外部结算）
     refunding: 51,
     refunded: 52,
 
@@ -86,8 +89,9 @@ const decodeAction = (a) => {
         [action.pay]: '支付成功',
         [action.cancel]: '取消支付',
         [action.abort]: '中止',
-        [action.payExpire]: '过期',
+        [action.expire]: '过期',
         [action.makePaid]: '自动支付',
+        [action.complete]: '完成',
     };
 
     return STRINGS[a];
