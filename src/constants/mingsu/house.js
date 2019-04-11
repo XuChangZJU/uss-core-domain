@@ -6,6 +6,8 @@ const {
     decodeState: decodeCommonState,
     action: CommonAction,
     decodeAction: decodeCommonAction,
+    relation: CommonRelation,
+    decodeRelation: decodeCommonRelation,
 } = require('../action');
 
 
@@ -87,6 +89,18 @@ const decodeAction = (a) => {
     return decodeCommonAction(a) || STRING[a];
 };
 
+const relation = Object.assign({
+    cleaner: 1001,          // 清洁人员
+});
+
+const decodeRelation = (r) => {
+    const STRING = {
+        [relation.cleaner]: '清洁人员',
+    };
+
+    return STRING[r] || decodeCommonRelation(r);
+};
+
 module.exports = {
     category,
     decodeCategory,
@@ -96,4 +110,6 @@ module.exports = {
     decodeMembership,
     action,
     decodeAction,
+    relation,
+    decodeRelation,
 };
