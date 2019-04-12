@@ -68,7 +68,9 @@ const decodeState = (s) => {
         [state.confirmed]: '确认的',
         [state.expired]: '过期的',
         [state.completed]: '已完成',
-    }
+    };
+
+    return STRINGS[s];
 };
 
 const decodeAction = (a) => {
@@ -103,7 +105,7 @@ const decodeRelation = (r) => {
         [relation.grantee]: '被授权者',
     };
     return STRINGS[r];
-}
+};
 
 module.exports = {
     action,

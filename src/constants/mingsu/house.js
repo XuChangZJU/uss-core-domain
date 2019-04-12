@@ -51,7 +51,7 @@ const decodeState = (s) => {
     };
 
     return decodeCommonState(s) || STRING[s];
-}
+};
 
 const membership = {
     level0: 1,
@@ -104,6 +104,7 @@ const decodeRelation = (r) => {
 const BookingInfoEnum = {
     Price: 1.00,                // 价格
     FactorOfHoliday: {      // 节假日上涨幅度
+        none: 0,
         fifteen: 15,
         twenty: 20,
         fifty: 50,
@@ -112,9 +113,10 @@ const BookingInfoEnum = {
         triple: 200,
     },
     RefundForFree: {        // 免费提前退款（距离入住日的天数）
+        none: 0,
         oneDay: 1,
         twoDays: 2,
-        ThreeDays: 3,
+        threeDays: 3,
         oneWeek: 7,
     },
     RefundPenalty: {        // 超过限制后的退款政策
