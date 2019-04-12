@@ -4,6 +4,8 @@
 const {
     state,
     decodeState,
+    action,
+    decodeAction,
 } = require('../action');
 
 const category = {
@@ -21,6 +23,8 @@ const decodeCategory = (c) => {
 }
 
 module.exports = {
+    action,
+    decodeAction,
     state,
     decodeState,
     category,
