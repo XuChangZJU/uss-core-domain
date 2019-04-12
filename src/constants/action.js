@@ -64,6 +64,7 @@ const decodeState = (s) => {
         [state.cantPaid]: '暂不可支付的',
         [state.refunding]: '退款中',
         [state.refunded]: '已退款',
+        [state.abandoned]: '已取消',
 
         [state.confirmed]: '确认的',
         [state.expired]: '过期的',
@@ -94,6 +95,7 @@ const decodeAction = (a) => {
         [action.expire]: '过期',
         [action.makePaid]: '自动支付',
         [action.complete]: '完成',
+        [action.abandon]: '取消',
     };
 
     return STRINGS[a];
