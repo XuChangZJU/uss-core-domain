@@ -102,16 +102,11 @@ const decodeRelation = (r) => {
 };
 
 const BookingInfoEnum = {
-    Price: 1.00,                // 价格
-    FactorOfHoliday: {      // 节假日上涨幅度
-        none: 0,
-        fifteen: 15,
-        twenty: 20,
-        fifty: 50,
-        double: 100,
-        doubleAndHalf: 150,
-        triple: 200,
-    },
+    PriceOffSeason: 1.00,                // 淡季价格
+    PriceOffSeasonWeekend: 1.00,        // 淡季周末价格
+    PriceHighSeason: 1.00,                  // 旺季价格
+    PriceHighSeasonWeekend: 1.00,           // 旺季周末价格
+    DiscountToPlatform: 15,                 // 平台折扣
     RefundForFree: {        // 免费提前退款（距离入住日的天数）
         none: 0,
         oneDay: 1,
