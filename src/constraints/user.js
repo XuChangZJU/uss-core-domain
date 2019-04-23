@@ -31,6 +31,9 @@ const AttrsUpdateMatrix = {
         country: [
             State.normal
         ],
+        password: [
+            State.normal
+        ],
     },
 };
 
