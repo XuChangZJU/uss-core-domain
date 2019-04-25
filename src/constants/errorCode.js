@@ -12,6 +12,7 @@ module.exports = {
 	errorSuspiciousAccessToken: {code: 992, message: "可疑的访问令牌"},
 	errorNoAccessRight: {code: 991, message: "该用户没有访问此数据的权限"},
 	errorUnexistedApiMethod: {code: 990, message: "请求了不支持的http方法"},
+	errorNeedLoginMobile: {code: 989, message: '用户必须先登录手机号码'},
 
 	errorIllegalFileUrl:{code:986,message:'非法的URL'},
 	errorInvalidAccessTokenOrRefreshToken: {code:985, message:'访问令牌或刷新令牌非法'},
