@@ -2,7 +2,7 @@
  * Created by Administrator on 2018/4/17.
  */
 const values = require('lodash/values');
-const { state: State, type: Type } = require('../../constants/mingsu/house');
+const { state: State, type: Type, spec: Spec } = require('../../constants/mingsu/house');
 const { Roles } = require('../../constants/roleConstant2');
 
 const { checkConditionThrowString } = require('../../utils/checkValidUtils');
@@ -29,9 +29,9 @@ const StateTransformMatrix = {
 
 function checkValid(house, assertFn) {
     const assertFn2 = assertFn || checkConditionThrowString;
-    const { state, phone, bookingInfo } = house;
+    const { state, phone, bookingInfo, spec } = house;
 
-    assertFn2(house.state, `house must have state`);
+    assertFn2(values(State).includes(house.state), `house must have state`);
     if (phone) {
         if (!isPhone(phone) && !isMobile(phone)) {
             throw ErrorCode.createErrorByCode(ErrorCode.errorLegalBodyError, '电话只能是XXXX-XXXXXXXX或者手机号格式');
@@ -39,6 +39,9 @@ function checkValid(house, assertFn) {
     }
     if (bookingInfo) {
         assertFn2(typeof bookingInfo === 'object');
+    }
+    if (spec) {
+        assertFn2(values(Spec).includes(spec), 'invalid spec');
     }
 
     return;
