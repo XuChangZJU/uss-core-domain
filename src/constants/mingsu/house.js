@@ -101,6 +101,15 @@ const decodeRelation = (r) => {
     return STRING[r] || decodeCommonRelation(r);
 };
 
+const spec = {
+    single: '单人间',
+    double: '双人间',
+    bigBed: '大床房',
+    childish: '儿童房',
+    zotheca: '套房',
+    distinctive: '特色房',
+};
+
 const BookingInfoEnum = {
     PriceOffSeason: 1.00,                // 淡季价格
     PriceOffSeasonWeekend: 1.00,        // 淡季周末价格
@@ -141,4 +150,5 @@ module.exports = {
     relation,
     decodeRelation,
     BookingInfoEnum,
+    spec,
 };
