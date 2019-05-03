@@ -38,6 +38,9 @@ function isDigital(digital) {
     return /^\d{6,12}$/.test(digital);
 }
 
+function isPhone(phone) {
+    return /^((\d{11})|^((\d{7,8})|(\d{4}|\d{3})-(\d{7,8})|(\d{4}|\d{3})-(\d{7,8})-(\d{4}|\d{3}|\d{2}|\d{1})|(\d{7,8})-(\d{4}|\d{3}|\d{2}|\d{1}))$)/.test(phone);
+}
 
 module.exports = {
     isMobile,
@@ -48,4 +51,5 @@ module.exports = {
     isNickname,
     isDigital,
     isSizedCaptcha,
+    isPhone,
 };

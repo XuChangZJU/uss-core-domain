@@ -6,6 +6,8 @@ const { state: State, type: Type } = require('../../constants/mingsu/house');
 const { Roles } = require('../../constants/roleConstant2');
 
 const { checkConditionThrowString } = require('../../utils/checkValidUtils');
+const { isPhone, isMobile } = require('../../validator/validator');
+const ErrorCode = require('../../constants/errorCode');
 
 const isAvailable = (house) => {
     return (house.state === State.online);
@@ -25,9 +27,28 @@ const StateTransformMatrix = {
     },
 };
 
+function checkValid(house, assertFn) {
+    const assertFn2 = assertFn || checkConditionThrowString;
+    const { state, phone, bookingInfo } = house;
+
+    assertFn2(house.state, `house must have state`);
+    if (phone) {
+        if (!isPhone(phone) && !isMobile(phone)) {
+            throw ErrorCode.createErrorByCode(ErrorCode.errorLegalBodyError, '电话只能是XXXX-XXXXXXXX或者手机号格式');
+        }
+    }
+    if (bookingInfo) {
+        assertFn2(typeof bookingInfo === 'object');
+    }
+
+    return;
+}
+
 
 module.exports = {
     isAvailable,
     AvailableStatesWhere,
     StateTransformMatrix,
+    checkValid,
+
 };
