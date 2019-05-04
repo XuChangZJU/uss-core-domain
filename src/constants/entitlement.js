@@ -26,19 +26,19 @@ const decodeBeginsAt = (sa) => {
 const getBeginsAt = (sa) => {
     switch (sa) {
         case beginsAt.tomorrow: {
-            return moment().add(1, 'd').startOf('day');
+            return moment().add(1, 'd').startOf('day').valueOf();
         }
         case beginsAt.now: {
-            return moment();
+            return moment().valueOf();
         }
         case beginsAt.nextWeek: {
-            return moment().add(1, 'w').startOf('week');
+            return moment().add(1, 'w').startOf('week').valueOf();
         }
         case beginsAt.nextMonth: {
-            return moment().add(1, 'm').startOf('month');
+            return moment().add(1, 'm').startOf('month').valueOf();
         }
         case beginsAt.nextYear: {
-            return moment().add(1, 'y').startOf('year');
+            return moment().add(1, 'y').startOf('year').valueOf();
         }
         default: {
             throw new Error('illegal beginsAt');
