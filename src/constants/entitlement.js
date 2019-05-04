@@ -63,6 +63,11 @@ const period = {
     fourYears: 304,
     fiveYears: 305,
     tenYears: 310,
+    oneTime: 401,
+    twoTimes: 402,
+    threeTimes: 403,
+    fourTimes: 404,
+    fiveTimes: 405,
     unlimited: 1001,
 };
 
@@ -84,6 +89,11 @@ const decodePeriod = (p) => {
         [period.fourYears]: '四年',
         [period.fiveYears]: '五年',
         [period.tenYears]: '十年',
+        [period.oneTime]: '一年',
+        [period.twoTimes]: '两年',
+        [period.threeTimes]: '三年',
+        [period.fourTimes]: '四年',
+        [period.fiveTimes]: '五年',
         [period.unlimited]: '不限制',
     };
 
