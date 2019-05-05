@@ -381,6 +381,26 @@ function destructInterval(startsAt, endsAt, CONFIG = { HighSeasonStart: { month:
     return RESULT;
 }
 
+function isLegalStartsAtAndEndsAt({startsAt, endsAt}) {
+    if (typeof startsAt !== 'number' || typeof endsAt !== 'number') {
+        throw new Error(`startsAt:[${startsAt}]和endsAt:[${endsAt}]格式不对`);
+    }
+    if (startsAt > endsAt) {
+        throw new Error(`startsAt:[${startsAt}]大于endsAt:[${endsAt}]`);
+    }
+    const ms = moment(startsAt);
+    const me = moment(endsAt);
+
+    if (ms.endOf('day').valueOf() < Date.now()) {
+        throw new Error(`startsAt:[${startsAt}]小于今天`);
+    }
+    if (ms.endOf('day').valueOf() === me.endOf('day').valueOf()) {
+        throw new Error(`startsAt:[${startsAt}]和endsAt:[${endsAt}]在同一天`);
+    }
+    return true;
+}
+
 module.exports = {
     destructInterval,
+    isLegalStartsAtAndEndsAt,
 };
