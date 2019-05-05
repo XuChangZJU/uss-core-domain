@@ -192,9 +192,9 @@ function destructOnHolidays(start, end, holidays) {
  * 本函数传入左闭右开的日期区间，返回结果是分析这个区间内的淡旺季、节假日和周末
  * @param startsAt
  * @param endsAt
- * @param CONFIG: { HighSeasonStart: { month: 5, day: 1}, HighSeasonEnd: { month: 10, day: 15 } }
+ * @param CONFIG: { HighSeasonStart: { month: 5, day: 1}, HighSeasonEnd: { month: 10, day: 16 } }
  */
-function destructInterval(startsAt, endsAt, CONFIG = { HighSeasonStart: { month: 5, day: 1}, HighSeasonEnd: { month: 10, day: 15 }}) {
+function destructInterval(startsAt, endsAt, CONFIG = { HighSeasonStart: { month: 5, day: 1}, HighSeasonEnd: { month: 10, day: 16 }}) {
     /* 简化情况，最多算300天
      */
     assert(endsAt - startsAt < 300 * 24 * 3600 * 1000);
@@ -234,7 +234,7 @@ function destructInterval(startsAt, endsAt, CONFIG = { HighSeasonStart: { month:
             OffSeasonPart.push([hsE1, yE1]);
         }
 
-        const holidays = CONFIG.getHolidays(mStart.year());
+        const holidays = getHolidays(mStart.year());
         OffSeasonPart.forEach(
             (ele) => {
                 const { HolidayPart, NotHolidayPart } = destructOnHolidays(ele[0], ele[1], holidays);
@@ -284,7 +284,7 @@ function destructInterval(startsAt, endsAt, CONFIG = { HighSeasonStart: { month:
             OffSeasonPart2.push([hsE2, mEnd]);
         }
 
-        const holidays2 = CONFIG.getHolidays(mEnd.year());
+        const holidays2 = getHolidays(mEnd.year());
         OffSeasonPart2.forEach(
             (ele) => {
                 const { HolidayPart, NotHolidayPart } = destructOnHolidays(ele[0], ele[1], holidays2);
@@ -348,7 +348,7 @@ function destructInterval(startsAt, endsAt, CONFIG = { HighSeasonStart: { month:
             OffSeasonPart.push(mStart, mEnd);
         }
 
-        const holidays = CONFIG.getHolidays(mStart.year());
+        const holidays = getHolidays(mStart.year());
         OffSeasonPart.forEach(
             (ele) => {
                 const { HolidayPart, NotHolidayPart } = destructOnHolidays(ele[0], ele[1], holidays);
