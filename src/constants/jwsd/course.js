@@ -20,7 +20,24 @@ const decodeAction = (a) => {
     return STRING[a] || decodeCommonAction(a);
 };
 
+const category = {
+    english: 1,
+    science: 2,
+    math: 3,
+};
+
+const decodeCategory = (c) => {
+    const STRING = {
+        [category.english]: '英语',
+        [category.science]: '科学',
+        [category.math]: '数学',
+    };
+    return STRING[c];
+};
+
 module.exports = {
     action,
     decodeAction,
+    category,
+    decodeCategory,
 };

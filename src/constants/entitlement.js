@@ -26,19 +26,19 @@ const decodeBeginsAt = (sa) => {
 const getBeginsAt = (sa) => {
     switch (sa) {
         case beginsAt.tomorrow: {
-            return moment().add(1, 'd').startOf('day');
+            return moment().add(1, 'd').startOf('day').valueOf();
         }
         case beginsAt.now: {
-            return moment();
+            return moment().valueOf();
         }
         case beginsAt.nextWeek: {
-            return moment().add(1, 'w').startOf('week');
+            return moment().add(1, 'w').startOf('week').valueOf();
         }
         case beginsAt.nextMonth: {
-            return moment().add(1, 'm').startOf('month');
+            return moment().add(1, 'm').startOf('month').valueOf();
         }
         case beginsAt.nextYear: {
-            return moment().add(1, 'y').startOf('year');
+            return moment().add(1, 'y').startOf('year').valueOf();
         }
         default: {
             throw new Error('illegal beginsAt');
@@ -63,6 +63,11 @@ const period = {
     fourYears: 304,
     fiveYears: 305,
     tenYears: 310,
+    oneTime: 401,
+    twoTimes: 402,
+    threeTimes: 403,
+    fourTimes: 404,
+    fiveTimes: 405,
     unlimited: 1001,
 };
 
@@ -84,6 +89,11 @@ const decodePeriod = (p) => {
         [period.fourYears]: '四年',
         [period.fiveYears]: '五年',
         [period.tenYears]: '十年',
+        [period.oneTime]: '一年',
+        [period.twoTimes]: '两年',
+        [period.threeTimes]: '三年',
+        [period.fourTimes]: '四年',
+        [period.fiveTimes]: '五年',
         [period.unlimited]: '不限制',
     };
 
