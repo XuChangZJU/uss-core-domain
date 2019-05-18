@@ -32,11 +32,11 @@ function checkValid(house, assertFn) {
     const { state, phone, bookingInfo, spec } = house;
 
     assertFn2(values(State).includes(house.state), `house must have state`);
-    if (phone) {
-        if (!isPhone(phone) && !isMobile(phone)) {
-            throw ErrorCode.createErrorByCode(ErrorCode.errorLegalBodyError, '电话只能是XXXX-XXXXXXXX或者手机号格式');
-        }
-    }
+    // if (phone) {
+    //     if (!isPhone(phone) && !isMobile(phone)) {
+    //         throw ErrorCode.createErrorByCode(ErrorCode.errorLegalBodyError, '电话只能是XXXX-XXXXXXXX或者手机号格式');
+    //     }
+    // }
     if (bookingInfo) {
         assertFn2(typeof bookingInfo === 'object');
     }
