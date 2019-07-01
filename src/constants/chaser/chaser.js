@@ -51,10 +51,22 @@ const ChargeCode = {
     busy: 62,
 };
 
+const CommandState = {
+    init: 1,        // 未发送
+    send: 2,        // 已发送
+    done: 3,        // 已处理掉
+};
+
+const populateCommand = (type, command, data) => {
+    // todo 这里要发送的数据应该以什么形式传递，还要看luat的socket的格式
+};
+
 module.exports = {
     Type,
     Command,
     ErrorCode,
     ChargeSource,
     ChargeCode,
+    CommandState,
+    populateCommand,
 };
