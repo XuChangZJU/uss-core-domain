@@ -20,6 +20,7 @@ const decodeState = (s) => {
 };
 
 const action = {
+    initialize: 101,
     normalize: 111,
     disconnect: 121,
     connect: 122,
@@ -32,6 +33,7 @@ const action = {
 
 const decodeAction = (s) => {
     const S = {
+        [action.initialize]: '初始化',
         [action.normalize]: '正常化',
         [action.disconnect]: '断连',
         [action.connect]: '连接',
