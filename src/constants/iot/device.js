@@ -21,26 +21,28 @@ const decodeState = (s) => {
 
 const action = {
     initialize: 101,
+    update: 102,
     normalize: 111,
     disconnect: 121,
     connect: 122,
     disable: 131,
     enable: 132,
     loadGoods: 151,
-    giveAgency: 161,
+    grantSubAgency: 161,
     returnBack: 162,
 };
 
 const decodeAction = (s) => {
     const S = {
         [action.initialize]: '初始化',
+        [action.update]: '更新',
         [action.normalize]: '正常化',
         [action.disconnect]: '断连',
         [action.connect]: '连接',
         [action.disable]: '禁用',
         [action.enable]: '启用',
         [action.loadGoods]: '增加货物',
-        [action.giveAgency]: '授予下级',
+        [action.grantSubAgency]: '授予下级',
         [action.returnBack]: '归还上级',
     };
     return S[s];
