@@ -21,6 +21,7 @@ function destructRequestOptions(req) {
 	}
 	result.user = req._user;
 	result.clientInfo = req._clientInfo;
+	result.appName = req._appName;
 
 	let ip = req.headers['x-forwarded-for'] || req.headers['x-real-ip'] || req.ip || '';
 	if (ip.indexOf(',') !== -1) {
