@@ -19,7 +19,24 @@ const decodeState = (s) => {
     return S[s];
 };
 
+const channel = {
+    zhzn: 1,
+    gsm: 2,
+    ble: 3,
+};
+
+const decodeChannel = (c) => {
+    const S = {
+        [channel.zhzn]: 'ZHZN',
+        [channel.gsm]: '2G',
+        [channel.ble]: '蓝牙',
+    };
+    return S[c];
+}
+
 module.exports = {
     state,
     decodeState,
+    channel,
+    decodeChannel,
 };
