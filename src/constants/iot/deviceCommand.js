@@ -5,7 +5,7 @@ const state = {
     init: 1,
     send: 5,
     success: 10,
-    failure: 21,
+    failure: 100,
     givenUp: 101,
     overTime: 102,
 };
