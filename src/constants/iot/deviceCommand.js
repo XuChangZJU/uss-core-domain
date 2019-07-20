@@ -3,7 +3,7 @@
  */
 const state = {
     init: 1,
-    send: 5,
+    sent: 5,
     success: 10,
     failure: 100,
     givenUp: 101,
@@ -13,7 +13,7 @@ const state = {
 const decodeState = (s) => {
     const S = {
         [state.init]: '初建',
-        [state.send]: '发送',
+        [state.sent]: '发送',
         [state.success]: '成功',
         [state.failure]: '失败',
         [state.givenUp]: '放弃',
