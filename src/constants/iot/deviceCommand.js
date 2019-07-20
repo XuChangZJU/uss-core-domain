@@ -3,17 +3,21 @@
  */
 const state = {
     init: 1,
+    send: 5,
     success: 10,
     failure: 21,
     givenUp: 101,
+    overTime: 102,
 };
 
 const decodeState = (s) => {
     const S = {
         [state.init]: '初建',
+        [state.send]: '发送',
         [state.success]: '成功',
         [state.failure]: '失败',
         [state.givenUp]: '放弃',
+        [state.overTime]: '超时',
     };
 
     return S[s];
