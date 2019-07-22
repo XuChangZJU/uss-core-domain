@@ -36,11 +36,29 @@ const decodeChannel = (c) => {
         [channel.ble]: '蓝牙',
     };
     return S[c];
-}
+};
+
+const command = {
+    work: 1,
+    stopWork: 2,
+    queryResult: 100,
+};
+
+const decodeCommand = (c) => {
+    const S = {
+        [command.work]: '工作',
+        [command.stopWork]: '取消工作',
+        [queryResult]: '查询结果',
+    };
+
+    return S[c];
+};
 
 module.exports = {
     state,
     decodeState,
     channel,
     decodeChannel,
+    command,
+    decodeCommand,
 };
