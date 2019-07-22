@@ -56,6 +56,27 @@ const decodeCommand = (c) => {
     return S[c];
 };
 
+const event = {
+    workSuccess: 1,
+    workFailure: 2,
+
+    stopSuccess: 11,
+    stopFailure: 12,
+
+    querySuccess: 101,
+};
+
+const decodeEvent = (e) => {
+    const S = {
+        [event.workSuccess]: '工作成功',
+        [event.workFailure]: '工作失败',
+        [event.stopSuccess]: '停止成功',
+        [event.stopFailure]: '停止失败',
+        [event.querySuccess]: '查询成功',
+    };
+    return S[e];
+};
+
 module.exports = {
     state,
     decodeState,
@@ -63,4 +84,6 @@ module.exports = {
     decodeChannel,
     command,
     decodeCommand,
+    event,
+    decodeEvent,
 };
