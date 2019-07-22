@@ -43,14 +43,14 @@ const decodeChannel = (c) => {
 const command = {
     work: 1,
     stopWork: 2,
-    queryResult: 100,
+    checkResult: 100,
 };
 
 const decodeCommand = (c) => {
     const S = {
         [command.work]: '工作',
         [command.stopWork]: '取消工作',
-        [queryResult]: '查询结果',
+        [command.checkResult]: '查询结果',
     };
 
     return S[c];
