@@ -20,6 +20,10 @@ const Roles = {
         name: 'client',
         id: 2,
     },
+    SYSTEM_MANAGER: {
+        name: 'systemManager',
+        id: 10,
+    },
 
 
     //  for 交易系统
