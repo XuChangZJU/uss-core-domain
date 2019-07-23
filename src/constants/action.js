@@ -45,6 +45,7 @@ const state = {
     refunding: 51,
     refunded: 52,
 
+
     // userEntityGrant相关的
     confirmed: 1001,
 
