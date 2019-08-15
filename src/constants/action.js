@@ -23,6 +23,9 @@ const action = {
     makePaid: 36,           // 管理员确认支付
     abandon: 37,            // 卖方主动中止
     complete: 38,           // 完成
+
+    send: 61,
+    reject: 62,
 };
 
 // 全局抽象的关系 0-1000
@@ -45,6 +48,10 @@ const state = {
     refunding: 51,
     refunded: 52,
 
+    // 发货相关
+    sent: 61,               // 已发货
+    rejected: 62,           // 拒签收
+
 
     // userEntityGrant相关的
     confirmed: 1001,
@@ -66,6 +73,9 @@ const decodeState = (s) => {
         [state.refunding]: '退款中',
         [state.refunded]: '已退款',
         [state.abandoned]: '已取消',
+
+        [state.sent]: '已发货',
+        [state.rejected]: '已拒收',
 
         [state.confirmed]: '确认的',
         [state.expired]: '过期的',
@@ -97,6 +107,9 @@ const decodeAction = (a) => {
         [action.makePaid]: '自动支付',
         [action.complete]: '完成',
         [action.abandon]: '取消',
+
+        [action.send]: '发货',
+        [action.reject]: '拒收',
     };
 
     return STRINGS[a];
