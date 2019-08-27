@@ -23,6 +23,7 @@ function destructRequestOptions(req) {
 	result.clientInfo = req._clientInfo;
 	result.appName = req._appName;
 	result.systemId = req._systemId;
+	result.tokenId = req._tokenId;
 
 	let ip = req.headers['x-forwarded-for'] || req.headers['x-real-ip'] || req.ip || '';
 	if (ip.indexOf(',') !== -1) {
