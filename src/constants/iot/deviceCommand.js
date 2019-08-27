@@ -66,7 +66,8 @@ const event = {
     stopFailure: 12,
 
     querySuccess: 101,
-    report: 102,
+    queryFailure: 102,
+    report: 103,
 
     deviceConnected: 201,
     deviceDisconnected: 202,
@@ -80,6 +81,7 @@ const decodeEvent = (e) => {
         [event.stopSuccess]: '停止成功',
         [event.stopFailure]: '停止失败',
         [event.querySuccess]: '查询成功',
+        [event.queryFailure]: '查询失败',
         [event.report]: '汇报数据',
         [event.deviceConnected]: '重新连接',
         [event.deviceDisconnected]: '失去连接',
