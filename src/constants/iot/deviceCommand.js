@@ -40,11 +40,10 @@ const decodeChannel = (c) => {
     return S[c];
 };
 
-const command = {
+// 这里已经废弃，合并到utils/deviceProtocol/def里去了
+/*const command = {
     work: 1,
     stopWork: 2,
-    getSpec: 11,
-    initialize: 12,
 
     checkResult: 100,
 };
@@ -53,13 +52,11 @@ const decodeCommand = (c) => {
     const S = {
         [command.work]: '工作',
         [command.stopWork]: '取消工作',
-        [command.getSpec]: '获取规格',
-        [command.initialize]: '初始化',
         [command.checkResult]: '查询结果',
     };
 
     return S[c];
-};
+};*/
 
 const event = {
     workSuccess: 1,
@@ -69,9 +66,11 @@ const event = {
     stopFailure: 12,
 
     querySuccess: 101,
+    report: 102,
 
     deviceConnected: 201,
     deviceDisconnected: 202,
+    deviceConnectedByBle: 203,
 };
 
 const decodeEvent = (e) => {
@@ -81,8 +80,10 @@ const decodeEvent = (e) => {
         [event.stopSuccess]: '停止成功',
         [event.stopFailure]: '停止失败',
         [event.querySuccess]: '查询成功',
+        [event.report]: '汇报数据',
         [event.deviceConnected]: '重新连接',
         [event.deviceDisconnected]: '失去连接',
+        [event.deviceConnectedByBle]: '通过蓝牙连接',
     };
     return S[e];
 };
@@ -92,8 +93,8 @@ module.exports = {
     decodeState,
     channel,
     decodeChannel,
-    command,
-    decodeCommand,
+    // command,
+    // decodeCommand,
     event,
     decodeEvent,
 };
