@@ -43,6 +43,9 @@ const decodeChannel = (c) => {
 const command = {
     work: 1,
     stopWork: 2,
+    getSpec: 11,
+    initialize: 12,
+
     checkResult: 100,
 };
 
@@ -50,6 +53,8 @@ const decodeCommand = (c) => {
     const S = {
         [command.work]: '工作',
         [command.stopWork]: '取消工作',
+        [command.getSpec]: '获取规格',
+        [command.initialize]: '初始化',
         [command.checkResult]: '查询结果',
     };
 
