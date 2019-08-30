@@ -19,7 +19,7 @@ const StateTransformMatrixForPaid = {
     [Roles.LOGGEDIN.name]: {
         [State.init]: [State.unpaid, State.cancelled],
         [State.unpaid]: [State.cancelled],
-        [State.legal]: [State.aborted, State.aborting],
+        [State.legal]: [State.aborted, State.aborting, State.abandoned, State.abandoning],
     }
 };
 
