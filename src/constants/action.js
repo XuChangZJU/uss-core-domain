@@ -23,6 +23,10 @@ const action = {
     makePaid: 36,           // 管理员确认支付
     abandon: 37,            // 卖方主动中止
     complete: 38,           // 完成
+    abort2: 39,             // 中止（异步）
+    abandon2: 40,           // 卖方主动中止（异步）
+    abort2Success: 41,       // 异步中止成功
+    abandon2Success: 42,     // 异步中止成功
 
     send: 61,
     reject: 62,
@@ -45,6 +49,10 @@ const state = {
     cancelled: 35,          // 未支付放弃
     cantPaid: 36,           // 当unpaid的支付因为某个实体的状态暂时无法支付时可以使用这个状态储存一下（比如相关产品没有库存了）
     abandoned: 37,          // 卖方中止（pay在外部结算）
+
+    aborting: 38,
+    abandoning: 39,
+
     refunding: 51,
     refunded: 52,
 
@@ -73,6 +81,9 @@ const decodeState = (s) => {
         [state.refunding]: '退款中',
         [state.refunded]: '已退款',
         [state.abandoned]: '已取消',
+
+        [state.aborting]: '正在中止',
+        [state.abandoning]: '正在取消',
 
         [state.sent]: '已发货',
         [state.rejected]: '已拒收',
@@ -107,6 +118,7 @@ const decodeAction = (a) => {
         [action.makePaid]: '自动支付',
         [action.complete]: '完成',
         [action.abandon]: '取消',
+
 
         [action.send]: '发货',
         [action.reject]: '拒收',
