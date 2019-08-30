@@ -11,10 +11,16 @@ const StateTransformMatrixForPaid = {
     [Roles.ROOT.name]: {
         [State.init]: [State.unpaid, State.cancelled, State.expired],
         [State.unpaid]: [ State.legal, State.cancelled, State.expired, State.cantPaid],
-        [State.legal]: [State.refunding, State.completed, State.aborted, State.abandoned],
-        [State.refunding]: [State.refunded],
-        [State.cantPaid]: [State.paid, State.expired],
+        [State.legal]: [State.completed, State.aborted, State.abandoned, State.aborting, State.abandoning],
+        [State.aborting]: [State.aborted, State.completed],
+        [State.abandoning]: [State.abandoned, State.completed],
+        [State.cantPaid]: [State.legal, State.expired],
     },
+    [Roles.LOGGEDIN.name]: {
+        [State.init]: [State.unpaid, State.cancelled],
+        [State.unpaid]: [State.cancelled],
+        [State.legal]: [State.aborted, State.aborting],
+    }
 };
 
 const StateTransformMatrixForGrant = {
