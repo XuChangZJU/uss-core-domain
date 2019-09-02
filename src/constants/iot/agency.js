@@ -2,6 +2,22 @@
  * Created by Administrator on 2019/7/8.
  */
 const { action: CommonAction, decodeAction: decodeCommonAction } = require('../action');
+
+const action = Object.assign({}, CommonAction, {
+    setAgencySkuPrice: 101,
+});
+
+
+const decodeAction = (a) => {
+    const S = {
+        [action.setAgencySkuPrice]: '设置进货价格',
+    };
+
+    return S[a] || decodeCommonAction(a);
+};
+
+
+
 const category = {
     personal: 1,
     enterprise: 2,
@@ -20,6 +36,6 @@ const decodeCategory = (c) => {
 module.exports = {
     category,
     decodeCategory,
-    action: CommonAction,
-    decodeAction: decodeCommonAction,
+    action,
+    decodeAction,
 };
