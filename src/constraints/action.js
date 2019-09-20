@@ -15,11 +15,13 @@ const StateTransformMatrixForPaid = {
         [State.aborting]: [State.aborted, State.completed],
         [State.abandoning]: [State.abandoned, State.completed],
         [State.cantPaid]: [State.legal, State.expired],
+        [State.sent]:[State.completed],
     },
     [Roles.LOGGEDIN.name]: {
         [State.init]: [State.unpaid, State.cancelled],
         [State.unpaid]: [State.cancelled],
-        [State.legal]: [State.aborted, State.aborting, State.abandoned, State.abandoning],
+        [State.legal]: [State.aborted, State.aborting, State.abandoned, State.abandoning, State.sent],
+        [State.sent]: [State.completed, State.rejected],
     }
 };
 
