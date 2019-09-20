@@ -9,9 +9,9 @@ const MATRIX = {
     agency: {
         [AgencyAction.create]: {
             // visible: 'always',           /*** always: 长显示，none: 不显示 *//
-            auth: [
+            auths: [
                 {
-                    '#role': Roles.EDITOR,
+                    '#roleNames': [Roles.EDITOR.name],
                 },
                 {
                     '#relation': {
@@ -30,7 +30,7 @@ const MATRIX = {
             ]
         },
         [AgencyAction.setAgencySkuPrice]: {
-            auth: [
+            auths: [
                 {
                     '#relation': {
                         attr: 'parentId',
