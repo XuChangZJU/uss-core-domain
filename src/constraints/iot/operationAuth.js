@@ -27,6 +27,7 @@ const MATRIX = {
                             if (!user.mobile) {
                                 return ErrorCode.createErrorByCode(ErrorCode.errorNeedLoginMobile, '请先登录您的手机号码');
                             }
+                            return true;
                         },
                     },
                 }
