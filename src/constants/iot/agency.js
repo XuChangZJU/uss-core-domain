@@ -1,7 +1,12 @@
 /**
  * Created by Administrator on 2019/7/8.
  */
-const { action: CommonAction, decodeAction: decodeCommonAction } = require('../action');
+const {
+    action: CommonAction,
+    decodeAction: decodeCommonAction,
+    relation,
+    decodeRelation,
+} = require('../action');
 
 const action = Object.assign({}, CommonAction, {
     setAgencySkuPrice: 101,
@@ -38,4 +43,6 @@ module.exports = {
     decodeCategory,
     action,
     decodeAction,
+    relation,
+    decodeRelation,
 };
