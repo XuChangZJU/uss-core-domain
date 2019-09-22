@@ -1,6 +1,11 @@
 /**
  * Created by Xc on 2019/6/30.
  */
+const {
+    relation,
+    decodeRelation,
+} = require('../action');
+
 const state = {
     init: 1,
     normal: 10,
@@ -49,6 +54,8 @@ const decodeAction = (s) => {
 };
 
 module.exports = {
+    relation,
+    decodeRelation,
     state,
     decodeState,
     action,
