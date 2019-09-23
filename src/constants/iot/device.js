@@ -2,6 +2,8 @@
  * Created by Xc on 2019/6/30.
  */
 const {
+    action: CommonAction,
+    decodeAction: decodeCommonAction,
     relation,
     decodeRelation,
 } = require('../action');
@@ -35,6 +37,7 @@ const action = {
     loadGoods: 151,
     grantSubAgency: 161,
     returnBack: 162,
+    remove: CommonAction.remove,
 };
 
 const decodeAction = (s) => {
@@ -50,7 +53,7 @@ const decodeAction = (s) => {
         [action.grantSubAgency]: '授予下级',
         [action.returnBack]: '归还上级',
     };
-    return S[s];
+    return S[s] || decodeCommonAction(s);
 };
 
 module.exports = {
