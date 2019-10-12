@@ -120,6 +120,10 @@ const decodeAction = (a) => {
         [action.makePaid]: '自动支付',
         [action.complete]: '完成',
         [action.abandon]: '取消',
+        [action.abort2]: '异步中止',
+        [action.abort2Success]: '异步中止成功',
+        [action.abandon2]: '异步取消',
+        [action.abandon2Success]: '异步取消成功',
 
 
         [action.send]: '发货',
