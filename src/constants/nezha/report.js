@@ -76,6 +76,20 @@ const decodeRelation = (r) => {
     return TEXT[r] || decodeCommonRelation(r);
 };
 
+
+const STATE_TRAN_MATRIX = {
+    [action.confirm]: [state.init, state.delivered],
+    [action.accept]: [state.delivered, state.accepted],
+    [action.deliverAgain]: [state.accepted, state.delivered],
+    [action.giveUp]: [state.accepted, state.delivered],
+    [action.startRepairing]: [state.accepted, state.inRepairing],
+    [action.endRepairing]: [state.inRepairing, state.done],
+    [action.askForRestart]: [state.done, state.askingForRestart],
+    [action.restart]: [state.askingForRestart, state.inRedoing],
+    [action.surrender]: [[state.inRepairing, state.inRedoing], state.failed],
+    [action.expire]: [state.init, state.expired],
+};
+
 module.exports = {
     action,
     decodeAction,
@@ -84,4 +98,5 @@ module.exports = {
     CONSTANTS,
     relation,
     decodeRelation,
+    STATE_TRAN_MATRIX,
 };

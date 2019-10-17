@@ -5,9 +5,10 @@ const { Roles } = require('../../constants/roleConstant2');
 const { action: AgencyAction, relation: AgencyRelation } = require('../../constants/iot/agency');
 const { action: DeviceAction, relation: DeviceRelation } = require('../../constants/iot/device');
 const ErrorCode = require('../../constants/iot/errorCode');
+const { COMMON_STATE_TRAN_MATRIX } = require('../../constants/action');
 
 
-const MATRIX = {
+const AUTH_MATRIX = {
     agency: {
         [AgencyAction.createSub]: {
             auths: [
@@ -156,7 +157,12 @@ const MATRIX = {
     },
 };
 
+const STATE_TRAN_MATRIX = {
+    trade: COMMON_STATE_TRAN_MATRIX,
+};
+
 module.exports = {
-    MATRIX,
+    AUTH_MATRIX,
+    // STATE_TRAN_MATRIX,           // 新架构下还没测过，先用老的代码，不放开
 };
 

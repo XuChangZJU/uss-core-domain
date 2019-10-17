@@ -150,6 +150,30 @@ const decodeRelation = (r) => {
     return STRINGS[r];
 };
 
+
+const COMMON_STATE_TRAN_MATRIX = {
+    [action.confirmToPay]: [state.init, state.unpaid],
+    [action.pay]: [state.unpaid, state.legal],
+    [action.makePaid]: [[state.init, state.unpaid], state.legal],
+    [action.cancel]: [[state.init, state.unpaid], state.cancelled],
+    [action.abort]: [state.legal, state.aborted],
+    [action.abort2]: [state.legal, state.aborting],
+    [action.abort2Success]: [state.aborting, state.aborted],
+    [action.abandon]: [state.legal, state.abandoned],
+    [action.abandon2]: [state.legal, state.abandoning],
+    [action.abandon2Success]: [state.abandoning, state.abandoned],
+    [action.complete]: [state.legal, state.completed],
+    [action.surrender]: [[state.inRepairing, state.inRedoing], state.failed],
+    [action.expire]: [[state.init, state.unpaid], state.expired],
+    [action.send]: [state.legal, state.sent],
+    [action.confirm]: [[state.applied, state.sent], state.confirmed],
+    [action.complete]: [[state.legal, state.confirmed], state.completed],
+
+    [action.apply]: [state.init, state.applied],
+    [action.reject]: [[state.sent, state.applied], state.rejected],
+    [action.agree]: [state.applied, state.agreed],
+};
+
 module.exports = {
     action,
     decodeAction,
@@ -157,4 +181,6 @@ module.exports = {
     decodeState,
     relation,
     decodeRelation,
+
+    COMMON_STATE_TRAN_MATRIX,
 };

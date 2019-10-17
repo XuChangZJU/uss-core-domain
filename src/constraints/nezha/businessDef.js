@@ -2,9 +2,16 @@
  * Created by Administrator on 2019/9/20.
  */
 const { Roles } = require('../../constants/roleConstant2');
-const { action: ReportAction, relation: ReportRelation, state: ReportState, CONSTANTS: REPORT_CONSTANTS } = require('../../constants/nezha/report');
+const {
+    action: ReportAction,
+    relation: ReportRelation,
+    state: ReportState,
+    CONSTANTS: REPORT_CONSTANTS,
+    STATE_TRAN_MATRIX: REPORT_STATE_TRAN_MATRIX,
+} = require('../../constants/nezha/report');
 const ErrorCode = require('../../constants/nezha/errorCode');
 
+const { COMMON_STATE_TRAN_MATRIX } = require('../../constants/action');
 
 function genOwnerOrFactoryOwner(checkRow) {
     return {
@@ -53,7 +60,7 @@ function genWorker(checkRow) {
     };
 }
 
-const MATRIX = {
+const AUTH_MATRIX = {
     report: {
         [ReportAction.confirm]: {
             auths: [
@@ -123,7 +130,13 @@ const MATRIX = {
     },
 };
 
+const STATE_TRAN_MATRIX = {
+    certificate: COMMON_STATE_TRAN_MATRIX,
+    report: REPORT_STATE_TRAN_MATRIX,
+};
+
 module.exports = {
-    MATRIX,
+    AUTH_MATRIX,
+    STATE_TRAN_MATRIX,
 };
 
