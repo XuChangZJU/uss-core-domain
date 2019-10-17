@@ -29,8 +29,10 @@ const action = {
     abort2Success: 41,       // 异步中止成功
     abandon2Success: 42,     // 异步中止成功
 
-    send: 61,
-    reject: 62,
+    send: 61,                 // 发货（后续状态sent）
+    reject: 62,              // 拒绝（后续状态rejected）
+    apply: 65,              // 申请（后续状态applied）
+    agree: 66,              // 同意（后续状态agreed
 };
 
 // 全局抽象的关系 0-1000
@@ -60,6 +62,9 @@ const   state = {
     // 发货相关
     sent: 61,               // 已发货
     rejected: 62,           // 拒签收
+    // 申请相关
+    applied: 65,
+    agreed: 66,
 
 
     // userEntityGrant相关的
@@ -88,6 +93,8 @@ const decodeState = (s) => {
 
         [state.sent]: '已发货',
         [state.rejected]: '已拒收',
+        [State.applied]: '已申请',
+        [State.agreed]: '已同意',
 
         [state.confirmed]: '确认的',
         [state.expired]: '过期的',
@@ -128,6 +135,8 @@ const decodeAction = (a) => {
 
         [action.send]: '发货',
         [action.reject]: '拒收',
+        [action.apply]: '申请',
+        [action.agree]: '同意',
     };
 
     return STRINGS[a];
