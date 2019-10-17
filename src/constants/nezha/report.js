@@ -6,9 +6,11 @@ const {
     state: commonState,
     decodeAction: decodeCommonAction,
     decodeState: decodeCommonState,
+    relation: commonRelation,
+    decodeRelation: decodeCommonRelation,
 } = require('../action');
 
-const state = {
+const state = Object.assign({}, commonState, {
     delivered: 101,
     accepted: 105,
     inRepairing: 111,
@@ -16,7 +18,7 @@ const state = {
     askingForRestart: 121,
     inRedoing: 125,
     failed: 131,
-};
+});
 
 const decodeState = (s) => {
     const TEXT = {
@@ -31,7 +33,7 @@ const decodeState = (s) => {
     return TEXT[s] || decodeCommonState(s);
 };
 
-const action = {
+const action = Object.assign({}, commonAction, {
     confirm: 101,
     accept: 105,
     deliverAgain: 106,
@@ -41,7 +43,7 @@ const action = {
     askForRestart: 121,
     restart: 125,
     surrender: 131,
-};
+});
 
 const decodeAction = (a) => {
     const TEXT = {
@@ -58,9 +60,28 @@ const decodeAction = (a) => {
     return TEXT[s] || decodeCommonAction(s);
 };
 
+const CONSTANTS = {
+    allowDeliverGap: 30 * 60 * 1000,        // 半小时后才允许主动再次派单
+};
+
+const relation = Object.assign({}, commonRelation, {
+    worker: 101,        // 技工
+});
+
+const decodeRelation = (r) => {
+    const TEXT = {
+        [relation.worker]: '技工',
+    };
+
+    return TEXT[r] || decodeCommonRelation(r);
+};
+
 module.exports = {
     action,
     decodeAction,
     state,
     decodeState,
+    CONSTANTS,
+    relation,
+    decodeRelation,
 };
