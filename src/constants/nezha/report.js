@@ -18,6 +18,7 @@ const state = Object.assign({}, commonState, {
     askingForRestart: 121,
     inRedoing: 125,
     failed: 131,
+    cancelled2: 132,
 });
 
 const decodeState = (s) => {
@@ -29,6 +30,7 @@ const decodeState = (s) => {
         [state.askingForRestart]: '申请重修',
         [state.inRedoing]: '确认重修',
         [state.failed]: '维修失败',
+        [state.cancelled2]: '已取消',
     };
     return TEXT[s] || decodeCommonState(s);
 };
@@ -88,6 +90,7 @@ const STATE_TRAN_MATRIX = {
     [action.restart]: [state.askingForRestart, state.inRedoing],
     [action.surrender]: [[state.inRepairing, state.inRedoing], state.failed],
     [action.expire]: [state.init, state.expired],
+    [action.cancel]: [[state.init, state.expired], state.cancelled2],
 };
 
 module.exports = {
