@@ -31,6 +31,7 @@ module.exports = {
 
 	chargeExistsError: {code: 800, message: '已存在的缴纳形式'},
 	errorNeedToPay: {code: 801, message: '需要支付'},
+	errorNeedCharge: {code: 802, message: '需要充值'},
 
 	/*// Order相关error
 	errorOrderCouldNotPay: {code: 899, message: '该订单不可支付'},
