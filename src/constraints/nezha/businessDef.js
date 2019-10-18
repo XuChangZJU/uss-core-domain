@@ -46,7 +46,6 @@ function genWorker(checkRow) {
         auths: [
             {
                 '#relation': {              // 表示现有对象与user的关系
-                    attr: 'id',         // 这里的attr指对象（agency)中的属性，通过Schema反查找，如果没有则是指自身，即使用id属性
                     relations: [ReportRelation.worker],         // 如果没有relations，则任何关系都可以
                 },
                 '#data': [                 // 表示对现有对象或者用户的数据有要求，可以有多项，每项之前是AND的关系
