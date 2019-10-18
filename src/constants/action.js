@@ -93,8 +93,8 @@ const decodeState = (s) => {
 
         [state.sent]: '已发货',
         [state.rejected]: '已拒收',
-        [State.applied]: '已申请',
-        [State.agreed]: '已同意',
+        [state.applied]: '已申请',
+        [state.agreed]: '已同意',
 
         [state.confirmed]: '确认的',
         [state.expired]: '过期的',
@@ -163,7 +163,6 @@ const COMMON_STATE_TRAN_MATRIX = {
     [action.abandon2]: [state.legal, state.abandoning],
     [action.abandon2Success]: [state.abandoning, state.abandoned],
     [action.complete]: [state.legal, state.completed],
-    [action.surrender]: [[state.inRepairing, state.inRedoing], state.failed],
     [action.expire]: [[state.init, state.unpaid], state.expired],
     [action.send]: [state.legal, state.sent],
     [action.confirm]: [[state.applied, state.sent], state.confirmed],
