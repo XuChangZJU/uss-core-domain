@@ -101,13 +101,14 @@ const AUTH_MATRIX = {
             ]
         },
         [ReportAction.deliverAgain]: genOwnerOrFactoryOwner(({user, row}) => {
-            return row._createAt_ < Date.now() - REPORT_CONSTANTS.allowDeliverGap && row.state === ReportState.accepted;
+            // 前端 传入row时 因为解构 _createAt_ 变成了 createAt, 进行容错处理
+            return (row._createAt_ || row.createAt) < Date.now() - REPORT_CONSTANTS.allowDeliverGap && row.state === ReportState.accepted;
         }),
         [ReportAction.giveUp]: genWorker(({user, row}) => {
             return row.state === ReportState.accepted;
         }),
         [ReportAction.cancel]: genOwnerOrFactoryOwner(({user, row}) => {
-            return row._createAt_ < Date.now() - REPORT_CONSTANTS.allowDeliverGap && row.state === ReportState.accepted
+            return (row._createAt_ || row.createAt) < Date.now() - REPORT_CONSTANTS.allowDeliverGap && row.state === ReportState.accepted
                 || [ReportState.init, ReportState.delivered].includes(row.state);
         }),
         [ReportAction.startRepairing]: genWorker(({user, row}) => {
