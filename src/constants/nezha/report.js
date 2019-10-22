@@ -93,6 +93,43 @@ const STATE_TRAN_MATRIX = {
     [action.cancel]: [[state.init, state.delivered, state.accepted, state.expired], state.cancelled2],
 };
 
+const giveUpReason = [
+    '配件不足',
+    '距离太远',
+    '时间不对',
+    '没有把握',
+    '个人有急事',
+    '与工厂已协商，放弃维修',
+    '其它原因',
+];
+
+const deliverAgainReason = [
+    '联系不上对方',
+    '对方迟到太久',
+    '与技工已协商，换人维修',
+    '其它原因',
+];
+
+const cancelReason = [
+    '我只是测试一下',
+    '已经自己修好了',
+    '暂时不修理',
+    '其它原因',
+];
+
+const mediaType = {
+    'video': 1,
+    'image': 2,
+    'audio': 3,
+};
+
+const decodeMediaType = (m) => {
+    const TEXT = {
+        [mediaType.video]: '视频',
+        [mediaType.image]: ''
+    }
+}
+
 module.exports = {
     action,
     decodeAction,
@@ -102,4 +139,8 @@ module.exports = {
     relation,
     decodeRelation,
     STATE_TRAN_MATRIX,
+
+    giveUpReason,
+    deliverAgainReason,
+    cancelReason,
 };
