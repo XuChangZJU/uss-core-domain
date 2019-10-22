@@ -123,7 +123,7 @@ const AUTH_MATRIX = {
         [ReportAction.restart]:  genWorker(({user, row}) => {
             return row.state === ReportState.askingForRestart;
         }),
-        [ReportAction.surrender]: genOwnerOrFactoryOwner(({user, row}) => {
+        [ReportAction.surrender]: genWorker(({user, row}) => {
             return [ReportState.inRepairing, ReportState.inRedoing].includes(row.state);
         }),
     },
