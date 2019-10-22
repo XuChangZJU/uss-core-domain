@@ -126,9 +126,12 @@ const mediaType = {
 const decodeMediaType = (m) => {
     const TEXT = {
         [mediaType.video]: '视频',
-        [mediaType.image]: ''
-    }
-}
+        [mediaType.image]: '图片',
+        [mediaType.audio]: '音频',
+    };
+
+    return TEXT[m];
+};
 
 module.exports = {
     action,
@@ -143,4 +146,5 @@ module.exports = {
     giveUpReason,
     deliverAgainReason,
     cancelReason,
+    decodeMediaType,
 };
