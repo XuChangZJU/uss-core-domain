@@ -163,6 +163,6 @@ const STATE_TRAN_MATRIX = {
 
 module.exports = {
     AUTH_MATRIX,
-    // STATE_TRAN_MATRIX,           // 新架构下还没测过，先用老的代码，不放开
+    STATE_TRAN_MATRIX,           // 新架构下还没测过，先用老的代码，不放开
 };
 
