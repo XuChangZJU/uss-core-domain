@@ -147,4 +147,5 @@ module.exports = {
     deliverAgainReason,
     cancelReason,
     decodeMediaType,
+    mediaType,
 };
