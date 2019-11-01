@@ -112,7 +112,7 @@ const AUTH_MATRIX = {
                 || [ReportState.init, ReportState.delivered].includes(row.state);
         }),
         [ReportAction.startRepairing]: genWorker(({user, row}) => {
-            return [ReportState.accepted].includes(row.state);
+            return [ReportState.accepted, ReportState.inRedoing].includes(row.state);
         }),
         [ReportAction.endRepairing]: genOwnerOrFactoryOwner(({user, row}) => {
             return [ReportState.inRepairing].includes(row.state);
