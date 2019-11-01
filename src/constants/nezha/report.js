@@ -48,7 +48,7 @@ const action = Object.assign({}, commonAction, {
     surrender: 131,
 });
 
-const decodeAction = (a) => {
+const decodeAction = (s) => {
     const TEXT = {
         [action.confirm]: '确认',
         [action.accept]: '接单',
