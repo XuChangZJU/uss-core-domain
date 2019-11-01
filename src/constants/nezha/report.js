@@ -44,6 +44,7 @@ const action = Object.assign({}, commonAction, {
     endRepairing: 115,
     askForRestart: 121,
     restart: 125,
+    rejectRepairing: 126,
     surrender: 131,
 });
 
@@ -57,6 +58,7 @@ const decodeAction = (a) => {
         [action.endRepairing]: '结束维修',
         [action.askForRestart]: '申请返修',
         [action.restart]: '再次开始维修',
+        [action.rejectRepairing]: '拒绝维修',
         [action.surrender]: '放弃维修',
     };
     return TEXT[s] || decodeCommonAction(s);
@@ -84,13 +86,15 @@ const STATE_TRAN_MATRIX = {
     [action.accept]: [state.delivered, state.accepted],
     [action.deliverAgain]: [state.accepted, state.delivered],
     [action.giveUp]: [state.accepted, state.delivered],
-    [action.startRepairing]: [state.accepted, state.inRepairing],
-    [action.endRepairing]: [[state.inRepairing, state.inRedoing], state.done],
+    [action.startRepairing]: [[state.inRedoing, state.accepted], state.inRepairing],
+    [action.endRepairing]: [state.inRepairing, state.done],
     [action.askForRestart]: [state.done, state.askingForRestart],
     [action.restart]: [state.askingForRestart, state.inRedoing],
+    [action.rejectRepairing]: [state.askingForRestart, state.done],
     [action.surrender]: [[state.inRepairing, state.inRedoing], state.failed],
     [action.expire]: [state.init, state.expired],
     [action.cancel]: [[state.init, state.delivered, state.accepted, state.expired], state.cancelled2],
+    [action.complete]: [state.done, state.completed],
 };
 
 const giveUpReason = [

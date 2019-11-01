@@ -11,7 +11,7 @@ const {
 } = require('../../constants/nezha/report');
 const ErrorCode = require('../../constants/nezha/errorCode');
 
-const { COMMON_STATE_TRAN_MATRIX } = require('../../constants/action');
+const { COMMON_STATE_TRAN_MATRIX, action: CommonAction, relation: CommonRelation } = require('../../constants/action');
 
 function genOwnerOrFactoryOwner(checkRow) {
     return {
@@ -115,7 +115,10 @@ const AUTH_MATRIX = {
             return [ReportState.accepted].includes(row.state);
         }),
         [ReportAction.endRepairing]: genOwnerOrFactoryOwner(({user, row}) => {
-            return [ReportState.inRepairing, ReportState.inRedoing].includes(row.state);
+            return [ReportState.inRepairing].includes(row.state);
+        }),
+        [ReportAction.rejectRepairing]: genWorker(({user, row}) => {
+            return [ReportState.askingForRestart].includes(row.state);
         }),
         [ReportAction.askForRestart]: genOwnerOrFactoryOwner(({user, row}) => {
             return row.state === ReportState.done;
@@ -126,6 +129,35 @@ const AUTH_MATRIX = {
         [ReportAction.surrender]: genWorker(({user, row}) => {
             return [ReportState.inRepairing, ReportState.inRedoing].includes(row.state);
         }),
+    },
+    machine: {
+        [CommonAction.update]: {
+            auths: [
+                {
+                    '#relation': {
+                        attr: 'factory',
+                    },
+                },
+            ],
+        },
+    },
+    factory: {
+        [CommonAction.update]: {
+            auths: [
+                {
+                    '#relation': {},
+                },
+            ],
+        },
+        [CommonAction.transfer]: {
+            auths: [
+                {
+                    '#relation': {
+                        relations: [CommonAction.owner],
+                    },
+                },
+            ],
+        },
     },
 };
 
