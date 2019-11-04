@@ -55,7 +55,7 @@ const decodeAction = (s) => {
         [action.deliverAgain]: '再次派单',
         [action.giveUp]: '放弃接单',
         [action.startRepairing]: '开始维修',
-        [action.endRepairing]: '结束维修',
+        [action.endRepairing]: '维修完成',
         [action.askForRestart]: '申请返修',
         [action.restart]: '再次开始维修',
         [action.rejectRepairing]: '拒绝维修',
