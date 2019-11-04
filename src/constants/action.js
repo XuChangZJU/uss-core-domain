@@ -121,7 +121,7 @@ const decodeAction = (a) => {
 
         [action.confirmToPay]: '确认下单',
         [action.pay]: '支付成功',
-        [action.cancel]: '取消支付',
+        [action.cancel]: '取消',
         [action.abort]: '中止',
         [action.expire]: '过期',
         [action.makePaid]: '自动支付',
