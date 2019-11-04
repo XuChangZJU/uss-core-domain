@@ -168,7 +168,7 @@ const COMMON_STATE_TRAN_MATRIX = {
     [action.confirm]: [[state.applied, state.sent], state.confirmed],
     [action.complete]: [[state.legal, state.confirmed], state.completed],
 
-    [action.apply]: [state.init, state.applied],
+    [action.apply]: [[state.init, state.rejected], state.applied],
     [action.reject]: [[state.sent, state.applied], state.rejected],
     [action.agree]: [state.applied, state.agreed],
 };

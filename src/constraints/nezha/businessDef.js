@@ -153,7 +153,7 @@ const AUTH_MATRIX = {
             auths: [
                 {
                     '#relation': {
-                        relations: [CommonAction.owner],
+                        relations: [CommonRelation.owner],
                     },
                 },
             ],
