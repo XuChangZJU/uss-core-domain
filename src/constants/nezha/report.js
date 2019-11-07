@@ -69,12 +69,14 @@ const CONSTANTS = {
 };
 
 const relation = Object.assign({}, commonRelation, {
+    factoryOwner: 102,  // 工厂主
     worker: 101,        // 技工
 });
 
 const decodeRelation = (r) => {
     const TEXT = {
         [relation.worker]: '技工',
+        [relation.factoryOwner]: '工厂主',
     };
 
     return TEXT[r] || decodeCommonRelation(r);
