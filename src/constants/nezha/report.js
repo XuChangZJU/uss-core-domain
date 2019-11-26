@@ -60,7 +60,7 @@ const decodeAction = (s) => {
         [action.giveUp]: '放弃接单',
         [action.startRepairing]: '开始维修',
         [action.endRepairing]: '维修完成',
-        [action.commit]: '维修完成',
+        [action.commit]: '提交完成',
         [action.admit]: '确认完成',
         [action.askForRestart]: '申请返修',
         [action.restart]: '再次开始维修',
