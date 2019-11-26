@@ -117,6 +117,12 @@ const AUTH_MATRIX = {
         [ReportAction.endRepairing]: genOwnerOrFactoryOwner(({user, row}) => {
             return [ReportState.inRepairing].includes(row.state);
         }),
+        [ReportAction.commit]: genWorker(({user, row}) => {
+            return [ReportState.inRepairing].includes(row.state);
+        }),
+        [ReportAction.admit]: genOwnerOrFactoryOwner(({user, row}) => {
+            return [ReportState.committed].includes(row.state);
+        }),
         [ReportAction.rejectRepairing]: genWorker(({user, row}) => {
             return [ReportState.askingForRestart].includes(row.state);
         }),
