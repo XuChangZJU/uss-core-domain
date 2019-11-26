@@ -96,7 +96,7 @@ const STATE_TRAN_MATRIX = {
     [action.giveUp]: [state.accepted, state.delivered],
     [action.startRepairing]: [[state.inRedoing, state.accepted], state.inRepairing],
     [action.endRepairing]: [state.inRepairing, state.done],
-    [action.commit]: [state.inRepairing, state.committed],
+    [action.commit]: [[state.inRepairing, state.committed], state.committed],
     [action.admit]: [state.committed, state.done],
     [action.askForRestart]: [state.done, state.askingForRestart],
     [action.restart]: [state.askingForRestart, state.inRedoing],
