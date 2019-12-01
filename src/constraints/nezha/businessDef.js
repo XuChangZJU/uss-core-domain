@@ -112,9 +112,18 @@ const AUTH_MATRIX = {
                 || [ReportState.init, ReportState.delivered].includes(row.state);
         }),
         [ReportAction.startRepairing]: genWorker(({user, row}) => {
-            return [ReportState.accepted, ReportState.inRedoing].includes(row.state);
+            return [ReportState.accepted, ReportState.inRedoing, ReportState.paused].includes(row.state);
         }),
         [ReportAction.endRepairing]: genOwnerOrFactoryOwner(({user, row}) => {
+            return [ReportState.inRepairing].includes(row.state);
+        }),
+        [ReportAction.commit]: genWorker(({user, row}) => {
+            return [ReportState.inRepairing, ReportState.committed].includes(row.state);
+        }),
+        [ReportAction.admit]: genOwnerOrFactoryOwner(({user, row}) => {
+            return [ReportState.committed].includes(row.state);
+        }),
+        [ReportAction.pauseRepairing]: genWorker(({user, row}) => {
             return [ReportState.inRepairing].includes(row.state);
         }),
         [ReportAction.rejectRepairing]: genWorker(({user, row}) => {
