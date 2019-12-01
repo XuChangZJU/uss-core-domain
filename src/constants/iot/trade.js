@@ -7,6 +7,9 @@ const category = {
     online: 1,
     device: 2,
     supply: 3,
+
+    demand: 11,
+    test: 12,
 };
 
 const decodeCategory = (c) => {
@@ -14,6 +17,9 @@ const decodeCategory = (c) => {
         [category.online]: '线上商城',
         [category.device]: '线下设备',
         [category.supply]: '经销供货',
+
+        [category.demand]: '管理员指令',
+        [category.test]: '测试',
     };
 
     return S[c];
