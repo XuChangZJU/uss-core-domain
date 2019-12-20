@@ -38,6 +38,7 @@ const action = {
 // 全局抽象的关系 0-1000
 const relation = {
     owner: 1,
+    manager: 2,         // 管理员
     grantee: 11,        // 被授权者（泛义上的)
 };
 
