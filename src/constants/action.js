@@ -146,6 +146,7 @@ const decodeAction = (a) => {
 const decodeRelation = (r) => {
     const STRINGS = {
         [relation.owner]: '所有者',
+        [relation.manager]: '管理者',
         [relation.grantee]: '被授权者',
     };
     return STRINGS[r];
