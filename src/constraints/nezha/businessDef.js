@@ -168,6 +168,38 @@ const AUTH_MATRIX = {
             ],
         },
     },
+    certificate: {
+        [CommonAction.update]: {
+            auths: [
+                {
+                    '#relation': {
+                        relations: [CommonRelation.owner],
+                    },
+                },
+            ],
+        },
+        [CommonAction.apply]: {
+            auths: [
+                {
+                    '#relation': {},
+                },
+            ],
+        },
+        [CommonAction.reject]: {
+            auths: [
+                {
+                    '#role': [Roles.SYSTEM_MANAGER.name],
+                },
+            ],
+        },
+        [CommonAction.agree]: {
+            auths: [
+                {
+                    '#role': [Roles.SYSTEM_MANAGER.name],
+                },
+            ],
+        },
+    }
 };
 
 const STATE_TRAN_MATRIX = {
