@@ -108,7 +108,7 @@ const STATE_TRAN_MATRIX = {
     [action.rejectRepairing]: [state.askingForRestart, state.done],
     [action.surrender]: [[state.inRepairing, state.inRedoing], state.failed],
     [action.expire]: [state.init, state.expired],
-    [action.cancel]: [[state.init, state.delivered, state.accepted, state.expired], state.cancelled2],
+    [action.cancel]: [[state.init, state.delivered, state.accepted], state.cancelled2],
     [action.complete]: [state.done, state.completed],
 };
 

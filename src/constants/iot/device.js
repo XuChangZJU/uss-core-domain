@@ -38,6 +38,7 @@ const action = {
     grantSubAgency: 161,
     returnBack: 162,
     remove: CommonAction.remove,
+    changeCharger: 171,
 };
 
 const decodeAction = (s) => {
@@ -52,6 +53,7 @@ const decodeAction = (s) => {
         [action.loadGoods]: '增加货物',
         [action.grantSubAgency]: '授予下级',
         [action.returnBack]: '归还上级',
+        [action.changeCharger]: '修改电桩设置',
     };
     return S[s] || decodeCommonAction(s);
 };
