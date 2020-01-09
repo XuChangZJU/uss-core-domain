@@ -93,6 +93,17 @@ const AUTH_MATRIX = {
                 }
             ],
         },
+        [DeviceAction.changeCharger]: {
+            auths: [
+                {
+                    '#relation': {              // 表示现有对象与user的关系
+                        show: false,                           // 置true的话，前台仍然显示按钮
+                        attr: 'agency',         // 这里的attr指对象中的属性，通过Schema反查找，如果没有则是指自身，即使用id属性
+                        // relations: [AgencyRelation.owner],         // 如果没有relations，则任何关系都可以
+                    },
+                }
+            ],
+        },
         [DeviceAction.update]: {
             auths: [
                 {
