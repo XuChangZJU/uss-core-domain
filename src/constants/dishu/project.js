@@ -1,7 +1,11 @@
 /**
  * Created by Administrator on 2020/1/20.
  */
-const { relation, decodeRelation } = require('../action');
+const {
+    action: CommonAction,
+    decodeAction: decodeCommonAction,
+    relation, decodeRelation
+} = require('../action');
 
 const type = {
     rand: 1,            // 随堂打卡
@@ -33,16 +37,21 @@ const decodeState = (s) => {
     return S[s];
 };
 
-const action = {
+const action = Object.assign({}, CommonAction, {
     makeDead: 111,
-};
+    createAttendance: 201,
+    updateAttendance: 202,
+});
 
 const decodeAction = (a) => {
     const S = {
         [action.makeDead]: '使过期',
+        [action.createAttendance]: '创建签到簿',
+        [action.updateAttendance]: '修改签到簿',
+        [action.appendAttendanceWifiList]: '为签到簿'
     };
 
-    return S[a];
+    return S[a] || decodeCommonAction(a);
 };
 
 

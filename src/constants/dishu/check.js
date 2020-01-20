@@ -20,7 +20,25 @@ const decodeCategory = (c) => {
     return S[c];
 };
 
+const result = {
+    success: 1,
+    suspicious: 11,
+    rejected: 21,
+};
+
+const decodeResult = (r) => {
+    const S = {
+        [result.success]: '成功的',
+        [result.suspicious]: '可疑的',
+        [result.rejected]: '拒绝的',
+    };
+
+    return S[r];
+};
+
 module.exports = {
     category,
     decodeCategory,
+    result,
+    decodeResult,
 };

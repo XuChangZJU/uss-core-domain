@@ -1,10 +1,15 @@
 /**
  * Created by Administrator on 2020/1/20.
  */
-const { relation: commonRelation, decodeRelation: decodeCommonRelation } = require('../action');
+const {
+    action: CommonAction,
+    decodeAction: decodeCommonAction,
+    relation: CommonRelation, 
+    decodeRelation: decodeCommonRelation
+} = require('../action');
 
 
-const relation = Object.assign({}, commonRelation, {
+const relation = Object.assign({}, CommonRelation, {
     self: 101,
     father: 111,
     mother: 112,
@@ -29,7 +34,21 @@ const decodeRelation = (r) => {
     return S[r] || decodeCommonRelation(r);
 };
 
+const action = Object.assign({}, CommonAction, {
+    check: 181,
+});
+
+const decodeAction = (a) => {
+    const S = {
+        [action.check]: '签到',
+    };
+
+    return S[a] || decodeCommonAction(a);
+};
+
 module.exports = {
     relation,
     decodeRelation,
+    action,
+    decodeAction,
 };
