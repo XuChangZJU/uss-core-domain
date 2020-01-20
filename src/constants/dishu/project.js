@@ -17,7 +17,23 @@ const decodeType = (t) => {
     return S[t];
 };
 
+const state = {
+    alive: 101,
+    dead: 111,
+};
+
+const decodeState = (s) => {
+    const S = {
+        [state.alive]: '活跃的',
+        [state.dead]: '过期的',
+    };
+
+    return S[s];
+};
+
 module.exports = {
     type,
     decodeType,
+    state,
+    decodeState,
 };
