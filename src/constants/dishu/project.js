@@ -1,6 +1,8 @@
 /**
  * Created by Administrator on 2020/1/20.
  */
+const { relation, decodeRelation } = require('../action');
+
 const type = {
     rand: 1,            // 随堂打卡
     work: 2,            // 考勤打卡
@@ -31,9 +33,31 @@ const decodeState = (s) => {
     return S[s];
 };
 
+const action = {
+    makeDead: 111,
+};
+
+const decodeAction = (a) => {
+    const S = {
+        [action.makeDead]: '使过期',
+    };
+
+    return S[a];
+};
+
+
+const STATE_TRAN_MATRIX = {
+    [action.makeDead]: [state.alive, state.dead],
+};
+
 module.exports = {
+    relation,
+    decodeRelation,
     type,
     decodeType,
     state,
     decodeState,
+    action,
+    decodeAction,
+    STATE_TRAN_MATRIX,
 };
