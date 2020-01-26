@@ -13,6 +13,14 @@ const type = {
     sign: 3,            // 签到打卡
 };
 
+/**
+ * static指静态打卡，即在创建打卡的时候就要收集信息
+ * @param t
+ */
+const isTypeStatic = (t) => {
+    return [type.work, type.sign].includes(t);
+};
+
 const decodeType = (t) => {
     const S = {
         [type.rand]: '随堂打卡',
@@ -69,4 +77,5 @@ module.exports = {
     action,
     decodeAction,
     STATE_TRAN_MATRIX,
+    isTypeStatic,
 };
