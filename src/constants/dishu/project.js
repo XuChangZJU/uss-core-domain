@@ -39,7 +39,7 @@ const state = {
 const decodeState = (s) => {
     const S = {
         [state.alive]: '活跃的',
-        [state.dead]: '过期的',
+        [state.dead]: '结束的',
     };
 
     return S[s];
@@ -53,7 +53,7 @@ const action = Object.assign({}, CommonAction, {
 
 const decodeAction = (a) => {
     const S = {
-        [action.makeDead]: '使过期',
+        [action.makeDead]: '使结束',
         [action.createAttendance]: '创建签到簿',
         [action.updateAttendance]: '修改签到簿',
         [action.appendAttendanceWifiList]: '为签到簿'
