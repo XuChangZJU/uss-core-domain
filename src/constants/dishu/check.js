@@ -1,6 +1,7 @@
 /**
  * Created by Administrator on 2020/1/20.
  */
+const { action, decodeAction } = require('../action');
 
 const category = {
     checkInBySelf: 1,
@@ -41,4 +42,6 @@ module.exports = {
     decodeCategory,
     result,
     decodeResult,
+    action,
+    decodeAction,
 };

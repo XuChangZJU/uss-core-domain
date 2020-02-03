@@ -7,10 +7,14 @@ const {
     relation: ProjectRelation,
     state: ProjectState,
     STATE_TRAN_MATRIX: PROJECT_STATE_TRAN_MATRIX,
-} = require('../../constants/dishu/project');
+    } = require('../../constants/dishu/project');
 const {
+    action: AttendanceAction,
     STATE_TRAN_MATRIX: ATTENDANCE_STATE_TRAN_MATRIX,
-} = require('../../constants/dishu/attendance');
+    } = require('../../constants/dishu/attendance');
+const {
+    action: CheckAction,
+    } = require('../../constants/dishu/check');
 
 const ProjectOwner = {
     auths: [
@@ -29,11 +33,38 @@ const ProjectOwner = {
     ],
 };
 
+const AttendanceProjectOwner = {
+    auths: [
+        {
+            '#relation': {              // 表示现有对象与user的关系
+                attr: 'project',
+                relations: [ProjectRelation.owner],         // 如果没有relations，则任何关系都可以
+            },
+        },
+    ],
+};
+
+const CheckAttendanceProjectOwner = {
+    auths: [
+        {
+            '#relation': {              // 表示现有对象与user的关系
+                attr: 'attendance.project',
+                relations: [ProjectRelation.owner],         // 如果没有relations，则任何关系都可以
+            },
+        },
+    ],
+};
+
 const AUTH_MATRIX = {
     project: {
         [ProjectAction.makeDead]: ProjectOwner,
-        [ProjectAction.createAttendance]: ProjectOwner,
-        [ProjectAction.updateAttendance]: ProjectOwner,
+    },
+    attendance: {
+        [AttendanceAction.update]: AttendanceProjectOwner,
+        [AttendanceAction.complete]: AttendanceProjectOwner,
+    },
+    check: {
+        [CheckAction.update]: CheckAttendanceProjectOwner,
     },
 };
 

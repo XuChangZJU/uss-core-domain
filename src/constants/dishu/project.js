@@ -47,15 +47,11 @@ const decodeState = (s) => {
 
 const action = Object.assign({}, CommonAction, {
     makeDead: 111,
-    createAttendance: 201,
-    updateAttendance: 202,
 });
 
 const decodeAction = (a) => {
     const S = {
         [action.makeDead]: '使结束',
-        [action.createAttendance]: '创建打卡簿',
-        [action.updateAttendance]: '修改打卡簿',
     };
 
     return S[a] || decodeCommonAction(a);
