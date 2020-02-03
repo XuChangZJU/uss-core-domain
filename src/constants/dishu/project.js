@@ -54,9 +54,8 @@ const action = Object.assign({}, CommonAction, {
 const decodeAction = (a) => {
     const S = {
         [action.makeDead]: '使结束',
-        [action.createAttendance]: '创建签到簿',
-        [action.updateAttendance]: '修改签到簿',
-        [action.appendAttendanceWifiList]: '为签到簿'
+        [action.createAttendance]: '创建打卡簿',
+        [action.updateAttendance]: '修改打卡簿',
     };
 
     return S[a] || decodeCommonAction(a);
