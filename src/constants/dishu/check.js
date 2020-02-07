@@ -4,18 +4,16 @@
 const { action, decodeAction } = require('../action');
 
 const category = {
-    checkInBySelf: 1,
-    checkInByOthers: 2,
-    takeOffBySelf: 21,
-    takeOffByOthers: 22,
+    checkIn: 1,
+    takeOff: 21,
+    makeUp: 31,
 };
 
 const decodeCategory = (c) => {
     const S = {
-        [category.checkInBySelf]: '本人打卡',
-        [category.checkInByOthers]: '他人代打',
-        [category.takeOffBySelf]: '本人请假',
-        [category.takeOffByOthers]: '他人请假',
+        [category.checkIn]: '打卡',
+        [category.takeOff]: '请假',
+        [category.makeUp]: '补打',
     };
 
     return S[c];
