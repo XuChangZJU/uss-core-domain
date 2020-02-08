@@ -66,6 +66,21 @@ const AUTH_MATRIX = {
     },
     check: {
         [CheckAction.update]: CheckAttendanceProjectOwner,
+        [CheckAction.create]: {
+            auths: [
+                {
+                    '#relation': {              // 表示现有对象与user的关系
+                        attr: 'attendance.project',
+                        relations: [ProjectRelation.owner],         // 如果没有relations，则任何关系都可以
+                    },
+                },
+                {
+                    '#relation': {
+                        attr: 'attender',
+                    },
+                },
+            ],
+        }
     },
 };
 
