@@ -60,6 +60,7 @@ const AUTH_MATRIX = {
         [ProjectAction.makeDead]: ProjectOwner,
     },
     attendance: {
+        [AttendanceAction.wakeUp]: AttendanceProjectOwner,
         [AttendanceAction.update]: AttendanceProjectOwner,
         [AttendanceAction.complete]: AttendanceProjectOwner,
     },
