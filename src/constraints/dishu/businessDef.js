@@ -69,15 +69,36 @@ const AUTH_MATRIX = {
         [CheckAction.create]: {
             auths: [
                 {
-                    '#relation': {              // 表示现有对象与user的关系
-                        attr: 'attendance.project',
-                        relations: [ProjectRelation.owner],         // 如果没有relations，则任何关系都可以
-                    },
+                    '#exists': [
+                        {
+                            relation: 'userProject',
+                            condition: ({user, row, tables}) => {
+                                const { attendanceId } = row;
+                                const query = {
+                                    userId: user.id,
+                                    projectId: {
+                                        $in: `select projectId from ${tables.attendance} where id = ${attendanceId} and _deleteAt_ is null`,
+                                    },
+                                };
+                                return query;
+                            },
+                        },
+                    ],
                 },
                 {
-                    '#relation': {
-                        attr: 'attender',
-                    },
+                    '#exists': [
+                        {
+                            relation: 'userAttender',
+                            condition: ({user, row}) => {
+                                const { attenderId } = row;
+                                const query = {
+                                    userId: user.id,
+                                    attenderId,
+                                };
+                                return query;
+                            },
+                        },
+                    ],
                 },
             ],
         }
