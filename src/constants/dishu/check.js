@@ -7,6 +7,7 @@ const category = {
     checkIn: 1,
     takeOff: 21,
     makeUp: 31,
+    absence: 101,
 };
 
 const decodeCategory = (c) => {
@@ -14,6 +15,7 @@ const decodeCategory = (c) => {
         [category.checkIn]: '打卡',
         [category.takeOff]: '请假',
         [category.makeUp]: '补打',
+        [category.absence]: '缺席',
     };
 
     return S[c];
