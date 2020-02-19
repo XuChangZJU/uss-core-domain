@@ -25,6 +25,7 @@ const result = {
     success: 1,
     suspicious: 11,
     rejected: 21,
+    uncertain: 101,
 };
 
 const decodeResult = (r) => {
@@ -32,6 +33,7 @@ const decodeResult = (r) => {
         [result.success]: '成功的',
         [result.suspicious]: '可疑的',
         [result.rejected]: '拒绝的',
+        [result.uncertain]: '待检查的',
     };
 
     return S[r];
