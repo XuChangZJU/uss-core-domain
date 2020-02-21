@@ -15,8 +15,11 @@ const {
 const {
     action: CheckAction,
     } = require('../../constants/dishu/check');
+const {
+    action: AttenderAction,
+    } = require('../../constants/dishu/attender');
 
-const ProjectOwner = {
+const AliveProjectOwner = {
     auths: [
         {
             '#relation': {              // 表示现有对象与user的关系
@@ -57,7 +60,7 @@ const CheckAttendanceProjectOwner = {
 
 const AUTH_MATRIX = {
     project: {
-        [ProjectAction.makeDead]: ProjectOwner,
+        [ProjectAction.makeDead]: AliveProjectOwner,
     },
     attendance: {
         [AttendanceAction.wakeUp]: AttendanceProjectOwner,
@@ -102,6 +105,21 @@ const AUTH_MATRIX = {
                 },
             ],
         }
+    },
+    attender: {
+        [AttenderAction.update]: {
+            auths: [
+                {
+                    '#relation': {
+                    },
+                },
+                {
+                    '#relation': {
+                        attr: 'project',
+                    },
+                }
+            ],
+        },
     },
 };
 
