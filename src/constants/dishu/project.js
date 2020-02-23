@@ -11,6 +11,7 @@ const type = {
     rand: 1,            // 随堂打卡
     work: 2,            // 考勤打卡
     sign: 3,            // 签到打卡
+    patrol: 4,          // 巡检打卡
 };
 
 /**
@@ -26,6 +27,7 @@ const decodeType = (t) => {
         [type.rand]: '随堂打卡',
         [type.work]: '考勤打卡',
         [type.sign]: '签到打卡',
+        [type.patrol]: '巡检打卡',
     };
 
     return S[t];
