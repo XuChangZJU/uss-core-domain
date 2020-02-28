@@ -10,7 +10,7 @@ const state = {
 
 const decodeState = (s) => {
     const S = {
-        [state.inactive]: '尚未开始',
+        [state.inactive]: '未开始',
         [state.alive]: '打卡中',
         [state.completed]: '已结束',
     };
