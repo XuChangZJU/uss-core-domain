@@ -22,7 +22,7 @@ const relation = Object.assign({}, CommonRelation, {
 
 const decodeRelation = (r) => {
     const S = {
-        [relation.self]: '自身',
+        [relation.self]: '本人',
         [relation.father]: '父亲',
         [relation.mother]: '母亲',
         [relation.eldership]: '长辈',
