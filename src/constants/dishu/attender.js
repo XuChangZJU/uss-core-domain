@@ -17,6 +17,7 @@ const relation = Object.assign({}, CommonRelation, {
     sibling: 121,
     friend: 122,
     colleague: 123,
+    child:131
 });
 
 
@@ -29,6 +30,7 @@ const decodeRelation = (r) => {
         [relation.sibling]: '兄弟姐妹',
         [relation.friend]: '朋友',
         [relation.colleague]: '同事',
+        [relation.child]:'子女',
     };
 
     return S[r] || decodeCommonRelation(r);
