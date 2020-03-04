@@ -11,22 +11,20 @@ const {
 
 const relation = Object.assign({}, CommonRelation, {
     self: 101,
-    father: 111,
-    mother: 112,
-    eldership: 113,
+    ascendant: 111,
     sibling: 121,
-    friend: 122,
-    colleague: 123,
+    descendant: 131,
+    friend: 141,
+    colleague: 142,
 });
 
 
 const decodeRelation = (r) => {
     const S = {
         [relation.self]: '自身',
-        [relation.father]: '父亲',
-        [relation.mother]: '母亲',
-        [relation.eldership]: '长辈',
+        [relation.ascendant]: '长辈',
         [relation.sibling]: '兄弟姐妹',
+        [relation.descendant]: '晚辈',
         [relation.friend]: '朋友',
         [relation.colleague]: '同事',
     };
