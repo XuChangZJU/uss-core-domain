@@ -21,12 +21,13 @@ const relation = Object.assign({}, CommonRelation, {
 
 const decodeRelation = (r) => {
     const S = {
-        [relation.self]: '自身',
+        [relation.self]: '本人',
         [relation.ascendant]: '长辈',
         [relation.sibling]: '兄弟姐妹',
         [relation.descendant]: '晚辈',
         [relation.friend]: '朋友',
         [relation.colleague]: '同事',
+        [relation.child]:'子女',
     };
 
     return S[r] || decodeCommonRelation(r);

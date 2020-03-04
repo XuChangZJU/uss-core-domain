@@ -66,6 +66,25 @@ const AUTH_MATRIX = {
         [AttendanceAction.wakeUp]: AttendanceProjectOwner,
         [AttendanceAction.update]: AttendanceProjectOwner,
         [AttendanceAction.complete]: AttendanceProjectOwner,
+        [AttendanceAction.create]:  {
+            auths:[
+                {
+                    '#exists': [
+                        {
+                            relation: 'userProject',
+                            condition: ({user, row}) => {
+                                const { projectId } = row;
+                                    const query = {
+                                        userId: user.id,
+                                        projectId,
+                                    };
+                                    return  query;
+                            },
+                        },
+                    ],
+                }
+            ],
+        },
     },
     check: {
         [CheckAction.update]: CheckAttendanceProjectOwner,
