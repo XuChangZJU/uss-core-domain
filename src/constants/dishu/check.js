@@ -30,10 +30,10 @@ const result = {
 
 const decodeResult = (r) => {
     const S = {
-        [result.success]: '成功的',
-        [result.suspicious]: '可疑的',
-        [result.rejected]: '拒绝的',
-        [result.uncertain]: '待检查的',
+        [result.success]: '成功',
+        [result.suspicious]: '可疑',
+        [result.rejected]: '被拒',
+        [result.uncertain]: '验证中',
     };
 
     return S[r];
