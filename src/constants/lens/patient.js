@@ -21,7 +21,7 @@ const relation = Object.assign({}, commonRelation, {
 
 const decodeRelation = (r) => {
     const S = {
-        [relation.self]: '自身',
+        [relation.self]: '本人',
         [relation.father]: '父亲',
         [relation.mother]: '母亲',
         [relation.eldership]: '长辈',
@@ -38,6 +38,6 @@ const decodeRelation = (r) => {
 module.exports = {
     relation,
     decodeRelation,
-    action,
-    decodeAction,
+    action: commonAction,
+    decodeAction: decodeCommonAction,
 };
