@@ -2,11 +2,7 @@
  *
  * Created by Xc on 2020/2/20.
  */
-const {
-    action: CommonAction,
-    state: CommonState,
-    STATE_TRAN_MATRIX: COMMON_STATE_TRAN_MATRIX,
-} = require('../../constants/lens/common');
+
 const {
     action: DiagnosisAction,
     STATE_TRAN_MATRIX: DIAGNOSIS_STATE_TRAN_MATRIX,
@@ -21,6 +17,24 @@ const {
     action: PatientAction,
     relation: PatientRelation,
 } = require('../../constants/lens/patient');
+const {
+    action: DeviceAction,
+    state: DeviceState,
+    STATE_TRANS_MATRIX: DEVICE_STATE_TRANS_MATRIX,
+} = require('../../constants/lens/device');
+
+const {
+    action: OrganizationAction,
+    state: OrganizationState,
+    relation: OrganizationRelation,
+    STATE_TRANS_MATRIX: ORGANIZATION_STATE_TRANS_MATRIX,
+} = require('../../constants/lens/organization');
+
+const {
+    action: WorkerAction,
+    relation: WorkerRelation,
+} = require('../../constants/lens/worker');
+
 
 const PatientOwner = {
     auths: [
@@ -82,6 +96,47 @@ const RecordOwner = {
         },
     ]
 }
+
+const OrganizationOwner = {
+    auths: [
+        {
+            '#relation': {
+            },
+            '#data': [
+                {
+                    check: ({user, row, tables}) => {
+                        const organizationOwnerId = {$in: `select id from ${tables.worker} where organizationId = ${row.organizationId} and job in (1, 2) and _deleteAt_ is null`}
+                        return organizationOwnerId === user.id;
+                    },
+                }
+            ],
+        },
+    ],
+};
+
+const OrganizationWorker = {
+    auth: [
+        {
+            '#relation': {
+                attr: 'worker.organization',
+                relation: [WorkerRelation.self],
+            },
+            '#data': [
+                {
+                    check: ({ user, row, tables }) => {
+                        const userWorkerOrganizationId = {$in:`select organizationId from ${tables.worker} where workerId in 
+                                        (select workerId from ${tables.userWorker} where userId = ${user.id} and _deleteAt_ is null)
+                                        and _deleteAt_ is null`,
+                        };
+                        const deviceOrganizationId = {$in:`select organizationId from ${tables.device} where deviceId = ${row.deviceId} and _deleteAt_ is null`,
+                        };
+                        return userWorkerOrganizationId === deviceOrganizationId;
+                    },
+                }
+            ],
+        },
+    ],
+};
 
 const AUTH_MATRIX = {
     patient: {
@@ -150,12 +205,22 @@ const AUTH_MATRIX = {
         [RecordAction.remove]: RecordOwner,
         [RecordAction.bind]: RecordOwner,
         [RecordAction.expire]: RecordOwner,
-    }
-}
+    },
+    device: {
+        [DeviceAction.enable]: OrganizationWorker,
+        [DeviceAction.disable]: OrganizationWorker,
+    },
+    organization: {
+        [OrganizationAction.enable]: OrganizationOwner,
+        [OrganizationAction.disable]: OrganizationOwner,
+    },
+};
 
 const STATE_TRAN_MATRIX = {
     diagnosis: DIAGNOSIS_STATE_TRAN_MATRIX,
     record: RECORD_STATE_TRAN_MATRIX,
+    device: DEVICE_STATE_TRANS_MATRIX,
+    organization: ORGANIZATION_STATE_TRANS_MATRIX,
 };
 
 module.exports = {
