@@ -1,4 +1,10 @@
-const { action: commonAction, decodeAction: decodeCommonAction } = require('../action');
+const {
+    action: commonAction,
+    decodeAction: decodeCommonAction,
+    relation,
+    decodeRelation
+} = require('../action');
+
 const state = {
     unbinded: 301,
     binded: 310,
@@ -40,4 +46,6 @@ module.exports = {
     state,
     decodeState,
     STATE_TRANS_MATRIX,
+    relation,
+    decodeRelation,
 };
