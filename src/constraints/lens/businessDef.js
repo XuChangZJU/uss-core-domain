@@ -35,6 +35,11 @@ const {
     relation: WorkerRelation,
 } = require('../../constants/lens/worker');
 
+const {
+    action: TransmitterAction,
+    STATE_TRANS_MATRIX: TRANSMITTER_STATE_TRANS_MATRIX,
+} = require('../../constants/lens/transmitter');
+
 
 const PatientOwner = {
     auths: [
@@ -221,6 +226,7 @@ const STATE_TRAN_MATRIX = {
     record: RECORD_STATE_TRAN_MATRIX,
     device: DEVICE_STATE_TRANS_MATRIX,
     organization: ORGANIZATION_STATE_TRANS_MATRIX,
+    transmitter: TRANSMITTER_STATE_TRANS_MATRIX,
 };
 
 module.exports = {
