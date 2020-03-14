@@ -38,6 +38,8 @@ const action = Object.assign({}, commonAction, {
     activate: 10,
     online: 11,
     offline: 101,
+    bind: 1001,
+    unbind: 1002,
 });
 
 const decodeAction = (a) => {
@@ -45,6 +47,8 @@ const decodeAction = (a) => {
         [action.activate]: '激活',
         [action.online]: '上线',
         [action.offline]: '下线',
+        [action.bind]: '绑定',
+        [action.unbind]: '下线',
     };
 
     return TEXT[a] || decodeCommonAction(a);
