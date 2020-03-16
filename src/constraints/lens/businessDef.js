@@ -46,15 +46,6 @@ const PatientOwner = {
         {
             '#relation': {              // 表示现有对象与user的关系// 如果没有relations，则任何关系都可以
             },
-            '#data': [                 // 表示对现有对象或者用户的数据有要求，可以有多项，每项之前是AND的关系
-                {
-                    check: ({user, row, tables}) => {
-                        const patientId = {$in: `select patientId from ${tables.userPatient} where userId = ${user.id} and patientId = ${row.patientId}
-and  _deleteAt_ is null`}
-                        return patientId === row.patientId;
-                    },
-                }
-            ],
         },
     ],
 };
