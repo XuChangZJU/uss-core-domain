@@ -52,39 +52,25 @@ const PatientOwner = {
     ],
 };
 
-const DiagnosisOwner = {
+const DiagnosisWorker = {
     auths: [
         {
             '#relation': {
+                attr: 'worker',
+                relation: [WorkerRelation.self],
             },
-            '#data': [
-                {
-                    check: ({user, row, tables}) => {
-                        const userOrganizationId = {$in:`select organizationId from ${tables.worker} where workerId in 
-                                        (select workerId from ${tables.userWorker} where userId = ${user.id} and _deleteAt_ is null)
-                                        and _deleteAt_ is null`,};
-                        const diagnosisOrganizationId = {$in:`select organizationId from ${tables.diagnosis} where diagnosisId = ${row.diagnosisId}
-                        and _deleteAt_ is null`,
-                        };
-                        return userOrganizationId === diagnosisOrganizationId;
-                    }
-                }
-            ],
-        },
-        {
-            '#relation': {
-                relations: [DiagnosisRelation.owner],
-            },
-            '#data': [
+            '#data': [                 // 表示对现有对象或者用户的数据有要求，可以有多项，每项之间是AND的关系
                 {
                     check: ({user, row}) => {
-                        return row.state === DiagnosisState.active;
-                    }
+                        return row.state === DiagnosisState.completed;
+                    },
                 }
-            ]
-        },
-    ]
+            ],
+        }
+    ],
 }
+
+
 
 const RecordOwner = {
     auths: [
@@ -185,9 +171,37 @@ const AUTH_MATRIX = {
                 }
             ],
         },
-        [DiagnosisAction.update]: DiagnosisOwner,
-        [DiagnosisAction.complete]: DiagnosisOwner,
-        [DiagnosisAction.expire]: DiagnosisOwner,
+        [DiagnosisAction.update]: DiagnosisWorker,
+        [DiagnosisAction.complete]: {
+            auth: [
+                {
+                    '#exists': [
+                        {
+                            relation: 'userWorker',
+                            condition: ({user, row}) => {
+                                return {
+                                    userId: user.id,
+                                    workerId: row.workerId,
+                                };
+                            },
+                        }
+                    ],
+                    '#data': [
+                        {
+                            check: ({ user, row, tables }) => {
+                                const userWorkerOrganizationId = {$in:`select organizationId from ${tables.worker} where workerId in 
+                                        (select workerId from ${tables.userWorker} where userId = ${user.id} and _deleteAt_ is null)
+                                        and _deleteAt_ is null`,
+                                };
+                                const diagnosisOrganizationId = {$in:`select organizationId from ${tables.diagnosis} where diagnosisId = ${row.id} and _deleteAt_ is null`,
+                                };
+                                return userWorkerOrganizationId === diagnosisOrganizationId;
+                            },
+                        }
+                    ],
+                },
+            ],
+        },
     },
     record: {
         [RecordAction.create]:  {
