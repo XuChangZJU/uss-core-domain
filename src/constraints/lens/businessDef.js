@@ -5,7 +5,9 @@
 
 const {
     action: DiagnosisAction,
+    state: DiagnosisState,
     STATE_TRAN_MATRIX: DIAGNOSIS_STATE_TRAN_MATRIX,
+    relation: DiagnosisRelation,
 } = require('../../constants/lens/diagnosis');
 const {
     action: RecordAction,
@@ -55,21 +57,38 @@ const DiagnosisOwner = {
         {
             '#relation': {
             },
-            '#data': [                 // 表示对现有对象或者用户的数据有要求，可以有多项，每项之前是AND的关系
+            '#data': [
                 {
                     check: ({user, row, tables}) => {
-                        const userWorkerId = {$in: `select workerId from ${tables.userWorker} where userId = ${user.id} and _deleteAt_ is null`}
-                        return userWorkerId === row.workerId;
-                    },
+                        const userOrganizationId = {$in:`select organizationId from ${tables.worker} where workerId in 
+                                        (select workerId from ${tables.userWorker} where userId = ${user.id} and _deleteAt_ is null)
+                                        and _deleteAt_ is null`,};
+                        const diagnosisOrganizationId = {$in:`select organizationId from ${tables.diagnosis} where diagnosisId = ${row.diagnosisId}
+                        and _deleteAt_ is null`,
+                        };
+                        return userOrganizationId === diagnosisOrganizationId;
+                    }
                 }
             ],
-        }
+        },
+        {
+            '#relation': {
+                relations: [DiagnosisRelation.owner],
+            },
+            '#data': [
+                {
+                    check: ({user, row}) => {
+                        return row.state === DiagnosisState.active;
+                    }
+                }
+            ]
+        },
     ]
 }
 
 const RecordOwner = {
     auths: [
-        {                                           //user为机构中worker
+        {
             '#relation': {
             },
             '#data': [
@@ -181,7 +200,7 @@ const AUTH_MATRIX = {
                                 const { patientId } = row;
                                 const query = {
                                     userId: user.id,
-                                    patientId,
+                                    patientId: patientId,
                                 };
                                 return query;
                             },
@@ -196,7 +215,7 @@ const AUTH_MATRIX = {
                                 const { workerId } = row;
                                 const query = {
                                     userId: user.id,
-                                    workerId,
+                                    workerId: workerId,
                                 };
                                 return query;
                             },
