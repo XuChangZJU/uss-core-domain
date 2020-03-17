@@ -104,7 +104,7 @@ const RecordOwner = {
             ]
         },
     ]
-}
+};
 
 const OrganizationOwner = {
     auths: [
@@ -114,8 +114,10 @@ const OrganizationOwner = {
             '#data': [
                 {
                     check: ({user, row, tables}) => {
-                        const organizationOwnerId = {$in: `select id from ${tables.worker} where organizationId = ${row.organizationId} and job in (1, 2) and _deleteAt_ is null`}
-                        return organizationOwnerId === user.id;
+                        const organizationOwnerUserId = {$in: `select userId from ${tables.userWorker} where workerId in 
+                        (select id from ${tables.worker} where organizationId = ${row.id} and jobId = 5 and _deleteAt_ is null)
+                        and _deleteAt_ is null`};
+                        return organizationOwnerUserId === user.id;
                     },
                 }
             ],
@@ -123,8 +125,8 @@ const OrganizationOwner = {
     ],
 };
 
-const OrganizationWorker = {
-    auth: [
+const DeviceOrganizationWorker = {
+    auths: [
         {
             '#relation': {
                 attr: 'worker.organization',
@@ -137,9 +139,7 @@ const OrganizationWorker = {
                                         (select workerId from ${tables.userWorker} where userId = ${user.id} and _deleteAt_ is null)
                                         and _deleteAt_ is null`,
                         };
-                        const deviceOrganizationId = {$in:`select organizationId from ${tables.device} where deviceId = ${row.deviceId} and _deleteAt_ is null`,
-                        };
-                        return userWorkerOrganizationId === deviceOrganizationId;
+                        return userWorkerOrganizationId === row.organizationId;
                     },
                 }
             ],
@@ -244,8 +244,8 @@ const AUTH_MATRIX = {
         [RecordAction.expire]: RecordOwner,
     },
     device: {
-        [DeviceAction.enable]: OrganizationWorker,
-        [DeviceAction.disable]: OrganizationWorker,
+        [DeviceAction.enable]: DeviceOrganizationWorker,
+        [DeviceAction.disable]: DeviceOrganizationWorker,
     },
     organization: {
         [OrganizationAction.enable]: OrganizationOwner,
