@@ -124,7 +124,7 @@ const OrganizationOwner = {
 };
 
 const OrganizationWorker = {
-    auth: [
+    auths: [
         {
             '#relation': {
                 attr: 'worker.organization',
@@ -162,7 +162,7 @@ const AUTH_MATRIX = {
                                 const { patientId } = row;
                                 const query = {
                                     userId: user.id,
-                                    patientId: patientId,
+                                    patientId,
                                 };
                                 return  query;
                             },
@@ -173,7 +173,7 @@ const AUTH_MATRIX = {
         },
         [DiagnosisAction.update]: DiagnosisWorker,
         [DiagnosisAction.complete]: {
-            auth: [
+            auths: [
                 {
                     '#exists': [
                         {
