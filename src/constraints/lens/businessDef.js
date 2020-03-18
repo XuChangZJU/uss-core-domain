@@ -150,6 +150,7 @@ const DeviceOrganizationWorker = {
 const AUTH_MATRIX = {
     patient: {
         [PatientAction.update]: PatientOwner,
+        [PatientAction.remove]: PatientOwner,
     },
     diagnosis: {
         [DiagnosisAction.create]: {
