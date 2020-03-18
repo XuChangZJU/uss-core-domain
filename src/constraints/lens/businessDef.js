@@ -181,7 +181,7 @@ const AUTH_MATRIX = {
                             condition: ({user, row}) => {
                                 return {
                                     userId: user.id,
-                                    workerId: {organizationId: row.organizationId},
+                                    worker: {organizationId: row.organizationId},
                                 };
                             },
                         }
