@@ -20,6 +20,7 @@ module.exports = {
 	errorVersionTooLow: {code: 984, message: '应用的版本过低'},
 	errorDataInconsistency: {code: 983, message: '数据已经过期'},
 	errorDataObsoleted:{code: 982, message: '数据失效了'},
+	errorDataUnexisted: {code: 981, message: '数据不存在'},
 
 
 	shadowUserLoginError: {code: 895, message: '您的账户尚未激活'}, // 临时的errorCode
