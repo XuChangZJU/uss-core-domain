@@ -48,7 +48,7 @@ const decodeAction = (a) => {
         [action.online]: '上线',
         [action.offline]: '下线',
         [action.bind]: '绑定',
-        [action.unbind]: '下线',
+        [action.unbind]: '解绑',
     };
 
     return TEXT[a] || decodeCommonAction(a);

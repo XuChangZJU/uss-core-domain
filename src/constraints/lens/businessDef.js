@@ -5,7 +5,9 @@
 
 const {
     action: DiagnosisAction,
+    state: DiagnosisState,
     STATE_TRAN_MATRIX: DIAGNOSIS_STATE_TRAN_MATRIX,
+    relation: DiagnosisRelation,
 } = require('../../constants/lens/diagnosis');
 const {
     action: RecordAction,
@@ -44,33 +46,35 @@ const {
 const PatientOwner = {
     auths: [
         {
-            '#relation': {              // 表示现有对象与user的关系
-                relations: [PatientRelation.owner],         // 如果没有relations，则任何关系都可以
+            '#relation': {              // 表示现有对象与user的关系// 如果没有relations，则任何关系都可以
             },
         },
     ],
 };
 
-const DiagnosisOwner = {
+const DiagnosisWorker = {
     auths: [
         {
             '#relation': {
+                attr: 'worker',
+                relation: [WorkerRelation.self],
             },
-            '#data': [                 // 表示对现有对象或者用户的数据有要求，可以有多项，每项之前是AND的关系
+            '#data': [                 // 表示对现有对象或者用户的数据有要求，可以有多项，每项之间是AND的关系
                 {
-                    check: ({user, row, tables}) => {
-                        const userWorkerId = {$in: `select workerId from ${tables.userWorker} where userId = ${user.id} and _deleteAt_ is null`}
-                        return userWorkerId === row.workerId;
+                    check: ({user, row}) => {
+                        return row.state === DiagnosisState.completed;
                     },
                 }
             ],
         }
-    ]
+    ],
 }
+
+
 
 const RecordOwner = {
     auths: [
-        {                                           //user为机构中worker
+        {
             '#relation': {
             },
             '#data': [
@@ -100,7 +104,7 @@ const RecordOwner = {
             ]
         },
     ]
-}
+};
 
 const OrganizationOwner = {
     auths: [
@@ -110,8 +114,10 @@ const OrganizationOwner = {
             '#data': [
                 {
                     check: ({user, row, tables}) => {
-                        const organizationOwnerId = {$in: `select id from ${tables.worker} where organizationId = ${row.organizationId} and job in (1, 2) and _deleteAt_ is null`}
-                        return organizationOwnerId === user.id;
+                        const organizationOwnerUserId = {$in: `select userId from ${tables.userWorker} where workerId in 
+                        (select id from ${tables.worker} where organizationId = ${row.id} and jobId = 5 and _deleteAt_ is null)
+                        and _deleteAt_ is null`};
+                        return organizationOwnerUserId === user.id;
                     },
                 }
             ],
@@ -119,8 +125,8 @@ const OrganizationOwner = {
     ],
 };
 
-const OrganizationWorker = {
-    auth: [
+const DeviceOrganizationWorker = {
+    auths: [
         {
             '#relation': {
                 attr: 'worker.organization',
@@ -133,9 +139,7 @@ const OrganizationWorker = {
                                         (select workerId from ${tables.userWorker} where userId = ${user.id} and _deleteAt_ is null)
                                         and _deleteAt_ is null`,
                         };
-                        const deviceOrganizationId = {$in:`select organizationId from ${tables.device} where deviceId = ${row.deviceId} and _deleteAt_ is null`,
-                        };
-                        return userWorkerOrganizationId === deviceOrganizationId;
+                        return userWorkerOrganizationId === row.organizationId;
                     },
                 }
             ],
@@ -146,6 +150,7 @@ const OrganizationWorker = {
 const AUTH_MATRIX = {
     patient: {
         [PatientAction.update]: PatientOwner,
+        [PatientAction.remove]: PatientOwner,
     },
     diagnosis: {
         [DiagnosisAction.create]: {
@@ -167,9 +172,24 @@ const AUTH_MATRIX = {
                 }
             ],
         },
-        [DiagnosisAction.update]: DiagnosisOwner,
-        [DiagnosisAction.complete]: DiagnosisOwner,
-        [DiagnosisAction.expire]: DiagnosisOwner,
+        [DiagnosisAction.update]: DiagnosisWorker,
+        [DiagnosisAction.complete]: {
+            auths: [
+                {
+                    '#exists': [
+                        {
+                            relation: 'userWorker',
+                            condition: ({user, row}) => {
+                                return {
+                                    userId: user.id,
+                                    worker: {organizationId: row.organizationId},
+                                };
+                            },
+                        }
+                    ],
+                },
+            ],
+        },
     },
     record: {
         [RecordAction.create]:  {
@@ -182,7 +202,7 @@ const AUTH_MATRIX = {
                                 const { patientId } = row;
                                 const query = {
                                     userId: user.id,
-                                    patientId,
+                                    patientId: patientId,
                                 };
                                 return query;
                             },
@@ -197,7 +217,7 @@ const AUTH_MATRIX = {
                                 const { workerId } = row;
                                 const query = {
                                     userId: user.id,
-                                    workerId,
+                                    workerId: workerId,
                                 };
                                 return query;
                             },
@@ -212,8 +232,8 @@ const AUTH_MATRIX = {
         [RecordAction.expire]: RecordOwner,
     },
     device: {
-        [DeviceAction.enable]: OrganizationWorker,
-        [DeviceAction.disable]: OrganizationWorker,
+        [DeviceAction.enable]: DeviceOrganizationWorker,
+        [DeviceAction.disable]: DeviceOrganizationWorker,
     },
     organization: {
         [OrganizationAction.enable]: OrganizationOwner,
