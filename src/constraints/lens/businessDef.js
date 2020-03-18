@@ -181,21 +181,8 @@ const AUTH_MATRIX = {
                             condition: ({user, row}) => {
                                 return {
                                     userId: user.id,
-                                    workerId: row.workerId,
+                                    workerId: {organizationId: row.organizationId},
                                 };
-                            },
-                        }
-                    ],
-                    '#data': [
-                        {
-                            check: ({ user, row, tables }) => {
-                                const userWorkerOrganizationId = {$in:`select organizationId from ${tables.worker} where workerId in 
-                                        (select workerId from ${tables.userWorker} where userId = ${user.id} and _deleteAt_ is null)
-                                        and _deleteAt_ is null`,
-                                };
-                                const diagnosisOrganizationId = {$in:`select organizationId from ${tables.diagnosis} where diagnosisId = ${row.id} and _deleteAt_ is null`,
-                                };
-                                return userWorkerOrganizationId === diagnosisOrganizationId;
                             },
                         }
                     ],
