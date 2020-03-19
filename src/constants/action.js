@@ -15,6 +15,7 @@ const action = {
     authConfirm: 15,
 
     transfer: 21,           // 转让
+    acquire: 22,            // 申请
 
     confirmToPay: 31,       // 确认下单
     cancel: 32,             // 取消
@@ -119,6 +120,7 @@ const decodeAction = (a) => {
         [action.authConfirm]: '确认权限',
 
         [action.transfer]: '转让',
+        [action.acquire]: '申请',
 
         [action.confirmToPay]: '确认下单',
         [action.pay]: '支付成功',

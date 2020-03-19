@@ -8,40 +8,45 @@ const {
     state: DiagnosisState,
     STATE_TRAN_MATRIX: DIAGNOSIS_STATE_TRAN_MATRIX,
     relation: DiagnosisRelation,
-} = require('../../constants/lens/diagnosis');
+    } = require('../../constants/lens/diagnosis');
 const {
     action: RecordAction,
     state: RecordState,
     relation: RecordRelation,
     STATE_TRANS_MATRIX: RECORD_STATE_TRAN_MATRIX,
-} = require('../../constants/lens/record');
+    } = require('../../constants/lens/record');
 const {
     action: PatientAction,
     relation: PatientRelation,
-} = require('../../constants/lens/patient');
+    } = require('../../constants/lens/patient');
 const {
     action: DeviceAction,
     state: DeviceState,
     STATE_TRANS_MATRIX: DEVICE_STATE_TRANS_MATRIX,
-} = require('../../constants/lens/device');
+    } = require('../../constants/lens/device');
 
 const {
     action: OrganizationAction,
     state: OrganizationState,
     relation: OrganizationRelation,
     STATE_TRANS_MATRIX: ORGANIZATION_STATE_TRANS_MATRIX,
-} = require('../../constants/lens/organization');
+    } = require('../../constants/lens/organization');
 
 const {
     action: WorkerAction,
     relation: WorkerRelation,
-} = require('../../constants/lens/worker');
+    } = require('../../constants/lens/worker');
 
 const {
     action: TransmitterAction,
     STATE_TRANS_MATRIX: TRANSMITTER_STATE_TRANS_MATRIX,
-} = require('../../constants/lens/transmitter');
+    } = require('../../constants/lens/transmitter');
 
+const {
+    AllowEveryoneAuth,
+    OwnerRelationAuth,
+    AnyRelationAuth,
+    } = require('../action');
 
 const PatientOwner = {
     auths: [
@@ -68,42 +73,66 @@ const DiagnosisWorker = {
             ],
         }
     ],
-}
+};
 
 
-
-const RecordOwner = {
+const RecordDeviceOrganizationWorker = {
     auths: [
         {
             '#relation': {
+                attr: 'device.organization.worker',
+                relations: [WorkerRelation.self],
+            },
+        }
+    ],
+};
+
+/**
+ * 能绑定record的，可能是医院方的人，也可能是当前正在看病的病人
+ * @type {{auths: *[]}}
+ */
+const UnboundRecordDeviceOrganizationWorkerOrPatient = {
+    auths: [
+        {
+            '#relation': {
+                attr: 'device.organization.worker',
+                relations: [WorkerRelation.self],
             },
             '#data': [
                 {
-                    check: ({user, row, tables}) => {
-                        const userOrganizationId = {$in:`select organizationId from ${tables.worker} where workerId in 
-                                        (select workerId from ${tables.userWorker} where userId = ${user.id} and _deleteAt_ is null)
-                                        and _deleteAt_ is null`,
-                        };
-                        const recordOrganizationId = {$in:`select organizationId from ${tables.device} where deviceId = ${row.deviceId} and _deleteAt_ is null`,
-                        };
-                        return userOrganizationId === recordOrganizationId;
-                    }
+                    check: ({ user, row, tables }) => {
+                        return !row.diagnosisId;
+                    },
                 }
             ],
         },
         {
-            '#relation': {
-                relations: [RecordRelation.owner],
-            },
+            '#exists': [
+                {
+                    relation: 'userPatient',
+                    condition: ({user, row, tables}) => {
+                        const { deviceId } = row;
+                        const query = {
+                            userId: user.id,
+                            patientId: {
+                                $in: `select patientId from ${tables.diagnosis} where _deleteAt_ is null and organizationId in (
+                                   select organizationId from ${tables.device} where _deleteAt_ is null and id = ${deviceId}
+                                )`,
+                            },          // 这个用has好像目前写不出来……
+                        };
+
+                    },
+                },
+            ],
             '#data': [
                 {
-                    check: ({user, row}) => {
-                        return row.state === RecordState.unbinded;
-                    }
+                    check: ({ row }) => {
+                        return !row.diagnosisId;
+                    },
                 }
-            ]
-        },
-    ]
+            ],
+        }
+    ],
 };
 
 const OrganizationOwner = {
@@ -129,26 +158,16 @@ const DeviceOrganizationWorker = {
     auths: [
         {
             '#relation': {
-                attr: 'worker.organization',
+                attr: 'organization.worker',
                 relation: [WorkerRelation.self],
             },
-            '#data': [
-                {
-                    check: ({ user, row, tables }) => {
-                        const userWorkerOrganizationId = {$in:`select organizationId from ${tables.worker} where workerId in 
-                                        (select workerId from ${tables.userWorker} where userId = ${user.id} and _deleteAt_ is null)
-                                        and _deleteAt_ is null`,
-                        };
-                        return userWorkerOrganizationId === row.organizationId;
-                    },
-                }
-            ],
         },
     ],
 };
 
 const AUTH_MATRIX = {
     patient: {
+        [PatientAction.create]: AllowEveryoneAuth,
         [PatientAction.update]: PatientOwner,
         [PatientAction.remove]: PatientOwner,
     },
@@ -172,70 +191,56 @@ const AUTH_MATRIX = {
                 }
             ],
         },
-        [DiagnosisAction.update]: DiagnosisWorker,
-        [DiagnosisAction.complete]: {
+        [DiagnosisAction.update]: {
             auths: [
                 {
-                    '#exists': [
+                    '#relation': {
+                        attr: 'worker',
+                        relation: [WorkerRelation.self],
+                    },
+                    '#data': [                 // 表示对现有对象或者用户的数据有要求，可以有多项，每项之间是AND的关系
                         {
-                            relation: 'userWorker',
-                            condition: ({user, row}) => {
-                                return {
-                                    userId: user.id,
-                                    worker: {organizationId: row.organizationId},
-                                };
+                            check: ({user, row}) => {
+                                return row.state === DiagnosisState.completed;
                             },
                         }
                     ],
-                },
+                }
+            ],
+        },
+        [DiagnosisAction.complete]: {
+            auths: [
+                {
+                    '#relation': {
+                        attr: 'worker',
+                        relation: [WorkerRelation.self],
+                    },
+                    '#data': [                 // 表示对现有对象或者用户的数据有要求，可以有多项，每项之间是AND的关系
+                        {
+                            check: ({user, row}) => {
+                                return row.state === DiagnosisState.active;
+                            },
+                        }
+                    ],
+                }
             ],
         },
     },
     record: {
-        [RecordAction.create]:  {
-            auths: [
-                {
-                    '#exists': [
-                        {
-                            relation: 'userPatient',
-                            condition: ({user, row}) => {
-                                const { patientId } = row;
-                                const query = {
-                                    userId: user.id,
-                                    patientId: patientId,
-                                };
-                                return query;
-                            },
-                        },
-                    ],
-                },
-                {
-                    '#exists': [
-                        {
-                            relation: 'userWorker' ,
-                            condition: ({user, row}) => {
-                                const { workerId } = row;
-                                const query = {
-                                    userId: user.id,
-                                    workerId: workerId,
-                                };
-                                return query;
-                            },
-                        },
-                    ],
-                },
-            ],
-        },
-        [RecordAction.update]: RecordOwner,
-        [RecordAction.remove]: RecordOwner,
-        [RecordAction.bind]: RecordOwner,
-        [RecordAction.expire]: RecordOwner,
+        [RecordAction.create]:  RecordDeviceOrganizationWorker,
+        [RecordAction.update]: RecordDeviceOrganizationWorker,
+        [RecordAction.remove]: RecordDeviceOrganizationWorker,
+        [RecordAction.bind]: UnboundRecordDeviceOrganizationWorkerOrPatient,
+        // [RecordAction.expire]: RecordOwner,   这个只有ROOT干
     },
     device: {
+        [DeviceAction.create]: DeviceOrganizationWorker,
+        [DeviceAction.update]: DeviceOrganizationWorker,
         [DeviceAction.enable]: DeviceOrganizationWorker,
         [DeviceAction.disable]: DeviceOrganizationWorker,
     },
     organization: {
+        [OrganizationAction.create]: AllowEveryoneAuth,
         [OrganizationAction.enable]: OrganizationOwner,
         [OrganizationAction.disable]: OrganizationOwner,
     },

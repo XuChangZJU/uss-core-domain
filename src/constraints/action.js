@@ -1,10 +1,10 @@
-    /**
+/**
  * Created by Administrator on 2018/8/31.
  * 本文件定义是公共有支付对象的状态变化矩阵
  */
 
 const { Roles } = require('../constants/roleConstant2');
-const { state: State } = require('../constants/action');
+const { state: State, relation: Relation } = require('../constants/action');
 
 // 状态允许更新矩阵
 const StateTransformMatrixForPaid = {
@@ -34,7 +34,23 @@ const StateTransformMatrixForGrant = {
     }
 }
 
+const AllowEveryoneAuth = {
+    allowEveryone: true,
+};
+
+const AnyRelationAuth = {
+    relation: 'any',
+};
+
+const OwnerRelationAuth = {
+    relation: [Relation.owner],
+};
+
 module.exports = {
     StateTransformMatrixForPaid,
-    StateTransformMatrixForGrant
+    StateTransformMatrixForGrant,
+
+    AllowEveryoneAuth,
+    OwnerRelationAuth,
+    AnyRelationAuth,
 };
