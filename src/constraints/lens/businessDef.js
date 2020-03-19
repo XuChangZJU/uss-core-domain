@@ -94,13 +94,64 @@ const RecordDeviceOrganizationWorker = {
 const UnboundRecordDeviceOrganizationWorkerOrPatient = {
     auths: [
         {
-            '#relation': {
-                attr: 'device.organization.worker',
-                relations: [WorkerRelation.self],
-            },
+            '#exists': [
+                {
+                    relation: 'diagnosis',
+                    condition: ({ user, actionData }) => {
+                        const { record } = actionData;
+                        const query = {
+                            id: record.diagnosisId,
+                        };
+                        const has = {
+                            name: 'userWorker',
+                            projection: {
+                                id: 1,
+                            },
+                            query: {
+                                userId: user.id,
+                                worker: {
+                                    organizationId: {
+                                        $ref: query,
+                                        $attr: 'organizationId',
+                                    }
+                                },
+                            },
+                        };
+                        Object.assign(query, { $has: has });
+                        return query;
+                    },
+                },
+                {
+                    relation: 'device',
+                    condition: ({ user, row }) => {
+                        const { deviceId } = row;
+                        const query = {
+                            id: deviceId,
+                        };
+                        const has = {
+                            name: 'userWorker',
+                            projection: {
+                                id: 1,
+                            },
+                            query: {
+                                userId: user.id,
+                                worker: {
+                                    organizationId: {
+                                        $ref: query,
+                                        $attr: 'organizationId',
+                                    },
+                                },
+                            },
+                        };
+                        Object.assign(query, { $has: has });
+
+                        return query;
+                    }
+                }
+            ],
             '#data': [
                 {
-                    check: ({ user, row, tables }) => {
+                    check: ({ row }) => {
                         return !row.diagnosisId;
                     },
                 }
@@ -109,20 +160,54 @@ const UnboundRecordDeviceOrganizationWorkerOrPatient = {
         {
             '#exists': [
                 {
-                    relation: 'userPatient',
-                    condition: ({user, row, tables}) => {
-                        const { deviceId } = row;
+                    relation: 'diagnosis',
+                    condition: ({ user, actionData }) => {
+                        const { record } = actionData;
                         const query = {
-                            userId: user.id,
-                            patientId: {
-                                $in: `select patientId from ${tables.diagnosis} where _deleteAt_ is null and organizationId in (
-                                   select organizationId from ${tables.device} where _deleteAt_ is null and id = ${deviceId}
-                                )`,
-                            },          // 这个用has好像目前写不出来……
+                            id: record.diagnosisId,
+                            state: DiagnosisState.active,
                         };
-
+                        const has = {
+                            name: 'userPatient',
+                            projection: {
+                                id: 1,
+                            },
+                            query: {
+                                userId: user.id,
+                                patientId: {
+                                    $ref: query,
+                                    $attr: 'patientId',
+                                },
+                            },
+                        };
+                        Object.assign(query, { $has: has });
+                        return query;
                     },
                 },
+                /*  这里还应该表达，此record数据的device.organization和userPatient的diagnosis.organizationId相等，写不出来
+                 {
+                 relation: 'device',
+                 condition: ({ user, row }) => {
+                 const query = {
+                 id: row.deviceId,
+                 };
+                 const has = {
+                 name: 'userPatient',
+                 projection: {
+                 id: 1,
+                 },
+                 query: {
+                 userId: user.id,
+                 patientId: {
+                 $ref: query,
+                 $attr: 'patientId',
+                 },
+                 },
+                 };
+                 Object.assign(query, { $has: has });
+                 return query;
+                 },
+                 }*/
             ],
             '#data': [
                 {
