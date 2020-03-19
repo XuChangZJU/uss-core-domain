@@ -130,17 +130,23 @@ const UnboundRecordDeviceOrganizationWorkerOrPatient = {
 const OrganizationOwner = {
     auths: [
         {
-            '#relation': {
-            },
-            '#data': [
+            '#exists': [
                 {
-                    check: ({user, row, tables}) => {
-                        const organizationOwnerUserId = {$in: `select userId from ${tables.userWorker} where workerId in 
-                        (select id from ${tables.worker} where organizationId = ${row.id} and jobId = 5 and _deleteAt_ is null)
-                        and _deleteAt_ is null`};
-                        return organizationOwnerUserId === user.id;
+                    relation: 'userWorker',
+                    condition: ({ user, row }) => {
+                        const { id: organizationId } = row;
+                        const query = {
+                            userId: user.id,
+                            worker: {
+                                organizationId,
+                                job: {
+                                    name: '所有者',
+                                },
+                            },
+                        };
+                        return query;
                     },
-                }
+                },
             ],
         },
     ],
@@ -155,6 +161,34 @@ const DeviceOrganizationWorker = {
             },
         },
     ],
+};
+
+const workerOrganizationOwner = {
+    auths: {
+        '#relation': {
+            relation: [WorkerRelation.self],
+        },
+        '#exists': [
+            {
+                relation: 'userWorker',
+                condition: ({ user, row }) => {
+                    const { organizationId } = row;
+                    const query = {
+                        userId: user.id,
+                        worker: {
+                            organizationId,
+                            job: {
+                                name: {
+                                    $in: ['所有者', '守护者', '管理员'],
+                                },
+                            },
+                        },
+                    };
+                    return query;
+                },
+            },
+        ],
+    },
 };
 
 const AUTH_MATRIX = {
@@ -233,9 +267,68 @@ const AUTH_MATRIX = {
     },
     organization: {
         [OrganizationAction.create]: AllowEveryoneAuth,
+        [OrganizationAction.update]: OrganizationOwner,
+        [OrganizationAction.remove]: OrganizationOwner,
         [OrganizationAction.enable]: OrganizationOwner,
         [OrganizationAction.disable]: OrganizationOwner,
     },
+    worker: {
+        [WorkerAction.create]: workerOrganizationOwner,
+        [WorkerAction.update]: {
+            auths: {
+                '#relation': {
+                    relation: [WorkerRelation.self],
+                },
+            },
+        },
+        [WorkerAction.remove]: workerOrganizationOwner,
+        [WorkerAction.link]: {
+            auths: {
+                '#exists': [
+                    {
+                        relation: 'userWorker',
+                        condition: ({ user, row }) => {
+                            // link 动作中的 row 应该是 diagnosis
+                            const { workerId, organizationId } = row;
+                            const query = {
+                                userId: user.id,
+                                worker: {
+                                    workerId,
+                                    organizationId,
+                                },
+                            };
+                            return query;
+                        },
+                    },
+                ],
+            },
+        },
+        [WorkerAction.transfer]: {
+            auths: {
+                '#relation': {
+                    relation: [WorkerRelation.self],
+                },
+                '#exists': [
+                    {
+                        relation: 'userWorker',
+                        condition: ({ user, row }) => {
+                            const { organizationId } = row;
+                            const query = {
+                                userId: user.id,
+                                worker: {
+                                    organizationId,
+                                    job: {
+                                        name: '所有者',
+                                    },
+                                },
+                            };
+                            return query;
+                        },
+                    },
+                ],
+            },
+        },
+    }
 };
 
 const STATE_TRAN_MATRIX = {
