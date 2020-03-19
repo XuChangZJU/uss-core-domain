@@ -282,7 +282,7 @@ const AUTH_MATRIX = {
         [PatientAction.create]: AllowEveryoneAuth,
         [PatientAction.update]: OwnerRelationAuth,
         [PatientAction.remove]: OwnerRelationAuth,
-        [PatientAction.link]: AllowEveryoneAuth,
+        [PatientAction.acquire]: AllowEveryoneAuth,
     },
     diagnosis: {
         [DiagnosisAction.create]: {
