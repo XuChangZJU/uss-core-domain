@@ -73,6 +73,7 @@ const RecordDeviceOrganizationWorker = {
         {
             '#relation': {
                 attr: 'device.organization.worker',
+
                 relations: [WorkerRelation.self],
             },
         }
