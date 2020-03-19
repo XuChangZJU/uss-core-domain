@@ -48,14 +48,6 @@ const {
     AnyRelationAuth,
     } = require('../action');
 
-const PatientOwner = {
-    auths: [
-        {
-            '#relation': {              // 表示现有对象与user的关系// 如果没有relations，则任何关系都可以
-            },
-        },
-    ],
-};
 
 const DiagnosisWorker = {
     auths: [
@@ -101,7 +93,7 @@ const UnboundRecordDeviceOrganizationWorkerOrPatient = {
             '#data': [
                 {
                     check: ({ user, row, tables }) => {
-                        return !row.diagnosisId;
+                        return row.state === RecordState.unbinded;
                     },
                 }
             ],
@@ -120,14 +112,14 @@ const UnboundRecordDeviceOrganizationWorkerOrPatient = {
                                 )`,
                             },          // 这个用has好像目前写不出来……
                         };
-
+                        return query;
                     },
                 },
             ],
             '#data': [
                 {
                     check: ({ row }) => {
-                        return !row.diagnosisId;
+                        return row.state === RecordState.unbinded;
                     },
                 }
             ],
@@ -168,8 +160,8 @@ const DeviceOrganizationWorker = {
 const AUTH_MATRIX = {
     patient: {
         [PatientAction.create]: AllowEveryoneAuth,
-        [PatientAction.update]: PatientOwner,
-        [PatientAction.remove]: PatientOwner,
+        [PatientAction.update]: OwnerRelationAuth,
+        [PatientAction.remove]: OwnerRelationAuth,
     },
     diagnosis: {
         [DiagnosisAction.create]: {
