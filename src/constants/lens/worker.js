@@ -6,12 +6,11 @@ const {
 } = require('../action');
 
 const relation = Object.assign({}, CommonRelation, {
-    self: 101,
 });
 
 const decodeRelation = (r) => {
     const R = {
-        [relation.self]: '自身',
+        [relation.owner]: '自身',
     };
     return R[r] || decodeCommonRelation(r);
 };
