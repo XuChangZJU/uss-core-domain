@@ -282,8 +282,8 @@ const workerOrganizationOwner = {
 const AUTH_MATRIX = {
     patient: {
         [PatientAction.create]: AllowEveryoneAuth,
-        [PatientAction.update]: OwnerRelationAuth,
-        [PatientAction.remove]: OwnerRelationAuth,
+        [PatientAction.update]: { relation: PatientRelation.self},
+        [PatientAction.remove]: { relation: PatientRelation.self},
         [PatientAction.acquire]: AllowEveryoneAuth,
     },
     diagnosis: {
