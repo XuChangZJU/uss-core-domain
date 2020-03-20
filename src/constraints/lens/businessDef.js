@@ -354,7 +354,7 @@ const AUTH_MATRIX = {
     },
     organization: {
         [OrganizationAction.create]: AllowEveryoneAuth,
-        [OrganizationAction.update]: OrganizationOwner,
+        [OrganizationAction.update]: AllowEveryoneAuth,
         [OrganizationAction.remove]: OrganizationOwner,
         [OrganizationAction.enable]: OrganizationOwner,
         [OrganizationAction.disable]: OrganizationOwner,
