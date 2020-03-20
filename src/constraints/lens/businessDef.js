@@ -250,31 +250,33 @@ const DeviceOrganizationWorker = {
 };
 
 const workerOrganizationOwner = {
-    auths: {
-        '#relation': {
-            relation: [WorkerRelation.self],
-        },
-        '#exists': [
-            {
-                relation: 'userWorker',
-                condition: ({ user, row }) => {
-                    const { organizationId } = row;
-                    const query = {
-                        userId: user.id,
-                        worker: {
-                            organizationId,
-                            job: {
-                                name: {
-                                    $in: ['所有者', '守护者', '管理员'],
+    auths: [
+        {
+            '#relation': {
+                relation: [WorkerRelation.self],
+            },
+            '#exists': [
+                {
+                    relation: 'userWorker',
+                    condition: ({user, row}) => {
+                        const {organizationId} = row;
+                        const query = {
+                            userId: user.id,
+                            worker: {
+                                organizationId,
+                                job: {
+                                    name: {
+                                        $in: ['所有者', '守护者', '管理员'],
+                                    },
                                 },
                             },
-                        },
-                    };
-                    return query;
+                        };
+                        return query;
+                    },
                 },
-            },
-        ],
-    },
+            ],
+        },
+    ],
 };
 
 const AUTH_MATRIX = {
@@ -362,58 +364,64 @@ const AUTH_MATRIX = {
     worker: {
         [WorkerAction.create]: workerOrganizationOwner,
         [WorkerAction.update]: {
-            auths: {
-                '#relation': {
-                    relation: [WorkerRelation.self],
+            auths: [
+                {
+                    '#relation': {
+                        relation: [WorkerRelation.self],
+                    },
                 },
-            },
+            ],
         },
         [WorkerAction.remove]: workerOrganizationOwner,
         [WorkerAction.link]: {
-            auths: {
-                '#exists': [
-                    {
-                        relation: 'userWorker',
-                        condition: ({ user, row }) => {
-                            // link 动作中的 row 应该是 diagnosis
-                            const { workerId, organizationId } = row;
-                            const query = {
-                                userId: user.id,
-                                worker: {
-                                    workerId,
-                                    organizationId,
-                                },
-                            };
-                            return query;
+            auths: [
+                {
+                    '#exists': [
+                        {
+                            relation: 'userWorker',
+                            condition: ({user, row}) => {
+                                // link 动作中的 row 应该是 diagnosis
+                                const {workerId, organizationId} = row;
+                                const query = {
+                                    userId: user.id,
+                                    worker: {
+                                        workerId,
+                                        organizationId,
+                                    },
+                                };
+                                return query;
+                            },
                         },
-                    },
-                ],
-            },
+                    ],
+                },
+            ],
         },
         [WorkerAction.transfer]: {
-            auths: {
-                '#relation': {
-                    relation: [WorkerRelation.self],
-                },
-                '#exists': [
-                    {
-                        relation: 'userWorker',
-                        condition: ({ user, row }) => {
-                            const { organizationId } = row;
-                            const query = {
-                                userId: user.id,
-                                worker: {
-                                    organizationId,
-                                    job: {
-                                        name: '所有者',
-                                    },
-                                },
-                            };
-                            return query;
-                        },
+            auths: [
+                {
+                    '#relation': {
+                        relation: [WorkerRelation.self],
                     },
-                ],
-            },
+                    '#exists': [
+                        {
+                            relation: 'userWorker',
+                            condition: ({user, row}) => {
+                                const {organizationId} = row;
+                                const query = {
+                                    userId: user.id,
+                                    worker: {
+                                        organizationId,
+                                        job: {
+                                            name: '所有者',
+                                        },
+                                    },
+                                };
+                                return query;
+                            },
+                        },
+                    ],
+                },
+            ],
         },
     }
 };
