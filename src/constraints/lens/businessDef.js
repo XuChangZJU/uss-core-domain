@@ -379,11 +379,11 @@ const AUTH_MATRIX = {
                             relation: 'userWorker',
                             condition: ({user, row}) => {
                                 // link 动作中的 row 应该是 diagnosis
-                                const {workerId, organizationId} = row;
+                                const {id, organizationId} = row;
                                 const query = {
                                     userId: user.id,
                                     worker: {
-                                        workerId,
+                                        id,
                                         organizationId,
                                     },
                                 };
