@@ -249,12 +249,10 @@ const DeviceOrganizationWorker = {
     ],
 };
 
+
 const workerOrganizationOwner = {
     auths: [
         {
-            '#relation': {
-                relation: [WorkerRelation.self],
-            },
             '#exists': [
                 {
                     relation: 'userWorker',
