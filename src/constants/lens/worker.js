@@ -13,7 +13,7 @@ const decodeRelation = (r) => {
     const R = {
         [relation.self]: '自身',
     };
-    return R[r] || decodeRelation(r);
+    return R[r] || decodeCommonRelation(r);
 };
 
 const action = Object.assign({}, CommonAction, {
@@ -24,7 +24,7 @@ const decodeAction = (a) => {
     const A = {
         [action.link]: '关联',
     };
-    return A[a] || decodeAction(a);
+    return A[a] || decodeCommonAction(a);
 };
 
 module.exports = {
