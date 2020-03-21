@@ -356,8 +356,60 @@ const AUTH_MATRIX = {
         [OrganizationAction.create]: AllowEveryoneAuth,
         [OrganizationAction.update]: AllowEveryoneAuth,
         [OrganizationAction.remove]: OrganizationOwner,
-        [OrganizationAction.enable]: OrganizationOwner,
-        [OrganizationAction.disable]: OrganizationOwner,
+        [OrganizationAction.enable]: {
+            auths: [{
+                '#exists': [
+                    {
+                        relation: 'userWorker',
+                        condition: ({ user, row }) => {
+                            const { id: organizationId } = row;
+                            const query = {
+                                userId: user.id,
+                                worker: {
+                                    organizationId,
+                                    job: {
+                                        name: '所有者',
+                                    },
+                                },
+                            };
+                            return query;
+                        },
+                    },
+                ],
+                '#data': [{
+                    check: ({user, row}) => {
+                        return row.state === OrganizationState.offline;
+                    },
+                }]
+            }]
+        },
+        [OrganizationAction.disable]: {
+            auths: [{
+                '#exists': [
+                    {
+                        relation: 'userWorker',
+                        condition: ({ user, row }) => {
+                            const { id: organizationId } = row;
+                            const query = {
+                                userId: user.id,
+                                worker: {
+                                    organizationId,
+                                    job: {
+                                        name: '所有者',
+                                    },
+                                },
+                            };
+                            return query;
+                        },
+                    },
+                ],
+                '#data': [{
+                    check: ({user, row}) => {
+                        return row.state === OrganizationState.online;
+                    },
+                }]
+            }]
+        },
     },
     worker: {
         [WorkerAction.create]: workerOrganizationOwner,
