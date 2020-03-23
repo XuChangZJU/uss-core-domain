@@ -241,10 +241,26 @@ const OrganizationOwner = {
 const DeviceOrganizationWorker = {
     auths: [
         {
-            '#relation': {
-                attr: 'organization.worker',
-                relation: [WorkerRelation.self],
-            },
+            '#exists': [
+                {
+                    relation: 'userWorker',
+                    condition: ({user, row}) => {
+                        const {organizationId} = row;
+                        const query = {
+                            userId: user.id,
+                            worker: {
+                                organizationId,
+                                job: {
+                                    name: {
+                                        $in: ['所有者', '守护者', '管理员'],
+                                    },
+                                },
+                            },
+                        };
+                        return query;
+                    },
+                },
+            ],
         },
     ],
 };
