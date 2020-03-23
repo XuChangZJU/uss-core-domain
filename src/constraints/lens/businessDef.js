@@ -588,7 +588,6 @@ const AUTH_MATRIX = {
         },
         [WorkerAction.remove]: workerOrganizationOwner,
         [WorkerAction.authGrant]: workerOrganizationOwner,
-        [WorkerAction.authConfirm]: AllowEveryoneAuth,
         [WorkerAction.link]: {
             auths: [
                 {
