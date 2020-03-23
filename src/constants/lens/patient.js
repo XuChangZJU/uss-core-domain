@@ -8,6 +8,7 @@ const {
 
 
 const relation = Object.assign({}, commonRelation, {
+    owner: 101,
     father: 111,
     mother: 112,
     eldership: 113,
@@ -20,6 +21,7 @@ const relation = Object.assign({}, commonRelation, {
 
 const decodeRelation = (r) => {
     const S = {
+        [relation.owner]: '本人',
         [relation.father]: '父亲',
         [relation.mother]: '母亲',
         [relation.eldership]: '长辈',
