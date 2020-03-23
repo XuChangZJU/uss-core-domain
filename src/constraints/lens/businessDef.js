@@ -54,7 +54,7 @@ const DiagnosisWorker = {
         {
             '#relation': {
                 attr: 'worker',
-                relation: [WorkerRelation.self],
+                relation: [WorkerRelation.owner],
             },
             '#data': [                 // 表示对现有对象或者用户的数据有要求，可以有多项，每项之间是AND的关系
                 {
@@ -71,12 +71,36 @@ const DiagnosisWorker = {
 const RecordDeviceOrganizationWorker = {
     auths: [
         {
-            '#relation': {
-                attr: 'device.organization.worker',
+            '#exists': [
+                {
+                    relation: 'device',
+                    condition: ({ user, row }) => {
+                        const { deviceId } = row;
+                        const query = {
+                            id: deviceId,
+                        };
+                        const has = {
+                            name: 'userWorker',
+                            projection: {
+                                id: 1,
+                            },
+                            query: {
+                                userId: user.id,
+                                worker: {
+                                    organizationId: {
+                                        $ref: query,
+                                        $attr: 'organizationId',
+                                    },
+                                },
+                            },
+                        };
+                        Object.assign(query, { $has: has });
 
-                relations: [WorkerRelation.self],
-            },
-        }
+                        return query;
+                    }
+                }
+            ],
+        },
     ],
 };
 
@@ -94,6 +118,7 @@ const UnboundRecordDeviceOrganizationWorkerOrPatient = {
                         const { record } = actionData;
                         const query = {
                             id: record.diagnosisId,
+                            state: DiagnosisState.active,
                         };
                         const has = {
                             name: 'userWorker',
@@ -177,6 +202,31 @@ const UnboundRecordDeviceOrganizationWorkerOrPatient = {
                         return query;
                     },
                 },
+                {
+                    relation: 'device',
+                    condition: ({ user, actionData ,row}) => {
+                        const { diagnosis } = actionData;
+                        const query = {
+                            id: diagnosis.patientId,
+                        };
+                        const query2 = {
+                            id: row.deviceId,
+                        }
+                        const has = {
+                            name: 'userPatient',
+                            projection: {
+                                id: 1,
+                            },
+                            query: {
+                                userId: user.id,
+                                patientId: query.id,
+                            },
+                        };
+
+                        Object.assign(query2, { $has: has });
+                        return query;
+                    },
+                },
                 /*  这里还应该表达，此record数据的device.organization和userPatient的diagnosis.organizationId相等，写不出来
                  {
                  relation: 'device',
@@ -205,7 +255,7 @@ const UnboundRecordDeviceOrganizationWorkerOrPatient = {
             '#data': [
                 {
                     check: ({ row }) => {
-                        return row.state === RecordState.unbinded;
+                        return !row.diagnosisId;
                     },
                 }
             ],
@@ -243,7 +293,7 @@ const DeviceOrganizationWorker = {
         {
             '#relation': {
                 attr: 'organization.worker',
-                relation: [WorkerRelation.self],
+                relation: [WorkerRelation.owner],
             },
         },
     ],
@@ -280,8 +330,8 @@ const workerOrganizationOwner = {
 const AUTH_MATRIX = {
     patient: {
         [PatientAction.create]: AllowEveryoneAuth,
-        [PatientAction.update]: { relation: PatientRelation.self},
-        [PatientAction.remove]: { relation: PatientRelation.self},
+        [PatientAction.update]: OwnerRelationAuth,
+        [PatientAction.remove]: OwnerRelationAuth,
         [PatientAction.acquire]: AllowEveryoneAuth,
     },
     diagnosis: {
@@ -309,7 +359,7 @@ const AUTH_MATRIX = {
                 {
                     '#relation': {
                         attr: 'worker',
-                        relation: [WorkerRelation.self],
+                        relation: [WorkerRelation.owner],
                     },
                     '#data': [                 // 表示对现有对象或者用户的数据有要求，可以有多项，每项之间是AND的关系
                         {
@@ -326,7 +376,7 @@ const AUTH_MATRIX = {
                 {
                     '#relation': {
                         attr: 'worker',
-                        relation: [WorkerRelation.self],
+                        relation: [WorkerRelation.owner],
                     },
                     '#data': [                 // 表示对现有对象或者用户的数据有要求，可以有多项，每项之间是AND的关系
                         {
@@ -341,9 +391,7 @@ const AUTH_MATRIX = {
     },
     record: {
         [RecordAction.create]:  RecordDeviceOrganizationWorker,
-        [RecordAction.update]: RecordDeviceOrganizationWorker,
-        [RecordAction.remove]: RecordDeviceOrganizationWorker,
-        [RecordAction.bind]: UnboundRecordDeviceOrganizationWorkerOrPatient,
+        [RecordAction.update]: UnboundRecordDeviceOrganizationWorkerOrPatient,
         // [RecordAction.expire]: RecordOwner,   这个只有ROOT干
     },
     device: {
@@ -365,7 +413,7 @@ const AUTH_MATRIX = {
             auths: [
                 {
                     '#relation': {
-                        relation: [WorkerRelation.self],
+                        relation: [WorkerRelation.owner],
                     },
                 },
             ],
@@ -398,7 +446,7 @@ const AUTH_MATRIX = {
             auths: [
                 {
                     '#relation': {
-                        relation: [WorkerRelation.self],
+                        relation: [WorkerRelation.owner],
                     },
                     '#exists': [
                         {
