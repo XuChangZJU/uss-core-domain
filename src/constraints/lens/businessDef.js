@@ -365,8 +365,68 @@ const AUTH_MATRIX = {
     device: {
         [DeviceAction.create]: DeviceOrganizationWorker,
         [DeviceAction.update]: DeviceOrganizationWorker,
-        [DeviceAction.enable]: DeviceOrganizationWorker,
-        [DeviceAction.disable]: DeviceOrganizationWorker,
+        [DeviceAction.enable]: {
+            auths: [
+                {
+                    '#exists': [
+                        {
+                            relation: 'userWorker',
+                            condition: ({user, row}) => {
+                                const {organizationId} = row;
+                                const query = {
+                                    userId: user.id,
+                                    worker: {
+                                        organizationId,
+                                        job: {
+                                            name: {
+                                                $in: ['所有者', '守护者', '管理员'],
+                                            },
+                                        },
+                                    },
+                                };
+                                return query;
+                            },
+                        },
+                    ],
+                    '#data': [{
+                        check: ({user, row}) => {
+                            return row.state === DeviceState.offline;
+                        },
+                    }]
+                },
+            ],
+        },
+        [DeviceAction.disable]: {
+            auths: [
+                {
+                    '#exists': [
+                        {
+                            relation: 'userWorker',
+                            condition: ({user, row}) => {
+                                const {organizationId} = row;
+                                const query = {
+                                    userId: user.id,
+                                    worker: {
+                                        organizationId,
+                                        job: {
+                                            name: {
+                                                $in: ['所有者', '守护者', '管理员'],
+                                            },
+                                        },
+                                    },
+                                };
+                                return query;
+                            },
+                        },
+                    ],
+                    '#data': [{
+                        check: ({user, row}) => {
+                            return row.state === DeviceState.online;
+                        },
+                    }]
+                },
+            ],
+        },
     },
     organization: {
         [OrganizationAction.create]: AllowEveryoneAuth,
@@ -439,6 +499,7 @@ const AUTH_MATRIX = {
             ],
         },
         [WorkerAction.remove]: workerOrganizationOwner,
+        [WorkerAction.authGrant]: workerOrganizationOwner,
         [WorkerAction.link]: {
             auths: [
                 {
