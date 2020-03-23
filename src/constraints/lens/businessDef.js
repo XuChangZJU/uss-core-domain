@@ -614,9 +614,6 @@ const AUTH_MATRIX = {
         [WorkerAction.transfer]: {
             auths: [
                 {
-                    '#relation': {
-                        relation: [WorkerRelation.owner],
-                    },
                     '#exists': [
                         {
                             relation: 'userWorker',
