@@ -343,6 +343,46 @@ const workerOrganizationOwner = {
     ],
 };
 
+/**
+ * 属于transmitter所关联的device所在的organization的worker或者用户的role为business
+ * @type {{auths: [{}]}}
+ */
+const transmitterDeviceOrganizationWorker = {
+    auths: [
+        {
+            '#exists': [
+                {
+                    relation: 'userRole',
+                    condition: ({ user }) => {
+                        const query = {
+                            userId: user.id,
+                            roleId: 101,
+                        };
+                        return query;
+                    },
+                },
+            ],
+        },
+        {
+            '#exists': [
+                {
+                    relation: 'userWorker',
+                    condition: ({ user, row }) => {
+                        const { device } = row;
+                        const query = {
+                            userId: user.id,
+                            worker: {
+                                organizationId: device.organizationId,
+                            },
+                        };
+                        return query;
+                    },
+                },
+            ],
+        },
+    ],
+};
+
 const AUTH_MATRIX = {
     patient: {
         [PatientAction.create]: AllowEveryoneAuth,
@@ -599,7 +639,14 @@ const AUTH_MATRIX = {
                 },
             ],
         },
-    }
+    },
+    transmitter: {
+        [TransmitterAction.create]: AllowEveryoneAuth,
+        [TransmitterAction.online]: transmitterDeviceOrganizationWorker,
+        [TransmitterAction.offline]: transmitterDeviceOrganizationWorker,
+        [TransmitterAction.bind]: transmitterDeviceOrganizationWorker,
+        [TransmitterAction.unbind]: transmitterDeviceOrganizationWorker,
+    },
 };
 
 const STATE_TRAN_MATRIX = {
