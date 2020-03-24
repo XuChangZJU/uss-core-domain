@@ -378,12 +378,6 @@ const AUTH_MATRIX = {
             auths: [
                 {
                     '#relation': {
-                        attr: 'worker',
-                        relation: [WorkerRelation.owner],
-                    },
-                },
-                {
-                    '#relation': {
                         attr: 'patient',
                     },
                     '#data': [
