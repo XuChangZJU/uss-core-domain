@@ -49,24 +49,6 @@ const {
     } = require('../action');
 
 
-const DiagnosisWorker = {
-    auths: [
-        {
-            '#relation': {
-                attr: 'worker',
-                relation: [WorkerRelation.owner],
-            },
-            '#data': [                 // 表示对现有对象或者用户的数据有要求，可以有多项，每项之间是AND的关系
-                {
-                    check: ({user, row}) => {
-                        return row.state === DiagnosisState.completed;
-                    },
-                }
-            ],
-        }
-    ],
-};
-
 
 const RecordDeviceOrganizationWorker = {
     auths: [
@@ -389,6 +371,7 @@ const AUTH_MATRIX = {
         [PatientAction.update]: OwnerRelationAuth,
         [PatientAction.remove]: OwnerRelationAuth,
         [PatientAction.acquire]: AllowEveryoneAuth,
+        [PatientAction.abandon]: AnyRelationAuth,
     },
     diagnosis: {
         [DiagnosisAction.create]: {
@@ -413,10 +396,19 @@ const AUTH_MATRIX = {
         [DiagnosisAction.update]: {
             auths: [
                 {
-                    '#relation': {
-                        attr: 'worker',
-                        relation: [WorkerRelation.owner],
-                    },
+                    '#exists': [
+                        {
+                            relation: 'userWorker',
+                            condition: ({user, row}) => {
+                                const { organizationId } = row;
+                                const query = {
+                                    userId: user.id,
+                                    organizationId,
+                                };
+                                return  query;
+                            },
+                        },
+                    ],
                     '#data': [                 // 表示对现有对象或者用户的数据有要求，可以有多项，每项之间是AND的关系
                         {
                             check: ({user, row}) => {
@@ -430,10 +422,19 @@ const AUTH_MATRIX = {
         [DiagnosisAction.complete]: {
             auths: [
                 {
-                    '#relation': {
-                        attr: 'worker',
-                        relation: [WorkerRelation.owner],
-                    },
+                    '#exists': [
+                        {
+                            relation: 'userWorker',
+                            condition: ({user, row}) => {
+                                const { organizationId } = row;
+                                const query = {
+                                    userId: user.id,
+                                    organizationId,
+                                };
+                                return  query;
+                            },
+                        },
+                    ],
                     '#data': [                 // 表示对现有对象或者用户的数据有要求，可以有多项，每项之间是AND的关系
                         {
                             check: ({user, row}) => {
