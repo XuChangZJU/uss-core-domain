@@ -8,7 +8,6 @@ const {
 
 
 const relation = Object.assign({}, commonRelation, {
-    owner: 101,
     father: 111,
     mother: 112,
     eldership: 113,
