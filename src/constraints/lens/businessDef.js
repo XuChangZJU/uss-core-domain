@@ -374,6 +374,21 @@ const AUTH_MATRIX = {
         [PatientAction.authAbandon]: AnyRelationAuth,
     },
     diagnosis: {
+        [DiagnosisAction.remove]: {
+            auths: [
+                {
+                    '#relation': {
+                        attr: 'worker',
+                        relation: [WorkerRelation.owner],
+                    },
+                },
+                {
+                    '#relation': {
+                        attr: 'patient',
+                    },
+                }
+            ],
+        },
         [DiagnosisAction.create]: {
             auths: [
                 {
