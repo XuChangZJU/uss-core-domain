@@ -386,6 +386,13 @@ const AUTH_MATRIX = {
                     '#relation': {
                         attr: 'patient',
                     },
+                    '#data': [
+                        {
+                            check: ({user, row}) => {
+                                return row.state === DiagnosisState.active;
+                            },
+                        }
+                    ],
                 }
             ],
         },
