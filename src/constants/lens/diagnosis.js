@@ -20,14 +20,12 @@ const decodeState = (s) => {
 
 const action = Object.assign({},commonAction,{
     complete: 310,
-    link: 311,
 });
 
 const decodeAction = (a) => {
     const S = {
         [action.complete]: '完成',
         [action.expire]: '结束',
-        [action.link]: '关联',
     };
 
     return S[a]|| decodeCommonAction(a);
