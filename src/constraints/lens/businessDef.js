@@ -535,7 +535,8 @@ const AUTH_MATRIX = {
     },
     organization: {
         [OrganizationAction.create]: AllowEveryoneAuth,
-        [OrganizationAction.update]: AllowEveryoneAuth,
+        [OrganizationAction.bind]: AllowEveryoneAuth,
+        [OrganizationAction.update]: OrganizationOwner,
         [OrganizationAction.remove]: OrganizationOwner,
         [OrganizationAction.enable]: {
             auths: [{
