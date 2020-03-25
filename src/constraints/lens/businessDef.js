@@ -184,7 +184,7 @@ const UnboundRecordDeviceOrganizationWorkerOrPatient = {
                         return query;
                     },
                 },
-                {
+             /*   {
                     relation: 'device',
                     condition: ({ user, actionData ,row}) => {
                         const { diagnosis } = actionData;
@@ -208,7 +208,7 @@ const UnboundRecordDeviceOrganizationWorkerOrPatient = {
                         Object.assign(query2, { $has: has });
                         return query;
                     },
-                },
+                },*/
                 /*  这里还应该表达，此record数据的device.organization和userPatient的diagnosis.organizationId相等，写不出来
                  {
                  relation: 'device',
@@ -461,6 +461,28 @@ const AUTH_MATRIX = {
                 }
             ],
         },
+        [DiagnosisAction.link]: {
+            auths: [
+                {
+                    '#exists': [
+                        {
+                            relation: 'userWorker',
+                            condition: ({user, row}) => {
+                                // link 动作中的 row 应该是 diagnosis
+                                const {organizationId} = row;
+                                const query = {
+                                    userId: user.id,
+                                    worker: {
+                                        organizationId,
+                                    },
+                                };
+                                return query;
+                            },
+                        },
+                    ],
+                },
+            ],
+        }
     },
     record: {
         [RecordAction.create]:  RecordDeviceOrganizationWorker,
