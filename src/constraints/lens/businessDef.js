@@ -374,7 +374,7 @@ const AUTH_MATRIX = {
         [PatientAction.authAbandon]: AnyRelationAuth,
     },
     diagnosis: {
-        [DiagnosisAction.remove]: {
+        [DiagnosisAction.expire]: {
             auths: [
                 {
                     '#relation': {
