@@ -419,7 +419,9 @@ const AUTH_MATRIX = {
                                 const { organizationId } = row;
                                 const query = {
                                     userId: user.id,
-                                    organizationId,
+                                    worker: {
+                                        organizationId,
+                                    },
                                 };
                                 return  query;
                             },
@@ -445,7 +447,9 @@ const AUTH_MATRIX = {
                                 const { organizationId } = row;
                                 const query = {
                                     userId: user.id,
-                                    organizationId,
+                                    worker: {
+                                        organizationId,
+                                    },
                                 };
                                 return  query;
                             },
