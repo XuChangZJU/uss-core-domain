@@ -628,29 +628,6 @@ const AUTH_MATRIX = {
         },
         [WorkerAction.remove]: workerOrganizationOwner,
         [WorkerAction.authGrant]: workerOrganizationOwner,
-        [WorkerAction.link]: {
-            auths: [
-                {
-                    '#exists': [
-                        {
-                            relation: 'userWorker',
-                            condition: ({user, row}) => {
-                                // link 动作中的 row 应该是 diagnosis
-                                const {id, organizationId} = row;
-                                const query = {
-                                    userId: user.id,
-                                    worker: {
-                                        id,
-                                        organizationId,
-                                    },
-                                };
-                                return query;
-                            },
-                        },
-                    ],
-                },
-            ],
-        },
         [WorkerAction.transfer]: {
             auths: [
                 {
