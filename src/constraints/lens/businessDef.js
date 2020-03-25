@@ -374,7 +374,7 @@ const AUTH_MATRIX = {
         [PatientAction.authAbandon]: AnyRelationAuth,
     },
     diagnosis: {
-        [DiagnosisAction.remove]: {
+        [DiagnosisAction.expire]: {
             auths: [
                 {
                     '#relation': {
@@ -419,7 +419,9 @@ const AUTH_MATRIX = {
                                 const { organizationId } = actionData;
                                 const query = {
                                     userId: user.id,
-                                    organizationId,
+                                    worker: {
+                                        organizationId,
+                                    },
                                 };
                                 return  query;
                             },
@@ -445,7 +447,9 @@ const AUTH_MATRIX = {
                                 const { organizationId } = actionData;
                                 const query = {
                                     userId: user.id,
-                                    organizationId,
+                                    worker: {
+                                        organizationId,
+                                    },
                                 };
                                 return  query;
                             },
