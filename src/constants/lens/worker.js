@@ -15,17 +15,6 @@ const decodeRelation = (r) => {
     return R[r] || decodeCommonRelation(r);
 };
 
-const action = Object.assign({}, CommonAction, {
-    link: 131,
-});
-
-const decodeAction = (a) => {
-    const A = {
-        [action.link]: '关联',
-    };
-    return A[a] || decodeCommonAction(a);
-};
-
 module.exports = {
     relation: CommonRelation,
     decodeRelation: decodeCommonRelation,
