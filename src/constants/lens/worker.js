@@ -27,8 +27,8 @@ const decodeAction = (a) => {
 };
 
 module.exports = {
-    relation,
-    decodeRelation,
-    action,
-    decodeAction,
+    relation: CommonRelation,
+    decodeRelation: decodeCommonRelation,
+    action: CommonAction,
+    decodeAction: decodeCommonAction,
 };

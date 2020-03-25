@@ -35,9 +35,9 @@ const decodeState = (s) => {
 };
 
 const action = Object.assign({}, commonAction, {
-    activate: 10,
-    online: 11,
-    offline: 101,
+    activate: 101,
+    online: 111,
+    offline: 121,
     bind: 1001,
     unbind: 1002,
 });

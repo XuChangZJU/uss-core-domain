@@ -184,7 +184,7 @@ const UnboundRecordDeviceOrganizationWorkerOrPatient = {
                         return query;
                     },
                 },
-                {
+             /*   {
                     relation: 'device',
                     condition: ({ user, actionData ,row}) => {
                         const { diagnosis } = actionData;
@@ -208,7 +208,7 @@ const UnboundRecordDeviceOrganizationWorkerOrPatient = {
                         Object.assign(query2, { $has: has });
                         return query;
                     },
-                },
+                },*/
                 /*  这里还应该表达，此record数据的device.organization和userPatient的diagnosis.organizationId相等，写不出来
                  {
                  relation: 'device',
@@ -378,14 +378,15 @@ const AUTH_MATRIX = {
             auths: [
                 {
                     '#relation': {
-                        attr: 'worker',
-                        relation: [WorkerRelation.owner],
-                    },
-                },
-                {
-                    '#relation': {
                         attr: 'patient',
                     },
+                    '#data': [
+                        {
+                            check: ({user, row}) => {
+                                return row.state === DiagnosisState.active;
+                            },
+                        }
+                    ],
                 }
             ],
         },
@@ -418,7 +419,9 @@ const AUTH_MATRIX = {
                                 const { organizationId } = row;
                                 const query = {
                                     userId: user.id,
-                                    organizationId,
+                                    worker: {
+                                        organizationId,
+                                    },
                                 };
                                 return  query;
                             },
@@ -444,7 +447,9 @@ const AUTH_MATRIX = {
                                 const { organizationId } = row;
                                 const query = {
                                     userId: user.id,
-                                    organizationId,
+                                    worker: {
+                                        organizationId,
+                                    },
                                 };
                                 return  query;
                             },
@@ -460,6 +465,28 @@ const AUTH_MATRIX = {
                 }
             ],
         },
+        [DiagnosisAction.link]: {
+            auths: [
+                {
+                    '#exists': [
+                        {
+                            relation: 'userWorker',
+                            condition: ({user, row}) => {
+                                // link 动作中的 row 应该是 diagnosis
+                                const {organizationId} = row;
+                                const query = {
+                                    userId: user.id,
+                                    worker: {
+                                        organizationId,
+                                    },
+                                };
+                                return query;
+                            },
+                        },
+                    ],
+                },
+            ],
+        }
     },
     record: {
         [RecordAction.create]:  RecordDeviceOrganizationWorker,
@@ -534,7 +561,8 @@ const AUTH_MATRIX = {
     },
     organization: {
         [OrganizationAction.create]: AllowEveryoneAuth,
-        [OrganizationAction.update]: AllowEveryoneAuth,
+        [OrganizationAction.bind]: AllowEveryoneAuth,
+        [OrganizationAction.update]: OrganizationOwner,
         [OrganizationAction.remove]: OrganizationOwner,
         [OrganizationAction.enable]: {
             auths: [{
@@ -604,29 +632,6 @@ const AUTH_MATRIX = {
         },
         [WorkerAction.remove]: workerOrganizationOwner,
         [WorkerAction.authGrant]: workerOrganizationOwner,
-        [WorkerAction.link]: {
-            auths: [
-                {
-                    '#exists': [
-                        {
-                            relation: 'userWorker',
-                            condition: ({user, row}) => {
-                                // link 动作中的 row 应该是 diagnosis
-                                const {id, organizationId} = row;
-                                const query = {
-                                    userId: user.id,
-                                    worker: {
-                                        id,
-                                        organizationId,
-                                    },
-                                };
-                                return query;
-                            },
-                        },
-                    ],
-                },
-            ],
-        },
         [WorkerAction.transfer]: {
             auths: [
                 {
