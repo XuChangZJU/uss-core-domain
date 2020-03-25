@@ -374,7 +374,7 @@ const AUTH_MATRIX = {
         [PatientAction.authAbandon]: AnyRelationAuth,
     },
     diagnosis: {
-        [DiagnosisAction.remove]: {
+        [DiagnosisAction.expire]: {
             auths: [
                 {
                     '#relation': {
@@ -415,8 +415,8 @@ const AUTH_MATRIX = {
                     '#exists': [
                         {
                             relation: 'userWorker',
-                            condition: ({user, row}) => {
-                                const { organizationId } = row;
+                            condition: ({user, actionData}) => {
+                                const { organizationId } = actionData;
                                 const query = {
                                     userId: user.id,
                                     worker: {
@@ -443,8 +443,8 @@ const AUTH_MATRIX = {
                     '#exists': [
                         {
                             relation: 'userWorker',
-                            condition: ({user, row}) => {
-                                const { organizationId } = row;
+                            condition: ({user, actionData}) => {
+                                const { organizationId } = actionData;
                                 const query = {
                                     userId: user.id,
                                     worker: {
@@ -465,28 +465,6 @@ const AUTH_MATRIX = {
                 }
             ],
         },
-        [DiagnosisAction.link]: {
-            auths: [
-                {
-                    '#exists': [
-                        {
-                            relation: 'userWorker',
-                            condition: ({user, row}) => {
-                                // link 动作中的 row 应该是 diagnosis
-                                const {organizationId} = row;
-                                const query = {
-                                    userId: user.id,
-                                    worker: {
-                                        organizationId,
-                                    },
-                                };
-                                return query;
-                            },
-                        },
-                    ],
-                },
-            ],
-        }
     },
     record: {
         [RecordAction.create]:  RecordDeviceOrganizationWorker,
