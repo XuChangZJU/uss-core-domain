@@ -276,8 +276,8 @@ const DeviceOrganizationWorker = {
             '#exists': [
                 {
                     relation: 'userWorker',
-                    condition: ({user, row}) => {
-                        const {organizationId} = row;
+                    condition: ({user, actionData}) => {
+                        const {organizationId} = actionData;
                         const query = {
                             userId: user.id,
                             worker: {
@@ -304,8 +304,8 @@ const workerOrganizationOwner = {
             '#exists': [
                 {
                     relation: 'userWorker',
-                    condition: ({user, row}) => {
-                        const {organizationId} = row;
+                    condition: ({user, actionData}) => {
+                        const {organizationId} = actionData;
                         const query = {
                             userId: user.id,
                             worker: {
@@ -416,10 +416,11 @@ const AUTH_MATRIX = {
                         {
                             relation: 'userWorker',
                             condition: ({user, actionData}) => {
-                                const { organizationId } = actionData;
+                                const { organizationId, workerId } = actionData;
                                 const query = {
                                     userId: user.id,
                                     worker: {
+                                        id: workerId,
                                         organizationId,
                                     },
                                 };
@@ -480,8 +481,8 @@ const AUTH_MATRIX = {
                     '#exists': [
                         {
                             relation: 'userWorker',
-                            condition: ({user, row}) => {
-                                const {organizationId} = row;
+                            condition: ({user, actionData}) => {
+                                const {organizationId} = actionData;
                                 const query = {
                                     userId: user.id,
                                     worker: {
@@ -511,8 +512,8 @@ const AUTH_MATRIX = {
                     '#exists': [
                         {
                             relation: 'userWorker',
-                            condition: ({user, row}) => {
-                                const {organizationId} = row;
+                            condition: ({user, actionData}) => {
+                                const {organizationId} = actionData;
                                 const query = {
                                     userId: user.id,
                                     worker: {
@@ -547,8 +548,8 @@ const AUTH_MATRIX = {
                 '#exists': [
                     {
                         relation: 'userWorker',
-                        condition: ({ user, row }) => {
-                            const { id: organizationId } = row;
+                        condition: ({ user, actionData }) => {
+                            const { id: organizationId } = actionData;
                             const query = {
                                 userId: user.id,
                                 worker: {
@@ -574,8 +575,8 @@ const AUTH_MATRIX = {
                 '#exists': [
                     {
                         relation: 'userWorker',
-                        condition: ({ user, row }) => {
-                            const { id: organizationId } = row;
+                        condition: ({ user, actionData }) => {
+                            const { id: organizationId } = actionData;
                             const query = {
                                 userId: user.id,
                                 worker: {
