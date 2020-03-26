@@ -96,6 +96,7 @@ const UnboundRecordDeviceOrganizationWorkerOrPatient = {
             '#exists': [
                 {
                     relation: 'diagnosis',
+                    needData: true,
                     condition: ({ user, actionData }) => {
                         const { record } = actionData;
                         const query = {
