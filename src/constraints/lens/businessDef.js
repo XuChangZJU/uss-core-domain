@@ -375,22 +375,6 @@ const AUTH_MATRIX = {
         [PatientAction.authAbandon]: AnyRelationAuth,
     },
     diagnosis: {
-        [DiagnosisAction.expire]: {
-            auths: [
-                {
-                    '#relation': {
-                        attr: 'patient',
-                    },
-                    '#data': [
-                        {
-                            check: ({user, row}) => {
-                                return row.state === DiagnosisState.active;
-                            },
-                        }
-                    ],
-                }
-            ],
-        },
         [DiagnosisAction.create]: {
             auths: [
                 {
@@ -445,7 +429,7 @@ const AUTH_MATRIX = {
                     '#exists': [
                         {
                             relation: 'userWorker',
-                            condition: ({user, row }) => {
+                            condition: ({ user, row }) => {
                                 const { organizationId } = row;
                                 const query = {
                                     userId: user.id,
@@ -604,9 +588,26 @@ const AUTH_MATRIX = {
         [WorkerAction.update]: {
             auths: [
                 {
-                    '#relation': {
-                        relation: [WorkerRelation.owner],
-                    },
+                    '#exists': [
+                        {
+                            relation: 'userWorker',
+                            condition: ({user, row}) => {
+                                const {organizationId} = row;
+                                const query = {
+                                    userId: user.id,
+                                    worker: {
+                                        organizationId,
+                                        job: {
+                                            name: {
+                                                $in: ['所有者', '守护者', '管理员'],
+                                            },
+                                        },
+                                    },
+                                };
+                                return query;
+                            },
+                        },
+                    ],
                 },
             ],
         },
