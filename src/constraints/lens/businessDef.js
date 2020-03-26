@@ -452,7 +452,7 @@ const AUTH_MATRIX = {
                                         organizationId,
                                     },
                                 };
-                                return  query;
+                                return query;
                             },
                         },
                     ],
