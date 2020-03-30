@@ -661,6 +661,13 @@ const AUTH_MATRIX = {
                             },
                         },
                     ],
+                    '#data': [
+                        {
+                            check: ({ row }) => {
+                                return row.job.name !== '所有者';
+                            },
+                        }
+                    ],
                 },
             ],
         },
