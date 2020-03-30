@@ -96,6 +96,7 @@ const UnboundRecordDeviceOrganizationWorkerOrPatient = {
             '#exists': [
                 {
                     relation: 'diagnosis',
+                    needData: true,
                     condition: ({ user, actionData }) => {
                         const { record } = actionData;
                         const query = {
@@ -636,7 +637,33 @@ const AUTH_MATRIX = {
                 },
             ],
         },
-        [WorkerAction.remove]: workerOrganizationOwner,
+        [WorkerAction.remove]: {
+            auths: [
+                {
+                    '#exists': [
+                        {
+                            relation: 'userWorker',
+                            condition: ({user, row}) => {
+                                const {organizationId, id} = row;
+                                const query = {
+                                    userId: user.id,
+                                    workerId: {
+                                        $ne: id, //排除当前workerId
+                                    },
+                                    worker: {
+                                        organizationId,
+                                        job: {
+                                            name: '所有者',
+                                        },
+                                    },
+                                };
+                                return query;
+                            },
+                        },
+                    ],
+                },
+            ],
+        },
         [WorkerAction.authGrant]: workerOrganizationOwner,
         [WorkerAction.transfer]: {
             auths: [
