@@ -56,8 +56,8 @@ const RecordDeviceOrganizationWorker = {
             '#exists': [
                 {
                     relation: 'device',
-                    condition: ({ user, row }) => {
-                        const { deviceId } = row;
+                    condition: ({ user, actionData }) => {
+                        const { deviceId } = actionData;
                         const query = {
                             id: deviceId,
                         };
@@ -276,8 +276,8 @@ const DeviceOrganizationWorker = {
             '#exists': [
                 {
                     relation: 'userWorker',
-                    condition: ({user, row}) => {
-                        const {organizationId} = row;
+                    condition: ({user, actionData}) => {
+                        const {organizationId} = actionData;
                         const query = {
                             userId: user.id,
                             worker: {
@@ -304,8 +304,8 @@ const workerOrganizationOwner = {
             '#exists': [
                 {
                     relation: 'userWorker',
-                    condition: ({user, row}) => {
-                        const {organizationId} = row;
+                    condition: ({user, actionData}) => {
+                        const {organizationId} = actionData;
                         const query = {
                             userId: user.id,
                             worker: {
@@ -380,8 +380,8 @@ const AUTH_MATRIX = {
                     '#exists': [
                         {
                             relation: 'userPatient',
-                            condition: ({user, row}) => {
-                                const { patientId } = row;
+                            condition: ({user, actionData}) => {
+                                const { patientId } = actionData;
                                 const query = {
                                     userId: user.id,
                                     patientId,
@@ -458,7 +458,32 @@ const AUTH_MATRIX = {
     },
     device: {
         [DeviceAction.create]: DeviceOrganizationWorker,
-        [DeviceAction.update]: DeviceOrganizationWorker,
+        [DeviceAction.update]: {
+            auths: [
+                {
+                    '#exists': [
+                        {
+                            relation: 'userWorker',
+                            condition: ({user, row}) => {
+                                const {organizationId} = row;
+                                const query = {
+                                    userId: user.id,
+                                    worker: {
+                                        organizationId,
+                                        job: {
+                                            name: {
+                                                $in: ['所有者', '守护者', '管理员'],
+                                            },
+                                        },
+                                    },
+                                };
+                                return query;
+                            },
+                        },
+                    ],
+                },
+            ],
+        },
         [DeviceAction.enable]: {
             auths: [
                 {
@@ -528,7 +553,8 @@ const AUTH_MATRIX = {
         [OrganizationAction.update]: OrganizationOwner,
         [OrganizationAction.remove]: OrganizationOwner,
         [OrganizationAction.enable]: {
-            auths: [{
+            auths: [
+                {
                 '#exists': [
                     {
                         relation: 'userWorker',
