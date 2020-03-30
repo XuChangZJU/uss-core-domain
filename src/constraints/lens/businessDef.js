@@ -578,13 +578,8 @@ const AUTH_MATRIX = {
                                     userId: user.id,
                                     worker: {
                                         organizationId,
-                                        job: {
-                                            name: {
-                                                $in: ['所有者', '守护者', '管理员'],
-                                            },
-                                        },
                                     },
-                                };
+                                }
                                 return query;
                             },
                         },
@@ -615,7 +610,7 @@ const AUTH_MATRIX = {
                     ],
                     '#data': [{
                         check: ({ user, row }) => {
-                            return row.job.name !== '所有者';
+                            return row.job.name !== '所有者' && row.job.name !== '守护者';
                         },
                     }]
                 },
