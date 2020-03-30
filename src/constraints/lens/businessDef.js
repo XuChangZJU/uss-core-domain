@@ -381,11 +381,12 @@ const AUTH_MATRIX = {
                     '#exists': [
                         {
                             relation: 'userPatient',
-                            condition: ({user, row}) => {
-                                const { patientId } = row;
+                            needData: true,
+                            condition: ({ user, actionData }) => {
+                                const { diagnosis } = actionData;
                                 const query = {
                                     userId: user.id,
-                                    patientId,
+                                    patientId: diagnosis.patientId,
                                 };
                                 return  query;
                             },
