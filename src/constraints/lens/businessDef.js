@@ -59,7 +59,7 @@ const RecordDeviceOrganizationWorker = {
                     needData: true,
                     condition: ({ user, actionData }) => {
                         const { record } = actionData;
-                        const query = {
+                        let query = {
                             id: record.deviceId,
                         };
                         const has = {
@@ -77,7 +77,7 @@ const RecordDeviceOrganizationWorker = {
                                 },
                             },
                         };
-                        Object.assign(query, { $has: has });
+                        query = Object.assign({}, query, { $has: has });
 
                         return query;
                     }
@@ -100,7 +100,7 @@ const UnboundRecordDeviceOrganizationWorkerOrPatient = {
                     needData: true,
                     condition: ({ user, row, actionData }) => {
                         const { record } = actionData;
-                        const query = {
+                        let query = {
                             id: record.diagnosisId,
                             state: DiagnosisState.active,
                         };
@@ -119,7 +119,7 @@ const UnboundRecordDeviceOrganizationWorkerOrPatient = {
                                 },
                             },
                         };
-                        Object.assign(query, { $has: has });
+                        query = Object.assign({}, query, { $has: has });
                         return query;
                     },
                 },
@@ -127,7 +127,7 @@ const UnboundRecordDeviceOrganizationWorkerOrPatient = {
                     relation: 'device',
                     condition: ({ user, row }) => {
                         const { deviceId } = row;
-                        const query = {
+                        let query = {
                             id: deviceId,
                         };
                         const has = {
@@ -145,7 +145,7 @@ const UnboundRecordDeviceOrganizationWorkerOrPatient = {
                                 },
                             },
                         };
-                        Object.assign(query, { $has: has });
+                        query = Object.assign({}, query, { $has: has });
 
                         return query;
                     }
@@ -166,7 +166,7 @@ const UnboundRecordDeviceOrganizationWorkerOrPatient = {
                     needData: true,
                     condition: ({ user, row, actionData }) => {
                         const { record } = actionData;
-                        const query = {
+                        let query = {
                             id: record.diagnosisId,
                             state: DiagnosisState.active,
                         };
@@ -183,7 +183,7 @@ const UnboundRecordDeviceOrganizationWorkerOrPatient = {
                                 },
                             },
                         };
-                        Object.assign(query, { $has: has });
+                        query = Object.assign({}, query, { $has: has });
                         return query;
                     },
                 },
