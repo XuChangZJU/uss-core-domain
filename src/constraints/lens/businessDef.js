@@ -597,12 +597,12 @@ const AUTH_MATRIX = {
                     '#exists': [
                         {
                             relation: 'userWorker',
-                            condition: ({user, row}) => {
+                            condition: ({ user, row }) => {
                                 const { id } = row;
                                 const query = {
                                     userId: user.id,
                                     workerId: id,
-                                }
+                                };
                                 return query;
                             },
                         },
@@ -618,11 +618,14 @@ const AUTH_MATRIX = {
                                     userId: user.id,
                                     worker: {
                                         organizationId,
-                                        job: {
-                                            name: {
-                                                $in: ['所有者', '守护者', '管理员'],
-                                            },
-                                        },
+                                        // job: {
+                                        //     name: {
+                                        //         $in: ['所有者', '守护者', '管理员'],
+                                        //     },
+                                        // },
+                                        jobId: {
+                                            $in: [Jobs.superAdministrator, Jobs.guardian, Jobs.administrator],
+                                        }
                                     },
                                 };
                                 return query;
