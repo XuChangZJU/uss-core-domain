@@ -573,18 +573,38 @@ const AUTH_MATRIX = {
                         {
                             relation: 'userWorker',
                             condition: ({user, row}) => {
-                                const { organizationId } = row;
+                                const { id } = row;
                                 const query = {
                                     userId: user.id,
-                                    worker: {
-                                        organizationId,
-                                    },
+                                    workerId: id,
                                 }
                                 return query;
                             },
                         },
                     ],
                 },
+                {
+                    '#exists': [
+                        {
+                            relation: 'userWorker',
+                            condition: ({user, row}) => {
+                                const { organizationId } = row;
+                                const query = {
+                                    userId: user.id,
+                                    worker: {
+                                        organizationId,
+                                        job: {
+                                            name: {
+                                                $in: ['所有者', '守护者', '管理员'],
+                                            },
+                                        },
+                                    },
+                                };
+                                return query;
+                            },
+                        },
+                    ],
+                }
             ],
         },
         [WorkerAction.remove]: {
@@ -608,11 +628,13 @@ const AUTH_MATRIX = {
                             },
                         },
                     ],
-                    '#data': [{
+                    '#data': [
+                        {
                         check: ({ user, row }) => {
                             return row.job.name !== '所有者' && row.job.name !== '守护者';
                         },
-                    }]
+                    }
+                    ]
                 },
             ],
         },
