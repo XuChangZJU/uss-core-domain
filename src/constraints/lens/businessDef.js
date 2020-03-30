@@ -48,6 +48,13 @@ const {
     AnyRelationAuth,
     } = require('../action');
 
+const { Roles } = require('../../constants/lens/roles');
+
+const Jobs = {
+    guardian: 1, //守护者
+    administrator: 2, //管理员
+    superAdministrator: 5 // 超级管理员
+};
 
 
 const RecordDeviceOrganizationWorker = {
@@ -211,9 +218,10 @@ const OrganizationOwner = {
                             userId: user.id,
                             worker: {
                                 organizationId,
-                                job: {
-                                    name: '所有者',
-                                },
+                                // job: {
+                                //     name: '所有者',
+                                // },
+                                jobId: Jobs.superAdministrator
                             },
                         };
                         return query;
@@ -237,11 +245,14 @@ const DeviceOrganizationWorker = {
                             userId: user.id,
                             worker: {
                                 organizationId: device.organizationId,
-                                job: {
-                                    name: {
-                                        $in: ['所有者', '守护者', '管理员'],
-                                    },
-                                },
+                                // job: {
+                                //     name: {
+                                //         $in: ['所有者', '守护者', '管理员'],
+                                //     },
+                                // },
+                                jobId: {
+                                    $in: [Jobs.superAdministrator, Jobs.guardian, Jobs.administrator],
+                                }
                             },
                         };
                         return query;
@@ -266,11 +277,14 @@ const WorkerOrganizationOwner = {
                             userId: user.id,
                             worker: {
                                 organizationId: worker.organizationId,
-                                job: {
-                                    name: {
-                                        $in: ['所有者', '守护者', '管理员'],
-                                    },
-                                },
+                                // job: {
+                                //     name: {
+                                //         $in: ['所有者', '守护者', '管理员'],
+                                //     },
+                                // },
+                                jobId: {
+                                    $in: [Jobs.superAdministrator, Jobs.guardian, Jobs.administrator],
+                                }
                             },
                         };
                         return query;
@@ -294,7 +308,7 @@ const transmitterDeviceOrganizationWorker = {
                     condition: ({ user }) => {
                         const query = {
                             userId: user.id,
-                            roleId: 101,
+                            roleId: Roles.BUSINESS.id,
                         };
                         return query;
                     },
@@ -427,11 +441,14 @@ const AUTH_MATRIX = {
                                     userId: user.id,
                                     worker: {
                                         organizationId,
-                                        job: {
-                                            name: {
-                                                $in: ['所有者', '守护者', '管理员'],
-                                            },
-                                        },
+                                        // job: {
+                                        //     name: {
+                                        //         $in: ['所有者', '守护者', '管理员'],
+                                        //     },
+                                        // },
+                                        jobId: {
+                                            $in: [Jobs.superAdministrator, Jobs.guardian, Jobs.administrator],
+                                        }
                                     },
                                 };
                                 return query;
@@ -453,11 +470,14 @@ const AUTH_MATRIX = {
                                     userId: user.id,
                                     worker: {
                                         organizationId,
-                                        job: {
-                                            name: {
-                                                $in: ['所有者', '守护者', '管理员'],
-                                            },
-                                        },
+                                        // job: {
+                                        //     name: {
+                                        //         $in: ['所有者', '守护者', '管理员'],
+                                        //     },
+                                        // },
+                                        jobId: {
+                                            $in: [Jobs.superAdministrator, Jobs.guardian, Jobs.administrator],
+                                        }
                                     },
                                 };
                                 return query;
@@ -484,11 +504,14 @@ const AUTH_MATRIX = {
                                     userId: user.id,
                                     worker: {
                                         organizationId,
-                                        job: {
-                                            name: {
-                                                $in: ['所有者', '守护者', '管理员'],
-                                            },
-                                        },
+                                        // job: {
+                                        //     name: {
+                                        //         $in: ['所有者', '守护者', '管理员'],
+                                        //     },
+                                        // },
+                                        jobId: {
+                                            $in: [Jobs.superAdministrator, Jobs.guardian, Jobs.administrator],
+                                        }
                                     },
                                 };
                                 return query;
@@ -520,9 +543,10 @@ const AUTH_MATRIX = {
                                 userId: user.id,
                                 worker: {
                                     organizationId,
-                                    job: {
-                                        name: '所有者',
-                                    },
+                                    // job: {
+                                    //     name: '所有者',
+                                    // },
+                                    jobId: Jobs.superAdministrator
                                 },
                             };
                             return query;
@@ -547,9 +571,10 @@ const AUTH_MATRIX = {
                                 userId: user.id,
                                 worker: {
                                     organizationId,
-                                    job: {
-                                        name: '所有者',
-                                    },
+                                    // job: {
+                                    //     name: '所有者',
+                                    // },
+                                    jobId: Jobs.superAdministrator
                                 },
                             };
                             return query;
@@ -599,9 +624,10 @@ const AUTH_MATRIX = {
                                     userId: user.id,
                                     worker: {
                                         organizationId,
-                                        job: {
-                                            name: '所有者',
-                                        },
+                                        // job: {
+                                        //     name: '所有者',
+                                        // },
+                                        jobId: Jobs.superAdministrator
                                     },
                                 };
                                 return query;
@@ -610,7 +636,8 @@ const AUTH_MATRIX = {
                     ],
                     '#data': [{
                         check: ({ user, row }) => {
-                            return row.job.name !== '所有者' && row.job.name !== '守护者';
+                            //return row.job.name !== '所有者' && row.job.name !== '守护者';
+                            return ![Jobs.superAdministrator, Jobs.guardian].includes(row.jobId);
                         },
                     }]
                 },
@@ -628,11 +655,14 @@ const AUTH_MATRIX = {
                                     userId: user.id,
                                     worker: {
                                         organizationId,
-                                        job: {
-                                            name: {
-                                                $in: ['所有者', '守护者', '管理员'],
-                                            },
-                                        },
+                                        // job: {
+                                        //     name: {
+                                        //         $in: ['所有者', '守护者', '管理员'],
+                                        //     },
+                                        // },
+                                        jobId: {
+                                            $in: [Jobs.superAdministrator, Jobs.guardian, Jobs.administrator],
+                                        }
                                     },
                                 };
                                 return query;
@@ -654,9 +684,10 @@ const AUTH_MATRIX = {
                                     userId: user.id,
                                     worker: {
                                         organizationId,
-                                        job: {
-                                            name: '所有者',
-                                        },
+                                        // job: {
+                                        //     name: '所有者',
+                                        // },
+                                        jobId: Jobs.superAdministrator
                                     },
                                 };
                                 return query;
