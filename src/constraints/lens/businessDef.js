@@ -673,35 +673,30 @@ const AUTH_MATRIX = {
                 },
             ],
         },
-        [WorkerAction.authGrant]: {
-            auths: [
-                {
-                    '#exists': [
-                        {
-                            relation: 'userWorker',
-                            condition: ({user, row}) => {
-                                const { organizationId } = row;
-                                const query = {
-                                    userId: user.id,
-                                    worker: {
-                                        organizationId,
-                                        // job: {
-                                        //     name: {
-                                        //         $in: ['所有者', '守护者', '管理员'],
-                                        //     },
-                                        // },
-                                        jobId: {
-                                            $in: [Jobs.superAdministrator, Jobs.guardian, Jobs.administrator],
-                                        }
-                                    },
-                                };
-                                return query;
-                            },
-                        },
-                    ],
-                },
-            ],
-        },
+        // [WorkerAction.authGrant]: {
+        //     auths: [
+        //         {
+        //             '#exists': [
+        //                 {
+        //                     relation: 'userWorker',
+        //                     condition: ({user, row}) => {
+        //                         const { organizationId } = row;
+        //                         const query = {
+        //                             userId: user.id,
+        //                             worker: {
+        //                                 organizationId,
+        //                                 jobId: {
+        //                                     $in: [Jobs.superAdministrator, Jobs.guardian, Jobs.administrator],
+        //                                 }
+        //                             },
+        //                         };
+        //                         return query;
+        //                     },
+        //                 },
+        //             ],
+        //         },
+        //     ],
+        // },
         [WorkerAction.transfer]: {
             auths: [
                 {
@@ -715,27 +710,21 @@ const AUTH_MATRIX = {
                                         userId: user.id,
                                         worker: {
                                             organizationId,
-                                            // job: {
-                                            //     name: '所有者',
-                                            // },
                                             jobId: Jobs.superAdministrator
                                         },
                                     };
                                     return query;
+                                }
+                                const query = {
+                                    userId: user.id,
+                                    worker: {
+                                        organizationId,
+                                        jobId:  {
+                                            $in: [Jobs.superAdministrator, Jobs.guardian, Jobs.administrator],
+                                        }
+                                    },
                                 };
-                                    const query = {
-                                        userId: user.id,
-                                        worker: {
-                                            organizationId,
-                                            // job: {
-                                            //     name: '所有者',
-                                            // },
-                                            jobId:  {
-                                                $in: [Jobs.superAdministrator, Jobs.guardian, Jobs.administrator],
-                                            }
-                                        },
-                                    };
-                                    return query;
+                                return query;
                             },
                         },
                     ],
