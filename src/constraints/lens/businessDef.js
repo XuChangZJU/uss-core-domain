@@ -212,7 +212,7 @@ const OrganizationOwner = {
                             worker: {
                                 organizationId,
                                 job: {
-                                    name: '所有者',
+                                    id: 5,
                                 },
                             },
                         };
@@ -238,8 +238,8 @@ const DeviceOrganizationWorker = {
                             worker: {
                                 organizationId: device.organizationId,
                                 job: {
-                                    name: {
-                                        $in: ['所有者', '守护者', '管理员'],
+                                    id: {
+                                        $in: [1,2,5],
                                     },
                                 },
                             },
@@ -267,8 +267,8 @@ const WorkerOrganizationOwner = {
                             worker: {
                                 organizationId: worker.organizationId,
                                 job: {
-                                    name: {
-                                        $in: ['所有者', '守护者', '管理员'],
+                                    id: {
+                                        $in: [1,2,5],
                                     },
                                 },
                             },
@@ -428,8 +428,8 @@ const AUTH_MATRIX = {
                                     worker: {
                                         organizationId,
                                         job: {
-                                            name: {
-                                                $in: ['所有者', '守护者', '管理员'],
+                                            id: {
+                                                $in: [1,2,5],
                                             },
                                         },
                                     },
@@ -454,8 +454,8 @@ const AUTH_MATRIX = {
                                     worker: {
                                         organizationId,
                                         job: {
-                                            name: {
-                                                $in: ['所有者', '守护者', '管理员'],
+                                            id: {
+                                                $in: [1,2,5],
                                             },
                                         },
                                     },
@@ -485,8 +485,8 @@ const AUTH_MATRIX = {
                                     worker: {
                                         organizationId,
                                         job: {
-                                            name: {
-                                                $in: ['所有者', '守护者', '管理员'],
+                                            id: {
+                                                $in: [1,2,5],
                                             },
                                         },
                                     },
@@ -521,7 +521,7 @@ const AUTH_MATRIX = {
                                 worker: {
                                     organizationId,
                                     job: {
-                                        name: '所有者',
+                                        id: 5,
                                     },
                                 },
                             };
@@ -548,7 +548,7 @@ const AUTH_MATRIX = {
                                 worker: {
                                     organizationId,
                                     job: {
-                                        name: '所有者',
+                                        id: 5,
                                     },
                                 },
                             };
@@ -594,8 +594,8 @@ const AUTH_MATRIX = {
                                     worker: {
                                         organizationId,
                                         job: {
-                                            name: {
-                                                $in: ['所有者', '守护者', '管理员'],
+                                            id: {
+                                                $in: [1,2,5],
                                             },
                                         },
                                     },
@@ -620,7 +620,7 @@ const AUTH_MATRIX = {
                                     worker: {
                                         organizationId,
                                         job: {
-                                            name: '所有者',
+                                            id: 5,
                                         },
                                     },
                                 };
@@ -631,7 +631,7 @@ const AUTH_MATRIX = {
                     '#data': [
                         {
                         check: ({ user, row }) => {
-                            return row.job.name !== '所有者' && row.job.name !== '守护者';
+                            return row.job.id !== 5 && row.job.id !== 1;
                         },
                     }
                     ]
@@ -651,8 +651,8 @@ const AUTH_MATRIX = {
                                     worker: {
                                         organizationId,
                                         job: {
-                                            name: {
-                                                $in: ['所有者', '守护者', '管理员'],
+                                            id: {
+                                                $in: [1,2,5],
                                             },
                                         },
                                     },
@@ -677,7 +677,7 @@ const AUTH_MATRIX = {
                                     worker: {
                                         organizationId,
                                         job: {
-                                            name: '所有者',
+                                            id: 5,
                                         },
                                     },
                                 };
