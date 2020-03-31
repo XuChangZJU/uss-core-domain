@@ -429,7 +429,31 @@ const AUTH_MATRIX = {
         // [RecordAction.expire]: RecordOwner,   这个只有ROOT干
     },
     device: {
-        [DeviceAction.create]: DeviceOrganizationWorker,
+        [DeviceAction.create]:  {
+            auths: [
+                {
+                    '#exists': [
+                        {
+                            relation: 'userWorker',
+                            needData: true,
+                            condition: ({ user, actionData }) => {
+                                const { organizationId } = actionData;
+                                const query = {
+                                    userId: user.id,
+                                    worker: {
+                                        organizationId: organizationId,
+                                        jobId: {
+                                            $in: [Jobs.superAdministrator, Jobs.guardian, Jobs.administrator],
+                                        }
+                                    },
+                                };
+                                return query;
+                            },
+                        },
+                    ],
+                },
+            ],
+        },
         [DeviceAction.update]: {
             auths: [
                 {
