@@ -709,18 +709,33 @@ const AUTH_MATRIX = {
                         {
                             relation: 'userWorker',
                             condition: ({user, row}) => {
-                                const {organizationId} = row;
-                                const query = {
-                                    userId: user.id,
-                                    worker: {
-                                        organizationId,
-                                        // job: {
-                                        //     name: '所有者',
-                                        // },
-                                        jobId: Jobs.superAdministrator
-                                    },
+                                const {organizationId, jobId} = row;
+                                if(jobId === Jobs.superAdministrator) {
+                                    const query = {
+                                        userId: user.id,
+                                        worker: {
+                                            organizationId,
+                                            // job: {
+                                            //     name: '所有者',
+                                            // },
+                                            jobId: Jobs.superAdministrator
+                                        },
+                                    };
+                                    return query;
                                 };
-                                return query;
+                                    const query = {
+                                        userId: user.id,
+                                        worker: {
+                                            organizationId,
+                                            // job: {
+                                            //     name: '所有者',
+                                            // },
+                                            jobId:  {
+                                                $in: [Jobs.superAdministrator, Jobs.guardian, Jobs.administrator],
+                                            }
+                                        },
+                                    };
+                                    return query;
                             },
                         },
                     ],
