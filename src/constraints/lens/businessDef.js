@@ -729,7 +729,6 @@ const AUTH_MATRIX = {
                             relation: 'userWorker',
                             condition: ({user, row}) => {
                                 const {organizationId, jobId} = row;
-                                if(jobId === Jobs.superAdministrator) {
                                     const query = {
                                         userId: user.id,
                                         worker: {
@@ -738,17 +737,6 @@ const AUTH_MATRIX = {
                                         },
                                     };
                                     return query;
-                                }
-                                const query = {
-                                    userId: user.id,
-                                    worker: {
-                                        organizationId,
-                                        jobId:  {
-                                            $in: [Jobs.superAdministrator, Jobs.guardian, Jobs.administrator],
-                                        }
-                                    },
-                                };
-                                return query;
                             },
                         },
                     ],
