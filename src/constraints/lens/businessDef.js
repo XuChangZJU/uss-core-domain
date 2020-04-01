@@ -732,7 +732,7 @@ const AUTH_MATRIX = {
     //             },
     //         ],
     //     },
-    // },
+    },
     transmitter: {
         [TransmitterAction.create]: AllowEveryoneAuth,
         [TransmitterAction.online]: transmitterDeviceOrganizationWorker,
