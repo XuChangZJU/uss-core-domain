@@ -218,9 +218,6 @@ const OrganizationOwner = {
                             userId: user.id,
                             worker: {
                                 organizationId,
-                                // job: {
-                                //     name: '所有者',
-                                // },
                                 jobId: Jobs.superAdministrator
                             },
                         };
@@ -245,12 +242,6 @@ const DeviceOrganizationWorker = {
                             userId: user.id,
                             worker: {
                                 organizationId: device.organizationId,
-
-             // job: {
-                                //     name: {
-                                //         $in: ['所有者', '守护者', '管理员'],
-                                //     },
-                                // },
                                 jobId: {
                                     $in: [Jobs.superAdministrator, Jobs.guardian, Jobs.administrator],
                                 }
@@ -278,11 +269,6 @@ const WorkerOrganizationOwner = {
                             userId: user.id,
                             worker: {
                                 organizationId: worker.organizationId,
-                                // job: {
-                                //     name: {
-                                //         $in: ['所有者', '守护者', '管理员'],
-                                //     },
-                                // },
                                 jobId: {
                                     $in: [Jobs.superAdministrator, Jobs.guardian, Jobs.administrator],
                                 }
@@ -426,7 +412,13 @@ const AUTH_MATRIX = {
     record: {
         [RecordAction.create]: RecordDeviceOrganizationWorker,
         [RecordAction.update]: UnboundRecordDeviceOrganizationWorkerOrPatient,
-        // [RecordAction.expire]: RecordOwner,   这个只有ROOT干
+        [RecordAction.remove]: {
+            auths: [
+                {
+                    '#role': [Roles.ROOT.name],
+                },
+            ],
+        },
     },
     device: {
         [DeviceAction.create]:  {
@@ -466,12 +458,6 @@ const AUTH_MATRIX = {
                                     userId: user.id,
                                     worker: {
                                         organizationId,
-
-                        // job: {
-                                        //     name: {
-                                        //         $in: ['所有者', '守护者', '管理员'],
-                                        //     },
-                                        // },
                                         jobId: {
                                             $in: [Jobs.superAdministrator, Jobs.guardian, Jobs.administrator],
                                         }
@@ -496,11 +482,6 @@ const AUTH_MATRIX = {
                                     userId: user.id,
                                     worker: {
                                         organizationId,
-                                        // job: {
-                                        //     name: {
-                                        //         $in: ['所有者', '守护者', '管理员'],
-                                        //     },
-                                        // },
                                         jobId: {
                                             $in: [Jobs.superAdministrator, Jobs.guardian, Jobs.administrator],
                                         }
@@ -530,12 +511,6 @@ const AUTH_MATRIX = {
                                     userId: user.id,
                                     worker: {
                                         organizationId,
-
-                                        // job: {
-                                        //     name: {
-                                        //         $in: ['所有者', '守护者', '管理员'],
-                                        //     },
-                                        // },
                                         jobId: {
                                             $in: [Jobs.superAdministrator, Jobs.guardian, Jobs.administrator],
                                         }
@@ -570,10 +545,6 @@ const AUTH_MATRIX = {
                                 userId: user.id,
                                 worker: {
                                     organizationId,
-
-                                    // job: {
-                                    //     name: '所有者',
-                                    // },
                                     jobId: Jobs.superAdministrator
                                 },
                             };
@@ -599,10 +570,6 @@ const AUTH_MATRIX = {
                                 userId: user.id,
                                 worker: {
                                     organizationId,
-
-                                    // job: {
-                                    //     name: '所有者',
-                                    // },
                                     jobId: Jobs.superAdministrator
                                 },
                             };
@@ -647,11 +614,6 @@ const AUTH_MATRIX = {
                                     userId: user.id,
                                     worker: {
                                         organizationId,
-                                        // job: {
-                                        //     name: {
-                                        //         $in: ['所有者', '守护者', '管理员'],
-                                        //     },
-                                        // },
                                         jobId: {
                                             $in: [Jobs.superAdministrator, Jobs.guardian, Jobs.administrator],
                                         }
@@ -676,9 +638,6 @@ const AUTH_MATRIX = {
                                     userId: user.id,
                                     worker: {
                                         organizationId,
-                                        // job: {
-                                        //     name: '所有者',
-                                        // },
                                         jobId: Jobs.superAdministrator
                                     },
                                 };
@@ -689,7 +648,6 @@ const AUTH_MATRIX = {
                     '#data': [
                         {
                         check: ({ user, row }) => {
-                            //return row.job.name !== '所有者' && row.job.name !== '守护者';
                             return ![Jobs.superAdministrator, Jobs.guardian].includes(row.jobId);
                         },
                     }
