@@ -593,13 +593,16 @@ const AUTH_MATRIX = {
                     '#exists': [
                         {
                             relation: 'userWorker',
-                            condition: ({ user, row }) => {
+                            needData: true,
+                            condition: ({ user, row, actionData }) => {
                                 const { id } = row;
-                                const query = {
+                                const { number } = actionData;
+                                if( number && !'/[0-9a-zA-Z_-]*/'.test(number))
+                                    throw new Error('请填写正确的工号');
+                                return {
                                     userId: user.id,
                                     workerId: id,
                                 };
-                                return query;
                             },
                         },
                     ],
@@ -608,9 +611,14 @@ const AUTH_MATRIX = {
                     '#exists': [
                         {
                             relation: 'userWorker',
-                            condition: ({user, row}) => {
-                                const { organizationId } = row;
-                                const query = {
+                            needData: true,
+                            condition: ({ user, row, actionData }) => {
+                                const { organizationId,jobId } = row;
+                                const { number } = actionData;
+                                if( number && !'/[0-9a-zA-Z_-]*/'.test(number))
+                                    throw new Error('请填写正确的工号');
+                                if([3, 4].includes(jobId)){
+                                    return {
                                     userId: user.id,
                                     worker: {
                                         organizationId,
@@ -619,7 +627,27 @@ const AUTH_MATRIX = {
                                         }
                                     },
                                 };
-                                return query;
+                                }
+                                if([1,2].includes(jobId)){
+                                    return {
+                                        userId: user.id,
+                                        worker: {
+                                            organizationId,
+                                            jobId: {
+                                                $in: [Jobs.superAdministrator, jobId],
+                                            },
+                                        },
+                                    };
+                                }
+                                if( jobId === 5 ){
+                                    return {
+                                        userId: user.id,
+                                        worker: {
+                                            organizationId,
+                                            jobId: Jobs.superAdministrator,
+                                        },
+                                    };
+                                }
                             },
                         },
                     ],
@@ -679,29 +707,32 @@ const AUTH_MATRIX = {
         //         },
         //     ],
         // },
-        [WorkerAction.transfer]: {
-            auths: [
-                {
-                    '#exists': [
-                        {
-                            relation: 'userWorker',
-                            condition: ({user, row}) => {
-                                const {organizationId, jobId} = row;
-                                    const query = {
-                                        userId: user.id,
-                                        worker: {
-                                            organizationId,
-                                            jobId: Jobs.superAdministrator
-                                        },
-                                    };
-                                    return query;
-                            },
-                        },
-                    ],
-                },
-            ],
-        },
-    },
+        [WorkerAction.transfer]: OwnerRelationAuth,
+        //     {
+    //         auths: [
+    //             {
+    //                 '#exists': [
+    //                     {
+    //                         relation: 'userWorker',
+    //                         condition: ({user, row}) => {
+    //                             const {organizationId, jobId} = row;
+    //                             if(jobId === Jobs.superAdministrator) {
+    //                                 const query = {
+    //                                     userId: user.id,
+    //                                     worker: {
+    //                                         organizationId,
+    //                                         jobId: Jobs.superAdministrator
+    //                                     },
+    //                                 };
+    //                                 return query;
+    //                             }
+    //                         },
+    //                     },
+    //                 ],
+    //             },
+    //         ],
+    //     },
+    // },
     transmitter: {
         [TransmitterAction.create]: AllowEveryoneAuth,
         [TransmitterAction.online]: transmitterDeviceOrganizationWorker,
