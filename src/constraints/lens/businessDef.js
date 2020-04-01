@@ -53,7 +53,10 @@ const { Roles } = require('../../constants/lens/roles');
 const Jobs = {
     guardian: 1, //守护者
     administrator: 2, //管理员
-    superAdministrator: 5 // 超级管理员
+    doctor: 3,
+    nurse: 4,
+    superAdministrator: 5, // 超级管理员
+
 };
 
 
@@ -617,7 +620,7 @@ const AUTH_MATRIX = {
                                 const { number } = actionData;
                                 if( number && !'/[0-9a-zA-Z_-]*/'.test(number))
                                     throw new Error('请填写正确的工号');
-                                if([3, 4].includes(jobId)){
+                                if([Jobs.doctor, Jobs.nurse].includes(jobId)){
                                     return {
                                     userId: user.id,
                                     worker: {
@@ -639,7 +642,7 @@ const AUTH_MATRIX = {
                                         },
                                     };
                                 }
-                                if( jobId === 5 ){
+                                if( jobId === Jobs.superAdministrator ){
                                     return {
                                         userId: user.id,
                                         worker: {
