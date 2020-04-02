@@ -631,23 +631,14 @@ const AUTH_MATRIX = {
                                     },
                                 };
                                 }
-                                if([1,2].includes(jobId)){
+                                if([Jobs.administrator].includes(jobId)){
                                     return {
                                         userId: user.id,
                                         worker: {
                                             organizationId,
                                             jobId: {
-                                                $in: [Jobs.superAdministrator, jobId],
+                                                $in: [Jobs.superAdministrator,Jobs.guardian],
                                             },
-                                        },
-                                    };
-                                }
-                                if( jobId === Jobs.superAdministrator ){
-                                    return {
-                                        userId: user.id,
-                                        worker: {
-                                            organizationId,
-                                            jobId: Jobs.superAdministrator,
                                         },
                                     };
                                 }
@@ -664,12 +655,24 @@ const AUTH_MATRIX = {
                         {
                             relation: 'userWorker',
                             condition: ({user, row}) => {
-                                const { organizationId, id } = row;
+                                const { organizationId, jobId } = row;
+                                if(jobId === Jobs.administrator)
+                                    return {
+                                        userId: user.id,
+                                        worker: {
+                                            organizationId,
+                                            jobId: {
+                                                $in: [Jobs.superAdministrator, Jobs.guardian],
+                                            }
+                                        }
+                                    };
                                 const query = {
                                     userId: user.id,
                                     worker: {
                                         organizationId,
-                                        jobId: Jobs.superAdministrator
+                                        jobId: {
+                                            $in: [Jobs.superAdministrator, Jobs.guardian, Jobs.administrator],
+                                        }
                                     },
                                 };
                                 return query;
@@ -710,31 +713,48 @@ const AUTH_MATRIX = {
         //         },
         //     ],
         // },
-        [WorkerAction.transfer]: OwnerRelationAuth,
-        //     {
-    //         auths: [
-    //             {
-    //                 '#exists': [
-    //                     {
-    //                         relation: 'userWorker',
-    //                         condition: ({user, row}) => {
-    //                             const {organizationId, jobId} = row;
-    //                             if(jobId === Jobs.superAdministrator) {
-    //                                 const query = {
-    //                                     userId: user.id,
-    //                                     worker: {
-    //                                         organizationId,
-    //                                         jobId: Jobs.superAdministrator
-    //                                     },
-    //                                 };
-    //                                 return query;
-    //                             }
-    //                         },
-    //                     },
-    //                 ],
-    //             },
-    //         ],
-    //     },
+        [WorkerAction.transfer]:
+            {
+            auths: [
+                {
+                    '#exists': [
+                        {
+                            relation: 'userWorker',
+                            condition: ({ user, row, actionData }) => {
+                                const { organizationId,jobId } = row;
+                                if([Jobs.doctor, Jobs.nurse].includes(jobId)){
+                                    return {
+                                        userId: user.id,
+                                        worker: {
+                                            organizationId,
+                                            jobId: {
+                                                $in: [Jobs.superAdministrator, Jobs.guardian, Jobs.administrator],
+                                            }
+                                        },
+                                    };
+                                }
+                                if([Jobs.administrator].includes(jobId)){
+                                    return {
+                                        userId: user.id,
+                                        worker: {
+                                            organizationId,
+                                            jobId: {
+                                                $in: [Jobs.superAdministrator, jobId],
+                                            },
+                                        },
+                                    };
+                                }
+                            },
+                        },
+                    ],
+                },
+                {
+                    '#relation': {
+                        relations: [WorkerRelation.owner],
+                    },
+                },
+            ],
+        },
     },
     transmitter: {
         [TransmitterAction.create]: AllowEveryoneAuth,
