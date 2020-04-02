@@ -12,6 +12,7 @@ const action = {
     authRevoke: 12,
     authAbandon: 13,
     // authExpire: 14,
+    authGrantMulti: 14,
     authConfirm: 15,
 
     transfer: 21,           // 转让
@@ -118,6 +119,7 @@ const decodeAction = (a) => {
         [action.authAbandon]: '放弃权限',
         // [action.authExpire]: '过期权限',
         [action.authConfirm]: '确认权限',
+        [action.authGrantMulti]: '散发权限',
 
         [action.transfer]: '转让',
         [action.acquire]: '申请',
