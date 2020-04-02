@@ -8,28 +8,26 @@ const {
 
 
 const relation = Object.assign({}, commonRelation, {
-    father: 111,
-    mother: 112,
-    eldership: 113,
-    sibling: 121,
-    friend: 122,
-    colleague: 123,
-    spouse: 124,
-    child: 125,
+    parent: 111,
+    eldership: 112,
+    mate: 121,
+    sibling: 122,
+    friend: 123,
+    children: 131,
+    grandchildren: 132,
 });
 
 
 const decodeRelation = (r) => {
     const S = {
         [relation.owner]: '本人',
-        [relation.father]: '父亲',
-        [relation.mother]: '母亲',
+        [relation.parent]: '父/母',
+        [relation.mate]: '配偶',
         [relation.eldership]: '长辈',
         [relation.sibling]: '兄弟姐妹',
         [relation.friend]: '朋友',
-        [relation.colleague]: '同事',
-        [relation.spouse]: '配偶',
-        [relation.child]: '子女',
+        [relation.children]: '子女',
+        [relation.grandchildren]: '晚辈',
     };
 
     return S[r] || decodeCommonRelation(r);
