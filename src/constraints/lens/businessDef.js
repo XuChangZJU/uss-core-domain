@@ -48,6 +48,16 @@ const {
     AnyRelationAuth,
     } = require('../action');
 
+const { Roles } = require('../../constants/lens/roles');
+
+const Jobs = {
+    guardian: 1, //守护者
+    administrator: 2, //管理员
+    doctor: 3,
+    nurse: 4,
+    superAdministrator: 5, // 超级管理员
+
+};
 
 
 const RecordDeviceOrganizationWorker = {
@@ -56,10 +66,11 @@ const RecordDeviceOrganizationWorker = {
             '#exists': [
                 {
                     relation: 'device',
-                    condition: ({ user, row }) => {
-                        const { deviceId } = row;
-                        const query = {
-                            id: deviceId,
+                    needData: true,
+                    condition: ({ user, actionData }) => {
+                        const { record } = actionData;
+                        let query = {
+                            id: record.deviceId,
                         };
                         const has = {
                             name: 'userWorker',
@@ -76,7 +87,7 @@ const RecordDeviceOrganizationWorker = {
                                 },
                             },
                         };
-                        Object.assign(query, { $has: has });
+                        query = Object.assign({}, query, { $has: has });
 
                         return query;
                     }
@@ -97,9 +108,9 @@ const UnboundRecordDeviceOrganizationWorkerOrPatient = {
                 {
                     relation: 'diagnosis',
                     needData: true,
-                    condition: ({ user, actionData }) => {
+                    condition: ({ user, row, actionData }) => {
                         const { record } = actionData;
-                        const query = {
+                        let query = {
                             id: record.diagnosisId,
                             state: DiagnosisState.active,
                         };
@@ -118,7 +129,7 @@ const UnboundRecordDeviceOrganizationWorkerOrPatient = {
                                 },
                             },
                         };
-                        Object.assign(query, { $has: has });
+                        query = Object.assign({}, query, { $has: has });
                         return query;
                     },
                 },
@@ -126,7 +137,7 @@ const UnboundRecordDeviceOrganizationWorkerOrPatient = {
                     relation: 'device',
                     condition: ({ user, row }) => {
                         const { deviceId } = row;
-                        const query = {
+                        let query = {
                             id: deviceId,
                         };
                         const has = {
@@ -144,7 +155,7 @@ const UnboundRecordDeviceOrganizationWorkerOrPatient = {
                                 },
                             },
                         };
-                        Object.assign(query, { $has: has });
+                        query = Object.assign({}, query, { $has: has });
 
                         return query;
                     }
@@ -162,9 +173,10 @@ const UnboundRecordDeviceOrganizationWorkerOrPatient = {
             '#exists': [
                 {
                     relation: 'diagnosis',
-                    condition: ({ user, actionData }) => {
+                    needData: true,
+                    condition: ({ user, row, actionData }) => {
                         const { record } = actionData;
-                        const query = {
+                        let query = {
                             id: record.diagnosisId,
                             state: DiagnosisState.active,
                         };
@@ -181,59 +193,10 @@ const UnboundRecordDeviceOrganizationWorkerOrPatient = {
                                 },
                             },
                         };
-                        Object.assign(query, { $has: has });
+                        query = Object.assign({}, query, { $has: has });
                         return query;
                     },
                 },
-             /*   {
-                    relation: 'device',
-                    condition: ({ user, actionData ,row}) => {
-                        const { diagnosis } = actionData;
-                        const query = {
-                            id: diagnosis.patientId,
-                        };
-                        const query2 = {
-                            id: row.deviceId,
-                        }
-                        const has = {
-                            name: 'userPatient',
-                            projection: {
-                                id: 1,
-                            },
-                            query: {
-                                userId: user.id,
-                                patientId: query.id,
-                            },
-                        };
-
-                        Object.assign(query2, { $has: has });
-                        return query;
-                    },
-                },*/
-                /*  这里还应该表达，此record数据的device.organization和userPatient的diagnosis.organizationId相等，写不出来
-                 {
-                 relation: 'device',
-                 condition: ({ user, row }) => {
-                 const query = {
-                 id: row.deviceId,
-                 };
-                 const has = {
-                 name: 'userPatient',
-                 projection: {
-                 id: 1,
-                 },
-                 query: {
-                 userId: user.id,
-                 patientId: {
-                 $ref: query,
-                 $attr: 'patientId',
-                 },
-                 },
-                 };
-                 Object.assign(query, { $has: has });
-                 return query;
-                 },
-                 }*/
             ],
             '#data': [
                 {
@@ -258,9 +221,7 @@ const OrganizationOwner = {
                             userId: user.id,
                             worker: {
                                 organizationId,
-                                job: {
-                                    name: '所有者',
-                                },
+                                jobId: Jobs.superAdministrator
                             },
                         };
                         return query;
@@ -277,17 +238,16 @@ const DeviceOrganizationWorker = {
             '#exists': [
                 {
                     relation: 'userWorker',
-                    condition: ({user, row}) => {
-                        const {organizationId} = row;
+                    needData: true,
+                    condition: ({ user, actionData }) => {
+                        const { device } = actionData;
                         const query = {
                             userId: user.id,
                             worker: {
-                                organizationId,
-                                job: {
-                                    name: {
-                                        $in: ['所有者', '守护者', '管理员'],
-                                    },
-                                },
+                                organizationId: device.organizationId,
+                                jobId: {
+                                    $in: [Jobs.superAdministrator, Jobs.guardian, Jobs.administrator],
+                                }
                             },
                         };
                         return query;
@@ -299,23 +259,22 @@ const DeviceOrganizationWorker = {
 };
 
 
-const workerOrganizationOwner = {
+const WorkerOrganizationOwner = {
     auths: [
         {
             '#exists': [
                 {
                     relation: 'userWorker',
-                    condition: ({user, row}) => {
-                        const {organizationId} = row;
+                    needData: true,
+                    condition: ({ user, actionData }) => {
+                        const { worker } = actionData;
                         const query = {
                             userId: user.id,
                             worker: {
-                                organizationId,
-                                job: {
-                                    name: {
-                                        $in: ['所有者', '守护者', '管理员'],
-                                    },
-                                },
+                                organizationId: worker.organizationId,
+                                jobId: {
+                                    $in: [Jobs.superAdministrator, Jobs.guardian, Jobs.administrator],
+                                }
                             },
                         };
                         return query;
@@ -339,7 +298,7 @@ const transmitterDeviceOrganizationWorker = {
                     condition: ({ user }) => {
                         const query = {
                             userId: user.id,
-                            roleId: 101,
+                            roleId: Roles.BUSINESS.id,
                         };
                         return query;
                     },
@@ -381,11 +340,12 @@ const AUTH_MATRIX = {
                     '#exists': [
                         {
                             relation: 'userPatient',
-                            condition: ({user, row}) => {
-                                const { patientId } = row;
+                            needData: true,
+                            condition: ({ user, actionData }) => {
+                                const { diagnosis } = actionData;
                                 const query = {
                                     userId: user.id,
-                                    patientId,
+                                    patientId: diagnosis.patientId,
                                 };
                                 return  query;
                             },
@@ -453,13 +413,66 @@ const AUTH_MATRIX = {
         },
     },
     record: {
-        [RecordAction.create]:  RecordDeviceOrganizationWorker,
+        [RecordAction.create]: RecordDeviceOrganizationWorker,
         [RecordAction.update]: UnboundRecordDeviceOrganizationWorkerOrPatient,
-        // [RecordAction.expire]: RecordOwner,   这个只有ROOT干
+        [RecordAction.remove]: {
+            auths: [
+                {
+                    '#role': [Roles.ROOT.name],
+                },
+            ],
+        },
     },
     device: {
-        [DeviceAction.create]: DeviceOrganizationWorker,
-        [DeviceAction.update]: DeviceOrganizationWorker,
+        [DeviceAction.create]:  {
+            auths: [
+                {
+                    '#exists': [
+                        {
+                            relation: 'userWorker',
+                            needData: true,
+                            condition: ({ user, actionData }) => {
+                                const { organizationId } = actionData;
+                                const query = {
+                                    userId: user.id,
+                                    worker: {
+                                        organizationId: organizationId,
+                                        jobId: {
+                                            $in: [Jobs.superAdministrator, Jobs.guardian, Jobs.administrator],
+                                        }
+                                    },
+                                };
+                                return query;
+                            },
+                        },
+                    ],
+                },
+            ],
+        },
+        [DeviceAction.update]: {
+            auths: [
+                {
+                    '#exists': [
+                        {
+                            relation: 'userWorker',
+                            condition: ({user, row}) => {
+                                const {organizationId} = row;
+                                const query = {
+                                    userId: user.id,
+                                    worker: {
+                                        organizationId,
+                                        jobId: {
+                                            $in: [Jobs.superAdministrator, Jobs.guardian, Jobs.administrator],
+                                        }
+                                    },
+                                };
+                                return query;
+                            },
+                        },
+                    ],
+                },
+            ],
+        },
         [DeviceAction.enable]: {
             auths: [
                 {
@@ -472,11 +485,9 @@ const AUTH_MATRIX = {
                                     userId: user.id,
                                     worker: {
                                         organizationId,
-                                        job: {
-                                            name: {
-                                                $in: ['所有者', '守护者', '管理员'],
-                                            },
-                                        },
+                                        jobId: {
+                                            $in: [Jobs.superAdministrator, Jobs.guardian, Jobs.administrator],
+                                        }
                                     },
                                 };
                                 return query;
@@ -503,11 +514,9 @@ const AUTH_MATRIX = {
                                     userId: user.id,
                                     worker: {
                                         organizationId,
-                                        job: {
-                                            name: {
-                                                $in: ['所有者', '守护者', '管理员'],
-                                            },
-                                        },
+                                        jobId: {
+                                            $in: [Jobs.superAdministrator, Jobs.guardian, Jobs.administrator],
+                                        }
                                     },
                                 };
                                 return query;
@@ -539,9 +548,7 @@ const AUTH_MATRIX = {
                                 userId: user.id,
                                 worker: {
                                     organizationId,
-                                    job: {
-                                        name: '所有者',
-                                    },
+                                    jobId: Jobs.superAdministrator
                                 },
                             };
                             return query;
@@ -566,9 +573,7 @@ const AUTH_MATRIX = {
                                 userId: user.id,
                                 worker: {
                                     organizationId,
-                                    job: {
-                                        name: '所有者',
-                                    },
+                                    jobId: Jobs.superAdministrator
                                 },
                             };
                             return query;
@@ -584,56 +589,169 @@ const AUTH_MATRIX = {
         },
     },
     worker: {
-        [WorkerAction.create]: workerOrganizationOwner,
+        [WorkerAction.create]: WorkerOrganizationOwner,
         [WorkerAction.update]: {
             auths: [
                 {
                     '#exists': [
                         {
                             relation: 'userWorker',
-                            condition: ({user, row}) => {
-                                const {organizationId} = row;
-                                const query = {
+                            needData: true,
+                            condition: ({ user, row, actionData }) => {
+                                const { id } = row;
+                                const { number } = actionData;
+                                if( number && !'/[0-9a-zA-Z_-]*/'.test(number))
+                                    throw new Error('请填写正确的工号');
+                                return {
                                     userId: user.id,
-                                    worker: {
-                                        organizationId,
-                                        job: {
-                                            name: {
-                                                $in: ['所有者', '守护者', '管理员'],
-                                            },
-                                        },
-                                    },
+                                    workerId: id,
                                 };
-                                return query;
                             },
                         },
                     ],
                 },
+                {
+                    '#exists': [
+                        {
+                            relation: 'userWorker',
+                            needData: true,
+                            condition: ({ user, row, actionData }) => {
+                                const { organizationId,jobId } = row;
+                                const { number } = actionData;
+                                if( number && !'/[0-9a-zA-Z_-]*/'.test(number))
+                                    throw new Error('请填写正确的工号');
+                                if([Jobs.doctor, Jobs.nurse].includes(jobId)){
+                                    return {
+                                    userId: user.id,
+                                    worker: {
+                                        organizationId,
+                                        jobId: {
+                                            $in: [Jobs.superAdministrator, Jobs.guardian, Jobs.administrator],
+                                        }
+                                    },
+                                };
+                                }
+                                if([Jobs.administrator].includes(jobId)){
+                                    return {
+                                        userId: user.id,
+                                        worker: {
+                                            organizationId,
+                                            jobId: {
+                                                $in: [Jobs.superAdministrator,Jobs.guardian],
+                                            },
+                                        },
+                                    };
+                                }
+                            },
+                        },
+                    ],
+                }
             ],
         },
-        [WorkerAction.remove]: workerOrganizationOwner,
-        [WorkerAction.authGrant]: workerOrganizationOwner,
-        [WorkerAction.transfer]: {
+        [WorkerAction.remove]: {
             auths: [
                 {
                     '#exists': [
                         {
                             relation: 'userWorker',
                             condition: ({user, row}) => {
-                                const {organizationId} = row;
+                                const { organizationId, jobId } = row;
+                                if(jobId === Jobs.administrator)
+                                    return {
+                                        userId: user.id,
+                                        worker: {
+                                            organizationId,
+                                            jobId: {
+                                                $in: [Jobs.superAdministrator, Jobs.guardian],
+                                            }
+                                        }
+                                    };
                                 const query = {
                                     userId: user.id,
                                     worker: {
                                         organizationId,
-                                        job: {
-                                            name: '所有者',
-                                        },
+                                        jobId: {
+                                            $in: [Jobs.superAdministrator, Jobs.guardian, Jobs.administrator],
+                                        }
                                     },
                                 };
                                 return query;
                             },
                         },
                     ],
+                    '#data': [
+                        {
+                        check: ({ user, row }) => {
+                            return ![Jobs.superAdministrator, Jobs.guardian].includes(row.jobId);
+                        },
+                    }
+                    ]
+                },
+            ],
+        },
+        // [WorkerAction.authGrant]: {
+        //     auths: [
+        //         {
+        //             '#exists': [
+        //                 {
+        //                     relation: 'userWorker',
+        //                     condition: ({user, row}) => {
+        //                         const { organizationId } = row;
+        //                         const query = {
+        //                             userId: user.id,
+        //                             worker: {
+        //                                 organizationId,
+        //                                 jobId: {
+        //                                     $in: [Jobs.superAdministrator, Jobs.guardian, Jobs.administrator],
+        //                                 }
+        //                             },
+        //                         };
+        //                         return query;
+        //                     },
+        //                 },
+        //             ],
+        //         },
+        //     ],
+        // },
+        [WorkerAction.transfer]:
+            {
+            auths: [
+                {
+                    '#exists': [
+                        {
+                            relation: 'userWorker',
+                            condition: ({ user, row, actionData }) => {
+                                const { organizationId,jobId } = row;
+                                if([Jobs.doctor, Jobs.nurse].includes(jobId)){
+                                    return {
+                                        userId: user.id,
+                                        worker: {
+                                            organizationId,
+                                            jobId: {
+                                                $in: [Jobs.superAdministrator, Jobs.guardian, Jobs.administrator],
+                                            }
+                                        },
+                                    };
+                                }
+                                if([Jobs.administrator].includes(jobId)){
+                                    return {
+                                        userId: user.id,
+                                        worker: {
+                                            organizationId,
+                                            jobId: {
+                                                $in: [Jobs.superAdministrator, jobId],
+                                            },
+                                        },
+                                    };
+                                }
+                            },
+                        },
+                    ],
+                },
+                {
+                    '#relation': {
+                        relations: [WorkerRelation.owner],
+                    },
                 },
             ],
         },
