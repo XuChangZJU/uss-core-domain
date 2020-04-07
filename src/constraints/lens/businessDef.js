@@ -432,11 +432,11 @@ const AUTH_MATRIX = {
                             relation: 'userWorker',
                             needData: true,
                             condition: ({ user, actionData }) => {
-                                const { organizationId } = actionData;
+                                const { device } = actionData;
                                 const query = {
                                     userId: user.id,
                                     worker: {
-                                        organizationId: organizationId,
+                                        organizationId: device.organizationId,
                                         jobId: {
                                             $in: [Jobs.superAdministrator, Jobs.guardian, Jobs.administrator],
                                         }
@@ -599,7 +599,8 @@ const AUTH_MATRIX = {
                             needData: true,
                             condition: ({ user, row, actionData }) => {
                                 const { id } = row;
-                                const { number } = actionData;
+                                const { worker = {} } = actionData;
+                                const { number } = worker;
                                 if( number && !'/^[0-9a-zA-Z_-]+$/'.test(number))
                                     throw new Error('请填写正确的工号');
                                 return {
@@ -616,20 +617,21 @@ const AUTH_MATRIX = {
                             relation: 'userWorker',
                             needData: true,
                             condition: ({ user, row, actionData }) => {
-                                const { organizationId,jobId } = row;
-                                const { number } = actionData;
+                                const { organizationId, jobId } = row;
+                                const { worker = {} } = actionData;
+                                const { number } = worker;
                                 if( number && !'/^[0-9a-zA-Z_-]+$/'.test(number))
                                     throw new Error('请填写正确的工号');
                                 if([Jobs.doctor, Jobs.nurse].includes(jobId)){
                                     return {
-                                    userId: user.id,
-                                    worker: {
-                                        organizationId,
-                                        jobId: {
-                                            $in: [Jobs.superAdministrator, Jobs.guardian, Jobs.administrator],
-                                        }
-                                    },
-                                };
+                                        userId: user.id,
+                                        worker: {
+                                            organizationId,
+                                            jobId: {
+                                                $in: [Jobs.superAdministrator, Jobs.guardian, Jobs.administrator],
+                                            }
+                                        },
+                                    };
                                 }
                                 if([Jobs.administrator].includes(jobId)){
                                     return {
@@ -637,7 +639,7 @@ const AUTH_MATRIX = {
                                         worker: {
                                             organizationId,
                                             jobId: {
-                                                $in: [Jobs.superAdministrator,Jobs.guardian],
+                                                $in: [Jobs.superAdministrator, Jobs.guardian],
                                             },
                                         },
                                     };
