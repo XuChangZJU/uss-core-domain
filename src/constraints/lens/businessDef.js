@@ -600,7 +600,7 @@ const AUTH_MATRIX = {
                             condition: ({ user, row, actionData }) => {
                                 const { id } = row;
                                 const { number } = actionData;
-                                if( number && !'/[0-9a-zA-Z_-]*/'.test(number))
+                                if( number && !'/^[0-9a-zA-Z_-]+$/'.test(number))
                                     throw new Error('请填写正确的工号');
                                 return {
                                     userId: user.id,
@@ -618,7 +618,7 @@ const AUTH_MATRIX = {
                             condition: ({ user, row, actionData }) => {
                                 const { organizationId,jobId } = row;
                                 const { number } = actionData;
-                                if( number && !'/[0-9a-zA-Z_-]*/'.test(number))
+                                if( number && !'/^[0-9a-zA-Z_-]+$/'.test(number))
                                     throw new Error('请填写正确的工号');
                                 if([Jobs.doctor, Jobs.nurse].includes(jobId)){
                                     return {
@@ -689,30 +689,30 @@ const AUTH_MATRIX = {
                 },
             ],
         },
-        // [WorkerAction.authGrant]: {
-        //     auths: [
-        //         {
-        //             '#exists': [
-        //                 {
-        //                     relation: 'userWorker',
-        //                     condition: ({user, row}) => {
-        //                         const { organizationId } = row;
-        //                         const query = {
-        //                             userId: user.id,
-        //                             worker: {
-        //                                 organizationId,
-        //                                 jobId: {
-        //                                     $in: [Jobs.superAdministrator, Jobs.guardian, Jobs.administrator],
-        //                                 }
-        //                             },
-        //                         };
-        //                         return query;
-        //                     },
-        //                 },
-        //             ],
-        //         },
-        //     ],
-        // },
+        [WorkerAction.authGrantMulti]: {
+            auths: [
+                {
+                    '#exists': [
+                        {
+                            relation: 'userWorker',
+                            condition: ({user, row}) => {
+                                const { organizationId } = row;
+                                const query = {
+                                    userId: user.id,
+                                    worker: {
+                                        organizationId,
+                                        jobId: {
+                                            $in: [Jobs.superAdministrator, Jobs.guardian, Jobs.administrator],
+                                        }
+                                    },
+                                };
+                                return query;
+                            },
+                        },
+                    ],
+                },
+            ],
+        },
         [WorkerAction.transfer]:
             {
             auths: [
