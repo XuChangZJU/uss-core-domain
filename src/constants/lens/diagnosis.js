@@ -10,7 +10,7 @@ const state = {
 
 const decodeState = (s) => {
     const S = {
-        [state.active]: '诊疗中',
+        [state.active]: '就诊中',
         [state.completed]: '已完成',
         [state.expired]: '已过期',
     };
