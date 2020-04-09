@@ -40,6 +40,7 @@ const action = Object.assign({}, commonAction, {
     offline: 121,
     bind: 1001,
     unbind: 1002,
+    updateUuid: 1003,
 });
 
 const decodeAction = (a) => {
@@ -47,8 +48,9 @@ const decodeAction = (a) => {
         [action.activate]: '激活',
         [action.online]: '上线',
         [action.offline]: '下线',
-        [action.bind]: '绑定',
-        [action.unbind]: '解绑',
+        [action.bind]: '关联设备',
+        [action.unbind]: '解联设备',
+        [action.updateUuid]: '绑定二维码',
     };
 
     return TEXT[a] || decodeCommonAction(a);
@@ -58,6 +60,8 @@ const STATE_TRANS_MATRIX = {
     [action.activate]: [state.inactive, state.normal],
     [action.online]: [state.offline, state.normal],
     [action.offline]: [state.normal, state.offline],
+    [action.bind]: [state.normal, state.normal],
+    [action.unbind]: [state.normal, state.normal],
 };
 
 module.exports = {
