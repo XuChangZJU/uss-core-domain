@@ -778,10 +778,9 @@ const AUTH_MATRIX = {
     },
     transmitter: {
         [TransmitterAction.create]: AllowEveryoneAuth,
-        [TransmitterAction.online]: transmitterDeviceOrganizationWorker,
-        [TransmitterAction.offline]: transmitterDeviceOrganizationWorker,
         [TransmitterAction.bind]: transmitterDeviceOrganizationWorker,
         [TransmitterAction.unbind]: transmitterDeviceOrganizationWorker,
+        [TransmitterAction.updateUuid]: transmitterDeviceOrganizationWorker,
     },
 };
 
