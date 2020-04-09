@@ -62,38 +62,56 @@ const Jobs = {
 
 const RecordDeviceOrganizationWorker = {
     auths: [
+        // {
+        //     '#exists': [
+        //         {
+        //             relation: 'device',
+        //             needData: true,
+        //             condition: ({ user, actionData }) => {
+        //                 const { record } = actionData;
+        //                 let query = {
+        //                     id: record.deviceId,
+        //                 };
+        //                 const has = {
+        //                     name: 'userWorker',
+        //                     projection: {
+        //                         id: 1,
+        //                     },
+        //                     query: {
+        //                         userId: user.id,
+        //                         worker: {
+        //                             organizationId: {
+        //                                 $ref: query,
+        //                                 $attr: 'organizationId',
+        //                             },
+        //                         },
+        //                     },
+        //                 };
+        //                 query = Object.assign({}, query, { $has: has });
+        //
+        //                 return query;
+        //             }
+        //         }
+        //     ],
+        // },
         {
             '#exists': [
                 {
-                    relation: 'device',
+                    relation: 'userWorker',
                     needData: true,
                     condition: ({ user, actionData }) => {
-                        const { record } = actionData;
-                        let query = {
-                            id: record.deviceId,
-                        };
-                        const has = {
-                            name: 'userWorker',
-                            projection: {
-                                id: 1,
-                            },
-                            query: {
-                                userId: user.id,
-                                worker: {
-                                    organizationId: {
-                                        $ref: query,
-                                        $attr: 'organizationId',
-                                    },
-                                },
+                        const { device } = actionData;
+                        const query = {
+                            userId: user.id,
+                            worker: {
+                                organizationId: device.organizationId,
                             },
                         };
-                        query = Object.assign({}, query, { $has: has });
-
                         return query;
-                    }
-                }
+                    },
+                },
             ],
-        },
+        }
     ],
 };
 
