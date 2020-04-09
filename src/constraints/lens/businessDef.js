@@ -39,6 +39,7 @@ const {
 
 const {
     action: TransmitterAction,
+    state: TransmitterState,
     STATE_TRANS_MATRIX: TRANSMITTER_STATE_TRANS_MATRIX,
     } = require('../../constants/lens/transmitter');
 
@@ -304,6 +305,13 @@ const transmitterDeviceOrganizationWorker = {
                     },
                 },
             ],
+            '#data': [
+                {
+                    check: ({ user, row }) => {
+                        return [TransmitterState.normal, TransmitterState.offline].includes(row.state);
+                    },
+                }
+            ]
         },
         {
             '#exists': [
@@ -321,6 +329,13 @@ const transmitterDeviceOrganizationWorker = {
                     },
                 },
             ],
+            '#data': [
+                {
+                    check: ({ user, row }) => {
+                        return [TransmitterState.normal, TransmitterState.offline].includes(row.state);
+                    },
+                }
+            ]
         },
     ],
 };
@@ -760,8 +775,6 @@ const AUTH_MATRIX = {
     },
     transmitter: {
         [TransmitterAction.create]: AllowEveryoneAuth,
-        [TransmitterAction.online]: transmitterDeviceOrganizationWorker,
-        [TransmitterAction.offline]: transmitterDeviceOrganizationWorker,
         [TransmitterAction.bind]: transmitterDeviceOrganizationWorker,
         [TransmitterAction.unbind]: transmitterDeviceOrganizationWorker,
     },
