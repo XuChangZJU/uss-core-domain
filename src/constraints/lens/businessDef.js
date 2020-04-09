@@ -68,28 +68,46 @@ const RecordDeviceOrganizationWorker = {
                     relation: 'device',
                     needData: true,
                     condition: ({ user, actionData }) => {
-                        const { record } = actionData;
-                        let query = {
+                        // const { record } = actionData;
+                        // let query = {
+                        //     id: record.deviceId,
+                        // };
+                        // const has = {
+                        //     name: 'userWorker',
+                        //     projection: {
+                        //         id: 1,
+                        //     },
+                        //     query: {
+                        //         userId: user.id,
+                        //         worker: {
+                        //             organizationId: {
+                        //                 $ref: query,
+                        //                 $attr: 'organizationId',
+                        //             },
+                        //         },
+                        //     },
+                        // };
+                        // Object.assign(query, { $has: has });
+                        //
+                        // return query;
+                        const query = {
                             id: record.deviceId,
-                        };
-                        const has = {
-                            name: 'userWorker',
-                            projection: {
-                                id: 1,
-                            },
-                            query: {
-                                userId: user.id,
-                                worker: {
-                                    organizationId: {
-                                        $ref: query,
-                                        $attr: 'organizationId',
+                            $has: {
+                                name: 'userWorker',
+                                projection:{
+                                    id:1,
+                                },
+                                query:{
+                                    userId: user.id,
+                                    worker: {
+                                        organizationId: {
+                                            $ref: record.deviceId,
+                                            $attr: 'organizationId',
+                                        },
                                     },
                                 },
                             },
-                        };
-                        Object.assign(query, { $has: has });
-
-                        return query;
+                        }
                     }
                 }
             ],
