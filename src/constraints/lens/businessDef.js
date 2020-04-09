@@ -129,7 +129,7 @@ const UnboundRecordDeviceOrganizationWorkerOrPatient = {
                                 },
                             },
                         };
-                        query = Object.assign({}, query, { $has: has });
+                        Object.assign(query, { $has: has });
                         return query;
                     },
                 },
@@ -155,7 +155,7 @@ const UnboundRecordDeviceOrganizationWorkerOrPatient = {
                                 },
                             },
                         };
-                        query = Object.assign({}, query, { $has: has });
+                        Object.assign(query, { $has: has });
 
                         return query;
                     }
@@ -193,7 +193,7 @@ const UnboundRecordDeviceOrganizationWorkerOrPatient = {
                                 },
                             },
                         };
-                        query = Object.assign({}, query, { $has: has });
+                        Object.assign(query, { $has: has });
                         return query;
                     },
                 },
