@@ -775,8 +775,104 @@ const AUTH_MATRIX = {
     },
     transmitter: {
         [TransmitterAction.create]: AllowEveryoneAuth,
-        [TransmitterAction.bind]: transmitterDeviceOrganizationWorker,
-        [TransmitterAction.unbind]: transmitterDeviceOrganizationWorker,
+        [TransmitterAction.bind]: {
+            auths: [
+                {
+                    '#exists': [
+                        {
+                            relation: 'userRole',
+                            condition: ({ user }) => {
+                                const query = {
+                                    userId: user.id,
+                                    roleId: Roles.BUSINESS.id,
+                                };
+                                return query;
+                            },
+                        },
+                    ],
+                    '#data': [
+                        {
+                            check: ({ user, row }) => {
+                                return !row.deviceId && [TransmitterState.normal, TransmitterState.offline].includes(row.state);
+                            },
+                        }
+                    ]
+                },
+                {
+                    '#exists': [
+                        {
+                            relation: 'userWorker',
+                            condition: ({ user, row }) => {
+                                const { device } = row;
+                                const query = {
+                                    userId: user.id,
+                                    worker: {
+                                        organizationId: device.organizationId,
+                                    },
+                                };
+                                return query;
+                            },
+                        },
+                    ],
+                    '#data': [
+                        {
+                            check: ({ user, row }) => {
+                                return !row.deviceId && [TransmitterState.normal, TransmitterState.offline].includes(row.state);
+                            },
+                        }
+                    ]
+                },
+            ],
+        },
+        [TransmitterAction.unbind]: {
+            auths: [
+                {
+                    '#exists': [
+                        {
+                            relation: 'userRole',
+                            condition: ({ user }) => {
+                                const query = {
+                                    userId: user.id,
+                                    roleId: Roles.BUSINESS.id,
+                                };
+                                return query;
+                            },
+                        },
+                    ],
+                    '#data': [
+                        {
+                            check: ({ user, row }) => {
+                                return row.deviceId && [TransmitterState.normal, TransmitterState.offline].includes(row.state);
+                            },
+                        }
+                    ]
+                },
+                {
+                    '#exists': [
+                        {
+                            relation: 'userWorker',
+                            condition: ({ user, row }) => {
+                                const { device } = row;
+                                const query = {
+                                    userId: user.id,
+                                    worker: {
+                                        organizationId: device.organizationId,
+                                    },
+                                };
+                                return query;
+                            },
+                        },
+                    ],
+                    '#data': [
+                        {
+                            check: ({ user, row }) => {
+                                return row.deviceId && [TransmitterState.normal, TransmitterState.offline].includes(row.state);
+                            },
+                        }
+                    ]
+                },
+            ],
+        },
     },
 };
 
