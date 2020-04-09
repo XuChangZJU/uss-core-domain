@@ -88,7 +88,6 @@ const RecordDeviceOrganizationWorker = {
                             },
                         };
                         Object.assign(query, { $has: has });
-
                         return query;
                     }
                 }
