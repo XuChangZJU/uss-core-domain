@@ -110,7 +110,7 @@ const decodeState = (s) => {
 const decodeAction = (a) => {
     const STRINGS = {
         [action.create]: '创建',
-        [action.update]: '更新数据',
+        [action.update]: '更新',
         [action.remove]: '删除',
         [action.createSub]: '创建子结点',
 
