@@ -789,6 +789,41 @@ const AUTH_MATRIX = {
     },
     transmitter: {
         [TransmitterAction.create]: AllowEveryoneAuth,
+        [TransmitterAction.updateUuid]: {
+            auths: [
+                {
+                    '#exists': [
+                        {
+                            relation: 'userRole',
+                            condition: ({ user }) => {
+                                const query = {
+                                    userId: user.id,
+                                    roleId: Roles.BUSINESS.id,
+                                };
+                                return query;
+                            },
+                        },
+                    ],
+                },
+                {
+                    '#exists': [
+                        {
+                            relation: 'userWorker',
+                            condition: ({ user, row }) => {
+                                const { device } = row;
+                                const query = {
+                                    userId: user.id,
+                                    worker: {
+                                        organizationId: device.organizationId,
+                                    },
+                                };
+                                return query;
+                            },
+                        },
+                    ],
+                },
+            ],
+        },
         [TransmitterAction.bind]: {
             auths: [
                 {
