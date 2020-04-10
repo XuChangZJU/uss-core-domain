@@ -608,9 +608,22 @@ const AUTH_MATRIX = {
         [WorkerAction.update]: {
             auths: [
                 {
-                    '#relation': [
+                    '#exists': [
                         {
-                            relations: [WorkerRelation.owner],
+                            relation: 'userWorker',
+                            needData: true,
+                            condition: ({user, row, actionData}) => {
+                                const { worker } = actionData;
+                                const { number ,jobId: jobId2} = worker;
+                                if(( number && !/^[0-9a-zA-Z_-]+$/.test(number)))
+                                throw new Error('请填写正确的工号');
+                                if(!jobId2) {
+                                    return {
+                                        userId: user.id,
+                                        workerId: row.id,
+                                    }
+                                }
+                            }
                         }
                     ],
                 },
@@ -621,20 +634,33 @@ const AUTH_MATRIX = {
                             needData: true,
                             condition: ({ user, row, actionData }) => {
                                 const { organizationId, jobId } = row;
-                                const { worker = {} } = actionData;
-                                const { number } = worker;
+                                const { worker } = actionData;
+                                const { number,jobId: jobId2 } = worker;
                                 if(( number && !/^[0-9a-zA-Z_-]+$/.test(number)))
                                     throw new Error('请填写正确的工号');
                                 if([Jobs.doctor, Jobs.nurse].includes(jobId)){
-                                    return {
-                                        userId: user.id,
-                                        worker: {
-                                            organizationId,
-                                            jobId: {
-                                                $in: [Jobs.superAdministrator, Jobs.guardian, Jobs.administrator],
-                                            }
-                                        },
-                                    };
+                                    if(!jobId2 || [Jobs.doctor,Jobs.nurse].includes(jobId2)) {
+                                        return {
+                                            userId: user.id,
+                                            worker: {
+                                                organizationId,
+                                                jobId: {
+                                                    $in: [Jobs.superAdministrator, Jobs.guardian, Jobs.administrator],
+                                                }
+                                            },
+                                        };
+                                    }
+                                    if([Jobs.administrator].includes(jobId2)){
+                                        return {
+                                            userId: user.id,
+                                            worker: {
+                                                organizationId,
+                                                jobId: {
+                                                    $in: [Jobs.superAdministrator, Jobs.guardian],
+                                                }
+                                            },
+                                        };
+                                    }
                                 }
                                 if([Jobs.administrator].includes(jobId)){
                                     return {
