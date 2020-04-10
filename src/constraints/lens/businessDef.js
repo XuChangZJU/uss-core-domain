@@ -593,22 +593,10 @@ const AUTH_MATRIX = {
         [WorkerAction.update]: {
             auths: [
                 {
-                    '#exists': [
+                    '#relation': [
                         {
-                            relation: 'userWorker',
-                            needData: true,
-                            condition: ({ user, row, actionData }) => {
-                                const { id } = row;
-                                const { worker = {} } = actionData;
-                                const { number } = worker;
-                                if( number && /^[0-9a-zA-Z_-]+$/.test(number))
-                                    throw new Error('请填写正确的工号');
-                                return {
-                                    userId: user.id,
-                                    workerId: id,
-                                };
-                            },
-                        },
+                            relations: [WorkerRelation.owner],
+                        }
                     ],
                 },
                 {
@@ -620,7 +608,7 @@ const AUTH_MATRIX = {
                                 const { organizationId, jobId } = row;
                                 const { worker = {} } = actionData;
                                 const { number } = worker;
-                                if( number && /^[0-9a-zA-Z_-]+$/.test(number))
+                                if(( number && !/^[0-9a-zA-Z_-]+$/.test(number)))
                                     throw new Error('请填写正确的工号');
                                 if([Jobs.doctor, Jobs.nurse].includes(jobId)){
                                     return {
@@ -741,7 +729,7 @@ const AUTH_MATRIX = {
                                         worker: {
                                             organizationId,
                                             jobId: {
-                                                $in: [Jobs.superAdministrator, jobId],
+                                                $in: [Jobs.superAdministrator],
                                             },
                                         },
                                     };
