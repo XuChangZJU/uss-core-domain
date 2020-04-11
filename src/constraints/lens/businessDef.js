@@ -39,6 +39,7 @@ const {
 
 const {
     action: TransmitterAction,
+    state: TransmitterState,
     STATE_TRANS_MATRIX: TRANSMITTER_STATE_TRANS_MATRIX,
     } = require('../../constants/lens/transmitter');
 
@@ -87,7 +88,7 @@ const RecordDeviceOrganizationWorker = {
                                 },
                             },
                         };
-                        query = Object.assign({}, query, { $has: has });
+                        Object.assign(query, { $has: has });
 
                         return query;
                     }
@@ -129,7 +130,7 @@ const UnboundRecordDeviceOrganizationWorkerOrPatient = {
                                 },
                             },
                         };
-                        query = Object.assign({}, query, { $has: has });
+                        Object.assign(query, { $has: has });
                         return query;
                     },
                 },
@@ -155,7 +156,7 @@ const UnboundRecordDeviceOrganizationWorkerOrPatient = {
                                 },
                             },
                         };
-                        query = Object.assign({}, query, { $has: has });
+                        Object.assign(query, { $has: has });
 
                         return query;
                     }
@@ -193,7 +194,7 @@ const UnboundRecordDeviceOrganizationWorkerOrPatient = {
                                 },
                             },
                         };
-                        query = Object.assign({}, query, { $has: has });
+                        Object.assign(query, { $has: has });
                         return query;
                     },
                 },
@@ -304,6 +305,13 @@ const transmitterDeviceOrganizationWorker = {
                     },
                 },
             ],
+            '#data': [
+                {
+                    check: ({ user, row }) => {
+                        return [TransmitterState.normal, TransmitterState.offline].includes(row.state);
+                    },
+                }
+            ]
         },
         {
             '#exists': [
@@ -321,6 +329,13 @@ const transmitterDeviceOrganizationWorker = {
                     },
                 },
             ],
+            '#data': [
+                {
+                    check: ({ user, row }) => {
+                        return [TransmitterState.normal, TransmitterState.offline].includes(row.state);
+                    },
+                }
+            ]
         },
     ],
 };
@@ -598,40 +613,34 @@ const AUTH_MATRIX = {
                             relation: 'userWorker',
                             needData: true,
                             condition: ({ user, row, actionData }) => {
-                                const { id } = row;
-                                const { worker = {} } = actionData;
-                                const { number } = worker;
-                                if( number && /^[0-9a-zA-Z_-]+$/.test(number))
-                                    throw new Error('请填写正确的工号');
-                                return {
-                                    userId: user.id,
-                                    workerId: id,
-                                };
-                            },
-                        },
-                    ],
-                },
-                {
-                    '#exists': [
-                        {
-                            relation: 'userWorker',
-                            needData: true,
-                            condition: ({ user, row, actionData }) => {
                                 const { organizationId, jobId } = row;
-                                const { worker = {} } = actionData;
-                                const { number } = worker;
-                                if( number && /^[0-9a-zA-Z_-]+$/.test(number))
+                                const { worker } = actionData;
+                                const { number,jobId: jobId2 } = worker;
+                                if(( number && !/^[0-9a-zA-Z_-]+$/.test(number)))
                                     throw new Error('请填写正确的工号');
                                 if([Jobs.doctor, Jobs.nurse].includes(jobId)){
-                                    return {
-                                        userId: user.id,
-                                        worker: {
-                                            organizationId,
-                                            jobId: {
-                                                $in: [Jobs.superAdministrator, Jobs.guardian, Jobs.administrator],
-                                            }
-                                        },
-                                    };
+                                    if(!jobId2 || [Jobs.doctor,Jobs.nurse].includes(jobId2)) {
+                                        return {
+                                            userId: user.id,
+                                            worker: {
+                                                organizationId,
+                                                jobId: {
+                                                    $in: [Jobs.superAdministrator, Jobs.guardian, Jobs.administrator],
+                                                }
+                                            },
+                                        };
+                                    }
+                                    if([Jobs.administrator].includes(jobId2)){
+                                        return {
+                                            userId: user.id,
+                                            worker: {
+                                                organizationId,
+                                                jobId: {
+                                                    $in: [Jobs.superAdministrator, Jobs.guardian],
+                                                }
+                                            },
+                                        };
+                                    }
                                 }
                                 if([Jobs.administrator].includes(jobId)){
                                     return {
@@ -647,7 +656,32 @@ const AUTH_MATRIX = {
                             },
                         },
                     ],
-                }
+                },
+                {
+                    '#exists': [
+                        {
+                            relation: 'userWorker',
+                            needData: true,
+                            condition: ({user, row, actionData}) => {
+                                const { worker } = actionData;
+                                const { organizationId, jobId ,id} = row;
+                                const { number ,jobId: jobId2} = worker;
+                                if(( number && !/^[0-9a-zA-Z_-]+$/.test(number)))
+                                    throw new Error('请填写正确的工号');
+                                if(jobId2)
+                                    throw new Error('不能改变自己的jobId');
+                                return {
+                                    userId: user.id,
+                                    worker: {
+                                        organizationId,
+                                        id,
+                                    },
+                                }
+
+                            }
+                        }
+                    ],
+                },
             ],
         },
         [WorkerAction.remove]: {
@@ -741,7 +775,7 @@ const AUTH_MATRIX = {
                                         worker: {
                                             organizationId,
                                             jobId: {
-                                                $in: [Jobs.superAdministrator, jobId],
+                                                $in: [Jobs.superAdministrator],
                                             },
                                         },
                                     };
@@ -760,9 +794,139 @@ const AUTH_MATRIX = {
     },
     transmitter: {
         [TransmitterAction.create]: AllowEveryoneAuth,
-        [TransmitterAction.bind]: transmitterDeviceOrganizationWorker,
-        [TransmitterAction.unbind]: transmitterDeviceOrganizationWorker,
-        [TransmitterAction.updateUuid]: transmitterDeviceOrganizationWorker,
+        [TransmitterAction.updateUuid]: {
+            auths: [
+                {
+                    '#exists': [
+                        {
+                            relation: 'userRole',
+                            condition: ({ user }) => {
+                                const query = {
+                                    userId: user.id,
+                                    roleId: Roles.BUSINESS.id,
+                                };
+                                return query;
+                            },
+                        },
+                    ],
+                },
+                {
+                    '#exists': [
+                        {
+                            relation: 'userWorker',
+                            condition: ({ user, row }) => {
+                                const { device } = row;
+                                const query = {
+                                    userId: user.id,
+                                    worker: {
+                                        organizationId: device.organizationId,
+                                    },
+                                };
+                                return query;
+                            },
+                        },
+                    ],
+                },
+            ],
+        },
+        [TransmitterAction.bind]: {
+            auths: [
+                {
+                    '#exists': [
+                        {
+                            relation: 'userRole',
+                            condition: ({ user }) => {
+                                const query = {
+                                    userId: user.id,
+                                    roleId: Roles.BUSINESS.id,
+                                };
+                                return query;
+                            },
+                        },
+                    ],
+                    '#data': [
+                        {
+                            check: ({ user, row }) => {
+                                return !row.deviceId && [TransmitterState.normal, TransmitterState.offline].includes(row.state);
+                            },
+                        }
+                    ]
+                },
+                {
+                    '#exists': [
+                        {
+                            relation: 'userWorker',
+                            condition: ({ user, row }) => {
+                                const { device } = row;
+                                const query = {
+                                    userId: user.id,
+                                    worker: {
+                                        organizationId: device.organizationId,
+                                    },
+                                };
+                                return query;
+                            },
+                        },
+                    ],
+                    '#data': [
+                        {
+                            check: ({ user, row }) => {
+                                return !row.deviceId && [TransmitterState.normal, TransmitterState.offline].includes(row.state);
+                            },
+                        }
+                    ]
+                },
+            ],
+        },
+        [TransmitterAction.unbind]: {
+            auths: [
+                {
+                    '#exists': [
+                        {
+                            relation: 'userRole',
+                            condition: ({ user }) => {
+                                const query = {
+                                    userId: user.id,
+                                    roleId: Roles.BUSINESS.id,
+                                };
+                                return query;
+                            },
+                        },
+                    ],
+                    '#data': [
+                        {
+                            check: ({ user, row }) => {
+                                return row.deviceId && [TransmitterState.normal, TransmitterState.offline].includes(row.state);
+                            },
+                        }
+                    ]
+                },
+                {
+                    '#exists': [
+                        {
+                            relation: 'userWorker',
+                            condition: ({ user, row }) => {
+                                const { device } = row;
+                                const query = {
+                                    userId: user.id,
+                                    worker: {
+                                        organizationId: device.organizationId,
+                                    },
+                                };
+                                return query;
+                            },
+                        },
+                    ],
+                    '#data': [
+                        {
+                            check: ({ user, row }) => {
+                                return row.deviceId && [TransmitterState.normal, TransmitterState.offline].includes(row.state);
+                            },
+                        }
+                    ]
+                },
+            ],
+        },
     },
 };
 
