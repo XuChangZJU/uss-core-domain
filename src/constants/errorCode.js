@@ -14,6 +14,7 @@ module.exports = {
 	errorUnexistedApiMethod: {code: 990, message: "请求了不支持的http方法"},
 	errorNeedLoginMobile: {code: 989, message: '用户必须先登录手机号码'},
 	errorNeedLoginUserInfo: {code: 988, message: '必须先登录用户信息'},
+	errorNeedGeoInfo: {code: 987, message: '需要位置信息'},
 
 	errorIllegalFileUrl:{code:986,message:'非法的URL'},
 	errorInvalidAccessTokenOrRefreshToken: {code:985, message:'访问令牌或刷新令牌非法'},
