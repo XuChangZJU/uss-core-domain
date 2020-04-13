@@ -653,7 +653,6 @@ const AUTH_MATRIX = {
                                         };
                                     }
                                 }
-                                if([Jobs.administrator].includes(jobId)){
                                     return {
                                             userId: user.id,
                                             worker: {
@@ -663,7 +662,6 @@ const AUTH_MATRIX = {
                                                 },
                                             },
                                         };
-                                }
                             },
                         },
                     ],
