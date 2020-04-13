@@ -800,6 +800,13 @@ const AUTH_MATRIX = {
                             },
                         },
                     ],
+                    '#data': [
+                        {
+                            check: ({ user, row }) => {
+                                return ![Jobs.superAdministrator, Jobs.guardian].includes(row.jobId);
+                            },
+                        }
+                    ]
                 },
                 {
                     '#relation': {
