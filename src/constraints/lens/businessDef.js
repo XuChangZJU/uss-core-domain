@@ -343,7 +343,7 @@ const transmitterDeviceOrganizationWorker = {
 const AUTH_MATRIX = {
     patient: {
         [PatientAction.create]: AllowEveryoneAuth,
-        [PatientAction.update]: OwnerRelationAuth,
+        [PatientAction.update]: AnyRelationAuth,
         [PatientAction.remove]: OwnerRelationAuth,
         [PatientAction.acquire]: AllowEveryoneAuth,
         [PatientAction.authAbandon]: AnyRelationAuth,
