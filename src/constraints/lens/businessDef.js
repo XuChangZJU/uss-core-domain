@@ -723,6 +723,7 @@ const AUTH_MATRIX = {
                                             }
                                         }
                                     };
+                                if([Jobs.nurse, Jobs.doctor].includes(jobId))
                                 const query = {
                                     userId: user.id,
                                     worker: {
@@ -732,10 +733,9 @@ const AUTH_MATRIX = {
                                         }
                                     },
                                 };
-                                return query;
-                                return{
+                                return {
                                     userId: -1,
-                                }
+                                };
                             },
                         },
                     ],
@@ -746,11 +746,13 @@ const AUTH_MATRIX = {
         [WorkerAction.authGrantMulti]: {
             auths: [
                 {
-                    '#exists': [
+                    '#exists':
                         {
                             relation: 'userWorker',
-                            condition: ({ user, row, actionData }) => {
-                                const { organizationId,jobId } = row;
+                            needData: true,
+                            condition: ({user, row, actionData}) => {
+                                const { organizationId } = row;
+                                const { jobId } = actionData;
                                 if([Jobs.doctor, Jobs.nurse].includes(jobId)){
                                     return {
                                         userId: user.id,
@@ -773,58 +775,58 @@ const AUTH_MATRIX = {
                                         },
                                     };
                                 }
-                                return{
+                                return {
                                     userId: -1,
                                 }
                             },
                         },
-                    ],
                 },
             ],
         },
         [WorkerAction.transfer]:
             {
-            auths: [
-                {
-                    '#exists': [
-                        {
-                            relation: 'userWorker',
-                            condition: ({ user, row, actionData }) => {
-                                const { organizationId,jobId } = row;
-                                if([Jobs.doctor, Jobs.nurse].includes(jobId)){
-                                    return {
-                                        userId: user.id,
-                                        worker: {
-                                            organizationId,
-                                            jobId: {
-                                                $in: [Jobs.superAdministrator, Jobs.guardian, Jobs.administrator],
-                                            }
-                                        },
-                                    };
-                                }
-                                if([Jobs.administrator].includes(jobId)){
-                                    return {
-                                        userId: user.id,
-                                        worker: {
-                                            organizationId,
-                                            jobId: {
-                                                $in: [Jobs.superAdministrator, Jobs.guardian],
+                auths: [
+                    {
+                        '#exists':
+                            {
+                                relation: 'userWorker',
+                                needData: true,
+                                condition: ({user, row, actionData}) => {
+                                    const { organizationId } = row;
+                                    const { jobId } = actionData;
+                                    if([Jobs.doctor, Jobs.nurse].includes(jobId)){
+                                        return {
+                                            userId: user.id,
+                                            worker: {
+                                                organizationId,
+                                                jobId: {
+                                                    $in: [Jobs.superAdministrator, Jobs.guardian, Jobs.administrator],
+                                                }
                                             },
-                                        },
-                                    };
-                                }
-                                return{
-                                    userId: -1,
-                                }
+                                        };
+                                    }
+                                    if([Jobs.administrator].includes(jobId)){
+                                        return {
+                                            userId: user.id,
+                                            worker: {
+                                                organizationId,
+                                                jobId: {
+                                                    $in: [Jobs.superAdministrator, Jobs.guardian],
+                                                },
+                                            },
+                                        };
+                                    }
+                                    return {
+                                        userId: -1,
+                                    }
+                                },
                             },
-                        },
-                    ],
-                },
-                {
-                    '#relation': {
-                        relations: [WorkerRelation.owner],
                     },
-                },
+                    {
+                        '#relation': {
+                            relations: [WorkerRelation.owner],
+                        },
+                    },
             ],
         },
     },
