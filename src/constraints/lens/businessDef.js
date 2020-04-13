@@ -733,6 +733,9 @@ const AUTH_MATRIX = {
                                     },
                                 };
                                 return query;
+                                return{
+                                    userId: -1,
+                                }
                             },
                         },
                     ],
@@ -743,21 +746,36 @@ const AUTH_MATRIX = {
         [WorkerAction.authGrantMulti]: {
             auths: [
                 {
-                    '#exists':
+                    '#exists': [
                         {
                             relation: 'userWorker',
-                            condition: ({user, row}) => {
-                                const { organizationId } = row;
-                                const query = {
-                                    userId: user.id,
-                                    worker: {
-                                        organizationId,
-                                        jobId: {
-                                            $in: [Jobs.superAdministrator, Jobs.guardian, Jobs.administrator],
-                                        }
-                                    },
-                                };
-                                return query;
+                            condition: ({ user, row, actionData }) => {
+                                const { organizationId,jobId } = row;
+                                if([Jobs.doctor, Jobs.nurse].includes(jobId)){
+                                    return {
+                                        userId: user.id,
+                                        worker: {
+                                            organizationId,
+                                            jobId: {
+                                                $in: [Jobs.superAdministrator, Jobs.guardian, Jobs.administrator],
+                                            }
+                                        },
+                                    };
+                                }
+                                if([Jobs.administrator].includes(jobId)){
+                                    return {
+                                        userId: user.id,
+                                        worker: {
+                                            organizationId,
+                                            jobId: {
+                                                $in: [Jobs.superAdministrator, Jobs.guardian],
+                                            },
+                                        },
+                                    };
+                                }
+                                return{
+                                    userId: -1,
+                                }
                             },
                         },
                     ],
@@ -790,21 +808,17 @@ const AUTH_MATRIX = {
                                         worker: {
                                             organizationId,
                                             jobId: {
-                                                $in: [Jobs.superAdministrator],
+                                                $in: [Jobs.superAdministrator, Jobs.guardian],
                                             },
                                         },
                                     };
                                 }
+                                return{
+                                    userId: -1,
+                                }
                             },
                         },
                     ],
-                    '#data': [
-                        {
-                            check: ({ user, row }) => {
-                                return ![Jobs.superAdministrator, Jobs.guardian].includes(row.jobId);
-                            },
-                        }
-                    ]
                 },
                 {
                     '#relation': {
