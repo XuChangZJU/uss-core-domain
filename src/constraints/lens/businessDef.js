@@ -613,13 +613,13 @@ const AUTH_MATRIX = {
                             relation: 'userWorker',
                             needData: true,
                             condition: ({ user, row, actionData }) => {
-                                const { organizationId, jobId } = row;
+                                const { organizationId, jobId, id } = row;
                                 const { worker } = actionData;
                                 const { number,jobId: jobId2 } = worker;
                                 if(( number && !/^[0-9a-zA-Z_-]+$/.test(number)))
                                     throw new Error('请填写正确的工号');
                                 if([Jobs.doctor, Jobs.nurse].includes(jobId)){
-                                    if(!jobId2 || [Jobs.doctor,Jobs.nurse].includes(jobId2)) {
+                                    if( jobId2 && [Jobs.doctor,Jobs.nurse].includes(jobId2)) {
                                         return {
                                             userId: user.id,
                                             worker: {
@@ -630,7 +630,7 @@ const AUTH_MATRIX = {
                                             },
                                         };
                                     }
-                                    if([Jobs.administrator].includes(jobId2)){
+                                    if( jobId2 && [Jobs.administrator].includes(jobId2)){
                                         return {
                                             userId: user.id,
                                             worker: {
@@ -641,21 +641,39 @@ const AUTH_MATRIX = {
                                             },
                                         };
                                     }
+                                    if(!jobId2){
+                                        return {
+                                            userId: user.id,
+                                            worker: {
+                                                organizationId,
+                                                jobId: {
+                                                    $in: [Jobs.superAdministrator, Jobs.guardian, Jobs.administrator],
+                                                }
+                                            },
+                                        };
+                                    }
                                 }
                                 if([Jobs.administrator].includes(jobId)){
                                     return {
-                                        userId: user.id,
-                                        worker: {
-                                            organizationId,
-                                            jobId: {
-                                                $in: [Jobs.superAdministrator, Jobs.guardian],
+                                            userId: user.id,
+                                            worker: {
+                                                organizationId,
+                                                jobId: {
+                                                    $in: [Jobs.superAdministrator, Jobs.guardian],
+                                                },
                                             },
-                                        },
-                                    };
+                                        };
                                 }
                             },
                         },
                     ],
+                    '#data': [
+                        {
+                            check: ({ user, row }) => {
+                                return ![Jobs.superAdministrator, Jobs.guardian].includes(row.jobId);
+                            },
+                        }
+                    ]
                 },
                 {
                     '#exists': [
@@ -668,14 +686,15 @@ const AUTH_MATRIX = {
                                 const { number ,jobId: jobId2} = worker;
                                 if(( number && !/^[0-9a-zA-Z_-]+$/.test(number)))
                                     throw new Error('请填写正确的工号');
-                                return {
-                                    userId: user.id,
-                                    worker: {
-                                        organizationId,
-                                        id,
-                                    },
+                                if( !jobId2 ) {
+                                    return {
+                                        userId: user.id,
+                                        worker: {
+                                            organizationId,
+                                            id,
+                                        },
+                                    }
                                 }
-
                             }
                         }
                     ],
