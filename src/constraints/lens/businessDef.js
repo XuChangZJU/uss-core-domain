@@ -653,6 +653,7 @@ const AUTH_MATRIX = {
                                         };
                                     }
                                 }
+                                if([Jobs.administrator].includes(jobId))
                                     return {
                                             userId: user.id,
                                             worker: {
@@ -665,38 +666,31 @@ const AUTH_MATRIX = {
                             },
                         },
                     ],
-                    '#data': [
-                        {
-                            check: ({ user, row }) => {
-                                return ![Jobs.superAdministrator, Jobs.guardian].includes(row.jobId);
-                            },
-                        }
-                    ]
                 },
-                // {
-                //     '#exists': [
-                //         {
-                //             relation: 'userWorker',
-                //             needData: true,
-                //             condition: ({user, row, actionData}) => {
-                //                 const { worker } = actionData;
-                //                 const { organizationId, jobId, id } = row;
-                //                 const { number, jobId: jobId2 } = worker;
-                //                 if((number && !/^[0-9a-zA-Z_-]+$/.test(number)))
-                //                     throw new Error('请填写正确的工号');
-                //                 if(!jobId2 ) {
-                //                     return {
-                //                         userId: user.id,
-                //                         worker: {
-                //                             organizationId,
-                //                         },
-                //                         workerId: id,
-                //                     }
-                //                 }
-                //             }
-                //         }
-                //     ],
-                // },
+                {
+                    '#exists': [
+                        {
+                            relation: 'userWorker',
+                            needData: true,
+                            condition: ({user, row, actionData}) => {
+                                const { worker } = actionData;
+                                const { organizationId, jobId, id } = row;
+                                const { number, jobId: jobId2 } = worker;
+                                if((number && !/^[0-9a-zA-Z_-]+$/.test(number)))
+                                    throw new Error('请填写正确的工号');
+                                if(!jobId2 ) {
+                                    return {
+                                        userId: user.id,
+                                        worker: {
+                                            organizationId,
+                                        },
+                                        workerId: id,
+                                    }
+                                }
+                            }
+                        }
+                    ],
+                },
             ],
         },
         [WorkerAction.remove]: {
