@@ -691,8 +691,8 @@ const AUTH_MATRIX = {
                                         userId: user.id,
                                         worker: {
                                             organizationId,
-                                            id,
                                         },
+                                        workerId: id,
                                     }
                                 }
                             }
