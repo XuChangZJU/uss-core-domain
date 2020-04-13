@@ -663,34 +663,46 @@ const AUTH_MATRIX = {
                                                 },
                                             },
                                         };
-                            },
-                        },
-                    ],
-                },
-                {
-                    '#exists': [
-                        {
-                            relation: 'userWorker',
-                            needData: true,
-                            condition: ({user, row, actionData}) => {
-                                const { worker } = actionData;
-                                const { organizationId, jobId, id } = row;
-                                const { number, jobId: jobId2 } = worker;
-                                if((number && !/^[0-9a-zA-Z_-]+$/.test(number)))
-                                    throw new Error('请填写正确的工号');
                                 if(!jobId2 ) {
                                     return {
                                         userId: user.id,
                                         worker: {
                                             organizationId,
+                                            id,
                                         },
-                                        workerId: id,
                                     }
                                 }
-                            }
-                        }
+                                return{
+                                    userId: -1,
+                                }
+                            },
+                        },
                     ],
                 },
+                // {
+                //     '#exists': [
+                //         {
+                //             relation: 'userWorker',
+                //             needData: true,
+                //             condition: ({user, row, actionData}) => {
+                //                 const { worker } = actionData;
+                //                 const { organizationId, jobId, id } = row;
+                //                 const { number, jobId: jobId2 } = worker;
+                //                 if((number && !/^[0-9a-zA-Z_-]+$/.test(number)))
+                //                     throw new Error('请填写正确的工号');
+                //                 if(!jobId2 ) {
+                //                     return {
+                //                         userId: user.id,
+                //                         worker: {
+                //                             organizationId,
+                //                         },
+                //                         workerId: id,
+                //                     }
+                //                 }
+                //             }
+                //         }
+                //     ],
+                // },
             ],
         },
         [WorkerAction.remove]: {
@@ -724,20 +736,14 @@ const AUTH_MATRIX = {
                             },
                         },
                     ],
-                    '#data': [
-                        {
-                        check: ({ user, row }) => {
-                            return ![Jobs.superAdministrator, Jobs.guardian].includes(row.jobId);
-                        },
-                    }
-                    ]
+
                 },
             ],
         },
         [WorkerAction.authGrantMulti]: {
             auths: [
                 {
-                    '#exists': [
+                    '#exists':
                         {
                             relation: 'userWorker',
                             condition: ({user, row}) => {
