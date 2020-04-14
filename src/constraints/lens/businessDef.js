@@ -836,7 +836,7 @@ const AUTH_MATRIX = {
                             {
                                 relation: 'userWorker',
                                 condition: ({user, row}) => {
-                                    const {organizationId, jobId} = row;
+                                    const {organizationId, jobId, id} = row;
                                     return {
                                         userId: user.id,
                                         worker: {
