@@ -752,9 +752,8 @@ const AUTH_MATRIX = {
                         {
                             relation: 'userWorker',
                             needData: true,
-                            condition: ({user, row, actionData}) => {
-                                const { organizationId } = row;
-                                const { jobId } = actionData;
+                            condition: ({user, row}) => {
+                                const { organizationId ,jobId } = row;
                                 if([Jobs.doctor, Jobs.nurse].includes(jobId)){
                                     return {
                                         userId: user.id,
@@ -793,9 +792,8 @@ const AUTH_MATRIX = {
                             {
                                 relation: 'userWorker',
                                 needData: true,
-                                condition: ({user, row, actionData}) => {
-                                    const { organizationId } = row;
-                                    const { jobId } = actionData;
+                                condition: ({user, row}) => {
+                                    const { organizationId, jobId } = row;
                                     if([Jobs.doctor, Jobs.nurse].includes(jobId)){
                                         return {
                                             userId: user.id,
