@@ -57,7 +57,6 @@ const Jobs = {
     doctor: 3,
     nurse: 4,
     superAdministrator: 5, // 超级管理员
-
 };
 
 
@@ -653,17 +652,18 @@ const AUTH_MATRIX = {
                                         };
                                     }
                                 }
-                                if([Jobs.administrator].includes(jobId))
+                                if([Jobs.administrator].includes(jobId)) {
                                     return {
-                                            userId: user.id,
-                                            worker: {
-                                                organizationId,
-                                                jobId: {
-                                                    $in: [Jobs.superAdministrator, Jobs.guardian],
-                                                },
+                                        userId: user.id,
+                                        worker: {
+                                            organizationId,
+                                            jobId: {
+                                                $in: [Jobs.superAdministrator, Jobs.guardian],
                                             },
-                                        };
-                                if(!jobId2 ) {
+                                        },
+                                    };
+                                }
+                                if(!jobId2) {
                                     return {
                                         userId: user.id,
                                         worker: {
@@ -672,7 +672,7 @@ const AUTH_MATRIX = {
                                         },
                                     }
                                 }
-                                return{
+                                return {
                                     userId: -1,
                                 }
                             },
@@ -713,7 +713,7 @@ const AUTH_MATRIX = {
                             relation: 'userWorker',
                             condition: ({user, row}) => {
                                 const { organizationId, jobId } = row;
-                                if(jobId === Jobs.administrator)
+                                if(jobId === Jobs.administrator) {
                                     return {
                                         userId: user.id,
                                         worker: {
@@ -723,16 +723,18 @@ const AUTH_MATRIX = {
                                             }
                                         }
                                     };
-                                if([Jobs.nurse, Jobs.doctor].includes(jobId))
-                                const query = {
-                                    userId: user.id,
-                                    worker: {
-                                        organizationId,
-                                        jobId: {
-                                            $in: [Jobs.superAdministrator, Jobs.guardian, Jobs.administrator],
-                                        }
-                                    },
-                                };
+                                }
+                                if([Jobs.nurse, Jobs.doctor].includes(jobId)) {
+                                    return {
+                                        userId: user.id,
+                                        worker: {
+                                            organizationId,
+                                            jobId: {
+                                                $in: [Jobs.superAdministrator, Jobs.guardian, Jobs.administrator],
+                                            }
+                                        },
+                                    };
+                                }
                                 return {
                                     userId: -1,
                                 };
