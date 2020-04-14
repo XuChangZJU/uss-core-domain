@@ -832,9 +832,21 @@ const AUTH_MATRIX = {
                         ]
                     },
                     {
-                        '#relation': {
-                            relations: [WorkerRelation.owner],
-                        },
+                        '#exists': [
+                            {
+                                relation: 'userWorker',
+                                condition: ({user, row}) => {
+                                    const {organizationId, jobId} = row;
+                                    return {
+                                        userId: user.id,
+                                        worker: {
+                                            organizationId,
+                                            id,
+                                        },
+                                    }
+                                }
+                            }
+                        ]
                     },
             ],
         },
