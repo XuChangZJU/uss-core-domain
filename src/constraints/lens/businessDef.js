@@ -748,7 +748,7 @@ const AUTH_MATRIX = {
         [WorkerAction.authGrantMulti]: {
             auths: [
                 {
-                    '#exists':
+                    '#exists': [
                         {
                             relation: 'userWorker',
                             condition: ({user, row}) => {
@@ -780,6 +780,7 @@ const AUTH_MATRIX = {
                                 }
                             },
                         },
+                    ]
                 },
             ],
         },
@@ -787,7 +788,7 @@ const AUTH_MATRIX = {
             {
                 auths: [
                     {
-                        '#exists':
+                        '#exists': [
                             {
                                 relation: 'userWorker',
                                 condition: ({user, row}) => {
@@ -819,6 +820,7 @@ const AUTH_MATRIX = {
                                     }
                                 },
                             },
+                        ]
                     },
                     {
                         '#relation': {
