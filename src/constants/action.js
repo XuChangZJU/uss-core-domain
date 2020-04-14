@@ -114,12 +114,12 @@ const decodeAction = (a) => {
         [action.remove]: '删除',
         [action.createSub]: '创建子结点',
 
-        [action.authGrant]: '授予权限',
-        [action.authRevoke]: '回收权限',
-        [action.authAbandon]: '放弃权限',
-        // [action.authExpire]: '过期权限',
-        [action.authConfirm]: '确认权限',
-        [action.authGrantMulti]: '散发权限',
+        [action.authGrant]: '授权',//授予权限
+        [action.authRevoke]: '回收',
+        [action.authAbandon]: '放弃',
+        // [action.authExpire]: '过期',
+        [action.authConfirm]: '确认',
+        [action.authGrantMulti]: '散发',
 
         [action.transfer]: '转让',
         [action.acquire]: '申请',
