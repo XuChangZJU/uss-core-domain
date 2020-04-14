@@ -653,15 +653,24 @@ const AUTH_MATRIX = {
                                     }
                                 }
                                 if([Jobs.administrator].includes(jobId)) {
-                                    return {
+                                    if(!jobId2) {
+                                        return {
+                                            userId: user.id,
+                                            worker: {
+                                                organizationId,
+                                                jobId: {
+                                                    $in: [Jobs.superAdministrator, Jobs.guardian],
+                                                },
+                                            },
+                                        };
+                                    }
+                                    return{
                                         userId: user.id,
                                         worker: {
                                             organizationId,
-                                            jobId: {
-                                                $in: [Jobs.superAdministrator, Jobs.guardian],
-                                            },
+                                            id,
                                         },
-                                    };
+                                    }
                                 }
                                 if(!jobId2) {
                                     return {
