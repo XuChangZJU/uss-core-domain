@@ -41,6 +41,7 @@ const {
     action: TransmitterAction,
     state: TransmitterState,
     STATE_TRANS_MATRIX: TRANSMITTER_STATE_TRANS_MATRIX,
+    type: TransmitterType,
     } = require('../../constants/lens/transmitter');
 
 const {
@@ -871,6 +872,13 @@ const AUTH_MATRIX = {
                             },
                         },
                     ],
+                    '#data': [
+                        {
+                          check: ({user, row}) => {
+                                return row.type === TransmitterType.esp8266;
+                          },
+                        }
+                    ],
                 },
                 {
                     '#exists': [
@@ -887,6 +895,13 @@ const AUTH_MATRIX = {
                                 return query;
                             },
                         },
+                    ],
+                    '#data': [
+                        {
+                            check: ({user, row}) => {
+                                return row.type === TransmitterType.esp8266;
+                            },
+                        }
                     ],
                 },
             ],
