@@ -7,6 +7,7 @@ const action = {
     update: 2,
     remove: 3,
     createSub: 4,
+    getList: 5,
 
     authGrant: 11,
     authRevoke: 12,
@@ -113,6 +114,7 @@ const decodeAction = (a) => {
         [action.update]: '更新',
         [action.remove]: '删除',
         [action.createSub]: '创建子结点',
+        [action.getList]: '获取列表',
 
         [action.authGrant]: '授予权限',
         [action.authRevoke]: '回收权限',
