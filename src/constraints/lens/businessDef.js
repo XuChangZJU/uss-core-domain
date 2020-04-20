@@ -876,8 +876,10 @@ const AUTH_MATRIX = {
                     '#exists': [
                         {
                             relation: 'userWorker',
-                            condition: ({ user, row }) => {
-                                const { organizationId } = row;
+                            needData: true,
+                            condition: ({ user, row, actionData }) => {
+                                const { transmitter } = actionData;
+                                const { organizationId } = transmitter;
                                 const query = {
                                     userId: user.id,
                                     worker: {
