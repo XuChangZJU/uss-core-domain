@@ -856,7 +856,44 @@ const AUTH_MATRIX = {
         },
     },
     transmitter: {
-        [TransmitterAction.create]: AllowEveryoneAuth,
+        [TransmitterAction.create]: {
+            auths: [
+                {
+                    '#exists': [
+                        {
+                            relation: 'userRole',
+                            condition: ({ user }) => {
+                                const query = {
+                                    userId: user.id,
+                                    roleId: Roles.BUSINESS.id,
+                                };
+                                return query;
+                            },
+                        },
+                    ],
+                },
+                {
+                    '#exists': [
+                        {
+                            relation: 'userWorker',
+                            condition: ({ user, row }) => {
+                                const { organizationId } = row;
+                                const query = {
+                                    userId: user.id,
+                                    worker: {
+                                        organizationId,
+                                        jobId: {
+                                            $in: [Jobs.superAdministrator, Jobs.guardian, Jobs.administrator],
+                                        }
+                                    },
+                                };
+                                return query;
+                            },
+                        },
+                    ],
+                },
+            ],
+        },
         [TransmitterAction.updateUuid]: {
             auths: [
                 {
@@ -874,9 +911,9 @@ const AUTH_MATRIX = {
                     ],
                     '#data': [
                         {
-                          check: ({user, row}) => {
+                            check: ({user, row}) => {
                                 return row.type === TransmitterType.esp8266;
-                          },
+                            },
                         }
                     ],
                 },
@@ -885,11 +922,14 @@ const AUTH_MATRIX = {
                         {
                             relation: 'userWorker',
                             condition: ({ user, row }) => {
-                                const { device } = row;
+                                const { organizationId } = row;
                                 const query = {
                                     userId: user.id,
                                     worker: {
-                                        organizationId: device.organizationId,
+                                        organizationId,
+                                        jobId: {
+                                            $in: [Jobs.superAdministrator, Jobs.guardian, Jobs.administrator],
+                                        }
                                     },
                                 };
                                 return query;
@@ -934,11 +974,14 @@ const AUTH_MATRIX = {
                         {
                             relation: 'userWorker',
                             condition: ({ user, row }) => {
-                                const { device } = row;
+                                const { organizationId } = row;
                                 const query = {
                                     userId: user.id,
                                     worker: {
-                                        organizationId: device.organizationId,
+                                        organizationId,
+                                        jobId: {
+                                            $in: [Jobs.superAdministrator, Jobs.guardian, Jobs.administrator],
+                                        }
                                     },
                                 };
                                 return query;
@@ -983,11 +1026,14 @@ const AUTH_MATRIX = {
                         {
                             relation: 'userWorker',
                             condition: ({ user, row }) => {
-                                const { device } = row;
+                                const { organizationId } = row;
                                 const query = {
                                     userId: user.id,
                                     worker: {
-                                        organizationId: device.organizationId,
+                                        organizationId,
+                                        jobId: {
+                                            $in: [Jobs.superAdministrator, Jobs.guardian, Jobs.administrator],
+                                        }
                                     },
                                 };
                                 return query;
