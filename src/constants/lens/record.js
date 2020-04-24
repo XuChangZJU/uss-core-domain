@@ -1,5 +1,5 @@
 const {
-    action,
+    action : commonAc,
     decodeAction,
     relation,
     decodeRelation,
