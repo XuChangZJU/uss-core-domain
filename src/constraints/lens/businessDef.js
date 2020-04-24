@@ -162,51 +162,51 @@ const UnboundRecordDeviceOrganizationWorkerOrPatient = {
                     }
                 }
             ],
-            '#data': [
-                {
-                    check: ({ row }) => {
-                        return !row.diagnosisId;
-                    },
-                }
-            ],
+            // '#data': [
+            //     {
+            //         check: ({ row }) => {
+            //             return !row.diagnosisId;
+            //         },
+            //     }
+            // ],
         },
-        {
-            '#exists': [
-                {
-                    relation: 'diagnosis',
-                    needData: true,
-                    condition: ({ user, row, actionData }) => {
-                        const { record } = actionData;
-                        let query = {
-                            id: record.diagnosisId,
-                            state: DiagnosisState.active,
-                        };
-                        const has = {
-                            name: 'userPatient',
-                            projection: {
-                                id: 1,
-                            },
-                            query: {
-                                userId: user.id,
-                                patientId: {
-                                    $ref: query,
-                                    $attr: 'patientId',
-                                },
-                            },
-                        };
-                        Object.assign(query, { $has: has });
-                        return query;
-                    },
-                },
-            ],
-            '#data': [
-                {
-                    check: ({ row }) => {
-                        return !row.diagnosisId;
-                    },
-                }
-            ],
-        }
+        // {
+        //     '#exists': [
+        //         {
+        //             relation: 'diagnosis',
+        //             needData: true,
+        //             condition: ({ user, row, actionData }) => {
+        //                 const { record } = actionData;
+        //                 let query = {
+        //                     id: record.diagnosisId,
+        //                     state: DiagnosisState.active,
+        //                 };
+        //                 const has = {
+        //                     name: 'userPatient',
+        //                     projection: {
+        //                         id: 1,
+        //                     },
+        //                     query: {
+        //                         userId: user.id,
+        //                         patientId: {
+        //                             $ref: query,
+        //                             $attr: 'patientId',
+        //                         },
+        //                     },
+        //                 };
+        //                 Object.assign(query, { $has: has });
+        //                 return query;
+        //             },
+        //         },
+        //     ],
+        //     '#data': [
+        //         {
+        //             check: ({ row }) => {
+        //                 return !row.diagnosisId;
+        //             },
+        //         }
+        //     ],
+        // }
     ],
 };
 
@@ -430,6 +430,71 @@ const AUTH_MATRIX = {
     record: {
         [RecordAction.create]: RecordDeviceOrganizationWorker,
         [RecordAction.update]: UnboundRecordDeviceOrganizationWorkerOrPatient,
+        [RecordAction.bind]: {
+            auths: [
+                {
+                    '#exists': [
+                        {
+                            relation: 'diagnosis',
+                            needData: true,
+                            condition: ({user, row, actionData}) => {
+                                const {record} = actionData;
+                                 return {
+                                    id: record.diagnosisId,
+                                    state: DiagnosisState.active,
+                                };
+                            },
+                        },
+                    ],
+                    '#data': [
+                        {
+                            check: ({row}) => {
+                                return !row.diagnosisId;
+                            },
+                        }
+                    ],
+                },
+            ],
+        },
+        [RecordAction.unbind]: {
+            auths: [
+                {
+                    '#exists': [
+                        {
+                            relation: 'diagnosis',
+                            condition: ({user, row}) => {
+                                let query = {
+                                    id: row.diagnosisId,
+                                };
+                                const has = {
+                                    name: 'userWorker',
+                                    projection: {
+                                        id: 1,
+                                    },
+                                    query: {
+                                        userId: user.id,
+                                        worker: {
+                                            organizationId: {
+                                                $ref: query,
+                                                $attr: 'organizationId',
+                                            }
+                                        },
+                                    },
+                                };
+                                Object.assign(query, { $has: has });
+                            },
+                        },
+                    ],
+                    '#data': [
+                        {
+                            check: ({row}) => {
+                                return !(!row.diagnosisId);
+                            },
+                        }
+                    ],
+                },
+            ],
+        },
         [RecordAction.remove]: {
             auths: [
                 {
