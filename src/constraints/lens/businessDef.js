@@ -106,34 +106,34 @@ const UnboundRecordDeviceOrganizationWorkerOrPatient = {
     auths: [
         {
             '#exists': [
-                {
-                    relation: 'diagnosis',
-                    needData: true,
-                    condition: ({ user, row, actionData }) => {
-                        const { record } = actionData;
-                        let query = {
-                            id: record.diagnosisId,
-                            state: DiagnosisState.active,
-                        };
-                        const has = {
-                            name: 'userWorker',
-                            projection: {
-                                id: 1,
-                            },
-                            query: {
-                                userId: user.id,
-                                worker: {
-                                    organizationId: {
-                                        $ref: query,
-                                        $attr: 'organizationId',
-                                    }
-                                },
-                            },
-                        };
-                        Object.assign(query, { $has: has });
-                        return query;
-                    },
-                },
+                // {
+                //     relation: 'diagnosis',
+                //     needData: true,
+                //     condition: ({ user, row, actionData }) => {
+                //         const { record } = actionData;
+                //         let query = {
+                //             id: record.diagnosisId,
+                //              state: DiagnosisState.active,
+                //         };
+                //         const has = {
+                //             name: 'userWorker',
+                //             projection: {
+                //                 id: 1,
+                //             },
+                //             query: {
+                //                 userId: user.id,
+                //                 worker: {
+                //                     organizationId: {
+                //                         $ref: query,
+                //                         $attr: 'organizationId',
+                //                     }
+                //                 },
+                //             },
+                //         };
+                //         Object.assign(query, { $has: has });
+                //         return query;
+                //     },
+                // },
                 {
                     relation: 'device',
                     condition: ({ user, row }) => {
