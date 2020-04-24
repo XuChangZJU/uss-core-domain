@@ -1,5 +1,5 @@
 const {
-    action : commonAc,
+    action : commonAction,
     decodeAction,
     relation,
     decodeRelation,
@@ -8,6 +8,7 @@ const {
 } = require('../action');
 
 
+const action = commonAction;
 
 module.exports = {
     action,
