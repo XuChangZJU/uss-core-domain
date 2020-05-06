@@ -21,10 +21,6 @@ const decodeAction = (a) => {
     return TEXT[a] || decodeCommonAction(a);
 };
 
-const STATE_TRANS_MATRIX = {
-    [action.bind]: [state.init, state.init],
-    [action.unbind]: [state.init, state.init],
-};
 
 module.exports = {
     action,
@@ -32,6 +28,5 @@ module.exports = {
     relation,
     decodeRelation,
     state,
-    STATE_TRANS_MATRIX,
     decodeState,
 };
