@@ -1031,7 +1031,7 @@ const AUTH_MATRIX = {
                     '#data': [
                         {
                             check: ({ user, row }) => {
-                                return !row.deviceId && [TransmitterState.normal, TransmitterState.offline].includes(row.state);
+                                return !row.deviceId && [TransmitterState.normal, TransmitterState.offline,TransmitterState.init].includes(row.state);
                             },
                         }
                     ]
@@ -1058,7 +1058,7 @@ const AUTH_MATRIX = {
                     '#data': [
                         {
                             check: ({ user, row }) => {
-                                return !row.deviceId && [TransmitterState.normal, TransmitterState.offline].includes(row.state);
+                                return !row.deviceId && [TransmitterState.normal, TransmitterState.offline, TransmitterState.init].includes(row.state);
                             },
                         }
                     ]
@@ -1083,7 +1083,7 @@ const AUTH_MATRIX = {
                     '#data': [
                         {
                             check: ({ user, row }) => {
-                                return row.deviceId && [TransmitterState.normal, TransmitterState.offline].includes(row.state);
+                                return row.deviceId && [TransmitterState.normal, TransmitterState.offline, TransmitterState.init].includes(row.state);
                             },
                         }
                     ]
@@ -1110,7 +1110,7 @@ const AUTH_MATRIX = {
                     '#data': [
                         {
                             check: ({ user, row }) => {
-                                return row.deviceId && [TransmitterState.normal, TransmitterState.offline].includes(row.state);
+                                return row.deviceId && [TransmitterState.normal, TransmitterState.offline, TransmitterState.init].includes(row.state);
                             },
                         }
                     ]
