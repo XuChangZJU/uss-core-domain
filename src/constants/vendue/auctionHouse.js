@@ -1,6 +1,6 @@
 const {
-    relation,
-    decodeRelation,
+    relation: commonRelation,
+    decodeRelation: decodeCommonRelation,
     action: commonAction,
     decodeAction: decodeCommonAction,
     state: commonState,
@@ -35,7 +35,20 @@ const decodeAction = (a) => {
     return S[a] || decodeCommonAction(a);
 };
 
-const STATE_TRANS_MATRIX = {
+const relation = Object.assign({}, commonRelation, {
+    guardian: 101,
+    worker: 102,
+});
+
+const decodeRelation = (r) => {
+    const R = {
+        [relation.guardian]: '守护者',
+        [relation.worker]: '员工',
+    };
+    return R[r] || decodeCommonRelation(r);
+};
+
+const STATE_TRAN_MATRIX = {
     [action.enable]: [state.offline, state.online],
     [action.disable]: [state.online, state.offline],
 };
@@ -47,5 +60,5 @@ module.exports = {
     decodeState,
     action,
     decodeAction,
-    STATE_TRANS_MATRIX,
+    STATE_TRAN_MATRIX,
 };
