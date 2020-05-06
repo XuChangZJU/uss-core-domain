@@ -13,7 +13,6 @@ const {
     action: RecordAction,
     state: RecordState,
     relation: RecordRelation,
-    STATE_TRANS_MATRIX: RECORD_STATE_TRANS_MATRIX,
     } = require('../../constants/lens/record');
 const {
     action: PatientAction,
@@ -1122,7 +1121,6 @@ const AUTH_MATRIX = {
 
 const STATE_TRAN_MATRIX = {
     diagnosis: DIAGNOSIS_STATE_TRANS_MATRIX,
-    record: RECORD_STATE_TRANS_MATRIX,
     device: DEVICE_STATE_TRANS_MATRIX,
     organization: ORGANIZATION_STATE_TRANS_MATRIX,
     transmitter: TRANSMITTER_STATE_TRANS_MATRIX,
