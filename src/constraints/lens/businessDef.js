@@ -494,13 +494,7 @@ const AUTH_MATRIX = {
                 },
             ],
         },
-        [RecordAction.remove]: {
-            auths: [
-                {
-                    '#role': [Roles.ROOT.name],
-                },
-            ],
-        },
+        [RecordAction.remove]: UnboundRecordDeviceOrganizationWorkerOrPatient,
     },
     device: {
         [DeviceAction.create]:  {
