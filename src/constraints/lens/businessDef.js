@@ -1072,7 +1072,7 @@ const AUTH_MATRIX = {
                     '#data': [
                         {
                             check: ({ user, row }) => {
-                                return  !deviceId && [TransmitterState.normal, TransmitterState.offline, TransmitterState.inactive].includes(row.state);
+                                return  !row.deviceId && [TransmitterState.normal, TransmitterState.offline, TransmitterState.inactive].includes(row.state);
                             },
                         }
                     ]
