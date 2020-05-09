@@ -607,7 +607,19 @@ const AUTH_MATRIX = {
     },
     organization: {
         [OrganizationAction.create]: AllowEveryoneAuth,
-        [OrganizationAction.bind]: AllowEveryoneAuth,
+        [OrganizationAction.bind]: {
+            auths: [
+                {
+                    '#data': [
+                        {
+                            check: ({ row }) => {
+                                return row.name === null;
+                            },
+                        },
+                    ],
+                },
+            ],
+        },
         [OrganizationAction.update]: OrganizationOwner,
         [OrganizationAction.remove]: OrganizationOwner,
         [OrganizationAction.enable]: {
