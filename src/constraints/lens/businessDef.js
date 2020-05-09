@@ -968,27 +968,27 @@ const AUTH_MATRIX = {
         },
         [TransmitterAction.updateUuid]: {
             auths: [
-                {
-                    '#exists': [
-                        {
-                            relation: 'userRole',
-                            condition: ({ user }) => {
-                                const query = {
-                                    userId: user.id,
-                                    roleId: Roles.BUSINESS.id,
-                                };
-                                return query;
-                            },
-                        },
-                    ],
-                    '#data': [
-                        {
-                            check: ({user, row}) => {
-                                return row.type === TransmitterType.esp8266;
-                            },
-                        }
-                    ],
-                },
+                // {
+                //     '#exists': [
+                //         {
+                //             relation: 'userRole',
+                //             condition: ({ user }) => {
+                //                 const query = {
+                //                     userId: user.id,
+                //                     roleId: Roles.BUSINESS.id,
+                //                 };
+                //                 return query;
+                //             },
+                //         },
+                //     ],
+                //     '#data': [
+                //         {
+                //             check: ({user, row}) => {
+                //                 return row.type === TransmitterType.esp8266;
+                //             },
+                //         }
+                //     ],
+                // },
                 {
                     '#exists': [
                         {
@@ -1020,47 +1020,46 @@ const AUTH_MATRIX = {
         },
         [TransmitterAction.bind]: {
             auths: [
-                {
-                    '#exists': [
-                        {
-                            relation: 'userRole',
-                            condition: ({ user }) => {
-                                const query = {
-                                    userId: user.id,
-                                    roleId: Roles.BUSINESS.id,
-                                };
-                                return query;
-                            },
-                        },
-                    ],
-                    '#data': [
-                        {
-                            check: ({ user, row }) => {
-                                return !row.deviceId && [TransmitterState.normal, TransmitterState.offline,TransmitterState.inactive].includes(row.state);
-                            },
-                        }
-                    ]
-                },
+                // {
+                //     '#exists': [
+                //         {
+                //             relation: 'userRole',
+                //             condition: ({ user }) => {
+                //                 const query = {
+                //                     userId: user.id,
+                //                     roleId: Roles.BUSINESS.id,
+                //                 };
+                //                 return query;
+                //             },
+                //         },
+                //     ],
+                //     '#data': [
+                //         {
+                //             check: ({ user, row }) => {
+                //                 return !row.deviceId && [TransmitterState.normal, TransmitterState.offline,TransmitterState.inactive].includes(row.state);
+                //             },
+                //         }
+                //     ]
+                // },
                 {
                     '#exists': [
                         {
                             relation: 'userWorker',
                             condition: ({ user, row }) => {
                                 const { organizationId, deviceId } = row;
-                                if (!deviceId){
-                                    return {
-                                        userId: user.id,
-                                        worker: {
-                                            jobId: {
-                                                $in: [Jobs.superAdministrator, Jobs.guardian, Jobs.administrator],
-                                            }
-                                        },
-                                    }
-                                }
+                                // if (!deviceId){
+                                //     return {
+                                //         userId: user.id,
+                                //         worker: {
+                                //             jobId: {
+                                //                 $in: [Jobs.superAdministrator, Jobs.guardian, Jobs.administrator],
+                                //             }
+                                //         },
+                                //     }
+                                // }
                                 const query = {
                                     userId: user.id,
                                     worker: {
-                                        organizationId,
                                         jobId: {
                                             $in: [Jobs.superAdministrator, Jobs.guardian, Jobs.administrator],
                                         }
@@ -1073,7 +1072,7 @@ const AUTH_MATRIX = {
                     '#data': [
                         {
                             check: ({ user, row }) => {
-                                return  [TransmitterState.normal, TransmitterState.offline, TransmitterState.inactive].includes(row.state);
+                                return  !deviceId && [TransmitterState.normal, TransmitterState.offline, TransmitterState.inactive].includes(row.state);
                             },
                         }
                     ]
