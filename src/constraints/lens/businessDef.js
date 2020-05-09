@@ -1034,7 +1034,17 @@ const AUTH_MATRIX = {
                         {
                             relation: 'userWorker',
                             condition: ({ user, row }) => {
-                                const { organizationId } = row;
+                                const { organizationId, deviceId } = row;
+                                if (!deviceId){
+                                    return {
+                                        userId: user.id,
+                                        worker: {
+                                            jobId: {
+                                                $in: [Jobs.superAdministrator, Jobs.guardian, Jobs.administrator],
+                                            }
+                                        },
+                                    }
+                                }
                                 const query = {
                                     userId: user.id,
                                     worker: {
@@ -1051,7 +1061,7 @@ const AUTH_MATRIX = {
                     '#data': [
                         {
                             check: ({ user, row }) => {
-                                return !row.deviceId && [TransmitterState.normal, TransmitterState.offline, TransmitterState.inactive].includes(row.state);
+                                return  [TransmitterState.normal, TransmitterState.offline, TransmitterState.inactive].includes(row.state);
                             },
                         }
                     ]

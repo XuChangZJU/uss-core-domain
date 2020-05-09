@@ -29,6 +29,35 @@ const {
     STATE_TRAN_MATRIX: STOCK_STATE_TRAN_MATRIX,
 } = require('../../constants/vendue/stock');
 
+const {
+    action: vendueAction,
+    state: vendueState,
+    STATE_TRAN_MATRIX: VENDUE_STATE_TRAN_MATRIX,
+    relation: vendueHouseRelation,
+} = require('../../constants/vendue/vendue');
+const {
+    action: sessionAction,
+    state: sessionState,
+    STATE_TRAN_MATRIX: SESSION_STATE_TRAN_MATRIX,
+    relation: sessionHouseRelation,
+} = require('../../constants/vendue/session');
+const {
+    action: auctionAction,
+    state: auctionState,
+    STATE_TRAN_MATRIX: AUCTION_STATE_TRAN_MATRIX,
+    relation: auctionRelation,
+} = require('../../constants/vendue/auction');
+const {
+    action: bidAction,
+    state: bidState,
+    relation: bidRelation,
+} = require('../../constants/vendue/bid');
+const {
+    action: paddleAction,
+    state: paddleState,
+    relation: paddleRelation,
+} = require('../../constants/vendue/paddle');
+
 const ContractAuctionHouseWorkerExists = [
     {
         relation: 'userAuctionHouse',
@@ -74,6 +103,24 @@ const AuctionHouseOwnerAndManagerExists = [
     },
 ];
 
+const AuctionHouseWorkerExists = [
+    {
+        relation: 'userAuctionHouse',
+        needData: true,
+        condition: ({ user, row, actionData}) => {
+            const { auctionHouseId } = actionData;
+            const query = {
+                userId: user.id,
+                auctionHouseId,
+                relation: {
+                    $in: [auctionHouseRelation.owner, auctionHouseRelation.guardian, auctionHouseRelation.manager, auctionHouseRelation.worker],
+                },
+            };
+            return query;
+        },
+    },
+];
+
 const AnyAuctionHouseWorker = {
     auths: [
         {
@@ -93,6 +140,18 @@ const AnyAuctionHouseWorker = {
 };
 
 const AUTH_MATRIX = {
+    vendue: {
+        [vendueAction.create]: {
+            auths: [
+                {
+                    '#exists': Auth
+                }
+            ]
+        },
+        [vendueAction.update]: {
+
+        }
+    },
     auctionHouse: {
         [auctionHouseAction.create]: AllowEveryoneAuth,
         [auctionHouseAction.update]: {
