@@ -7,7 +7,6 @@ const action = {
     update: 2,
     remove: 3,
     createSub: 4,
-    getList: 5,
 
     authGrant: 11,
     authRevoke: 12,
