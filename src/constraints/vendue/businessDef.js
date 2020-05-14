@@ -33,13 +33,13 @@ const {
     action: vendueAction,
     state: vendueState,
     STATE_TRAN_MATRIX: VENDUE_STATE_TRAN_MATRIX,
-    relation: vendueHouseRelation,
+    relation: vendueRelation,
 } = require('../../constants/vendue/vendue');
 const {
     action: sessionAction,
     state: sessionState,
     STATE_TRAN_MATRIX: SESSION_STATE_TRAN_MATRIX,
-    relation: sessionHouseRelation,
+    relation: sessionRelation,
 } = require('../../constants/vendue/session');
 const {
     action: auctionAction,
@@ -103,24 +103,6 @@ const AuctionHouseOwnerAndManagerExists = [
     },
 ];
 
-const AuctionHouseWorkerExists = [
-    {
-        relation: 'userAuctionHouse',
-        needData: true,
-        condition: ({ user, row, actionData}) => {
-            const { auctionHouseId } = actionData;
-            const query = {
-                userId: user.id,
-                auctionHouseId,
-                relation: {
-                    $in: [auctionHouseRelation.owner, auctionHouseRelation.guardian, auctionHouseRelation.manager, auctionHouseRelation.worker],
-                },
-            };
-            return query;
-        },
-    },
-];
-
 const AnyAuctionHouseWorker = {
     auths: [
         {
@@ -144,13 +126,190 @@ const AUTH_MATRIX = {
         [vendueAction.create]: {
             auths: [
                 {
-                    '#exists': Auth
+                    "exists": [
+                        {
+                            relation: 'userAuctionHouse',
+                            condition: ({user}) => {
+                                return{
+                                    userId: user.id,
+                                    relation: {
+                                        $in: [auctionHouseRelation.owner, auctionHouseRelation.guardian, auctionHouseRelation.manager],
+                                    },
+                                };
+                            }
+                        }
+                    ]
                 }
             ]
         },
         [vendueAction.update]: {
-
-        }
+            auths: [
+                {
+                    "#relation": {
+                        'relations': [vendueRelation.owner],
+                    }
+                }
+            ]
+        },
+        [vendueAction.start]: {
+            auths: [
+                {
+                    "#relation": {
+                        'relations': [vendueRelation.owner],
+                    },
+                    '#data': [
+                        {
+                            check: ({user, row}) => {
+                                return [vendueState.ready, vendueState.pausing].includes(row.state);
+                            },
+                        }
+                    ],
+                }
+            ]
+        },
+        [vendueAction.ready]: {
+            auths: [
+                {
+                    "#relation": {
+                        'relations': [vendueRelation.owner],
+                    },
+                    '#data': [
+                        {
+                            check: ({user, row}) => {
+                                return [vendueState.preparing].includes(row.state);
+                            },
+                        }
+                    ]
+                }
+            ]
+        },
+        [vendueAction.finish]: {
+            auths: [
+                {
+                    "#relation": {
+                        'relations': [vendueRelation.owner],
+                    },
+                    '#data': [
+                        {
+                            check: ({user, row}) => {
+                                return [vendueState.ongoing, vendueState.pausing].includes(row.state);
+                            },
+                        }
+                    ],
+                }
+            ]
+        },
+        [vendueAction.pause]: {
+            auths: [
+                {
+                    "#relation": {
+                        'relations': [vendueRelation.owner],
+                    },
+                    '#data': [                 // 表示对现有对象或者用户的数据有要求，可以有多项，每项之前是AND的关系
+                        {
+                            check: ({user, row}) => {
+                                return row.state === vendueState.ongoing;
+                            },
+                        }
+                    ],
+                }
+            ]
+        },
+    },
+    session: {
+        [sessionAction.create]: {
+            auths: [
+                {
+                    "exists": [
+                        {
+                            relation: 'userAuctionHouse',
+                            condition: ({user}) => {
+                                return{
+                                    userId: user.id,
+                                    auctionHouseId: row.auctionHouseId,
+                                    relation: {
+                                        $in: [auctionHouseRelation.owner, auctionHouseRelation.guardian, auctionHouseRelation.manager],
+                                    },
+                                };
+                            }
+                        }
+                    ]
+                }
+            ]
+        },
+        [sessionAction.update]: {
+            auths: [
+                {
+                    "#relation": {
+                        'relations': [sessionRelation.owner],
+                    }
+                }
+            ]
+        },
+        [sessionAction.start]: {
+            auths: [
+                {
+                    "#relation": {
+                        'relations': [sessionRelation.owner],
+                    },
+                    '#data': [
+                        {
+                            check: ({user, row}) => {
+                                return [sessionState.ready, sessionState.pausing].includes(row.state);
+                            },
+                        }
+                    ],
+                }
+            ]
+        },
+        [sessionAction.ready]: {
+            auths: [
+                {
+                    "#relation": {
+                        'relations': [sessionRelation.owner],
+                    },
+                    '#data': [
+                        {
+                            check: ({user, row}) => {
+                                return [sessionState.preparing].includes(row.state);
+                            },
+                        }
+                    ]
+                }
+            ]
+        },
+        [sessionAction.finish]: {
+            auths: [
+                {
+                    "#relation": {
+                        'relations': [sessionRelation.owner],
+                    },
+                    '#data': [
+                        {
+                            check: ({user, row}) => {
+                                return [sessionState.ongoing, sessionState.pausing].includes(row.state);
+                            },
+                        }
+                    ],
+                }
+            ]
+        },
+        [sessionAction.pause]: {
+            auths: [
+                {
+                    "#relation": {
+                        'relations': [sessionRelation.owner],
+                    },
+                    '#data': [                 // 表示对现有对象或者用户的数据有要求，可以有多项，每项之前是AND的关系
+                        {
+                            check: ({user, row}) => {
+                                return row.state === sessionState.ongoing;
+                            },
+                        }
+                    ],
+                }
+            ]
+        },
     },
     auctionHouse: {
         [auctionHouseAction.create]: AllowEveryoneAuth,

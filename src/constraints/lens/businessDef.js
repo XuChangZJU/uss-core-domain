@@ -494,7 +494,48 @@ const AUTH_MATRIX = {
                 },
             ],
         },
-        [RecordAction.remove]: UnboundRecordDeviceOrganizationWorkerOrPatient,
+        [RecordAction.remove]: {
+            auths: [
+                {
+                    '#exists': [
+                        {
+                            relation: 'device',
+                            condition: ({ user, row }) => {
+                                const { deviceId } = row;
+                                let query = {
+                                    id: deviceId,
+                                };
+                                const has = {
+                                    name: 'userWorker',
+                                    projection: {
+                                        id: 1,
+                                    },
+                                    query: {
+                                        userId: user.id,
+                                        worker: {
+                                            organizationId: {
+                                                $ref: query,
+                                                $attr: 'organizationId',
+                                            },
+                                        },
+                                    },
+                                };
+                                Object.assign(query, { $has: has });
+
+                                return query;
+                            }
+                        }
+                    ],
+                    '#data': [
+                        {
+                            check: ({ row }) => {
+                                return !row.diagnosisId;
+                            },
+                        }
+                    ],
+                },
+            ],
+        }
     },
     device: {
         [DeviceAction.create]:  {
