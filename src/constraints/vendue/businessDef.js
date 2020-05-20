@@ -80,6 +80,9 @@ const StockAuctionHouseWorkerExists = [
             const query = {
                 userId: user.id,
                 auctionHouseId,
+                relation: {
+                    $in: [auctionHouseRelation.stockKeeper, auctionHouseRelation.guardian, auctionHouseRelation.manager, auctionHouseRelation.owner],
+                },
             };
             return query;
         },
@@ -113,6 +116,60 @@ const AnyAuctionHouseWorker = {
                         const query = {
                             userId: user.id,
                         };
+                        return query;
+                    },
+                },
+            ],
+        },
+    ],
+};
+
+const CollectionOwnerAndGranteeOrAuctionHouseWorker = {
+    auths: [
+        {
+            'exists': [
+                {
+                    relation: 'userCollection',
+                    condition: ({ user, row }) => {
+                        const { id: collectionId } = row;
+                        const query = {
+                            userId: user.id,
+                            collectionId,
+                            relation: {
+                                $in: [collectionRelation.owner, collectionRelation.grantee],
+                            },
+                        };
+                        return query;
+                    },
+                },
+            ],
+        },
+        {
+            'exists': [
+                {
+                    relation: 'stock',
+                    condition: ({ user, row }) => {
+                        const { id: stockId } = row;
+                        const query = {
+                            stockId,
+                        };
+                        const has = {
+                            name: 'userAuctionHouse',
+                            projection: {
+                                id: 1,
+                            },
+                            query: {
+                                userId: user.id,
+                                collectionId: {
+                                    $ref: query,
+                                    $attr: 'auctionHouseId',
+                                },
+                                relation: {
+                                    $in: [auctionHouseRelation.owner, auctionHouseRelation.manager, auctionHouseRelation.guardian, auctionHouseRelation.stockKeeper],
+                                },
+                            },
+                        };
+                        Object.assign(query, { $has: has });
                         return query;
                     },
                 },
@@ -358,8 +415,8 @@ const AUTH_MATRIX = {
     },
     collection: {
         [collectionAction.create]: AllowEveryoneAuth,
-        [collectionAction.update]: OwnerRelationAuth,
-        [collectionAction.remove]: OwnerRelationAuth,
+        [collectionAction.update]: CollectionOwnerAndGranteeOrAuctionHouseWorker,
+        [collectionAction.remove]: CollectionOwnerAndGranteeOrAuctionHouseWorker,
     },
     contract: {
         [contractAction.create]: AnyAuctionHouseWorker,
