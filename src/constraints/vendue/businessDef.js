@@ -129,13 +129,16 @@ const AUTH_MATRIX = {
                     "exists": [
                         {
                             relation: 'userAuctionHouse',
-                            condition: ({user}) => {
+                            needData: true,
+                            condition: ({user,actionData}) => {
+                                const {auctionHouseId} = actionData;
                                 return{
                                     userId: user.id,
                                     relation: {
-                                        $in: [auctionHouseRelation.owner, auctionHouseRelation.guardian, auctionHouseRelation.manager],
+                                        $exists: true,
                                     },
-                                };
+                                    auctionHouseId,
+                                }
                             }
                         }
                     ]
@@ -146,17 +149,52 @@ const AUTH_MATRIX = {
             auths: [
                 {
                     "#relation": {
-                        'relations': [vendueRelation.owner],
-                    }
+                    },
+                },
+                {
+                    '#exists': [
+                        {
+                            relation: 'userAuctionHouse',
+                            condition: ({ user, row }) => {
+                                const query = {
+                                    userId: user.id,
+                                    auctionHouseId: row.auctionHouseId,
+                                    relation: auctionHouseRelation.administrator,
+                                };
+                                return query;
+                            },
+                        },
+                    ],
                 }
-            ]
+            ],
         },
         [vendueAction.start]: {
             auths: [
                 {
                     "#relation": {
-                        'relations': [vendueRelation.owner],
                     },
+                    '#data': [
+                        {
+                            check: ({user, row}) => {
+                                return [vendueState.ready, vendueState.pausing].includes(row.state);
+                            },
+                        }
+                    ],
+                },
+                {
+                    '#exists': [
+                        {
+                            relation: 'userAuctionHouse',
+                            condition: ({ user, row }) => {
+                                const query = {
+                                    userId: user.id,
+                                    auctionHouseId: row.auctionHouseId,
+                                    relation: auctionHouseRelation.administrator,
+                                };
+                                return query;
+                            },
+                        },
+                    ],
                     '#data': [
                         {
                             check: ({user, row}) => {
@@ -171,7 +209,6 @@ const AUTH_MATRIX = {
             auths: [
                 {
                     "#relation": {
-                        'relations': [vendueRelation.owner],
                     },
                     '#data': [
                         {
@@ -180,6 +217,28 @@ const AUTH_MATRIX = {
                             },
                         }
                     ]
+                },
+                {
+                    '#exists': [
+                        {
+                            relation: 'userAuctionHouse',
+                            condition: ({ user, row }) => {
+                                const query = {
+                                    userId: user.id,
+                                    auctionHouseId: row.auctionHouseId,
+                                    relation: auctionHouseRelation.administrator,
+                                };
+                                return query;
+                            },
+                        },
+                    ],
+                    '#data': [
+                        {
+                            check: ({user, row}) => {
+                                return [vendueState.preparing].includes(row.state);
+                            },
+                        }
+                    ],
                 }
             ]
         },
@@ -187,8 +246,29 @@ const AUTH_MATRIX = {
             auths: [
                 {
                     "#relation": {
-                        'relations': [vendueRelation.owner],
                     },
+                    '#data': [
+                        {
+                            check: ({user, row}) => {
+                                return [vendueState.ongoing, vendueState.pausing].includes(row.state);
+                            },
+                        }
+                    ],
+                },
+                {
+                    '#exists': [
+                        {
+                            relation: 'userAuctionHouse',
+                            condition: ({ user, row }) => {
+                                const query = {
+                                    userId: user.id,
+                                    auctionHouseId: row.auctionHouseId,
+                                    relation: auctionHouseRelation.administrator,
+                                };
+                                return query;
+                            },
+                        },
+                    ],
                     '#data': [
                         {
                             check: ({user, row}) => {
@@ -203,9 +283,30 @@ const AUTH_MATRIX = {
             auths: [
                 {
                     "#relation": {
-                        'relations': [vendueRelation.owner],
                     },
-                    '#data': [                 // 表示对现有对象或者用户的数据有要求，可以有多项，每项之前是AND的关系
+                    '#data': [
+                        {
+                            check: ({user, row}) => {
+                                return row.state === vendueState.ongoing;
+                            },
+                        }
+                    ],
+                },
+                {
+                    '#exists': [
+                        {
+                            relation: 'userAuctionHouse',
+                            condition: ({ user, row }) => {
+                                const query = {
+                                    userId: user.id,
+                                    auctionHouseId: row.auctionHouseId,
+                                    relation: auctionHouseRelation.administrator,
+                                };
+                                return query;
+                            },
+                        },
+                    ],
+                    '#data': [
                         {
                             check: ({user, row}) => {
                                 return row.state === vendueState.ongoing;
@@ -215,6 +316,78 @@ const AUTH_MATRIX = {
                 }
             ]
         },
+        [vendueAction.transfer]: {
+            auths: [
+                {
+                    "#relation": {
+                        relations: [vendueRelation.adminstrator],
+                    },
+                },
+                {
+                    '#exists': [
+                        {
+                            relation: 'userAuctionHouse',
+                            condition: ({user, row}) => {
+                                const query = {
+                                    userId: user.id,
+                                    auctionHouseId: row.auctionHouseId,
+                                    relation: auctionHouseRelation.administrator,
+                                };
+                                return query;
+                            },
+                        },
+                    ],
+                }
+            ]
+        },
+        [vendueAction.authGrant]: {
+            auths: [
+                {
+                    "#relation": {
+                        relations: [vendueRelation.administrator],
+                    },
+                },
+                {
+                    '#exists': [
+                        {
+                            relation: 'userAuctionHouse',
+                            condition: ({user, row}) => {
+                                const query = {
+                                    userId: user.id,
+                                    auctionHouseId: row.auctionHouseId,
+                                    relation: auctionHouseRelation.administrator,
+                                };
+                                return query;
+                            },
+                        },
+                    ],
+                }
+            ]
+        },
+        [vendueAction.remove]: {
+            auths: [
+                {
+                    "#relation": {
+                        relations: [vendueRelation.administrator],
+                    },
+                },
+                {
+                    '#exists': [
+                        {
+                            relation: 'userAuctionHouse',
+                            condition: ({user, row}) => {
+                                const query = {
+                                    userId: user.id,
+                                    auctionHouseId: row.auctionHouseId,
+                                    relation: auctionHouseRelation.administrator,
+                                };
+                                return query;
+                            },
+                        },
+                    ],
+                }
+            ]
+        }
     },
     session: {
         [sessionAction.create]: {
@@ -222,14 +395,30 @@ const AUTH_MATRIX = {
                 {
                     "exists": [
                         {
-                            relation: 'userAuctionHouse',
-                            condition: ({user}) => {
+                            relation: 'userVendue',
+                            needData: true,
+                            condition: ({user,actionData}) => {
                                 return{
                                     userId: user.id,
-                                    auctionHouseId: row.auctionHouseId,
+                                    vendueId: actionData.vendueId,
                                     relation: {
-                                        $in: [auctionHouseRelation.owner, auctionHouseRelation.guardian, auctionHouseRelation.manager],
+                                        $exists: true,
                                     },
+                                };
+                            }
+                        }
+                    ]
+                },
+                {
+                    "exists": [
+                        {
+                            relation: 'userAuctionHouse',
+                            needData: true,
+                            condition: ({user,actionData}) => {
+                                return{
+                                    userId: user.id,
+                                    auctionHouseId: actionData.vendue.auctionHouseId,
+                                    relation: auctionHouseRelation.administrator,
                                 };
                             }
                         }
@@ -241,16 +430,52 @@ const AUTH_MATRIX = {
             auths: [
                 {
                     "#relation": {
-                        'relations': [sessionRelation.owner],
                     }
-                }
+                },
+                {
+                    '#relation': {
+                        attr: 'vendue',
+                        relations: [vendueRelation.adminstrator]
+                    }
+                },
+                {
+                    '#relation': {
+                        attr: 'vendue.auctionHouse',
+                        relations: [auctionHouseRelation.adminstrator]
+                    }
+                },
             ]
         },
         [sessionAction.start]: {
             auths: [
                 {
                     "#relation": {
-                        'relations': [sessionRelation.owner],
+                    },
+                    '#data': [
+                        {
+                            check: ({user, row}) => {
+                                return [sessionState.ready, sessionState.pausing].includes(row.state);
+                            },
+                        }
+                    ],
+                },
+                {
+                    "#relation": {
+                        attr: 'vendue',
+                        relations: [vendueRelation.administrator],
+                    },
+                    '#data': [
+                        {
+                            check: ({user, row}) => {
+                                return [sessionState.ready, sessionState.pausing].includes(row.state);
+                            },
+                        }
+                    ],
+                },
+                {
+                    "#relation": {
+                        attr: 'vendue.auctionHouse',
+                        relations: [auctionHouseRelation.administrator],
                     },
                     '#data': [
                         {
@@ -266,7 +491,6 @@ const AUTH_MATRIX = {
             auths: [
                 {
                     "#relation": {
-                        'relations': [sessionRelation.owner],
                     },
                     '#data': [
                         {
@@ -275,6 +499,32 @@ const AUTH_MATRIX = {
                             },
                         }
                     ]
+                },
+                {
+                    "#relation": {
+                        attr: 'vendue',
+                        relations: [vendueRelation.administrator],
+                    },
+                    '#data': [
+                        {
+                            check: ({user, row}) => {
+                                return [sessionState.preparing].includes(row.state);
+                            },
+                        }
+                    ],
+                },
+                {
+                    "#relation": {
+                        attr: 'vendue.auctionHouse',
+                        relations: [auctionHouseRelation.administrator],
+                    },
+                    '#data': [
+                        {
+                            check: ({user, row}) => {
+                                return [sessionState.preparing].includes(row.state);
+                            },
+                        }
+                    ],
                 }
             ]
         },
@@ -282,7 +532,32 @@ const AUTH_MATRIX = {
             auths: [
                 {
                     "#relation": {
-                        'relations': [sessionRelation.owner],
+                    },
+                    '#data': [
+                        {
+                            check: ({user, row}) => {
+                                return [sessionState.ongoing, sessionState.pausing].includes(row.state);
+                            },
+                        }
+                    ],
+                },
+                {
+                    "#relation": {
+                        attr: 'vendue',
+                        relations: [vendueRelation.administrator],
+                    },
+                    '#data': [
+                        {
+                            check: ({user, row}) => {
+                                return [sessionState.ongoing, sessionState.pausing].includes(row.state);
+                            },
+                        }
+                    ],
+                },
+                {
+                    "#relation": {
+                        attr: 'vendue.auctionHouse',
+                        relations: [auctionHouseRelation.administrator],
                     },
                     '#data': [
                         {
@@ -298,9 +573,34 @@ const AUTH_MATRIX = {
             auths: [
                 {
                     "#relation": {
-                        'relations': [sessionRelation.owner],
                     },
                     '#data': [                 // 表示对现有对象或者用户的数据有要求，可以有多项，每项之前是AND的关系
+                        {
+                            check: ({user, row}) => {
+                                return row.state === sessionState.ongoing;
+                            },
+                        }
+                    ],
+                },
+                {
+                    "#relation": {
+                        attr: 'vendue',
+                        relations: [vendueRelation.administrator],
+                    },
+                    '#data': [
+                        {
+                            check: ({user, row}) => {
+                                return row.state === sessionState.ongoing;
+                            },
+                        }
+                    ],
+                },
+                {
+                    "#relation": {
+                        attr: 'vendue.auctionHouse',
+                        relations: [auctionHouseRelation.administrator],
+                    },
+                    '#data': [
                         {
                             check: ({user, row}) => {
                                 return row.state === sessionState.ongoing;
@@ -310,6 +610,424 @@ const AUTH_MATRIX = {
                 }
             ]
         },
+        [sessionAction.transfer]: {
+            auths: [
+                {
+                    "#relation": {
+                        relations: [sessionRelation.administrator],
+                    },
+                },
+                {
+                    "#relation": {
+                        attr: 'vendue',
+                        relations: [vendueRelation.administrator],
+                    },
+                },
+                {
+                    "#relation": {
+                        attr: 'vendue.auctionHouse',
+                        relations: [auctionHouseRelation.administrator],
+                    },
+                }
+            ]
+        },
+        [sessionAction.authGrant]: {
+            auths: [
+                {
+                    "#relation": {
+                        relations: [sessionRelation.administrator],
+                    },
+                },
+                {
+                    "#relation": {
+                        attr: 'vendue',
+                        relations: [vendueRelation.administrator],
+                    },
+                },
+                {
+                    "#relation": {
+                        attr: 'vendue.auctionHouse',
+                        relations: [auctionHouseRelation.administrator],
+                    },
+                }
+            ]
+        },
+        [sessionAction.remove]: {
+            auths: [
+                {
+                    "#relation": {
+                        relations: [sessionRelation.administrator],
+                    },
+                },
+                {
+                    "#relation": {
+                        attr: 'vendue',
+                        relations: [vendueRelation.administrator],
+                    },
+                },
+                {
+                    "#relation": {
+                        attr: 'vendue.auctionHouse',
+                        relations: [auctionHouseRelation.administrator],
+                    },
+                }
+            ]
+        }
+    },
+    auction: {
+        [auctionAction.create]: {
+            auths: [
+                {
+                    "exists": [
+                        {
+                            relation: 'userSession',
+                            needData: true,
+                            condition: ({user,actionData}) => {
+                                return{
+                                    userId: user.id,
+                                    sessionId: actionData.sessionId,
+                                    relation: {
+                                        $exists: true,
+                                    },
+                                };
+                            }
+                        },
+                    ]
+                },
+                {
+                    "exists": [
+                        {
+                            relation: 'userVendue',
+                            needData: true,
+                            condition: ({user,actionData}) => {
+                                return{
+                                    userId: user.id,
+                                    vendueId: actionData.session.vendueId,
+                                    relation: vendueRelation.administrator,
+                                };
+                            }
+                        },
+                    ]
+                },
+                {
+                    "exists": [
+                        {
+                            relation: 'userAuctionHouse',
+                            needData: true,
+                            condition: ({user,actionData}) => {
+                                return{
+                                    userId: user.id,
+                                    auctionHouseId: actionData.session.vendue.auctionHouseId,
+                                    relation: auctionHouseRelation.administrator,
+                                };
+                            }
+                        },
+                    ]
+                },
+            ]
+        },
+        [auctionAction.update]: {
+            auths: [
+                {
+                    "#relation": {
+                    }
+                },
+                {
+                    "#relation": {
+                        attr: 'session',
+                        relations: [sessionRelation.administrator],
+                    },
+                },
+                {
+                    "#relation": {
+                        attr: 'session.vendue',
+                        relations: [vendueRelation.administrator],
+                    },
+                },
+                {
+                    "#relation": {
+                        attr: 'session.vendue.auctionHouse',
+                        relations: [auctionHouseRelation.administrator],
+                    },
+                }
+            ]
+        },
+        [auctionAction.ready]: {
+            auths: [
+                {
+                    "#relation": {
+                    },
+                    '#data': [
+                        {
+                            check: ({user, row}) => {
+                                return row.state === auctionState.preparing;
+                            },
+                        }
+                    ],
+                },
+                {
+                    "#relation": {
+                        attr: 'session',
+                        relations: [sessionRelation.administrator],
+                    },
+                    '#data': [
+                        {
+                            check: ({user, row}) => {
+                                return row.state === auctionState.preparing;
+                            },
+                        }
+                    ],
+                },
+                {
+                    "#relation": {
+                        attr: 'session.vendue',
+                        relations: [vendueRelation.administrator],
+                    },
+                    '#data': [
+                        {
+                            check: ({user, row}) => {
+                                return row.state === auctionState.preparing;
+                            },
+                        }
+                    ],
+                },
+                {
+                    "#relation": {
+                        attr: 'session.vendue.auctionHouse',
+                        relations: [auctionHouseRelation.administrator],
+                    },
+                    '#data': [
+                        {
+                            check: ({user, row}) => {
+                                return row.state === auctionState.preparing;
+                            },
+                        }
+                    ],
+                }
+            ]
+        },
+        [auctionAction.start]: {
+            auths: [
+                {
+                    "#relation": {
+                        attr: 'session',
+                        relations: [sessionRelation.administrator, sessionRelation.auctioneer],
+                    },
+                    '#data': [
+                        {
+                            check: ({user, row}) => {
+                                return [auctionState.preparing, auctionState.pausing, auctionState.unsold].includes(row.state);
+                            },
+                        }
+                    ],
+                },
+                {
+                    "#relation": {
+                        attr: 'session.vendue',
+                        relations: [vendueRelation.administrator],
+                    },
+                    '#data': [
+                        {
+                            check: ({user, row}) => {
+                                return [auctionState.preparing, auctionState.pausing, auctionState.unsold].includes(row.state);
+                            },
+                        }
+                    ],
+                },
+                {
+                    "#relation": {
+                        attr: 'session.vendue.auctionHouse',
+                        relations: [auctionHouseRelation.administrator],
+                    },
+                    '#data': [
+                        {
+                            check: ({user, row}) => {
+                                return [auctionState.preparing, auctionState.pausing, auctionState.unsold].includes(row.state);
+                            },
+                        }
+                    ],
+                }
+            ]
+        },
+        [auctionAction.sold]: {
+            auths: [
+                {
+                    "#relation": {
+                        attr: 'session',
+                        relations: [sessionRelation.administrator, sessionRelation.auctioneer],
+                    },
+                    '#data': [
+                        {
+                            check: ({user, row}) => {
+                                return row.state === auctionState.ongoing;
+                            },
+                        }
+                    ],
+                },
+                {
+                    "#relation": {
+                        attr: 'session.vendue',
+                        relations: [vendueRelation.administrator],
+                    },
+                    '#data': [
+                        {
+                            check: ({user, row}) => {
+                                return row.state === auctionState.ongoing;
+                            },
+                        }
+                    ],
+                },
+                {
+                    "#relation": {
+                        attr: 'session.vendue.auctionHouse',
+                        relations: [auctionHouseRelation.administrator],
+                    },
+                    '#data': [
+                        {
+                            check: ({user, row}) => {
+                                return row.state === auctionState.ongoing;
+                            },
+                        }
+                    ],
+                }
+            ]
+        },
+        [auctionAction.unsold]: {
+            auths: [
+                {
+                    "#relation": {
+                        attr: 'session',
+                        relations: [sessionRelation.administrator, sessionRelation.auctioneer],
+                    },
+                    '#data': [
+                        {
+                            check: ({user, row}) => {
+                                return row.state === auctionState.ongoing;
+                            },
+                        }
+                    ],
+                },
+                {
+                    "#relation": {
+                        attr: 'session.vendue',
+                        relations: [vendueRelation.administrator],
+                    },
+                    '#data': [
+                        {
+                            check: ({user, row}) => {
+                                return row.state === auctionState.ongoing;
+                            },
+                        }
+                    ],
+                },
+                {
+                    "#relation": {
+                        attr: 'session.vendue.auctionHouse',
+                        relations: [auctionHouseRelation.administrator],
+                    },
+                    '#data': [
+                        {
+                            check: ({user, row}) => {
+                                return row.state === auctionState.ongoing;
+                            },
+                        }
+                    ],
+                }
+            ]
+        },
+        [auctionAction.pause]: {
+            auths: [
+                {
+                    "#relation": {
+                        attr: 'session',
+                        relations: [sessionRelation.administrator, sessionRelation.auctioneer],
+                    },
+                    '#data': [
+                        {
+                            check: ({user, row}) => {
+                                return row.state === auctionState.ongoing;
+                            },
+                        }
+                    ],
+                },
+                {
+                    "#relation": {
+                        attr: 'session.vendue',
+                        relations: [vendueRelation.administrator],
+                    },
+                    '#data': [
+                        {
+                            check: ({user, row}) => {
+                                return row.state === auctionState.ongoing;
+                            },
+                        }
+                    ],
+                },
+                {
+                    "#relation": {
+                        attr: 'session.vendue.auctionHouse',
+                        relations: [auctionHouseRelation.administrator],
+                    },
+                    '#data': [
+                        {
+                            check: ({user, row}) => {
+                                return row.state === auctionState.ongoing;
+                            },
+                        }
+                    ],
+                }
+            ]
+        },
+        [auctionAction.remove]: {
+            auths: [
+                {
+                    "#relation": {
+                        attr: 'session',
+                        relations: [sessionRelation.administrator, sessionRelation.auctioneer],
+                    },
+                },
+                {
+                    "#relation": {
+                        attr: 'session.vendue',
+                        relations: [vendueRelation.administrator],
+                    },
+                },
+                {
+                    "#relation": {
+                        attr: 'session.vendue.auctionHouse',
+                        relations: [auctionHouseRelation.administrator],
+                    },
+                }
+            ]
+        }
+    },
+    bid: {
+        [bidAction.create]: AllowEveryoneAuth,
+        [bidAction.remove]: {
+            auths: [
+                {
+                    "#relation": {
+                        attr: 'auction.session',
+                        relations: [sessionRelation.administrator, sessionRelation.auctioneer],
+                    },
+                },
+                {
+                    "#relation": {
+                        attr: 'auction.session.vendue',
+                        relations: [vendueRelation.administrator],
+                    },
+                },
+                {
+                    "#relation": {
+                        attr: 'auction.session.vendue.auctionHouse',
+                        relations: [auctionHouseRelation.administrator],
+                    },
+                }
+            ]
+        }
+    },
+    paddle: {
+        [paddleAction.create]: AnyRelationAuth,
     },
     auctionHouse: {
         [auctionHouseAction.create]: AllowEveryoneAuth,

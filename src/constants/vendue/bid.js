@@ -1,8 +1,8 @@
 const {
     relation,
     decodeRelation,
-    action: commonAction,
-    decodeAction: decodeCommonAction,
+    action,
+    decodeAction,
     state: commonState,
     decodeState: decodeCommonState,
 } = require('../action');
@@ -19,17 +19,6 @@ const decodeState = (s) => {
     return S[s] || decodeCommonState(s);
 };
 
-const action = Object.assign({}, commonAction, {
-    cancel: 501,
-});
-
-const decodeAction = (a) => {
-    const S = {
-        [action.cancel]: '撤销',
-    };
-
-    return S[a] || decodeCommonAction(a);
-};
 
 
 module.exports = {

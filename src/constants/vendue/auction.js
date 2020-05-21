@@ -13,6 +13,7 @@ const state = object.assign({}, commonState, {
     ongoing: 311,
     sold: 501,
     unsold: 511,
+    pausing: 520,
 });
 const decodeState = (s) => {
     const S = {
@@ -21,6 +22,7 @@ const decodeState = (s) => {
         [state.ongoing]: '拍卖中',
         [state.sold]: '成交',
         [state.unsold]: '流拍',
+        [state.pausing]: '暂停',
     };
 
     return S[s] || decodeCommonState(s);
@@ -32,6 +34,7 @@ const action = Object.assign({}, commonAction, {
     sold: 601,
     unsold: 610,
     resold: 611,
+    pause: 620,
 });
 
 const decodeAction = (a) => {
@@ -40,7 +43,7 @@ const decodeAction = (a) => {
         [action.start]: '开拍',
         [action.sold]: '成交',
         [action.unsold]: '流拍',
-        [action.resold]: '重拍',
+        [action.pause]: '暂停',
     };
 
     return S[a] || decodeCommonAction(a);
@@ -48,10 +51,10 @@ const decodeAction = (a) => {
 
 const STATE_TRAN_MATRIX = {
     [action.ready]: [state.preparing, state.ready],
-    [action.start]: [state.ready, state.ongoing],
+    [action.start]: [[state.ready, state.unsold, state.pausing], state.ongoing],
     [action.sold]: [state.ongoing, state.sold],
     [action.unsold]: [state.ongoing, state.unsold],
-    [action.resold]: [state.unsold, state.ongoing],
+    [action.pause]: [state.ongoing, state.pausing],
 };
 
 module.exports = {

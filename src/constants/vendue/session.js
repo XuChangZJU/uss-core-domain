@@ -1,6 +1,6 @@
 const {
-    relation,
-    decodeRelation,
+    relation: commonRelation,
+    decodeRelation: decodeCommonRelation,
     action: commonAction,
     decodeAction: decodeCommonAction,
     state: commonState,
@@ -43,7 +43,22 @@ const decodeAction = (a) => {
 
     return S[a] || decodeCommonAction(a);
 };
+const relation = Object.assign({}, commonRelation, {
+    guardian: 101,
+    worker: 102,
+    administrator: 110,
+    auctioneer: 111,
+});
 
+const decodeRelation = (r) => {
+    const R = {
+        [relation.guardian]: '守护者',
+        [relation.worker]: '员工',
+        [relation.administrator]: '管理员',
+        [relation.auctioneer]: '拍卖师',
+    };
+    return R[r] || decodeCommonRelation(r);
+};
 const STATE_TRAN_MATRIX = {
     [action.ready]: [state.preparing, state.ready],
     [action.start]: [[state.ready, state.pausing], state.ongoing],
