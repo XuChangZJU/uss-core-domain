@@ -1152,41 +1152,32 @@ const AUTH_MATRIX = {
                 },
             ],
         },
-        [contractAction.sign]: {
+        [contractAction.auctionSuccess]: {
             auths: [
                 {
                     '#exists': ContractAuctionHouseWorkerExists,
                     '#data': [
                         {
                             check: ({ row }) => {
-                                return row.state === contractState.init;
+                                return row.state === contractState.legal;
                             },
                         },
                     ],
                 },
+            ],
+        },
+        [contractAction.settle]: {
+            auths: [
                 {
-                    // 收藏品拥有者也可以确认签署
-                    '#exists': [
-                        {
-                            relation: 'userCollection',
-                            condition: ({ user, row }) => {
-                                const { collectionId } = row;
-                                const query = {
-                                    userId: user.id,
-                                    collectionId,
-                                };
-                                return query;
-                            },
-                        },
-                    ],
+                    '#exists': ContractAuctionHouseWorkerExists,
                     '#data': [
                         {
                             check: ({ row }) => {
-                                return row.state === contractState.init;
+                                return row.state === contractState.unsettled;
                             },
                         },
                     ],
-                }
+                },
             ],
         },
         [contractAction.abort]: {
@@ -1196,21 +1187,7 @@ const AUTH_MATRIX = {
                     '#data': [
                         {
                             check: ({ row }) => {
-                                return [contractState.init, contractState.legal].includes(row.state);
-                            },
-                        },
-                    ],
-                },
-            ],
-        },
-        [contractAction.performance]: {
-            auths: [
-                {
-                    '#exists': ContractAuctionHouseWorkerExists,
-                    '#data': [
-                        {
-                            check: ({ row }) => {
-                                return row.state === contractState.legal;
+                                return [contractState.legal, contractState.unsettled].includes(row.state);
                             },
                         },
                     ],
@@ -1249,6 +1226,34 @@ const AUTH_MATRIX = {
             ],
         },
         [stockAction.outStore]: {
+            auths: [
+                {
+                    '#exists': StockAuctionHouseWorkerExists,
+                    '#data': [
+                        {
+                            check: ({ row }) => {
+                                return row.state === stockState.stored;
+                            },
+                        },
+                    ],
+                },
+            ],
+        },
+        [stockAction.sell]: {
+            auths: [
+                {
+                    '#exists': StockAuctionHouseWorkerExists,
+                    '#data': [
+                        {
+                            check: ({ row }) => {
+                                return row.state === stockState.stored;
+                            },
+                        },
+                    ],
+                },
+            ],
+        },
+        [stockAction.return]: {
             auths: [
                 {
                     '#exists': StockAuctionHouseWorkerExists,
