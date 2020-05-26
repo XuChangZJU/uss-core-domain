@@ -373,6 +373,43 @@ const AUTH_MATRIX = {
                 }
             ]
         },
+        [vendueAction.stop]: {
+            auths: [
+                {
+                    "#relation": {
+                    },
+                    '#data': [
+                        {
+                            check: ({user, row}) => {
+                                return [vendueState.ongoing, vendueState.pausing, vendueState.ready, vendueState.preparing].includes(row.state);
+                            },
+                        }
+                    ],
+                },
+                {
+                    '#exists': [
+                        {
+                            relation: 'userAuctionHouse',
+                            condition: ({ user, row }) => {
+                                const query = {
+                                    userId: user.id,
+                                    auctionHouseId: row.auctionHouseId,
+                                    relation: auctionHouseRelation.administrator,
+                                };
+                                return query;
+                            },
+                        },
+                    ],
+                    '#data': [
+                        {
+                            check: ({user, row}) => {
+                                return [vendueState.ongoing, vendueState.pausing, vendueState.ready, vendueState.preparing].includes(row.state);
+                            },
+                        }
+                    ],
+                }
+            ]
+        },
         [vendueAction.transfer]: {
             auths: [
                 {
@@ -781,6 +818,60 @@ const AUTH_MATRIX = {
                         },
                     ]
                 },
+            ]
+        },
+        [auctionAction.cancel]: {
+            auths: [
+                {
+                    "#relation": {
+                    },
+                    '#data': [
+                        {
+                            check: ({user, row}) => {
+                                return [auctionState.preparing, auctionState.ready, auctionState.ongoing, auctionState.pausing].includes(row.state);
+                            },
+                        }
+                    ],
+                },
+                {
+                    "#relation": {
+                        attr: 'session',
+                        relations: [sessionRelation.administrator],
+                    },
+                    '#data': [
+                        {
+                            check: ({user, row}) => {
+                                return [auctionState.preparing, auctionState.ready, auctionState.ongoing, auctionState.pausing].includes(row.state);
+                            },
+                        }
+                    ],
+                },
+                {
+                    "#relation": {
+                        attr: 'session.vendue',
+                        relations: [vendueRelation.administrator],
+                    },
+                    '#data': [
+                        {
+                            check: ({user, row}) => {
+                                return [auctionState.preparing, auctionState.ready, auctionState.ongoing, auctionState.pausing].includes(row.state);
+                            },
+                        }
+                    ],
+                },
+                {
+                    "#relation": {
+                        attr: 'session.vendue.auctionHouse',
+                        relations: [auctionHouseRelation.administrator],
+                    },
+                    '#data': [
+                        {
+                            check: ({user, row}) => {
+                                return [auctionState.preparing, auctionState.ready, auctionState.ongoing, auctionState.pausing].includes(row.state);
+                            },
+                        }
+                    ],
+                }
             ]
         },
         [auctionAction.update]: {
