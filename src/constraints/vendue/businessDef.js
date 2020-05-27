@@ -1243,7 +1243,7 @@ const AUTH_MATRIX = {
                 },
             ],
         },
-        [contractAction.auctionSuccess]: {
+        [contractAction.complete]:{
             auths: [
                 {
                     '#exists': ContractAuctionHouseWorkerExists,
@@ -1257,20 +1257,6 @@ const AUTH_MATRIX = {
                 },
             ],
         },
-        [contractAction.settle]: {
-            auths: [
-                {
-                    '#exists': ContractAuctionHouseWorkerExists,
-                    '#data': [
-                        {
-                            check: ({ row }) => {
-                                return row.state === contractState.unsettled;
-                            },
-                        },
-                    ],
-                },
-            ],
-        },
         [contractAction.abort]: {
             auths: [
                 {
@@ -1278,7 +1264,7 @@ const AUTH_MATRIX = {
                     '#data': [
                         {
                             check: ({ row }) => {
-                                return [contractState.legal, contractState.unsettled].includes(row.state);
+                                return row.state === contractState.legal;
                             },
                         },
                     ],
