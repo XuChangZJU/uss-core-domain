@@ -7,8 +7,7 @@ const {
     decodeState: decodeCommonState,
 } = require('../action');
 
-
-const state = object.assign({}, commonState, {
+const state = Object.assign({}, commonState, {
     active: 301,
     inactive: 311,
     succeed: 401,
