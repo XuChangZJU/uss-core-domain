@@ -7,14 +7,17 @@ const {
     decodeState: decodeCommonState,
 } = require('../action');
 
+
 const state = object.assign({}, commonState, {
     active: 301,
     inactive: 311,
+    succeed: 401,
 });
 const decodeState = (s) => {
     const S = {
-        active: '最高',
-        inactive: '非最高'
+        active: '进行中',
+        inactive: '已完成',
+        succeed: '成交',
     };
     return S[s] || decodeCommonState(s);
 };

@@ -544,6 +544,7 @@ const AUTH_MATRIX = {
             auths: [
                 {
                     "#relation": {
+                        relations: [sessionRelation.administrator, sessionRelation.auctioneer],
                     },
                     '#data': [
                         {
@@ -626,6 +627,7 @@ const AUTH_MATRIX = {
             auths: [
                 {
                     "#relation": {
+                        relations: [sessionRelation.administrator, sessionRelation.auctioneer],
                     },
                     '#data': [
                         {
@@ -883,7 +885,7 @@ const AUTH_MATRIX = {
                 {
                     "#relation": {
                         attr: 'session',
-                        relations: [sessionRelation.administrator],
+                        relations: [sessionRelation.administrator, sessionRelation.auctioneer],
                     },
                 },
                 {
@@ -1150,8 +1152,59 @@ const AUTH_MATRIX = {
         }
     },
     bid: {
-        [bidAction.create]: AllowEveryoneAuth,
+        [bidAction.create]: {
+            auths: [
+                {
+                    '#exists': [
+                        {
+                            relation: 'auction',
+                            needData: true,
+                            condition: ({ user, actionData }) => {
+                                const {auction} = actionData;
+                                return {
+                                    id: auction.id,
+                                    state: auctionState.ongoing,
+                                };
+                            },
+                        },
+                        {
+                            relation: 'paddle',
+                            needData: true,
+                            condition: ({ user, actionData }) => {
+                                const {paddle} = actionData;
+                                return {
+                                    id: paddle.id,
+                                    state: paddleState.unsettled,
+                                };
+                            },
+                        },
+                    ],
+                }
+            ]
+        },
         [bidAction.remove]: {
+            auths: [
+                {
+                    "#relation": {
+                        attr: 'auction.session',
+                        relations: [sessionRelation.administrator, sessionRelation.auctioneer],
+                    },
+                },
+                {
+                    "#relation": {
+                        attr: 'auction.session.vendue',
+                        relations: [vendueRelation.administrator],
+                    },
+                },
+                {
+                    "#relation": {
+                        attr: 'auction.session.vendue.auctionHouse',
+                        relations: [auctionHouseRelation.administrator],
+                    },
+                }
+            ]
+        },
+        [bidAction.update]: {
             auths: [
                 {
                     "#relation": {
@@ -1175,7 +1228,24 @@ const AUTH_MATRIX = {
         }
     },
     paddle: {
-        [paddleAction.create]: AnyRelationAuth,
+        [paddleAction.create]: {
+            auths: [
+                {
+                    '#unexists': [
+                        {
+                            relation: 'paddle',
+                            needData: true,
+                            condition: ({ user, actionData }) => {
+                                return {
+                                    state: paddleState.unsettled,
+                                    userId: user.id,
+                                }
+                            },
+                        },
+                    ],
+                }
+            ]
+        },
     },
     auctionHouse: {
         [auctionHouseAction.create]: AllowEveryoneAuth,
