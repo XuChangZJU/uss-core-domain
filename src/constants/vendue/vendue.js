@@ -15,6 +15,21 @@ const state = Object.assign({}, commonState, {
     pausing: 410,
     aborted: 411,
 });
+const category = Object.assign({}, {
+    pureOnline: 1,
+    offline: 2,
+    delayed: 3,
+});
+
+const STRINGS_OF_ORIGINS = {
+    [category.pureOnline]: "纯线上",
+    [category.offline]: "线下",
+    [category.delayed]: "延时拍",
+};
+
+function decodeCategory(o) {
+    return STRINGS_OF_ORIGINS[o];
+}
 const decodeState = (s) => {
     const S = {
         [state.preparing]: '准备中',
@@ -77,4 +92,6 @@ module.exports = {
     action,
     decodeAction,
     STATE_TRAN_MATRIX,
+    category,
+    decodeCategory,
 };
