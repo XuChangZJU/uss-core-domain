@@ -11,13 +11,13 @@ const {
     relation: auctionHouseRelation,
 } = require('../../constants/vendue/auctionHouse');
 const {
-    STATE_TRAN_MATRIX: DEPOSIT_STATE_TRAN_MATRIX,
+    COMMON_STATE_TRAN_MATRIX: DEPOSIT_STATE_TRAN_MATRIX,
 } = require('../../constants/vendue/deposit');
 const {
-    STATE_TRAN_MATRIX: CHECKOUT_STATE_TRAN_MATRIX,
+    COMMON_STATE_TRAN_MATRIX: CHECKOUT_STATE_TRAN_MATRIX,
 } = require('../../constants/vendue/checkOut');
 const {
-    STATE_TRAN_MATRIX: CASHIN_STATE_TRAN_MATRIX,
+    COMMON_STATE_TRAN_MATRIX: CASHIN_STATE_TRAN_MATRIX,
 } = require('../../constants/vendue/cashIn');
 const {
     action: collectionAction,
