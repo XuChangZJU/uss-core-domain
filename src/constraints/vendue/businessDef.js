@@ -10,7 +10,15 @@ const {
     STATE_TRAN_MATRIX: AUCTIONHOUSE_STATE_TRAN_MATRIX,
     relation: auctionHouseRelation,
 } = require('../../constants/vendue/auctionHouse');
-
+const {
+    STATE_TRAN_MATRIX: DEPOSIT_STATE_TRAN_MATRIX,
+} = require('../../constants/vendue/deposit');
+const {
+    STATE_TRAN_MATRIX: CHECKOUT_STATE_TRAN_MATRIX,
+} = require('../../constants/vendue/checkOut');
+const {
+    STATE_TRAN_MATRIX: CASHIN_STATE_TRAN_MATRIX,
+} = require('../../constants/vendue/cashIn');
 const {
     action: collectionAction,
     state: collectionState,
@@ -1424,6 +1432,9 @@ const STATE_TRAN_MATRIX = {
     vendue: VENDUE_STATE_TRAN_MATRIX,
     session: SESSION_STATE_TRAN_MATRIX,
     auction: AUCTION_STATE_TRAN_MATRIX,
+    deposit: DEPOSIT_STATE_TRAN_MATRIX,
+    checkOut: CHECKOUT_STATE_TRAN_MATRIX,
+    cashIn: CASHIN_STATE_TRAN_MATRIX,
 };
 
 module.exports = {
