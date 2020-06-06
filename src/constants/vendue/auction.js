@@ -8,23 +8,23 @@ const {
 } = require('../action');
 
 const state = Object.assign({}, commonState, {
-    preparing: 301,
+    // preparing: 301,
     ready: 310,
     ongoing: 311,
     sold: 501,
     unsold: 511,
-    pausing: 520,
-    cancelled: 610,
+    // pausing: 520,
+    // cancelled: 610,
 });
 const decodeState = (s) => {
     const S = {
-        [state.preparing]: '准备中',
+        // [state.preparing]: '准备中',
         [state.ready]: '就绪',
         [state.ongoing]: '拍卖中',
         [state.sold]: '成交',
         [state.unsold]: '流拍',
-        [state.pausing]: '暂停',
-        [state.cancelled]: '撤销',
+        // [state.pausing]: '暂停',
+        // [state.cancelled]: '撤销',
     };
 
     return S[s] || decodeCommonState(s);

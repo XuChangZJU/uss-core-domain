@@ -12,8 +12,8 @@ const state = Object.assign({}, commonState, {
     ready: 310,
     ongoing: 311,
     finished: 401,
-    pausing: 410,
-    aborted: 411,
+    // pausing: 410,
+    // aborted: 411,
 });
 const category = Object.assign({}, {
     pureOnline: 1,
@@ -36,8 +36,8 @@ const decodeState = (s) => {
         [state.ready]: '就绪',
         [state.ongoing]: '进行中',
         [state.finished]: '已结束',
-        [state.pausing]: '暂停中',
-        [state.stopped]: '已中断'
+        // [state.pausing]: '暂停中',
+        // [state.stopped]: '已中断'
     };
 
     return S[s] || decodeCommonState(s);
@@ -47,8 +47,8 @@ const action = Object.assign({}, commonAction, {
     ready: 501,
     start: 511,
     finish: 601,
-    pause: 610,
-    stop: 611,
+    // pause: 610,
+    // stop: 611,
 });
 const relation = Object.assign({}, commonRelation, {
     guardian: 101,
@@ -69,8 +69,8 @@ const decodeAction = (a) => {
         [action.ready]: '就绪',
         [action.start]: '开始',
         [action.finish]: '结束',
-        [action.pause]: '暂停',
-        [action.stop]: '停止',
+        // [action.pause]: '暂停',
+        // [action.stop]: '停止',
     };
 
     return S[a] || decodeCommonAction(a);
@@ -78,10 +78,10 @@ const decodeAction = (a) => {
 
 const STATE_TRAN_MATRIX = {
     [action.ready]: [state.preparing, state.ready],
-    [action.start]: [[state.ready, state.pausing], state.ongoing],
-    [action.finish]: [[state.ongoing, state.pausing], state.finished],
-    [action.pause]: [state.ongoing, state.pausing],
-    [action.stop]: [[state.preparing, state.ready, state.ongoing, state.pausing], state.stopped],
+    [action.start]: [state.ready, state.ongoing],
+    [action.finish]: [state.ongoing, state.finished],
+    // [action.pause]: [state.ongoing, state.pausing],
+    // [action.stop]: [[state.preparing, state.ready, state.ongoing, state.pausing], state.stopped],
 };
 
 module.exports = {
