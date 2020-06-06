@@ -500,6 +500,20 @@ const AUTH_MATRIX = {
                             relation: 'userVendue',
                             needData: true,
                             condition: ({user,actionData}) => {
+                                if(actionData.biddingSchema){
+                                    actionData.biddingSchema.forEach(
+                                        (ele, index) => {
+                                            assert(ele.type < 3, '目前仅支持顺序递增和258拍');
+                                            if(ele.type ===1 && ele.step)
+                                            assert((ele.max-ele.min)> ele.step, '设置的步长过大');
+                                            if(index > 0){
+                                                if(ele.min !== actionData.biddingSchema[index-1].max){
+                                                    throw ErrorCode.createErrorByCode(ErrorCode.errorLegalParamError, `第${index}条的最小值与上一条最大值不同`);
+                                                }
+                                            }
+                                        }
+                                    );
+                                }
                                 return{
                                     userId: user.id,
                                     vendueId: actionData.vendueId,
@@ -787,6 +801,20 @@ const AUTH_MATRIX = {
                             relation: 'userSession',
                             needData: true,
                             condition: ({user,actionData}) => {
+                                if(actionData.biddingSchema){
+                                    actionData.biddingSchema.forEach(
+                                        (ele, index) => {
+                                            assert(ele.type < 3, '目前仅支持顺序递增和258拍');
+                                            if(ele.type ===1 && ele.step)
+                                                assert((ele.max-ele.min)> ele.step, '设置的步长过大');
+                                            if(index > 0){
+                                                if(ele.min !== actionData.biddingSchema[index-1].max){
+                                                    throw ErrorCode.createErrorByCode(ErrorCode.errorLegalParamError, `第${index}条的最小值与上一条最大值不同`);
+                                                }
+                                            }
+                                        }
+                                    );
+                                }
                                 return{
                                     userId: user.id,
                                     sessionId: actionData.sessionId,
