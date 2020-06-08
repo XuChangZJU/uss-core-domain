@@ -687,47 +687,47 @@ const AUTH_MATRIX = {
                 }
             ]
         },
-        // [sessionAction.pause]: {
-        //     auths: [
-        //         {
-        //             "#relation": {
-        //             },
-        //             '#data': [                 // 表示对现有对象或者用户的数据有要求，可以有多项，每项之前是AND的关系
-        //                 {
-        //                     check: ({user, row}) => {
-        //                         return row.state === sessionState.ongoing;
-        //                     },
-        //                 }
-        //             ],
-        //         },
-        //         {
-        //             "#relation": {
-        //                 attr: 'vendue',
-        //                 relations: [vendueRelation.administrator],
-        //             },
-        //             '#data': [
-        //                 {
-        //                     check: ({user, row}) => {
-        //                         return row.state === sessionState.ongoing;
-        //                     },
-        //                 }
-        //             ],
-        //         },
-        //         {
-        //             "#relation": {
-        //                 attr: 'vendue.auctionHouse',
-        //                 relations: [auctionHouseRelation.administrator],
-        //             },
-        //             '#data': [
-        //                 {
-        //                     check: ({user, row}) => {
-        //                         return row.state === sessionState.ongoing;
-        //                     },
-        //                 }
-        //             ],
-        //         }
-        //     ]
-        // },
+        [sessionAction.pause]: {
+            auths: [
+                {
+                    "#relation": {
+                    },
+                    '#data': [                 // 表示对现有对象或者用户的数据有要求，可以有多项，每项之前是AND的关系
+                        {
+                            check: ({user, row}) => {
+                                return row.state === sessionState.ongoing;
+                            },
+                        }
+                    ],
+                },
+                {
+                    "#relation": {
+                        attr: 'vendue',
+                        relations: [vendueRelation.administrator],
+                    },
+                    '#data': [
+                        {
+                            check: ({user, row}) => {
+                                return row.state === sessionState.ongoing;
+                            },
+                        }
+                    ],
+                },
+                {
+                    "#relation": {
+                        attr: 'vendue.auctionHouse',
+                        relations: [auctionHouseRelation.administrator],
+                    },
+                    '#data': [
+                        {
+                            check: ({user, row}) => {
+                                return row.state === sessionState.ongoing;
+                            },
+                        }
+                    ],
+                }
+            ]
+        },
         [sessionAction.transfer]: {
             auths: [
                 {
@@ -1193,13 +1193,13 @@ const AUTH_MATRIX = {
                 {
                     '#exists': [
                         {
-                            relation: 'auction',
+                            relation: 'session',
                             needData: true,
                             condition: ({ user, actionData }) => {
                                 const {auction} = actionData;
                                 return {
-                                    id: auction.id,
-                                    state: auctionState.ongoing,
+                                    id: auction.sessionId,
+                                    state: sessionState.ongoing,
                                 };
                             },
                         },

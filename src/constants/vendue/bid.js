@@ -21,12 +21,12 @@ function decodeCategory(o) {
 }
 const state = Object.assign({}, commonState, {
     bidding: 301,
-    succeed: 401,
+    success: 401,
 });
 const decodeState = (s) => {
     const S = {
-        bidding: '竞拍',
-        succeed: '成交',
+        [state.bidding]: '竞拍',
+        [state.success]: '成交',
     };
     return S[s] || decodeCommonState(s);
 };
