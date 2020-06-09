@@ -28,7 +28,7 @@ function getChangedPrice(params){
                 }
                 return parseInt(ans);
             }
-            if (myPrice1.length < 2) {
+            if ((myPrice1.length < 2) || (myPrice === 10 && add === -1)) {
                 throw ErrorCode.createErrorByCode(ErrorCode.errorLegalParamError, '258加价格至少为10');
             }
             let posJudge = Math.floor((parseInt(myPrice1[1])-1)/3)+1;
