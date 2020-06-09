@@ -21,7 +21,7 @@ function getChangedPrice(params){
             const secondPos = [-2, 0, 2, 5, 8, 10];
             const myPrice2 = Math.floor(myPrice);
             let myPrice1 = myPrice2.toString();
-            if(/^10{2,}$/.test(myPrice1)){
+            if(/^10{2,}$/.test(myPrice)){
                 let ans = '98';
                 for (let i = 0; i < myPrice1.length -3; i ++){
                     ans += '0';
