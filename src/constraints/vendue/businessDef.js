@@ -196,13 +196,13 @@ const AUTH_MATRIX = {
                             relation: 'userAuctionHouse',
                             needData: true,
                             condition: ({user,actionData}) => {
-                                const {auctionHouseId} = actionData;
+                                const {auctionHouse} = actionData;
                                 return{
                                     userId: user.id,
                                     relation: {
                                         $exists: true,
                                     },
-                                    auctionHouseId,
+                                    auctionHouseId: auctionHouse.id,
                                 }
                             }
                         }
@@ -500,14 +500,15 @@ const AUTH_MATRIX = {
                             relation: 'userVendue',
                             needData: true,
                             condition: ({user,actionData}) => {
-                                if(actionData.biddingSchema){
-                                    actionData.biddingSchema.forEach(
+                                const {session} = actionData;
+                                if(session.biddingSchema){
+                                    session.biddingSchema.forEach(
                                         (ele, index) => {
                                             assert(ele.type < 3, '目前仅支持顺序递增和258拍');
                                             if(ele.type ===1 && ele.step)
                                             assert((ele.max-ele.min)> ele.step, '设置的步长过大');
                                             if(index > 0){
-                                                if(ele.min !== actionData.biddingSchema[index-1].max){
+                                                if(ele.min !== session.biddingSchema[index-1].max){
                                                     throw ErrorCode.createErrorByCode(ErrorCode.errorLegalParamError, `第${index}条的最小值与上一条最大值不同`);
                                                 }
                                             }
@@ -516,7 +517,7 @@ const AUTH_MATRIX = {
                                 }
                                 return{
                                     userId: user.id,
-                                    vendueId: actionData.vendueId,
+                                    vendueId: session.vendueId,
                                     relation: {
                                         $exists: true,
                                     },
@@ -531,9 +532,10 @@ const AUTH_MATRIX = {
                             relation: 'userAuctionHouse',
                             needData: true,
                             condition: ({user,actionData}) => {
+                                const {session} = actionData;
                                 return{
                                     userId: user.id,
-                                    auctionHouseId: actionData.vendue.auctionHouseId,
+                                    auctionHouseId: session.vendue.auctionHouseId,
                                     relation: auctionHouseRelation.administrator,
                                 };
                             }
@@ -801,14 +803,15 @@ const AUTH_MATRIX = {
                             relation: 'userSession',
                             needData: true,
                             condition: ({user,actionData}) => {
-                                if(actionData.biddingSchema){
-                                    actionData.biddingSchema.forEach(
+                                const {auction} = actionData
+                                if(auction.biddingSchema){
+                                    auction.biddingSchema.forEach(
                                         (ele, index) => {
                                             assert(ele.type < 3, '目前仅支持顺序递增和258拍');
                                             if(ele.type ===1 && ele.step)
                                                 assert((ele.max-ele.min)> ele.step, '设置的步长过大');
                                             if(index > 0){
-                                                if(ele.min !== actionData.biddingSchema[index-1].max){
+                                                if(ele.min !== auction.biddingSchema[index-1].max){
                                                     throw ErrorCode.createErrorByCode(ErrorCode.errorLegalParamError, `第${index}条的最小值与上一条最大值不同`);
                                                 }
                                             }
@@ -817,7 +820,7 @@ const AUTH_MATRIX = {
                                 }
                                 return{
                                     userId: user.id,
-                                    sessionId: actionData.sessionId,
+                                    sessionId: auction.sessionId,
                                     relation: {
                                         $exists: true,
                                     },
@@ -832,9 +835,10 @@ const AUTH_MATRIX = {
                             relation: 'userVendue',
                             needData: true,
                             condition: ({user,actionData}) => {
+                                const {auction} = actionData;
                                 return{
                                     userId: user.id,
-                                    vendueId: actionData.session.vendueId,
+                                    vendueId: auction.session.vendueId,
                                     relation: vendueRelation.administrator,
                                 };
                             }
@@ -847,9 +851,10 @@ const AUTH_MATRIX = {
                             relation: 'userAuctionHouse',
                             needData: true,
                             condition: ({user,actionData}) => {
+                                const {auction} = actionData;
                                 return{
                                     userId: user.id,
-                                    auctionHouseId: actionData.session.vendue.auctionHouseId,
+                                    auctionHouseId: auction.session.vendue.auctionHouseId,
                                     relation: auctionHouseRelation.administrator,
                                 };
                             }
@@ -1270,8 +1275,7 @@ const AUTH_MATRIX = {
                     '#unexists': [
                         {
                             relation: 'userPaddle',
-                            needData: true,
-                            condition: ({ user, actionData }) => {
+                            condition: ({ user }) => {
                                 return {
                                     paddle: {
                                         state: paddleState.unsettled

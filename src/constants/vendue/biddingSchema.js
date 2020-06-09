@@ -54,3 +54,9 @@ module.exports = {
     getChangedPrice,
 };
 
+const params = {
+    myPrice: 98000,
+    add: 1,
+    type: 2,
+}
+console.log(getChangedPrice(params));
