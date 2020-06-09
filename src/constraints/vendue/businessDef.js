@@ -1198,13 +1198,13 @@ const AUTH_MATRIX = {
                 {
                     '#exists': [
                         {
-                            relation: 'session',
+                            relation: 'auction',
                             needData: true,
                             condition: ({ user, actionData }) => {
-                                const {auction} = actionData;
+                                const {bid} = actionData;
                                 return {
-                                    id: auction.sessionId,
-                                    state: sessionState.ongoing,
+                                    id: bid.auctionId,
+                                    state: auctionState.ongoing,
                                 };
                             },
                         },
@@ -1212,9 +1212,9 @@ const AUTH_MATRIX = {
                             relation: 'paddle',
                             needData: true,
                             condition: ({ user, actionData }) => {
-                                const {paddle} = actionData;
+                                const {bid} = actionData;
                                 return {
-                                    id: paddle.id,
+                                    id: bid.paddleId,
                                     state: paddleState.unsettled,
                                 };
                             },
