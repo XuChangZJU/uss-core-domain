@@ -31,7 +31,7 @@ function getChangedPrice(params){
             if ((myPrice1.length < 2) || (myPrice === 10 && add === -1)) {
                 throw ErrorCode.createErrorByCode(ErrorCode.errorLegalParamError, '258加价格至少为10');
             }
-            let posJudge = Math.floor((parseInt(myPrice1[1])-1)/3)+2;
+            let posJudge = Math.floor((parseInt(myPrice1[1])-2)/3)+2;
             const tailNum = myPrice1.substr(2);
             if(parseInt(tailNum)>0 && add < 0){
                 posJudge++;
@@ -54,9 +54,3 @@ module.exports = {
     getChangedPrice,
 };
 
-const params = {
-    myPrice: 98000,
-    add: 1,
-    type: 2,
-}
-console.log(getChangedPrice(params));
