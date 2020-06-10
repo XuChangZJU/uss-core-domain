@@ -17,7 +17,7 @@ const state = Object.assign({}, commonState, {
 const decodeState = (s) => {
     const S = {
         [state.preparing]: '准备中',
-        [state.ready]: '就绪',
+        [state.ready]: '已就绪',
         [state.ongoing]: '进行中',
         [state.finished]: '已结束',
         [state.pausing]: '暂停中'
