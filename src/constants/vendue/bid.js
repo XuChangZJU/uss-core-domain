@@ -57,5 +57,6 @@ module.exports = {
     decodeAction,
     category,
     decodeCategory,
+    STATE_TRAN_MATRIX
 };
 

@@ -59,6 +59,7 @@ const {
     action: bidAction,
     state: bidState,
     relation: bidRelation,
+    STATE_TRAN_MATRIX: BID_STATE_TRAN_MATRIX,
 } = require('../../constants/vendue/bid');
 const {
     action: paddleAction,
@@ -1512,6 +1513,7 @@ const STATE_TRAN_MATRIX = {
     deposit: DEPOSIT_STATE_TRAN_MATRIX,
     checkOut: CHECKOUT_STATE_TRAN_MATRIX,
     cashIn: CASHIN_STATE_TRAN_MATRIX,
+    bid: BID_STATE_TRAN_MATRIX,
 };
 
 module.exports = {
