@@ -1245,6 +1245,49 @@ const AUTH_MATRIX = {
                 }
             ]
         },
+        [bidAction.cancel]: {
+            auths: [
+                {
+                    "#relation": {
+                        attr: 'auction.session',
+                        relations: [sessionRelation.administrator, sessionRelation.auctioneer],
+                    },
+                    '#data': [
+                        {
+                            check: ({ row }) => {
+                                return row.state === bidState.bidding;
+                            },
+                        },
+                    ],
+                },
+                {
+                    "#relation": {
+                        attr: 'auction.session.vendue',
+                        relations: [vendueRelation.administrator],
+                    },
+                    '#data': [
+                        {
+                            check: ({ row }) => {
+                                return row.state === bidState.bidding;
+                            },
+                        },
+                    ],
+                },
+                {
+                    "#relation": {
+                        attr: 'auction.session.vendue.auctionHouse',
+                        relations: [auctionHouseRelation.administrator],
+                    },
+                    '#data': [
+                        {
+                            check: ({ row }) => {
+                                return row.state === bidState.bidding;
+                            },
+                        },
+                    ],
+                }
+            ]
+        },
         [bidAction.update]: {
             auths: [
                 {

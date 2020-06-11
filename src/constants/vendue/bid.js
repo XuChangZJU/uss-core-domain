@@ -1,11 +1,22 @@
 const {
     relation,
     decodeRelation,
-    action,
-    decodeAction,
+    action: commonAction,
+    decodeAction: decodeCommonAction,
     state: commonState,
     decodeState: decodeCommonState,
 } = require('../action');
+const action = Object.assign({}, commonAction, {
+    cancel: 621,
+});
+
+const decodeAction = (a) => {
+    const S = {
+        [action.cancel]: '撤销'
+    };
+
+    return S[a] || decodeCommonAction(a);
+};
 const category = Object.assign({}, {
     bid: 1,
     count: 2,
@@ -22,15 +33,19 @@ function decodeCategory(o) {
 const state = Object.assign({}, commonState, {
     bidding: 301,
     success: 401,
+    cancelled: 501
 });
 const decodeState = (s) => {
     const S = {
         [state.bidding]: '竞拍',
         [state.success]: '成交',
+        [state.cancelled]: '已取消',
     };
     return S[s] || decodeCommonState(s);
 };
-
+const STATE_TRAN_MATRIX = {
+    [action.cancel]: [state.bidding, state.cancelled],
+};
 
 
 module.exports = {
