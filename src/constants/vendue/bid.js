@@ -39,7 +39,7 @@ const decodeState = (s) => {
     const S = {
         [state.bidding]: '竞拍',
         [state.success]: '成交',
-        [state.cancelled]: '已取消',
+        [state.cancelled]: '撤销',
     };
     return S[s] || decodeCommonState(s);
 };
