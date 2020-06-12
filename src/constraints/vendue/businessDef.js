@@ -1008,7 +1008,7 @@ const AUTH_MATRIX = {
                     '#data': [
                         {
                             check: ({user, row}) => {
-                                return [auctionState.preparing, auctionState.pausing, auctionState.unsold].includes(row.state);
+                                return [auctionState.ready, auctionState.pausing, auctionState.unsold].includes(row.state);
                             },
                         }
                     ],
@@ -1021,7 +1021,7 @@ const AUTH_MATRIX = {
                     '#data': [
                         {
                             check: ({user, row}) => {
-                                return [auctionState.preparing, auctionState.pausing, auctionState.unsold].includes(row.state);
+                                return [auctionState.ready, auctionState.pausing, auctionState.unsold].includes(row.state);
                             },
                         }
                     ],
@@ -1034,7 +1034,7 @@ const AUTH_MATRIX = {
                     '#data': [
                         {
                             check: ({user, row}) => {
-                                return [auctionState.preparing, auctionState.pausing, auctionState.unsold].includes(row.state);
+                                return [auctionState.ready, auctionState.pausing, auctionState.unsold].includes(row.state);
                             },
                         }
                     ],
