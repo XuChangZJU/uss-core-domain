@@ -14,6 +14,16 @@ function decodeType(o) {
     return STRINGS_OF_ORIGINS[o];
 }
 
+function getBS({ price, biddingSchema }){
+    let b;
+    for (let i = 0; i < biddingSchema.length; i++){
+        if( biddingSchema[i].min<= price && biddingSchema[i].max > price){
+           b = biddingSchema[i];
+           break;
+        }
+    }
+    return b;
+}
 
 function getChangedPrice(params){
     const FN = {
@@ -29,7 +39,7 @@ function getChangedPrice(params){
                 return parseInt(ans);
             }
             if ((myPrice1.length < 2) || (myPrice === 10 && add === -1)) {
-                throw ErrorCode.createErrorByCode(ErrorCode.errorLegalParamError, '258加价格至少为10');
+                return 10;
             }
             let posJudge = Math.floor((parseInt(myPrice1[1])-2)/3)+2;
             const tailNum = myPrice1.substr(2);
@@ -43,6 +53,9 @@ function getChangedPrice(params){
             return (parseInt(myPrice1[0])*10 + secondPos[posJudge+add])*basic;
         },
         [type.sequentiallyIncreasing]: ({myPrice, step, add}) => {
+            if(myPrice + step * add < 0){
+                return 0;
+            }
             return myPrice + step * add;
         }
     }
@@ -51,6 +64,7 @@ function getChangedPrice(params){
 module.exports = {
     type,
     decodeType,
+    getBS,
     getChangedPrice,
 };
 
