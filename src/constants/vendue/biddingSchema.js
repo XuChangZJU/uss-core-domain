@@ -77,7 +77,14 @@ function getChangedPrice(params){
     if (typeof fn !== 'function') {
         return -1;
     }
-    return fn(Object.assign({}, params, { section }));
+    const ans =  fn(Object.assign({}, params, { section }));
+    if ( ans > section.max ){
+        return section.max;
+    }
+    if ( ans < section.min ){
+        return section.min;
+    }
+    return ans;
 }
 
 module.exports = {
@@ -86,3 +93,5 @@ module.exports = {
     getBS,
     getChangedPrice,
 };
+
+
