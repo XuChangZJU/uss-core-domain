@@ -45,6 +45,7 @@ const decodeState = (s) => {
 };
 const STATE_TRAN_MATRIX = {
     [action.cancel]: [state.bidding, state.cancelled],
+    [action.success]: [state.bidding, state.success],
 };
 
 

@@ -60,6 +60,7 @@ const {
     state: bidState,
     relation: bidRelation,
     STATE_TRAN_MATRIX: BID_STATE_TRAN_MATRIX,
+    category: bidCategory,
 } = require('../../constants/vendue/bid');
 const {
     action: paddleAction,
@@ -1203,10 +1204,10 @@ const AUTH_MATRIX = {
                             needData: true,
                             condition: ({ user, actionData }) => {
                                 const {bid} = actionData;
-                                return {
-                                    id: bid.auctionId,
-                                    state: auctionState.ongoing,
-                                };
+                                    return {
+                                        id: bid.auctionId,
+                                        state: auctionState.ongoing,
+                                    };
                             },
                         },
                         {
@@ -1214,8 +1215,13 @@ const AUTH_MATRIX = {
                             needData: true,
                             condition: ({ user, actionData }) => {
                                 const {bid} = actionData;
+                                if( bid.category = bidCategory.bid ) {
+                                    return {
+                                        id: bid.paddleId,
+                                        state: paddleState.unsettled,
+                                    };
+                                }
                                 return {
-                                    id: bid.paddleId,
                                     state: paddleState.unsettled,
                                 };
                             },
