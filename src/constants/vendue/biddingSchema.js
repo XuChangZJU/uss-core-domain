@@ -14,12 +14,17 @@ function decodeType(o) {
     return STRINGS_OF_ORIGINS[o];
 }
 
-function getBS(price, biddingSchema){
+function getBS(price, biddingSchema, add){
     let b;
+
     for (let i = 0; i < biddingSchema.length; i++){
-        if( biddingSchema[i].min<= price && biddingSchema[i].max > price){
+        if( biddingSchema[i].min<= price && biddingSchema[i].max > price && add === 1){
            b = biddingSchema[i];
            break;
+        }
+        if( biddingSchema[i].min< price && biddingSchema[i].max >= price && add === -1){
+            b = biddingSchema[i];
+            break;
         }
     }
     return b;
@@ -31,7 +36,7 @@ function getChangedPrice(params){
             const secondPos = [-2, 0, 2, 5, 8, 10];
             const myPrice2 = Math.floor(price);
             let myPrice1 = myPrice2.toString();
-            if(/^10{2,}$/.test(price)){
+            if(/^10{2,}$/.test(price) && add === -1 ){
                 let ans = '98';
                 for (let i = 0; i < myPrice1.length -3; i ++){
                     ans += '0';
@@ -62,9 +67,9 @@ function getChangedPrice(params){
     };
 
     //传入 价格 竞价阶梯
-    const { price, biddingSchema } = params;
+    const { price, biddingSchema, add } = params;
 
-    const section = getBS(price, biddingSchema); //价格在竞价阶梯哪一段
+    const section = getBS(price, biddingSchema, add); //价格在竞价阶梯哪一段
     if (!section) {
         return -1;
     }
@@ -81,4 +86,3 @@ module.exports = {
     getBS,
     getChangedPrice,
 };
-
