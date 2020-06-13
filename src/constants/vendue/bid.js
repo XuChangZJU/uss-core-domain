@@ -8,6 +8,7 @@ const {
 } = require('../action');
 const action = Object.assign({}, commonAction, {
     cancel: 621,
+    success: 701,
 });
 
 const decodeAction = (a) => {
