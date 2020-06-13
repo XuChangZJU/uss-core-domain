@@ -1215,7 +1215,7 @@ const AUTH_MATRIX = {
                             needData: true,
                             condition: ({ user, actionData }) => {
                                 const { bid } = actionData;
-                                if( bid.category === bidCategory.bid ) {
+                                if( bid.category === bidCategory.bid && bid.isOnline ) {
                                     return {
                                         id: bid.paddleId,
                                         state: paddleState.unsettled,
