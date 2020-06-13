@@ -13,7 +13,8 @@ const action = Object.assign({}, commonAction, {
 
 const decodeAction = (a) => {
     const S = {
-        [action.cancel]: '撤销'
+        [action.cancel]: '撤销',
+        [action.success]: '成交',
     };
 
     return S[a] || decodeCommonAction(a);
