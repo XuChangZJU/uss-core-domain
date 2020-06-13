@@ -1214,8 +1214,8 @@ const AUTH_MATRIX = {
                             relation: 'paddle',
                             needData: true,
                             condition: ({ user, actionData }) => {
-                                const {bid} = actionData;
-                                if( bid.category = bidCategory.bid ) {
+                                const { bid } = actionData;
+                                if( bid.category === bidCategory.bid ) {
                                     return {
                                         id: bid.paddleId,
                                         state: paddleState.unsettled,
