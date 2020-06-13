@@ -62,7 +62,7 @@ const decodeRelation = (r) => {
 const STATE_TRAN_MATRIX = {
     [action.ready]: [state.preparing, state.ready],
     [action.start]: [[state.ready,state.pausing], state.ongoing],
-    [action.finish]: [[state.ready,state.pausing], state.finished],
+    [action.finish]: [[state.ready, state.ongoing, state.pausing], state.finished],
     [action.pause]: [state.ongoing, state.pausing],
 };
 
