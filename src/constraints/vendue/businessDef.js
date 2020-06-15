@@ -1371,11 +1371,21 @@ const AUTH_MATRIX = {
                             relation: 'userPaddle',
                             condition: ({ user, actionData }) => {
                                 const {userId} = actionData;
-                                return {
-                                    paddle: {
-                                        state: paddleState.unsettled
-                                    },
-                                    userId,
+                                if (userId) {
+                                    return {
+                                        paddle: {
+                                            state: paddleState.unsettled
+                                        },
+                                        userId,
+                                    }
+                                }
+                                else {
+                                    return {
+                                        paddle: {
+                                            state: paddleState.unsettled
+                                        },
+                                        userId: user.id,
+                                    }
                                 }
                             },
                         },
