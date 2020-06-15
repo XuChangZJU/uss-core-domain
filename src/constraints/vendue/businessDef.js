@@ -1367,13 +1367,15 @@ const AUTH_MATRIX = {
                 {
                     '#unexists': [
                         {
+                            needData: true,
                             relation: 'userPaddle',
-                            condition: ({ user }) => {
+                            condition: ({ user, actionData }) => {
+                                const {userId} = actionData;
                                 return {
                                     paddle: {
                                         state: paddleState.unsettled
                                     },
-                                    userId: user.id,
+                                    userId,
                                 }
                             },
                         },
