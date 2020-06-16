@@ -35,7 +35,7 @@ function destructRequestOptions(req) {
 	result.ip = ip;
 
 	if(req.headers['coordinate']) {
-		result.coordinate = req.header['coordinate'];
+		result.coordinate = req.headers['coordinate'];
 	}
 
 	return result;

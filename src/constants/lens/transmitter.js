@@ -60,8 +60,6 @@ const STATE_TRANS_MATRIX = {
     [action.activate]: [state.inactive, state.normal],
     [action.online]: [state.offline, state.normal],
     [action.offline]: [state.normal, state.offline],
-    [action.bind]: [state.normal, state.normal],
-    [action.unbind]: [state.normal, state.normal],
 };
 
 module.exports = {
