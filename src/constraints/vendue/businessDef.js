@@ -1383,6 +1383,7 @@ const AUTH_MATRIX = {
                 }
             ]
         },
+
     },
     auctionHouse: {
         [auctionHouseAction.create]: AllowEveryoneAuth,
