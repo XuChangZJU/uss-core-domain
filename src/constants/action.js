@@ -7,6 +7,7 @@ const action = {
     update: 2,
     remove: 3,
     createSub: 4,
+    getList: 5,
 
     authGrant: 11,
     authRevoke: 12,
@@ -30,6 +31,7 @@ const action = {
     abandon2: 40,           // 卖方主动中止（异步）
     abort2Success: 41,       // 异步中止成功
     abandon2Success: 42,     // 异步中止成功
+    makeAbandoned: 43,       // 管理员强制中止
 
     send: 61,                 // 发货（后续状态sent）
     reject: 62,              // 拒绝（后续状态rejected）
@@ -51,10 +53,12 @@ const   state = {
     // pay相关的
     unpaid: 31,
     legal: 32,
+    legal2: 33,             // makePaid出来的
     aborted: 34,            // 支付后取消
     cancelled: 35,          // 未支付放弃
     cantPaid: 36,           // 当unpaid的支付因为某个实体的状态暂时无法支付时可以使用这个状态储存一下（比如相关产品没有库存了）
     abandoned: 37,          // 卖方中止（pay在外部结算）
+
 
     aborting: 38,
     abandoning: 39,
@@ -84,6 +88,7 @@ const decodeState = (s) => {
 
         [state.unpaid]: '待支付的',
         [state.legal]: '生效的',
+        [state.legal2]: '手动生效的',
         [state.aborted]: '中止的',
         [state.cancelled]: '取消的',
         [state.cantPaid]: '暂不可支付的',
@@ -113,6 +118,7 @@ const decodeAction = (a) => {
         [action.update]: '更新',
         [action.remove]: '删除',
         [action.createSub]: '创建子结点',
+        [action.getList]: '获取列表',
 
         [action.authGrant]: '授权',//授予权限
         [action.authRevoke]: '回收',
@@ -129,7 +135,8 @@ const decodeAction = (a) => {
         [action.cancel]: '取消',
         [action.abort]: '中止',
         [action.expire]: '过期',
-        [action.makePaid]: '自动支付',
+        [action.makePaid]: '手动设置支付',
+        [action.makeAbandoned]: '手动设置中止',
         [action.complete]: '完成',
         [action.abandon]: '取消',
         [action.abort2]: '异步中止',
@@ -160,13 +167,14 @@ const decodeRelation = (r) => {
 const COMMON_STATE_TRAN_MATRIX = {
     [action.confirmToPay]: [state.init, state.unpaid],
     [action.pay]: [state.unpaid, state.legal],
-    [action.makePaid]: [[state.init, state.unpaid], state.legal],
+    [action.makePaid]: [[state.init, state.unpaid], state.legal2],
     [action.cancel]: [[state.init, state.unpaid], state.cancelled],
     [action.abort]: [state.legal, state.aborted],
     [action.abort2]: [state.legal, state.aborting],
     [action.abort2Success]: [state.aborting, state.aborted],
     [action.abandon]: [state.legal, state.abandoned],
     [action.abandon2]: [state.legal, state.abandoning],
+    [action.makeAbandoned]: [state.legal2, state.abandoned],
     [action.abandon2Success]: [state.abandoning, state.abandoned],
     [action.complete]: [state.legal, state.completed],
     [action.expire]: [[state.init, state.unpaid], state.expired],
