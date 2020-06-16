@@ -3,22 +3,27 @@ const {
     OwnerRelationAuth,
     AnyRelationAuth,
 } = require('../action');
-
+const {
+    action: depositAction,
+    state: depositState,
+    STATE_TRAN_MATRIX: DEPOSIT_STATE_TRAN_MATRIX,
+} = require('../../constants/vendue/deposit');
+const {
+    action: checkOutAction,
+    state: checkOutState,
+    STATE_TRAN_MATRIX: CHECKOUT_STATE_TRAN_MATRIX,
+} = require('../../constants/vendue/checkOut');
+const {
+    action: cashInAction,
+    state: cashInState,
+    STATE_TRAN_MATRIX: CASHIN_STATE_TRAN_MATRIX,
+} = require('../../constants/vendue/cashIn');
 const {
     action: auctionHouseAction,
     state: auctionHouseState,
     STATE_TRAN_MATRIX: AUCTIONHOUSE_STATE_TRAN_MATRIX,
     relation: auctionHouseRelation,
 } = require('../../constants/vendue/auctionHouse');
-const {
-    COMMON_STATE_TRAN_MATRIX: DEPOSIT_STATE_TRAN_MATRIX,
-} = require('../../constants/vendue/deposit');
-const {
-    COMMON_STATE_TRAN_MATRIX: CHECKOUT_STATE_TRAN_MATRIX,
-} = require('../../constants/vendue/checkOut');
-const {
-    COMMON_STATE_TRAN_MATRIX: CASHIN_STATE_TRAN_MATRIX,
-} = require('../../constants/vendue/cashIn');
 const {
     action: collectionAction,
     state: collectionState,
@@ -1393,7 +1398,6 @@ const AUTH_MATRIX = {
                 }
             ]
         },
-
     },
     auctionHouse: {
         [auctionHouseAction.create]: AllowEveryoneAuth,
@@ -1563,6 +1567,15 @@ const AUTH_MATRIX = {
             ],
         },
     },
+    deposit: {
+        [depositAction.create]: AllowEveryoneAuth,
+    },
+    checkOut: {
+        [checkOutAction.create]: AllowEveryoneAuth,
+    },
+    cashIn: {
+        [cashInAction.create]: AllowEveryoneAuth,
+    }
 };
 
 const STATE_TRAN_MATRIX = {
