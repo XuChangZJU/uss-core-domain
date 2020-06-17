@@ -71,6 +71,7 @@ const {
     action: paddleAction,
     state: paddleState,
     relation: paddleRelation,
+    isPaddleOnline,
 } = require('../../constants/vendue/paddle');
 
 const ContractAuctionHouseWorkerExists = [
@@ -1416,6 +1417,58 @@ const AUTH_MATRIX = {
                 }
             ]
         },
+        [paddleAction.update]: {
+            auths: [
+                {
+                    "#relation": {
+                        attr: 'auction.session',
+                        relations: [sessionRelation.administrator],
+                    },
+                    '#data': [
+                        {
+                            check: ({ row }) => {
+                                if(row.number){
+                                    return isPaddleOnline(row.number);
+                                };
+                                return true;
+                            },
+                        },
+                    ],
+                },
+                {
+                    "#relation": {
+                        attr: 'auction.session.vendue',
+                        relations: [vendueRelation.administrator],
+                    },
+                    '#data': [
+                        {
+                            check: ({ row }) => {
+                                if(row.number){
+                                    return isPaddleOnline(row.number);
+                                };
+                                return true;
+                            },
+                        },
+                    ],
+                },
+                {
+                    "#relation": {
+                        attr: 'auction.session.vendue.auctionHouse',
+                        relations: [auctionHouseRelation.administrator],
+                    },
+                    '#data': [
+                        {
+                            check: ({ row }) => {
+                                if(row.number){
+                                    return isPaddleOnline(row.number);
+                                };
+                                return true;
+                            },
+                        },
+                    ],
+                },
+            ]
+        }
     },
     auctionHouse: {
         [auctionHouseAction.create]: AllowEveryoneAuth,

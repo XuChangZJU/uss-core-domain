@@ -23,6 +23,10 @@ const decodeState = (s) => {
 
     return S[s] || decodeCommonState(s);
 };
+function isPaddleOnline(paddleId){
+    const maxOfflineNum = 10000;
+    return (paddleId > maxOfflineNum);
+}
 module.exports = {
     relation,
     decodeRelation,
@@ -30,4 +34,5 @@ module.exports = {
     decodeState,
     action,
     decodeAction,
+    isPaddleOnline,
 };
