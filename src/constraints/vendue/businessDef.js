@@ -1370,6 +1370,24 @@ const AUTH_MATRIX = {
         [paddleAction.create]: {
             auths: [
                 {
+                    "#relation": {
+                        attr: 'auction.session',
+                        relations: [sessionRelation.administrator],
+                    },
+                },
+                {
+                    "#relation": {
+                        attr: 'auction.session.vendue',
+                        relations: [vendueRelation.administrator],
+                    },
+                },
+                {
+                    "#relation": {
+                        attr: 'auction.session.vendue.auctionHouse',
+                        relations: [auctionHouseRelation.administrator],
+                    },
+                },
+                {
                     '#unexists': [
                         {
                             needData: true,
