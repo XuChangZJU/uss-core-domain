@@ -1371,22 +1371,18 @@ const AUTH_MATRIX = {
         [paddleAction.create]: {
             auths: [
                 {
-                    "#relation": {
-                        attr: 'auction.session',
-                        relations: [sessionRelation.administrator],
-                    },
-                },
-                {
-                    "#relation": {
-                        attr: 'auction.session.vendue',
-                        relations: [vendueRelation.administrator],
-                    },
-                },
-                {
-                    "#relation": {
-                        attr: 'auction.session.vendue.auctionHouse',
-                        relations: [auctionHouseRelation.administrator],
-                    },
+                    '#exists': [
+                        {
+                            relation: 'userVendue',
+                            needData: true,
+                            condition: ({ user, actionData }) => {
+                                return {
+                                    userId: user.id,
+                                    vendueId: actionData.paddle.vendueId,
+                                }
+                            },
+                        },
+                    ]
                 },
                 {
                     '#unexists': [
@@ -1421,8 +1417,8 @@ const AUTH_MATRIX = {
             auths: [
                 {
                     "#relation": {
-                        attr: 'auction.session',
-                        relations: [sessionRelation.administrator],
+                        attr: 'vendue',
+                        relations: [vendueRelation.worker, vendueRelation.administrator],
                     },
                     '#data': [
                         {
@@ -1437,23 +1433,7 @@ const AUTH_MATRIX = {
                 },
                 {
                     "#relation": {
-                        attr: 'auction.session.vendue',
-                        relations: [vendueRelation.administrator],
-                    },
-                    '#data': [
-                        {
-                            check: ({ row }) => {
-                                if(row.number){
-                                    return isPaddleOnline(row.number);
-                                };
-                                return true;
-                            },
-                        },
-                    ],
-                },
-                {
-                    "#relation": {
-                        attr: 'auction.session.vendue.auctionHouse',
+                        attr: 'vendue.auctionHouse',
                         relations: [auctionHouseRelation.administrator],
                     },
                     '#data': [
