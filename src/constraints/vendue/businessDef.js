@@ -73,6 +73,10 @@ const {
     relation: paddleRelation,
     isPaddleOnline,
 } = require('../../constants/vendue/paddle');
+const {
+    action: licenseAction,
+    STATE_TRAN_MATRIX: license_STATE_TRAN_MATRIX,
+} = require('../../constants/vendue/license');
 
 const ContractAuctionHouseWorkerExists = [
     {
@@ -1626,6 +1630,52 @@ const AUTH_MATRIX = {
     },
     cashIn: {
         [cashInAction.create]: AllowEveryoneAuth,
+    },
+    license: {
+        [licenseAction.create]: {
+            auths: [
+                {
+                    "#relation": {
+                        attr: 'auction.session',
+                        relations: [sessionRelation.administrator, sessionRelation.auctioneer],
+                    },
+                },
+                {
+                    "#relation": {
+                        attr: 'auction.session.vendue',
+                        relations: [vendueRelation.administrator],
+                    },
+                },
+                {
+                    "#relation": {
+                        attr: 'auction.session.vendue.auctionHouse',
+                        relations: [auctionHouseRelation.administrator],
+                    },
+                }
+            ]
+        },
+        [licenseAction.remove]: {
+            auths: [
+                {
+                    "#relation": {
+                        attr: 'auction.session',
+                        relations: [sessionRelation.administrator, sessionRelation.auctioneer],
+                    },
+                },
+                {
+                    "#relation": {
+                        attr: 'auction.session.vendue',
+                        relations: [vendueRelation.administrator],
+                    },
+                },
+                {
+                    "#relation": {
+                        attr: 'auction.session.vendue.auctionHouse',
+                        relations: [auctionHouseRelation.administrator],
+                    },
+                }
+            ]
+        },
     }
 };
 
