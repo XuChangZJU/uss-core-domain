@@ -1650,6 +1650,28 @@ const AUTH_MATRIX = {
                 },
             ]
         },
+        [licenseAction.update]: {
+            auths: [
+                {
+                    "#relation": {
+                        attr: 'session',
+                        relations: [sessionRelation.administrator, sessionRelation.auctioneer],
+                    },
+                },
+                {
+                    "#relation": {
+                        attr: 'session.vendue',
+                        relations: [vendueRelation.administrator],
+                    },
+                },
+                {
+                    "#relation": {
+                        attr: 'session.vendue.auctionHouse',
+                        relations: [auctionHouseRelation.administrator],
+                    },
+                }
+            ]
+        },
         [licenseAction.remove]: {
             auths: [
                 {
