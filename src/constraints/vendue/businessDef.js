@@ -1635,23 +1635,19 @@ const AUTH_MATRIX = {
         [licenseAction.create]: {
             auths: [
                 {
-                    "#relation": {
-                        attr: 'session',
-                        relations: [sessionRelation.administrator, sessionRelation.auctioneer],
-                    },
+                    '#exists': [
+                        {
+                            relation: 'userSession',
+                            needData: true,
+                            condition: ({ user, actionData }) => {
+                                return {
+                                    userId: user.id,
+                                    sessionId: actionData.license.sessionId,
+                                }
+                            },
+                        },
+                    ]
                 },
-                {
-                    "#relation": {
-                        attr: 'session.vendue',
-                        relations: [vendueRelation.administrator],
-                    },
-                },
-                {
-                    "#relation": {
-                        attr: 'session.vendue.auctionHouse',
-                        relations: [auctionHouseRelation.administrator],
-                    },
-                }
             ]
         },
         [licenseAction.remove]: {
