@@ -1636,19 +1636,19 @@ const AUTH_MATRIX = {
             auths: [
                 {
                     "#relation": {
-                        attr: 'auction.session',
+                        attr: 'session',
                         relations: [sessionRelation.administrator, sessionRelation.auctioneer],
                     },
                 },
                 {
                     "#relation": {
-                        attr: 'auction.session.vendue',
+                        attr: 'session.vendue',
                         relations: [vendueRelation.administrator],
                     },
                 },
                 {
                     "#relation": {
-                        attr: 'auction.session.vendue.auctionHouse',
+                        attr: 'session.vendue.auctionHouse',
                         relations: [auctionHouseRelation.administrator],
                     },
                 }
@@ -1658,19 +1658,19 @@ const AUTH_MATRIX = {
             auths: [
                 {
                     "#relation": {
-                        attr: 'auction.session',
+                        attr: 'session',
                         relations: [sessionRelation.administrator, sessionRelation.auctioneer],
                     },
                 },
                 {
                     "#relation": {
-                        attr: 'auction.session.vendue',
+                        attr: 'session.vendue',
                         relations: [vendueRelation.administrator],
                     },
                 },
                 {
                     "#relation": {
-                        attr: 'auction.session.vendue.auctionHouse',
+                        attr: 'session.vendue.auctionHouse',
                         relations: [auctionHouseRelation.administrator],
                     },
                 }
