@@ -77,7 +77,11 @@ const {
     action: licenseAction,
     STATE_TRAN_MATRIX: license_STATE_TRAN_MATRIX,
 } = require('../../constants/vendue/license');
-
+const {
+    action: contractTermsAction,
+    state: contractTermsState,
+    COMMON_STATE_TRAN_MATRIX: CONTRACTTERMS_STATE_TRAN_MATRIX,
+} = require('../../constants/vendue/contractTerms');
 const ContractAuctionHouseWorkerExists = [
     {
         relation: 'userAuctionHouse',
@@ -1694,6 +1698,46 @@ const AUTH_MATRIX = {
                 }
             ]
         },
+    },
+    contractTerms: {
+        [contractTermsAction.create]: {
+            auths: [
+                {
+                    '#exists': [
+                        {
+                            needData: true,
+                            relation: 'userAuctionHouse',
+                            condition: ({user, actionData}) => {
+                                const query = {
+                                    userId: user.id,
+                                };
+                                return query;
+                            },
+                        },
+                    ],
+                }
+             ],
+        },
+        [contractTermsAction.update]: {
+            auths: [
+                {
+                    "#relation": {
+                        attr: 'contract.auctionHouse',
+                        relations: [auctionHouseRelation.administrator, auctionHouseRelation.worker],
+                    },
+                },
+            ]
+        },
+        [contractTermsAction.remove]: {
+            auths: [
+                {
+                    "#relation": {
+                        attr: 'contract.auctionHouse',
+                        relations: [auctionHouseRelation.administrator, auctionHouseRelation.worker],
+                    },
+                },
+            ]
+        }
     }
 };
 
@@ -1708,6 +1752,7 @@ const STATE_TRAN_MATRIX = {
     checkOut: CHECKOUT_STATE_TRAN_MATRIX,
     cashIn: CASHIN_STATE_TRAN_MATRIX,
     bid: BID_STATE_TRAN_MATRIX,
+    contractTerms: CONTRACTTERMS_STATE_TRAN_MATRIX,
 };
 
 module.exports = {
