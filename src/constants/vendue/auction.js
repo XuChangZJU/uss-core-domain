@@ -20,7 +20,7 @@ const state = Object.assign({}, commonState, {
 const decodeState = (s) => {
     const S = {
         // [state.preparing]: '准备中',
-        [state.ready]: '已就绪',
+        [state.ready]: '预展中',
         [state.ongoing]: '拍卖中',
         [state.sold]: '已成交',
         [state.unsold]: '已流拍',
