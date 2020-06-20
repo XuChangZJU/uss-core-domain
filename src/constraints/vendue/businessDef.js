@@ -1631,6 +1631,22 @@ const AUTH_MATRIX = {
     },
     checkOut: {
         [checkOutAction.create]: AllowEveryoneAuth,
+        [checkOutAction.makePaid]: {
+            auths: [
+                {
+                    "#relation": {
+                        attr: 'paddle.vendue',
+                        relations: [vendueRelation.administrator],
+                    },
+                },
+                {
+                    "#relation": {
+                        attr: 'paddle.vendue.auctionHouse',
+                        relations: [auctionHouseRelation.administrator, auctionHouseRelation.settler],
+                    },
+                }
+            ]
+        },
     },
     cashIn: {
         [cashInAction.create]: AllowEveryoneAuth,
