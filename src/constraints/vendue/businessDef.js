@@ -1224,22 +1224,6 @@ const AUTH_MATRIX = {
                                     };
                             },
                         },
-                        {
-                            relation: 'paddle',
-                            needData: true,
-                            condition: ({ user, actionData }) => {
-                                const { bid } = actionData;
-                                if( bid.category === bidCategory.bid && bid.isOnline ) {
-                                    return {
-                                        id: bid.paddleId,
-                                        state: paddleState.unsettled,
-                                    };
-                                }
-                                return {
-                                    state: paddleState.unsettled,
-                                };
-                            },
-                        },
                     ],
                 }
             ]
