@@ -1024,39 +1024,39 @@ const AUTH_MATRIX = {
                         attr: 'session',
                         relations: [sessionRelation.administrator, sessionRelation.auctioneer],
                     },
-                    '#data': [
-                        {
-                            check: ({user, row}) => {
-                                return [auctionState.ready, auctionState.pausing, auctionState.unsold].includes(row.state);
-                            },
-                        }
-                    ],
+                    // '#data': [
+                    //     {
+                    //         check: ({user, row}) => {
+                    //             return [auctionState.ready, auctionState.pausing, auctionState.unsold].includes(row.state);
+                    //         },
+                    //     }
+                    // ],
                 },
                 {
                     "#relation": {
                         attr: 'session.vendue',
                         relations: [vendueRelation.administrator],
                     },
-                    '#data': [
-                        {
-                            check: ({user, row}) => {
-                                return [auctionState.ready, auctionState.pausing, auctionState.unsold].includes(row.state);
-                            },
-                        }
-                    ],
+                    // '#data': [
+                    //     {
+                    //         check: ({user, row}) => {
+                    //             return [auctionState.ready, auctionState.pausing, auctionState.unsold].includes(row.state);
+                    //         },
+                    //     }
+                    // ],
                 },
                 {
                     "#relation": {
                         attr: 'session.vendue.auctionHouse',
                         relations: [auctionHouseRelation.administrator],
                     },
-                    '#data': [
-                        {
-                            check: ({user, row}) => {
-                                return [auctionState.ready, auctionState.pausing, auctionState.unsold].includes(row.state);
-                            },
-                        }
-                    ],
+                    // '#data': [
+                    //     {
+                    //         check: ({user, row}) => {
+                    //             return [auctionState.ready, auctionState.pausing, auctionState.unsold].includes(row.state);
+                    //         },
+                    //     }
+                    // ],
                 }
             ]
         },
