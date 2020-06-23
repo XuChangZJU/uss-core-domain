@@ -4,6 +4,10 @@ const {
     AnyRelationAuth,
 } = require('../action');
 const {
+    action: agentAction,
+    state: agentState,
+} = require('../../constants/vendue/agent');
+const {
     action: depositAction,
     state: depositState,
     STATE_TRAN_MATRIX: DEPOSIT_STATE_TRAN_MATRIX,
@@ -1612,6 +1616,22 @@ const AUTH_MATRIX = {
     },
     deposit: {
         [depositAction.create]: AllowEveryoneAuth,
+        [depositAction.makePaid]: {
+            auths: [
+                {
+                    "#relation": {
+                        attr: 'paddle.vendue',
+                        relations: [vendueRelation.administrator],
+                    },
+                },
+                {
+                    "#relation": {
+                        attr: 'paddle.vendue.auctionHouse',
+                        relations: [auctionHouseRelation.administrator, auctionHouseRelation.settler],
+                    },
+                }
+            ]
+        },
     },
     checkOut: {
         [checkOutAction.create]: AllowEveryoneAuth,
@@ -1634,6 +1654,22 @@ const AUTH_MATRIX = {
     },
     cashIn: {
         [cashInAction.create]: AllowEveryoneAuth,
+        [cashInAction.makePaid]: {
+            auths: [
+                {
+                    "#relation": {
+                        attr: 'paddle.vendue',
+                        relations: [vendueRelation.administrator],
+                    },
+                },
+                {
+                    "#relation": {
+                        attr: 'paddle.vendue.auctionHouse',
+                        relations: [auctionHouseRelation.administrator, auctionHouseRelation.settler],
+                    },
+                }
+            ]
+        },
     },
     license: {
         [licenseAction.create]: {
@@ -1736,6 +1772,58 @@ const AUTH_MATRIX = {
                         relations: [auctionHouseRelation.administrator, auctionHouseRelation.worker],
                     },
                 },
+            ]
+        }
+    },
+    agent: {
+        [agentAction.create]: {
+            auths: [
+                {
+                    '#exists': [
+                        {
+                            relation: 'userPaddle',
+                            needData: true,
+                            condition: ({ user, actionData }) => {
+                                const { agent } = actionData;
+                                const query = {
+                                    userId: user.id,
+                                    paddleId: agent.paddleId,
+                                };
+                                return query;
+                            },
+                        },
+                    ],
+                },
+            ]
+        },
+        [agentAction.remove]: {
+            auths: [
+                {
+                    '#exists': [
+                        {
+                            relation: 'userPaddle',
+                            condition: ({ user, row }) => {
+                                const query = {
+                                    userId: user.id,
+                                    paddleId: row.paddleId,
+                                };
+                                return query;
+                            },
+                        },
+                    ],
+                },
+                {
+                    "#relation": {
+                        attr: 'paddle.vendue',
+                        relations: [vendueRelation.administrator],
+                    },
+                },
+                {
+                    "#relation": {
+                        attr: 'paddle.vendue.auctionHouse',
+                        relations: [auctionHouseRelation.administrator],
+                    },
+                }
             ]
         }
     }
