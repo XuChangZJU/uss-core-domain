@@ -68,9 +68,14 @@ function getChangedPrice(params){
 
     //传入 价格 竞价阶梯
     const { price, biddingSchema, add } = params;
-
     const section = getBS(price, biddingSchema, add); //价格在竞价阶梯哪一段
     if (!section) {
+        if(price >= biddingSchema[biddingSchema.length - 1].max){
+            return FN[biddingSchema[biddingSchema.length - 1].type](price, biddingSchema[biddingSchema.length - 1], add);
+        }
+        if(price <= biddingSchema[0].min){
+            return FN[biddingSchema[0].type](price, biddingSchema[0], add);
+        }
         return -1;
     }
     const fn = FN[section.type];
