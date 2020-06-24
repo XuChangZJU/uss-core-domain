@@ -73,7 +73,6 @@ const {
 } = require('../../constants/vendue/bid');
 const {
     action: paddleAction,
-    state: paddleState,
     relation: paddleRelation,
     isPaddleOnline,
 } = require('../../constants/vendue/paddle');
@@ -1386,11 +1385,11 @@ const AUTH_MATRIX = {
                             needData: true,
                             relation: 'userPaddle',
                             condition: ({ user, actionData }) => {
-                                const {userId} = actionData;
+                                const {userId, paddle} = actionData;
                                 if (userId) {
                                     return {
                                         paddle: {
-                                            state: paddleState.unsettled
+                                            vendueId: paddle.vendueId,
                                         },
                                         userId,
                                     }
@@ -1398,7 +1397,7 @@ const AUTH_MATRIX = {
                                 else {
                                     return {
                                         paddle: {
-                                            state: paddleState.unsettled
+                                            vendueId: paddle.vendueId,
                                         },
                                         userId: user.id,
                                     }
@@ -1637,6 +1636,28 @@ const AUTH_MATRIX = {
         [checkOutAction.create]: AllowEveryoneAuth,
         [checkOutAction.makePaid]: {
             auths: [
+                {
+                    "#relation": {
+                        attr: 'paddle.vendue',
+                        relations: [vendueRelation.administrator],
+                    },
+                },
+                {
+                    "#relation": {
+                        attr: 'paddle.vendue.auctionHouse',
+                        relations: [auctionHouseRelation.administrator, auctionHouseRelation.settler],
+                    },
+                }
+            ]
+        },
+        [checkOutAction.remove]: {
+            auths: [
+                {
+                    "#relation": {
+                        attr: 'paddle',
+                        relations: [vendueRelation.owner],
+                    },
+                },
                 {
                     "#relation": {
                         attr: 'paddle.vendue',
