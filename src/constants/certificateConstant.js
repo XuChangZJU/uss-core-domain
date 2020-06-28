@@ -64,13 +64,13 @@ const decoder = {
 	[cardStatus.legal]: "实名认证已通过"
 };
 
-function decodeIdStatus(state) {
-	return decoder[state];
+function decodeCardStatus(status) {
+	return decoder[status];
 }
 
 module.exports = {
 	type,
 	decodeType,
 	cardStatus,
-	decodeIdStatus,
+	decodeCardStatus,
 };
