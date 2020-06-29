@@ -34,6 +34,15 @@ const AttrsUpdateMatrix = {
         password: [
             State.normal
         ],
+        cardNo: [
+            State.normal
+        ],
+        cardImage: [
+            State.normal
+        ],
+        cardType: [
+            State.normal
+        ]
     },
 };
 
