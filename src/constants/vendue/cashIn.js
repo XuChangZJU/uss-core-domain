@@ -5,7 +5,7 @@ const {
     decodeState,
     relation,
     decodeRelation,
-    COMMON_STATE_TRAN_MATRIX,
+    COMMON_STATE_TRAN_MATRIX: STATE_TRAN_MATRIX,
 } = require('../action');
 
 module.exports = {
@@ -15,5 +15,5 @@ module.exports = {
     decodeState,
     relation,
     decodeRelation,
-    COMMON_STATE_TRAN_MATRIX,
+    STATE_TRAN_MATRIX,
 };

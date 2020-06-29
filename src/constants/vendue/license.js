@@ -1,3 +1,12 @@
+const {
+    action,
+    decodeAction,
+    state,
+    decodeState,
+    relation,
+    decodeRelation,
+} = require('../action');
+
 const type = Object.assign({}, {
     noInsurance: 1,
     rewardBenifit: 2,
@@ -15,4 +24,10 @@ function decodeType(o) {
 module.exports = {
     type,
     decodeType,
+    action,
+    decodeAction,
+    state,
+    decodeState,
+    relation,
+    decodeRelation,
 };

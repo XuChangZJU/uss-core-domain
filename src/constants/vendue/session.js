@@ -16,8 +16,8 @@ const state = Object.assign({}, commonState, {
 });
 const decodeState = (s) => {
     const S = {
-        [state.preparing]: '准备中',
-        [state.ready]: '已就绪',
+        // [state.preparing]: '准备中',
+        [state.ready]: '预展中',
         [state.ongoing]: '进行中',
         [state.finished]: '已结束',
         [state.pausing]: '暂停中'
@@ -35,7 +35,7 @@ const action = Object.assign({}, commonAction, {
 
 const decodeAction = (a) => {
     const S = {
-        [action.ready]: '就绪',
+        // [action.ready]: '就绪',
         [action.start]: '开始',
         [action.finish]: '结束',
         [action.pause]: '暂停',
@@ -60,7 +60,7 @@ const decodeRelation = (r) => {
     return R[r] || decodeCommonRelation(r);
 };
 const STATE_TRAN_MATRIX = {
-    [action.ready]: [state.preparing, state.ready],
+    // [action.ready]: [state.preparing, state.ready],
     [action.start]: [[state.ready,state.pausing], state.ongoing],
     [action.finish]: [[state.ready, state.ongoing, state.pausing], state.finished],
     [action.pause]: [state.ongoing, state.pausing],

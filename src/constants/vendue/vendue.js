@@ -33,7 +33,7 @@ function decodeCategory(o) {
 const decodeState = (s) => {
     const S = {
         [state.preparing]: '准备中',
-        [state.ready]: '已就绪',
+        [state.ready]: '预展中',
         [state.ongoing]: '进行中',
         [state.finished]: '已结束',
         // [state.pausing]: '暂停中',
@@ -66,7 +66,7 @@ const decodeRelation = (r) => {
 };
 const decodeAction = (a) => {
     const S = {
-        [action.ready]: '就绪',
+        [action.ready]: '发布',
         [action.start]: '开始',
         [action.finish]: '结束',
         // [action.pause]: '暂停',
