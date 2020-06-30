@@ -1633,7 +1633,27 @@ const AUTH_MATRIX = {
         },
     },
     checkOut: {
-        [checkOutAction.create]: AllowEveryoneAuth,
+        [checkOutAction.create]: {
+            auths: [
+                {
+                    '#unexists': [
+                        {
+                            relation: 'checkOut',
+                            needData: true,
+                            condition: ({user, actionData}) => {
+                                const {checkOut} = actionData;
+                                return {
+                                    paddleId: checkOut.paddleId,
+                                    state: {
+                                        $lt: checkOutState.legal,
+                                    },
+                                };
+                            },
+                        },
+                    ],
+                }
+            ],
+        },
         [checkOutAction.makePaid]: {
             auths: [
                 {
