@@ -22,6 +22,7 @@ module.exports = {
 	errorDataInconsistency: {code: 983, message: '数据已经过期'},
 	errorDataObsoleted:{code: 982, message: '数据失效了'},
 	errorDataUnexisted: {code: 981, message: '数据不存在'},
+	errorFileNameExisted: { code:980, message: '上传的文件名已经存在'},
 
 
 	shadowUserLoginError: {code: 895, message: '您的账户尚未激活'}, // 临时的errorCode
