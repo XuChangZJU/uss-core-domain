@@ -1633,7 +1633,27 @@ const AUTH_MATRIX = {
         },
     },
     checkOut: {
-        [checkOutAction.create]: AllowEveryoneAuth,
+        [checkOutAction.create]: {
+            auths: [
+                {
+                    '#unexists': [
+                        {
+                            relation: 'checkOut',
+                            needData: true,
+                            condition: ({user, actionData}) => {
+                                const {checkOut} = actionData;
+                                return {
+                                    paddleId: checkOut.paddleId,
+                                    state: {
+                                        $lt: checkOutState.legal,
+                                    },
+                                };
+                            },
+                        },
+                    ],
+                }
+            ],
+        },
         [checkOutAction.makePaid]: {
             auths: [
                 {
@@ -1815,6 +1835,24 @@ const AUTH_MATRIX = {
                         },
                     ],
                 },
+                {
+                    "#relation": {
+                        attr: 'auction.session',
+                        relations: [sessionRelation.administrator, sessionRelation.worker],
+                    },
+                },
+                {
+                    "#relation": {
+                        attr: 'auction.session.vendue',
+                        relations: [vendueRelation.administrator],
+                    },
+                },
+                {
+                    "#relation": {
+                        attr: 'auction.session.vendue.auctionHouse',
+                        relations: [auctionHouseRelation.administrator],
+                    },
+                },
             ]
         },
         [agentAction.remove]: {
@@ -1835,16 +1873,22 @@ const AUTH_MATRIX = {
                 },
                 {
                     "#relation": {
-                        attr: 'paddle.vendue',
+                        attr: 'auction.session',
+                        relations: [sessionRelation.administrator, sessionRelation.worker],
+                    },
+                },
+                {
+                    "#relation": {
+                        attr: 'auction.session.vendue',
                         relations: [vendueRelation.administrator],
                     },
                 },
                 {
                     "#relation": {
-                        attr: 'paddle.vendue.auctionHouse',
+                        attr: 'auction.session.vendue.auctionHouse',
                         relations: [auctionHouseRelation.administrator],
                     },
-                }
+                },
             ]
         }
     }

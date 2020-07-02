@@ -16,14 +16,12 @@ const state = Object.assign({}, commonState, {
     // aborted: 411,
 });
 const category = Object.assign({}, {
-    pureOnline: 1,
-    offline: 2,
-    delayed: 3,
+    synchronous: 1,
+    delayed: 2,
 });
 
 const STRINGS_OF_ORIGINS = {
-    [category.pureOnline]: "纯线上",
-    [category.offline]: "线下",
+    [category.synchronous]: "同步拍",
     [category.delayed]: "延时拍",
 };
 
