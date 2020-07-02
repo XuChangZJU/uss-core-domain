@@ -1835,24 +1835,24 @@ const AUTH_MATRIX = {
                         },
                     ],
                 },
-                {
-                    "#relation": {
-                        attr: 'auction.session',
-                        relations: [sessionRelation.administrator, sessionRelation.worker],
-                    },
-                },
-                {
-                    "#relation": {
-                        attr: 'auction.session.vendue',
-                        relations: [vendueRelation.administrator],
-                    },
-                },
-                {
-                    "#relation": {
-                        attr: 'auction.session.vendue.auctionHouse',
-                        relations: [auctionHouseRelation.administrator],
-                    },
-                },
+                // {
+                //     "#relation": {
+                //         attr: 'auction.session',
+                //         relations: [sessionRelation.administrator, sessionRelation.worker],
+                //     },
+                // },
+                // {
+                //     "#relation": {
+                //         attr: 'auction.session.vendue',
+                //         relations: [vendueRelation.administrator],
+                //     },
+                // },
+                // {
+                //     "#relation": {
+                //         attr: 'auction.session.vendue.auctionHouse',
+                //         relations: [auctionHouseRelation.administrator],
+                //     },
+                // },
             ]
         },
         [agentAction.remove]: {
@@ -1871,24 +1871,24 @@ const AUTH_MATRIX = {
                         },
                     ],
                 },
-                {
-                    "#relation": {
-                        attr: 'auction.session',
-                        relations: [sessionRelation.administrator, sessionRelation.worker],
-                    },
-                },
-                {
-                    "#relation": {
-                        attr: 'auction.session.vendue',
-                        relations: [vendueRelation.administrator],
-                    },
-                },
-                {
-                    "#relation": {
-                        attr: 'auction.session.vendue.auctionHouse',
-                        relations: [auctionHouseRelation.administrator],
-                    },
-                },
+                // {
+                //     "#relation": {
+                //         attr: 'auction.session',
+                //         relations: [sessionRelation.administrator, sessionRelation.worker],
+                //     },
+                // },
+                // {
+                //     "#relation": {
+                //         attr: 'auction.session.vendue',
+                //         relations: [vendueRelation.administrator],
+                //     },
+                // },
+                // {
+                //     "#relation": {
+                //         attr: 'auction.session.vendue.auctionHouse',
+                //         relations: [auctionHouseRelation.administrator],
+                //     },
+                // },
             ]
         }
     }
