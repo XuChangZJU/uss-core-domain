@@ -85,6 +85,11 @@ const {
     state: contractTermsState,
     COMMON_STATE_TRAN_MATRIX: CONTRACTTERMS_STATE_TRAN_MATRIX,
 } = require('../../constants/vendue/contractTerms');
+const {
+    action: qiniuFileAction,
+    state: qiniuFileState,
+} = require('../../constants/vendue/qiniuFile');
+
 const ContractAuctionHouseWorkerExists = [
     {
         relation: 'userAuctionHouse',
@@ -441,7 +446,7 @@ const AUTH_MATRIX = {
             auths: [
                 {
                     "#relation": {
-                        relations: [vendueRelation.adminstrator],
+                        relations: [vendueRelation.administrator],
                     },
                 },
                 {
@@ -1891,6 +1896,10 @@ const AUTH_MATRIX = {
                 // },
             ]
         }
+    },
+    qiniuFile: {
+        [qiniuFileAction.create]: AllowEveryoneAuth,
+        [qiniuFileAction.remove]: AllowEveryoneAuth,
     }
 };
 
