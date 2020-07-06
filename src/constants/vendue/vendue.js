@@ -50,8 +50,9 @@ const action = Object.assign({}, commonAction, {
 });
 const relation = Object.assign({}, commonRelation, {
     guardian: 101,
-    worker: 102,
-    administrator: 110
+    administrator: 201,
+    worker: 301,
+
 });
 
 const decodeRelation = (r) => {

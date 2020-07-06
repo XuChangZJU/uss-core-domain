@@ -445,48 +445,75 @@ const AUTH_MATRIX = {
         [vendueAction.transfer]: {
             auths: [
                 {
-                    "#relation": {
-                        relations: [vendueRelation.administrator],
-                    },
-                },
-                {
                     '#exists': [
                         {
-                            relation: 'userAuctionHouse',
-                            condition: ({user, row}) => {
+                            needData: true,
+                            relation: 'userVendue',
+                            condition: ({user, row, actionData}) => {
+                                const { vendue } = actionData;
                                 const query = {
                                     userId: user.id,
-                                    auctionHouseId: row.auctionHouseId,
-                                    relation: auctionHouseRelation.administrator,
+                                    vendueId: row.id,
+                                    relation: vendue.relation,
                                 };
                                 return query;
                             },
                         },
                     ],
+                },
+                {
+                    '#exists': [
+                        {
+                            needData: true,
+                            relation: 'userVendue',
+                            condition: ({user, row, actionData}) => {
+                                const { vendue } = actionData;
+                                const query = {
+                                    userId: user.id,
+                                    vendueId: row.id,
+                                    relation: {
+                                        $lt: vendue.relation - 99,
+                                    },
+                                };
+                                return query;
+                            },
+                        },
+                    ],
+                },
+                {
+                    "#relation": {
+                        attr: 'auctionHouse',
+                        relations: [auctionHouseRelation.administrator],
+                    },
                 }
             ]
         },
         [vendueAction.authGrantMulti]: {
             auths: [
                 {
-                    "#relation": {
-                        relations: [vendueRelation.administrator],
-                    },
-                },
-                {
                     '#exists': [
                         {
-                            relation: 'userAuctionHouse',
-                            condition: ({user, row}) => {
+                            relation: 'userVendue',
+                            needData: true,
+                            condition: ({user, row, actionData}) => {
+                                const { vendue } = actionData;
                                 const query = {
                                     userId: user.id,
-                                    auctionHouseId: row.auctionHouseId,
-                                    relation: auctionHouseRelation.administrator,
+                                    vendueId: row.id,
+                                    relation: {
+                                        $lt: vendue.relation - 99,
+                                    },
                                 };
                                 return query;
                             },
                         },
                     ],
+                },
+                {
+                    "#relation": {
+                        attr: 'auctionHouse',
+                        relations: [auctionHouseRelation.administrator],
+                    },
                 }
             ]
         },
@@ -757,9 +784,40 @@ const AUTH_MATRIX = {
         [sessionAction.transfer]: {
             auths: [
                 {
-                    "#relation": {
-                        relations: [sessionRelation.administrator],
-                    },
+                    '#exists': [
+                        {
+                            needData: true,
+                            relation: 'userSession',
+                            condition: ({user, row, actionData}) => {
+                                const { session } = actionData;
+                                const query = {
+                                    userId: user.id,
+                                    sessionId: row.id,
+                                    relation: session.relation,
+                                };
+                                return query;
+                            },
+                        },
+                    ],
+                },
+                {
+                    '#exists': [
+                        {
+                            needData: true,
+                            relation: 'userSession',
+                            condition: ({user, row, actionData}) => {
+                                const { session } = actionData;
+                                const query = {
+                                    userId: user.id,
+                                    sessionId: row.id,
+                                    relation: {
+                                        $lt: session.relation - 99,
+                                    },
+                                };
+                                return query;
+                            },
+                        },
+                    ],
                 },
                 {
                     "#relation": {
@@ -775,12 +833,26 @@ const AUTH_MATRIX = {
                 }
             ]
         },
-        [sessionAction.authGrant]: {
+        [sessionAction.authGrantMulti]: {
             auths: [
                 {
-                    "#relation": {
-                        relations: [sessionRelation.administrator],
-                    },
+                    '#exists': [
+                        {
+                            relation: 'userSession',
+                            needData: true,
+                            condition: ({user, row, actionData}) => {
+                                const { session } = actionData;
+                                const query = {
+                                    userId: user.id,
+                                    sessionId: row.id,
+                                    relation: {
+                                        $lt: session.relation - 99,
+                                    },
+                                };
+                                return query;
+                            },
+                        },
+                    ],
                 },
                 {
                     "#relation": {
@@ -1499,20 +1571,34 @@ const AUTH_MATRIX = {
         [auctionHouseAction.transfer]: {
             auths: [
                 {
-                    "#relation": {
-                        relations: [auctionHouseRelation.administrator, auctionHouseRelation.manager],
-                    },
+                    '#exists': [
+                        {
+                            needData: true,
+                            relation: 'userAuctionHouse',
+                            condition: ({user, row, actionData}) => {
+                                const { auctionHouse } = actionData;
+                                const query = {
+                                    userId: user.id,
+                                    auctionHouseId: row.id,
+                                    relation: auctionHouse.relation,
+                                };
+                                return query;
+                            },
+                        },
+                    ],
                 },
                 {
                     '#exists': [
                         {
+                            needData: true,
                             relation: 'userAuctionHouse',
-                            condition: ({user, row}) => {
+                            condition: ({user, row, actionData}) => {
+                                const { auctionHouse } = actionData;
                                 const query = {
                                     userId: user.id,
-                                    auctionHouseId: row.auctionHouseId,
+                                    auctionHouseId: row.id,
                                     relation: {
-                                        $in: [auctionHouseRelation.administrator, auctionHouseRelation.manager],
+                                        $lt: auctionHouse.relation - 99,
                                     },
                                 };
                                 return query;
@@ -1524,7 +1610,25 @@ const AUTH_MATRIX = {
         },
         [auctionHouseAction.authGrantMulti]: {
             auths: [
-
+                {
+                    '#exists': [
+                        {
+                            relation: 'userAuctionHouse',
+                            needData: true,
+                            condition: ({user, row, actionData}) => {
+                                const { auctionHouse } = actionData;
+                                const query = {
+                                    userId: user.id,
+                                    auctionHouseId: row.id,
+                                    relation: {
+                                        $lt: auctionHouse.relation - 99,
+                                    },
+                                };
+                                return query;
+                            },
+                        },
+                    ],
+                }
             ]
         },
     },
@@ -1703,7 +1807,7 @@ const AUTH_MATRIX = {
                 {
                     "#relation": {
                         attr: 'paddle.vendue.auctionHouse',
-                        relations: [auctionHouseRelation.administrator, auctionHouseRelation.settler],
+                        relations: [auctionHouseRelation.administrator, auctionHouseRelation.manager, auctionHouseRelation.settler],
                     },
                 }
             ]
@@ -1713,7 +1817,7 @@ const AUTH_MATRIX = {
                 {
                     "#relation": {
                         attr: 'paddle',
-                        relations: [vendueRelation.owner],
+                        relations: [vendueRelation.administrator],
                     },
                 },
                 {
@@ -1725,7 +1829,7 @@ const AUTH_MATRIX = {
                 {
                     "#relation": {
                         attr: 'paddle.vendue.auctionHouse',
-                        relations: [auctionHouseRelation.administrator, auctionHouseRelation.settler],
+                        relations: [auctionHouseRelation.administrator, auctionHouseRelation.manager, auctionHouseRelation.settler],
                     },
                 }
             ]
