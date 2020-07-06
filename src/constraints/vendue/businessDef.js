@@ -224,7 +224,7 @@ const AUTH_MATRIX = {
                                 return{
                                     userId: user.id,
                                     relation: {
-                                        $exists: true,
+                                        $in: [auctionHouseRelation.administrator, auctionHouseRelation.manager],
                                     },
                                     auctionHouseId: auctionHouse.id,
                                 }
@@ -265,7 +265,7 @@ const AUTH_MATRIX = {
                     '#data': [
                         {
                             check: ({user, row}) => {
-                                return [vendueState.ready, vendueState.pausing].includes(row.state);
+                                return [vendueState.ready].includes(row.state);
                             },
                         }
                     ],
@@ -287,7 +287,7 @@ const AUTH_MATRIX = {
                     '#data': [
                         {
                             check: ({user, row}) => {
-                                return [vendueState.ready, vendueState.pausing].includes(row.state);
+                                return [vendueState.ready].includes(row.state);
                             },
                         }
                     ],
@@ -339,7 +339,7 @@ const AUTH_MATRIX = {
                     '#data': [
                         {
                             check: ({user, row}) => {
-                                return [vendueState.ongoing, vendueState.pausing].includes(row.state);
+                                return [vendueState.ongoing].includes(row.state);
                             },
                         }
                     ],
@@ -361,7 +361,7 @@ const AUTH_MATRIX = {
                     '#data': [
                         {
                             check: ({user, row}) => {
-                                return [vendueState.ongoing, vendueState.pausing].includes(row.state);
+                                return [vendueState.ongoing].includes(row.state);
                             },
                         }
                     ],
@@ -466,7 +466,7 @@ const AUTH_MATRIX = {
                 }
             ]
         },
-        [vendueAction.authGrant]: {
+        [vendueAction.authGrantMulti]: {
             auths: [
                 {
                     "#relation": {
@@ -1462,7 +1462,9 @@ const AUTH_MATRIX = {
         [auctionHouseAction.remove]: {
             auths: [
                 {
-                    '#exists': AuctionHouseOwnerAndManagerExists,
+                    "#relation": {
+                        relations: [auctionHouseRelation.administrator],
+                    },
                 },
             ],
         },
@@ -1493,6 +1495,37 @@ const AUTH_MATRIX = {
                     ],
                 },
             ],
+        },
+        [auctionHouseAction.transfer]: {
+            auths: [
+                {
+                    "#relation": {
+                        relations: [auctionHouseRelation.administrator, auctionHouseRelation.manager],
+                    },
+                },
+                {
+                    '#exists': [
+                        {
+                            relation: 'userAuctionHouse',
+                            condition: ({user, row}) => {
+                                const query = {
+                                    userId: user.id,
+                                    auctionHouseId: row.auctionHouseId,
+                                    relation: {
+                                        $in: [auctionHouseRelation.administrator, auctionHouseRelation.manager],
+                                    },
+                                };
+                                return query;
+                            },
+                        },
+                    ],
+                }
+            ]
+        },
+        [auctionHouseAction.authGrantMulti]: {
+            auths: [
+
+            ]
         },
     },
     collection: {

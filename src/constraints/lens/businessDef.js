@@ -432,19 +432,6 @@ const AUTH_MATRIX = {
         [RecordAction.bind]: {
             auths: [
                 {
-                    '#exists': [
-                        {
-                            relation: 'diagnosis',
-                            needData: true,
-                            condition: ({user, row, actionData}) => {
-                                const {record} = actionData;
-                                 return {
-                                    id: record.diagnosisId,
-                                    state: DiagnosisState.active,
-                                };
-                            },
-                        },
-                    ],
                     '#data': [
                         {
                             check: ({row}) => {
