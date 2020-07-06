@@ -450,11 +450,11 @@ const AUTH_MATRIX = {
                             needData: true,
                             relation: 'userVendue',
                             condition: ({user, row, actionData}) => {
-                                const { vendue } = actionData;
+                                const { userEntityGrant } = actionData;
                                 const query = {
                                     userId: user.id,
                                     vendueId: row.id,
-                                    relation: vendue.relation,
+                                    relation: userEntityGrant.relation,
                                 };
                                 return query;
                             },
@@ -467,12 +467,12 @@ const AUTH_MATRIX = {
                             needData: true,
                             relation: 'userVendue',
                             condition: ({user, row, actionData}) => {
-                                const { vendue } = actionData;
+                                const { userEntityGrant } = actionData;
                                 const query = {
                                     userId: user.id,
                                     vendueId: row.id,
                                     relation: {
-                                        $lt: vendue.relation - 99,
+                                        $lt: userEntityGrant.relation - 99,
                                     },
                                 };
                                 return query;
@@ -496,12 +496,12 @@ const AUTH_MATRIX = {
                             relation: 'userVendue',
                             needData: true,
                             condition: ({user, row, actionData}) => {
-                                const { vendue } = actionData;
+                                const { userEntityGrant } = actionData;
                                 const query = {
                                     userId: user.id,
                                     vendueId: row.id,
                                     relation: {
-                                        $lt: vendue.relation - 99,
+                                        $lt: userEntityGrant.relation - 99,
                                     },
                                 };
                                 return query;
@@ -789,11 +789,11 @@ const AUTH_MATRIX = {
                             needData: true,
                             relation: 'userSession',
                             condition: ({user, row, actionData}) => {
-                                const { session } = actionData;
+                                const { userEntityGrant } = actionData;
                                 const query = {
                                     userId: user.id,
                                     sessionId: row.id,
-                                    relation: session.relation,
+                                    relation: userEntityGrant.relation,
                                 };
                                 return query;
                             },
@@ -806,12 +806,12 @@ const AUTH_MATRIX = {
                             needData: true,
                             relation: 'userSession',
                             condition: ({user, row, actionData}) => {
-                                const { session } = actionData;
+                                const { userEntityGrant } = actionData;
                                 const query = {
                                     userId: user.id,
                                     sessionId: row.id,
                                     relation: {
-                                        $lt: session.relation - 99,
+                                        $lt: userEntityGrant.relation - 99,
                                     },
                                 };
                                 return query;
@@ -841,12 +841,12 @@ const AUTH_MATRIX = {
                             relation: 'userSession',
                             needData: true,
                             condition: ({user, row, actionData}) => {
-                                const { session } = actionData;
+                                const { userEntityGrant } = actionData;
                                 const query = {
                                     userId: user.id,
                                     sessionId: row.id,
                                     relation: {
-                                        $lt: session.relation - 99,
+                                        $lt: userEntityGrant.relation - 99,
                                     },
                                 };
                                 return query;
@@ -1576,11 +1576,11 @@ const AUTH_MATRIX = {
                             needData: true,
                             relation: 'userAuctionHouse',
                             condition: ({user, row, actionData}) => {
-                                const { auctionHouse } = actionData;
+                                const { userEntityGrant } = actionData;
                                 const query = {
                                     userId: user.id,
                                     auctionHouseId: row.id,
-                                    relation: auctionHouse.relation,
+                                    relation: userEntityGrant.relation,
                                 };
                                 return query;
                             },
@@ -1593,12 +1593,12 @@ const AUTH_MATRIX = {
                             needData: true,
                             relation: 'userAuctionHouse',
                             condition: ({user, row, actionData}) => {
-                                const { auctionHouse } = actionData;
+                                const { userEntityGrant } = actionData;
                                 const query = {
                                     userId: user.id,
                                     auctionHouseId: row.id,
                                     relation: {
-                                        $lt: auctionHouse.relation - 99,
+                                        $lt: userEntityGrant.relation - 99,
                                     },
                                 };
                                 return query;
@@ -1616,12 +1616,12 @@ const AUTH_MATRIX = {
                             relation: 'userAuctionHouse',
                             needData: true,
                             condition: ({user, row, actionData}) => {
-                                const { auctionHouse } = actionData;
+                                const { userEntityGrant } = actionData;
                                 const query = {
                                     userId: user.id,
                                     auctionHouseId: row.id,
                                     relation: {
-                                        $lt: auctionHouse.relation - 99,
+                                        $lt: userEntityGrant.relation - 99,
                                     },
                                 };
                                 return query;
