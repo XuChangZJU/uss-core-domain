@@ -447,14 +447,12 @@ const AUTH_MATRIX = {
                 {
                     '#exists': [
                         {
-                            needData: true,
                             relation: 'userVendue',
-                            condition: ({user, row, actionData}) => {
-                                const { userEntityGrant } = actionData;
+                            condition: ({user, row}) => {
                                 const query = {
                                     userId: user.id,
                                     vendueId: row.id,
-                                    relation: userEntityGrant.relation,
+                                    relation: vendueRelation.owner,
                                 };
                                 return query;
                             },
@@ -464,15 +462,13 @@ const AUTH_MATRIX = {
                 {
                     '#exists': [
                         {
-                            needData: true,
-                            relation: 'userVendue',
-                            condition: ({user, row, actionData}) => {
-                                const { userEntityGrant } = actionData;
+                            relation: 'userAuctionHouse',
+                            condition: ({user, row}) => {
                                 const query = {
                                     userId: user.id,
-                                    vendueId: row.id,
+                                    auctionHouseId: row.auctionHouseId,
                                     relation: {
-                                        $lt: userEntityGrant.relation - 99,
+                                        $in: [auctionHouseRelation.administrator, auctionHouseRelation.owner],
                                     },
                                 };
                                 return query;
@@ -480,12 +476,6 @@ const AUTH_MATRIX = {
                         },
                     ],
                 },
-                {
-                    "#relation": {
-                        attr: 'auctionHouse',
-                        relations: [auctionHouseRelation.administrator],
-                    },
-                }
             ]
         },
         [vendueAction.authGrantMulti]: {
@@ -494,14 +484,12 @@ const AUTH_MATRIX = {
                     '#exists': [
                         {
                             relation: 'userVendue',
-                            needData: true,
-                            condition: ({user, row, actionData}) => {
-                                const { userEntityGrant } = actionData;
+                            condition: ({user, row}) => {
                                 const query = {
                                     userId: user.id,
                                     vendueId: row.id,
                                     relation: {
-                                        $lt: userEntityGrant.relation - 99,
+                                        $in: [vendueRelation.administrator, vendueRelation.owner],
                                     },
                                 };
                                 return query;
@@ -510,11 +498,22 @@ const AUTH_MATRIX = {
                     ],
                 },
                 {
-                    "#relation": {
-                        attr: 'auctionHouse',
-                        relations: [auctionHouseRelation.administrator],
-                    },
-                }
+                    '#exists': [
+                        {
+                            relation: 'userAuctionHouse',
+                            condition: ({user, row}) => {
+                                const query = {
+                                    userId: user.id,
+                                    auctionHouseId: row.auctionHouseId,
+                                    relation: {
+                                        $in: [auctionHouseRelation.administrator, auctionHouseRelation.owner],
+                                    },
+                                };
+                                return query;
+                            },
+                        },
+                    ],
+                },
             ]
         },
         [vendueAction.remove]: {
@@ -786,14 +785,12 @@ const AUTH_MATRIX = {
                 {
                     '#exists': [
                         {
-                            needData: true,
                             relation: 'userSession',
-                            condition: ({user, row, actionData}) => {
-                                const { userEntityGrant } = actionData;
+                            condition: ({user, row}) => {
                                 const query = {
                                     userId: user.id,
                                     sessionId: row.id,
-                                    relation: userEntityGrant.relation,
+                                    relation: sessionRelation.owner,
                                 };
                                 return query;
                             },
@@ -803,15 +800,13 @@ const AUTH_MATRIX = {
                 {
                     '#exists': [
                         {
-                            needData: true,
-                            relation: 'userSession',
-                            condition: ({user, row, actionData}) => {
-                                const { userEntityGrant } = actionData;
+                            relation: 'userVendue',
+                            condition: ({user, row}) => {
                                 const query = {
                                     userId: user.id,
-                                    sessionId: row.id,
+                                    vendueId: row.vendueId,
                                     relation: {
-                                        $lt: userEntityGrant.relation - 99,
+                                        $in: [vendueRelation.owner, vendueRelation.administrator],
                                     },
                                 };
                                 return query;
@@ -820,17 +815,22 @@ const AUTH_MATRIX = {
                     ],
                 },
                 {
-                    "#relation": {
-                        attr: 'vendue',
-                        relations: [vendueRelation.administrator],
-                    },
+                    '#exists': [
+                        {
+                            relation: 'userAuctionHouse',
+                            condition: ({user, row}) => {
+                                const query = {
+                                    userId: user.id,
+                                    vendueId: row.vendue.auctionHouseId,
+                                    relation: {
+                                        $in: [auctionHouseRelation.owner, auctionHouseRelation.administrator],
+                                    },
+                                };
+                                return query;
+                            },
+                        },
+                    ],
                 },
-                {
-                    "#relation": {
-                        attr: 'vendue.auctionHouse',
-                        relations: [auctionHouseRelation.administrator],
-                    },
-                }
             ]
         },
         [sessionAction.authGrantMulti]: {
@@ -839,14 +839,27 @@ const AUTH_MATRIX = {
                     '#exists': [
                         {
                             relation: 'userSession',
-                            needData: true,
-                            condition: ({user, row, actionData}) => {
-                                const { userEntityGrant } = actionData;
+                            condition: ({user, row}) => {
                                 const query = {
                                     userId: user.id,
                                     sessionId: row.id,
+                                    $in: [sessionRelation.owner, sessionRelation.administrator],
+                                };
+                                return query;
+                            },
+                        },
+                    ],
+                },
+                {
+                    '#exists': [
+                        {
+                            relation: 'userVendue',
+                            condition: ({user, row}) => {
+                                const query = {
+                                    userId: user.id,
+                                    vendueId: row.vendueId,
                                     relation: {
-                                        $lt: userEntityGrant.relation - 99,
+                                        $in: [vendueRelation.owner, vendueRelation.administrator],
                                     },
                                 };
                                 return query;
@@ -855,17 +868,22 @@ const AUTH_MATRIX = {
                     ],
                 },
                 {
-                    "#relation": {
-                        attr: 'vendue',
-                        relations: [vendueRelation.administrator],
-                    },
+                    '#exists': [
+                        {
+                            relation: 'userAuctionHouse',
+                            condition: ({user, row}) => {
+                                const query = {
+                                    userId: user.id,
+                                    vendueId: row.vendue.auctionHouseId,
+                                    relation: {
+                                        $in: [auctionHouseRelation.owner, auctionHouseRelation.administrator],
+                                    },
+                                };
+                                return query;
+                            },
+                        },
+                    ],
                 },
-                {
-                    "#relation": {
-                        attr: 'vendue.auctionHouse',
-                        relations: [auctionHouseRelation.administrator],
-                    },
-                }
             ]
         },
         [sessionAction.remove]: {
@@ -1573,39 +1591,18 @@ const AUTH_MATRIX = {
                 {
                     '#exists': [
                         {
-                            needData: true,
                             relation: 'userAuctionHouse',
-                            condition: ({user, row, actionData}) => {
-                                const { userEntityGrant } = actionData;
+                            condition: ({ user, row }) => {
                                 const query = {
                                     userId: user.id,
                                     auctionHouseId: row.id,
-                                    relation: userEntityGrant.relation,
+                                    relation: auctionHouseRelation.owner,
                                 };
                                 return query;
                             },
                         },
                     ],
                 },
-                {
-                    '#exists': [
-                        {
-                            needData: true,
-                            relation: 'userAuctionHouse',
-                            condition: ({user, row, actionData}) => {
-                                const { userEntityGrant } = actionData;
-                                const query = {
-                                    userId: user.id,
-                                    auctionHouseId: row.id,
-                                    relation: {
-                                        $lt: userEntityGrant.relation - 99,
-                                    },
-                                };
-                                return query;
-                            },
-                        },
-                    ],
-                }
             ]
         },
         [auctionHouseAction.authGrantMulti]: {
@@ -1614,14 +1611,12 @@ const AUTH_MATRIX = {
                     '#exists': [
                         {
                             relation: 'userAuctionHouse',
-                            needData: true,
-                            condition: ({user, row, actionData}) => {
-                                const { userEntityGrant } = actionData;
+                            condition: ({ user, row }) => {
                                 const query = {
                                     userId: user.id,
                                     auctionHouseId: row.id,
                                     relation: {
-                                        $lt: userEntityGrant.relation - 99,
+                                        $in: [auctionHouseRelation.owner, auctionHouseRelation.administrator],
                                     },
                                 };
                                 return query;
