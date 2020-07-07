@@ -459,10 +459,6 @@ const AUTH_MATRIX = {
                                 return query;
                             },
                         },
-                    ],
-                },
-                {
-                    '#exists': [
                         {
                             needData: true,
                             relation: 'userVendue',
