@@ -576,22 +576,6 @@ const AUTH_MATRIX = {
                         }
                     ]
                 },
-                {
-                    "exists": [
-                        {
-                            relation: 'userAuctionHouse',
-                            needData: true,
-                            condition: ({user,actionData}) => {
-                                const {session} = actionData;
-                                return{
-                                    userId: user.id,
-                                    auctionHouseId: session.vendue.auctionHouseId,
-                                    relation: auctionHouseRelation.administrator,
-                                };
-                            }
-                        }
-                    ]
-                }
             ]
         },
         [sessionAction.update]: {
@@ -821,7 +805,7 @@ const AUTH_MATRIX = {
                             condition: ({user, row}) => {
                                 const query = {
                                     userId: user.id,
-                                    vendueId: row.vendue.auctionHouseId,
+                                    auctionHouseId: row.vendue.auctionHouseId,
                                     relation: {
                                         $in: [auctionHouseRelation.owner, auctionHouseRelation.administrator],
                                     },
@@ -874,7 +858,7 @@ const AUTH_MATRIX = {
                             condition: ({user, row}) => {
                                 const query = {
                                     userId: user.id,
-                                    vendueId: row.vendue.auctionHouseId,
+                                    auctionHouseId: row.vendue.auctionHouseId,
                                     relation: {
                                         $in: [auctionHouseRelation.owner, auctionHouseRelation.administrator],
                                     },
