@@ -474,7 +474,7 @@ const AUTH_MATRIX = {
                 },
             ]
         },
-        [vendueAction.authGrantMulti]: {
+        [vendueAction.authGrantMulti2]: {
             auths: [
                 {
                     '#exists': [
@@ -813,7 +813,7 @@ const AUTH_MATRIX = {
                 },
             ]
         },
-        [sessionAction.authGrantMulti]: {
+        [sessionAction.authGrantMulti2]: {
             auths: [
                 {
                     '#exists': [
@@ -1587,7 +1587,7 @@ const AUTH_MATRIX = {
                 },
             ]
         },
-        [auctionHouseAction.authGrantMulti]: {
+        [auctionHouseAction.authGrantMulti2]: {
             auths: [
                 {
                     '#exists': [

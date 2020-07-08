@@ -13,9 +13,9 @@ const action = {
     authRevoke: 12,
     authAbandon: 13,
     // authExpire: 14,
-    authGrantMulti: 14,     // 复制一个对象后将对象授权
+    authGrantMulti: 14,     // 复制一个对象后将新对象owner关系授权
     authConfirm: 15,
-    authGrantMulti2: 16,    // 仅授权关系
+    authGrantMulti2: 16,    // 仅发散关系
 
     transfer: 21,           // 转让
     acquire: 22,            // 申请
@@ -127,7 +127,7 @@ const decodeAction = (a) => {
         // [action.authExpire]: '过期',
         [action.authConfirm]: '确认',
         [action.authGrantMulti]: '散发',
-
+        [action.authGrantMulti2]: '散发2',
         [action.transfer]: '转让',
         [action.acquire]: '申请',
 
