@@ -13,8 +13,9 @@ const action = {
     authRevoke: 12,
     authAbandon: 13,
     // authExpire: 14,
-    authGrantMulti: 14,
+    authGrantMulti: 14,     // 复制一个对象后将对象授权
     authConfirm: 15,
+    authGrantMulti2: 16,    // 仅授权关系
 
     transfer: 21,           // 转让
     acquire: 22,            // 申请
