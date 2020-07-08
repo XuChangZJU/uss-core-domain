@@ -55,6 +55,19 @@ const decodeAction = (a) => {
     return S[a] || decodeCommonAction(a);
 };
 
+const mode = {
+    stock: 1,
+    lot: 2,
+};
+
+function decodeMode(m) {
+    const S = {
+        [mode.stock]: '库号命名',
+        [mode.lot]: 'Lot号命名',
+    };
+    return S[m];
+};
+
 const STATE_TRAN_MATRIX = {
     [action.ready]: [state.preparing, state.ready],
     [action.start]: [[state.ready, state.unsold, state.pausing], state.ongoing],
@@ -71,5 +84,7 @@ module.exports = {
     decodeState,
     action,
     decodeAction,
+    mode,
+    decodeMode,
     STATE_TRAN_MATRIX,
 };
