@@ -7,7 +7,7 @@ const type = Object.assign({}, {
 
 const STRINGS_OF_ORIGINS = {
     [type.sequentiallyIncreasing]: "顺序递增",
-    [type.increasingBy258]: "258拍",
+    [type.increasingBy258]: "2/5/8递增",
 };
 
 function decodeType(o) {

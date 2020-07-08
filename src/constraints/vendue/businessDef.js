@@ -823,7 +823,9 @@ const AUTH_MATRIX = {
                                 const query = {
                                     userId: user.id,
                                     sessionId: row.id,
-                                    $in: [sessionRelation.owner, sessionRelation.administrator],
+                                    relation: {
+                                        $in: [sessionRelation.owner, sessionRelation.administrator]
+                                    },
                                 };
                                 return query;
                             },
