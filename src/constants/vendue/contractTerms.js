@@ -1,8 +1,8 @@
 const {
     action,
     decodeAction,
-    state: commonState,
-    decodeState: decodeCommonState,
+    state,
+    decodeState,
     COMMON_STATE_TRAN_MATRIX
 } = require('../action');
 
