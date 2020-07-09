@@ -477,13 +477,15 @@ const AUTH_MATRIX = {
                 {
                     '#exists': [
                         {
+                            needData: true,
                             relation: 'userVendue',
-                            condition: ({user, row}) => {
+                            condition: ({user, row, actionData}) => {
+                                const { userVendue } = actionData;
                                 const query = {
                                     userId: user.id,
                                     vendueId: row.id,
                                     relation: {
-                                        $in: [vendueRelation.administrator, vendueRelation.owner],
+                                        $lt: userVendue.relation - 99,
                                     },
                                 };
                                 return query;
@@ -847,13 +849,15 @@ const AUTH_MATRIX = {
                 {
                     '#exists': [
                         {
+                            needData: 'true',
                             relation: 'userSession',
-                            condition: ({user, row}) => {
+                            condition: ({user, row, actionData}) => {
+                                const { userSession } = actionData;
                                 const query = {
                                     userId: user.id,
                                     sessionId: row.id,
                                     relation: {
-                                        $in: [sessionRelation.owner, sessionRelation.administrator]
+                                        $lt: userSession.relation - 99,
                                     },
                                 };
                                 return query;
@@ -1643,12 +1647,14 @@ const AUTH_MATRIX = {
                     '#exists': [
                         {
                             relation: 'userAuctionHouse',
-                            condition: ({ user, row }) => {
+                            needData: true,
+                            condition: ({ user, row, actionData }) => {
+                                const {userAuctionHouse} = actionData;
                                 const query = {
                                     userId: user.id,
                                     auctionHouseId: row.id,
                                     relation: {
-                                        $in: [auctionHouseRelation.owner, auctionHouseRelation.administrator],
+                                        $lt: userAuctionHouse.relation - 99,
                                     },
                                 };
                                 return query;
