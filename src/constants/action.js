@@ -127,7 +127,7 @@ const decodeAction = (a) => {
         // [action.authExpire]: '过期',
         [action.authConfirm]: '确认',
         [action.authGrantMulti]: '散发',
-        [action.authGrantMulti2]: '散发2',
+        [action.authGrantMulti2]: '邀请',
         [action.transfer]: '转让',
         [action.acquire]: '申请',
 

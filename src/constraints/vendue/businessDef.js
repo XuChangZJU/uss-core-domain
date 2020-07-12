@@ -2075,18 +2075,22 @@ const AUTH_MATRIX = {
         [cashInAction.makePaid]: {
             auths: [
                 {
-                    "#relation": {
-                        attr: 'paddle.vendue',
-                        relations: [vendueRelation.administrator, vendueRelation.owner],
-                    },
-                },
-                {
-                    "#relation": {
-                        attr: 'paddle.vendue.auctionHouse',
-                        relations: [auctionHouseRelation.administrator, auctionHouseRelation.settler, auctionHouseRelation.owner],
-                    },
+                    '#exists': [
+                        {
+                            relation: 'userAuctionHouse',
+                            condition: ({user, row}) => {
+                                return {
+                                    userId: user.id,
+                                    auctionHouseId: row.auctionHouseId,
+                                    relation: {
+                                        $in: [auctionHouseRelation.owner, auctionHouseRelation.administrator, auctionHouseRelation.manager, auctionHouseRelation.settler],
+                                    }
+                                };
+                            },
+                        },
+                    ],
                 }
-            ]
+            ],
         },
     },
     license: {
