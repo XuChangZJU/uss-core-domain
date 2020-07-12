@@ -480,12 +480,12 @@ const AUTH_MATRIX = {
                             needData: true,
                             relation: 'userVendue',
                             condition: ({user, row, actionData}) => {
-                                const { userVendue } = actionData;
+                                const { userEntityGrant } = actionData;
                                 const query = {
                                     userId: user.id,
                                     vendueId: row.id,
                                     relation: {
-                                        $lt: userVendue.relation - 99,
+                                        $in: [vendueRelation.administrator, vendueRelation.owner],
                                     },
                                 };
                                 return query;
@@ -852,12 +852,12 @@ const AUTH_MATRIX = {
                             needData: 'true',
                             relation: 'userSession',
                             condition: ({user, row, actionData}) => {
-                                const { userSession } = actionData;
+                                const { userEntityGrant } = actionData;
                                 const query = {
                                     userId: user.id,
                                     sessionId: row.id,
                                     relation: {
-                                        $lt: userSession.relation - 99,
+                                        $in: [sessionRelation.owner, sessionRelation.administrator]
                                     },
                                 };
                                 return query;
@@ -1653,12 +1653,12 @@ const AUTH_MATRIX = {
                             relation: 'userAuctionHouse',
                             needData: true,
                             condition: ({ user, row, actionData }) => {
-                                const {userAuctionHouse} = actionData;
+                                const { userEntityGrant } = actionData;
                                 const query = {
                                     userId: user.id,
                                     auctionHouseId: row.id,
                                     relation: {
-                                        $lt: userAuctionHouse.relation - 99,
+                                        $in: [auctionHouseRelation.owner, auctionHouseRelation.administrator],
                                     },
                                 };
                                 return query;
