@@ -519,14 +519,38 @@ const AUTH_MATRIX = {
                             relation: 'userVendue',
                             condition: ({user, row, actionData}) => {
                                 const { userVendue } = actionData;
-                                const query = {
-                                    userId: user.id,
-                                    vendueId: row.id,
-                                    relation: {
-                                        $lt: userVendue.relation - 99,
-                                    },
-                                };
-                                return query;
+                                if(!userVendue.relation){
+                                    return {
+                                        userId: user.id,
+                                        vendueId: row.id,
+                                        relation: {
+                                            $in: [vendueRelation.administrator, vendueRelation.owner],
+                                        },
+                                    }
+                                }
+                                if(userVendue.relation === vendueRelation.owner){
+                                    return {
+                                        relation: -1,
+                                    }
+                                }
+                                if(userVendue.relation === vendueRelation.administrator){
+                                    return{
+                                        userId: user.id,
+                                        vendueId: row.id,
+                                        relation: {
+                                            $in: [vendueRelation.owner],
+                                        },
+                                    }
+                                }
+                                if(userVendue.relation === vendueRelation.worker){
+                                    return {
+                                        userId: user.id,
+                                        vendueId: row.id,
+                                        relation: {
+                                            $in: [vendueRelation.administrator, vendueRelation.owner],
+                                        },
+                                    }
+                                }
                             },
                         },
                     ],
@@ -946,14 +970,40 @@ const AUTH_MATRIX = {
                             relation: 'userSession',
                             condition: ({user, row, actionData}) => {
                                 const { userSession } = actionData;
-                                const query = {
-                                    userId: user.id,
-                                    sessionId: row.id,
-                                    relation: {
-                                        $lt: userSession.relation - 99,
-                                    },
-                                };
-                                return query;
+                                if(!userSession.relation){
+                                    return {
+                                        userId: user.id,
+                                        sessionId: row.id,
+                                        relation: {
+                                            $in: [sessionRelation.owner, sessionRelation.administrator]
+                                        },
+                                    }
+                                }
+                                if(userSession.relation === sessionRelation.owner){
+                                    return {
+                                        userId: user.id,
+                                        sessionId: row.id,
+                                        relation: -1,
+                                    }
+                                }
+                                if(userSession.relation === sessionRelation.administrator){
+                                    return {
+                                        userId: user.id,
+                                        sessionId: row.id,
+                                        relation: {
+                                            $in: [sessionRelation.owner],
+                                        },
+                                    }
+                                }
+                                if(userSession.relation === sessionRelation.worker){
+                                    return {
+                                        userId: user.id,
+                                        sessionId: row.id,
+                                        relation: {
+                                            $in: [sessionRelation.owner, sessionRelation.administrator],
+                                        },
+                                    }
+                                }
                             },
                         },
                     ],
@@ -1767,15 +1817,49 @@ const AUTH_MATRIX = {
                             relation: 'userAuctionHouse',
                             needData: true,
                             condition: ({ user, row, actionData }) => {
-                                const {userAuctionHouse} = actionData;
-                                const query = {
-                                    userId: user.id,
-                                    auctionHouseId: row.id,
-                                    relation: {
-                                        $lt: userAuctionHouse.relation - 99,
-                                    },
-                                };
-                                return query;
+                                const { userAuctionHouse } = actionData;
+                                if(!userAuctionHouse.relation){
+                                    return {
+                                        userId: user.id,
+                                        auctionHouseId: row.id,
+                                        relation: {
+                                            $in: [auctionHouseRelation.owner, auctionHouseRelation.administrator],
+                                        },
+                                    }
+                                }
+                                if(userAuctionHouse.relation === auctionHouseRelation.owner){
+                                    return {
+                                        relation: -1,
+                                    }
+                                }
+                                if(userAuctionHouse.relation === auctionHouseRelation.administrator){
+                                    return {
+                                        userId: user.id,
+                                        auctionHouseId: row.id,
+                                        relation: {
+                                            $in: [auctionHouseRelation.owner],
+                                        },
+                                    }
+                                }
+                                if(userAuctionHouse.relation === auctionHouseRelation.manager){
+                                    return {
+                                        userId: user.id,
+                                        auctionHouseId: row.id,
+                                        relation: {
+                                            $in: [auctionHouseRelation.owner, auctionHouseRelation.administrator],
+                                        },
+                                    }
+                                }
+
+                                if([auctionHouseRelation.worker, auctionHouseRelation.auctioneer, auctionHouseRelation.settler, auctionHouseRelation.stockKeeper].includes(userAuctionHouse.relation)){
+                                    return {
+                                        userId: user.id,
+                                        auctionHouseId: row.id,
+                                        relation: {
+                                            $in: [auctionHouseRelation.owner, auctionHouseRelation.manager, auctionHouseRelation.administrator],
+                                        },
+                                    }
+                                }
                             },
                         },
                     ],
