@@ -113,7 +113,7 @@ const StockAuctionHouseWorkerExists = [
                 userId: user.id,
                 auctionHouseId,
                 relation: {
-                    $in: [auctionHouseRelation.stockKeeper, auctionHouseRelation.guardian, auctionHouseRelation.owner],
+                    $in: [auctionHouseRelation.stockKeeper, auctionHouseRelation.owner],
                 },
             };
             return query;
@@ -130,7 +130,7 @@ const AuctionHouseOwnerAndAdministratorExists = [
                 userId: user.id,
                 auctionHouseId,
                 relation: {
-                    $in: [auctionHouseRelation.owner, auctionHouseRelation.guardian, auctionHouseRelation.administrator],
+                    $in: [auctionHouseRelation.owner, auctionHouseRelation.administrator],
                 },
             };
             return query;
@@ -197,7 +197,7 @@ const CollectionOwnerAndGranteeOrAuctionHouseWorker = {
                                     $attr: 'auctionHouseId',
                                 },
                                 relation: {
-                                    $in: [auctionHouseRelation.owner, auctionHouseRelation.guardian, auctionHouseRelation.stockKeeper],
+                                    $in: [auctionHouseRelation.owner, auctionHouseRelation.stockKeeper],
                                 },
                             },
                         };
