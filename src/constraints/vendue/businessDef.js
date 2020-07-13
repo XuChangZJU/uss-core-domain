@@ -113,7 +113,7 @@ const StockAuctionHouseWorkerExists = [
                 userId: user.id,
                 auctionHouseId,
                 relation: {
-                    $in: [auctionHouseRelation.stockKeeper, auctionHouseRelation.guardian, auctionHouseRelation.manager, auctionHouseRelation.owner],
+                    $in: [auctionHouseRelation.stockKeeper, auctionHouseRelation.guardian, auctionHouseRelation.owner],
                 },
             };
             return query;
@@ -121,7 +121,7 @@ const StockAuctionHouseWorkerExists = [
     },
 ];
 
-const AuctionHouseOwnerAndManagerExists = [
+const AuctionHouseOwnerAndAdministratorExists = [
     {
         relation: 'userAuctionHouse',
         condition: ({ user, row }) => {
@@ -130,7 +130,7 @@ const AuctionHouseOwnerAndManagerExists = [
                 userId: user.id,
                 auctionHouseId,
                 relation: {
-                    $in: [auctionHouseRelation.owner, auctionHouseRelation.guardian, auctionHouseRelation.manager],
+                    $in: [auctionHouseRelation.owner, auctionHouseRelation.guardian, auctionHouseRelation.administrator],
                 },
             };
             return query;
@@ -197,7 +197,7 @@ const CollectionOwnerAndGranteeOrAuctionHouseWorker = {
                                     $attr: 'auctionHouseId',
                                 },
                                 relation: {
-                                    $in: [auctionHouseRelation.owner, auctionHouseRelation.manager, auctionHouseRelation.guardian, auctionHouseRelation.stockKeeper],
+                                    $in: [auctionHouseRelation.owner, auctionHouseRelation.guardian, auctionHouseRelation.stockKeeper],
                                 },
                             },
                         };
@@ -224,7 +224,7 @@ const AUTH_MATRIX = {
                                 return{
                                     userId: user.id,
                                     relation: {
-                                        $in: [auctionHouseRelation.owner, auctionHouseRelation.administrator, auctionHouseRelation.manager],
+                                        $in: [auctionHouseRelation.owner, auctionHouseRelation.administrator],
                                     },
                                     auctionHouseId: auctionHouse.id,
                                 }
@@ -249,7 +249,7 @@ const AUTH_MATRIX = {
                                     userId: user.id,
                                     auctionHouseId: row.auctionHouseId,
                                     relation: {
-                                        $in: [auctionHouseRelation.owner, auctionHouseRelation.administrator, auctionHouseRelation.manager],
+                                        $in: [auctionHouseRelation.owner, auctionHouseRelation.administrator],
                                     },
                                 };
                                 return query;
@@ -1707,7 +1707,7 @@ const AUTH_MATRIX = {
         [auctionHouseAction.update]: {
             auths: [
                 {
-                    '#exists': AuctionHouseOwnerAndManagerExists,
+                    '#exists': AuctionHouseOwnerAndAdministratorExists,
                 },
             ],
         },
@@ -1723,7 +1723,7 @@ const AUTH_MATRIX = {
         [auctionHouseAction.enable]: {
             auths: [
                 {
-                    '#exists': AuctionHouseOwnerAndManagerExists,
+                    '#exists': AuctionHouseOwnerAndAdministratorExists,
                     '#data': [
                         {
                             check: ({ row }) => {
@@ -1737,7 +1737,7 @@ const AUTH_MATRIX = {
         [auctionHouseAction.disable]: {
             auths: [
                 {
-                    '#exists': AuctionHouseOwnerAndManagerExists,
+                    '#exists': AuctionHouseOwnerAndAdministratorExists,
                     '#data': [
                         {
                             check: ({ row }) => {
@@ -1841,22 +1841,13 @@ const AUTH_MATRIX = {
                                         },
                                     }
                                 }
-                                if(userAuctionHouse.relation === auctionHouseRelation.manager){
-                                    return {
-                                        userId: user.id,
-                                        auctionHouseId: row.id,
-                                        relation: {
-                                            $in: [auctionHouseRelation.owner, auctionHouseRelation.administrator],
-                                        },
-                                    }
-                                }
 
                                 if([auctionHouseRelation.worker, auctionHouseRelation.auctioneer, auctionHouseRelation.settler, auctionHouseRelation.stockKeeper].includes(userAuctionHouse.relation)){
                                     return {
                                         userId: user.id,
                                         auctionHouseId: row.id,
                                         relation: {
-                                            $in: [auctionHouseRelation.owner, auctionHouseRelation.manager, auctionHouseRelation.administrator],
+                                            $in: [auctionHouseRelation.owner, auctionHouseRelation.administrator],
                                         },
                                     }
                                 }
@@ -2042,7 +2033,7 @@ const AUTH_MATRIX = {
                 {
                     "#relation": {
                         attr: 'paddle.vendue.auctionHouse',
-                        relations: [auctionHouseRelation.administrator, auctionHouseRelation.manager, auctionHouseRelation.settler, auctionHouseRelation.owner],
+                        relations: [auctionHouseRelation.administrator, auctionHouseRelation.settler, auctionHouseRelation.owner],
                     },
                 }
             ]
@@ -2064,7 +2055,7 @@ const AUTH_MATRIX = {
                 {
                     "#relation": {
                         attr: 'paddle.vendue.auctionHouse',
-                        relations: [auctionHouseRelation.administrator, auctionHouseRelation.manager, auctionHouseRelation.settler, auctionHouseRelation.owner],
+                        relations: [auctionHouseRelation.administrator, auctionHouseRelation.settler, auctionHouseRelation.owner],
                     },
                 }
             ]
@@ -2083,7 +2074,7 @@ const AUTH_MATRIX = {
                                     userId: user.id,
                                     auctionHouseId: row.auctionHouseId,
                                     relation: {
-                                        $in: [auctionHouseRelation.owner, auctionHouseRelation.administrator, auctionHouseRelation.manager, auctionHouseRelation.settler],
+                                        $in: [auctionHouseRelation.owner, auctionHouseRelation.administrator, auctionHouseRelation.settler],
                                     }
                                 };
                             },
