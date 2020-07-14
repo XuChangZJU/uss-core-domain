@@ -49,7 +49,6 @@ const action = Object.assign({}, commonAction, {
     // stop: 611,
 });
 const relation = Object.assign({}, commonRelation, {
-    administrator: 201,
     worker: 301,
 
 });
@@ -57,7 +56,6 @@ const relation = Object.assign({}, commonRelation, {
 const decodeRelation = (r) => {
     const R = {
         [relation.worker]: '员工',
-        [relation.administrator]: '管理员',
     };
     return R[r] || decodeCommonRelation(r);
 };
