@@ -121,7 +121,7 @@ const StockAuctionHouseWorkerExists = [
     },
 ];
 
-const AuctionHouseOwnerAndAdministratorExists = [
+const AuctionHouseOwnerAndmanagerExists = [
     {
         relation: 'userAuctionHouse',
         condition: ({ user, row }) => {
@@ -130,7 +130,7 @@ const AuctionHouseOwnerAndAdministratorExists = [
                 userId: user.id,
                 auctionHouseId,
                 relation: {
-                    $in: [auctionHouseRelation.owner, auctionHouseRelation.administrator],
+                    $in: [auctionHouseRelation.owner, auctionHouseRelation.manager],
                 },
             };
             return query;
@@ -224,7 +224,7 @@ const AUTH_MATRIX = {
                                 return{
                                     userId: user.id,
                                     relation: {
-                                        $in: [auctionHouseRelation.owner, auctionHouseRelation.administrator],
+                                        $in: [auctionHouseRelation.owner, auctionHouseRelation.manager],
                                     },
                                     auctionHouseId: auctionHouse.id,
                                 }
@@ -249,7 +249,7 @@ const AUTH_MATRIX = {
                                     userId: user.id,
                                     auctionHouseId: row.auctionHouseId,
                                     relation: {
-                                        $in: [auctionHouseRelation.owner, auctionHouseRelation.administrator],
+                                        $in: [auctionHouseRelation.owner, auctionHouseRelation.manager],
                                     },
                                 };
                                 return query;
@@ -281,7 +281,7 @@ const AUTH_MATRIX = {
                                     userId: user.id,
                                     auctionHouseId: row.auctionHouseId,
                                     relation: {
-                                        $in: [auctionHouseRelation.owner, auctionHouseRelation.administrator],
+                                        $in: [auctionHouseRelation.owner, auctionHouseRelation.manager],
                                     },
                                 };
                                 return query;
@@ -320,7 +320,7 @@ const AUTH_MATRIX = {
                                     userId: user.id,
                                     auctionHouseId: row.auctionHouseId,
                                     relation: {
-                                        $in: [auctionHouseRelation.owner, auctionHouseRelation.administrator],
+                                        $in: [auctionHouseRelation.owner, auctionHouseRelation.manager],
                                     },
                                 };
                                 return query;
@@ -359,7 +359,7 @@ const AUTH_MATRIX = {
                                     userId: user.id,
                                     auctionHouseId: row.auctionHouseId,
                                     relation: {
-                                        $in: [auctionHouseRelation.owner, auctionHouseRelation.administrator],
+                                        $in: [auctionHouseRelation.owner, auctionHouseRelation.manager],
                                     },
                                 };
                                 return query;
@@ -398,7 +398,7 @@ const AUTH_MATRIX = {
                                     userId: user.id,
                                     auctionHouseId: row.auctionHouseId,
                                     relation: {
-                                        $in: [auctionHouseRelation.owner, auctionHouseRelation.administrator],
+                                        $in: [auctionHouseRelation.owner, auctionHouseRelation.manager],
                                     },
                                 };
                                 return query;
@@ -419,7 +419,7 @@ const AUTH_MATRIX = {
                                     userId: user.id,
                                     vendueId: row.id,
                                     relation: {
-                                        $in: [vendueRelation.administrator, vendueRelation.owner],
+                                        $in: [vendueRelation.manager, vendueRelation.owner],
                                     },
                                 };
                                 return query;
@@ -436,7 +436,7 @@ const AUTH_MATRIX = {
                                     userId: user.id,
                                     auctionHouseId: row.auctionHouseId,
                                     relation: {
-                                        $in: [auctionHouseRelation.owner, auctionHouseRelation.administrator],
+                                        $in: [auctionHouseRelation.owner, auctionHouseRelation.manager],
                                     },
                                 };
                                 return query;
@@ -450,7 +450,7 @@ const AUTH_MATRIX = {
             auths: [
                 {
                     "#relation": {
-                        relations: [vendueRelation.administrator, vendueRelation.owner],
+                        relations: [vendueRelation.manager, vendueRelation.owner],
                     },
                 },
                 {
@@ -462,7 +462,7 @@ const AUTH_MATRIX = {
                                     userId: user.id,
                                     auctionHouseId: row.auctionHouseId,
                                     relation: {
-                                        $in: [auctionHouseRelation.owner, auctionHouseRelation.administrator],
+                                        $in: [auctionHouseRelation.owner, auctionHouseRelation.manager],
                                     },
                                 };
                                 return query;
@@ -483,7 +483,7 @@ const AUTH_MATRIX = {
         //                             userId: user.id,
         //                             vendueId: row.id,
         //                             relation: {
-        //                                 $in: [vendueRelation.administrator, vendueRelation.owner],
+        //                                 $in: [vendueRelation.manager, vendueRelation.owner],
         //                             },
         //                         };
         //                         return query;
@@ -500,7 +500,7 @@ const AUTH_MATRIX = {
         //                             userId: user.id,
         //                             auctionHouseId: row.auctionHouseId,
         //                             relation: {
-        //                                 $in: [auctionHouseRelation.owner, auctionHouseRelation.administrator],
+        //                                 $in: [auctionHouseRelation.owner, auctionHouseRelation.manager],
         //                             },
         //                         };
         //                         return query;
@@ -524,7 +524,7 @@ const AUTH_MATRIX = {
                                         userId: user.id,
                                         vendueId: row.id,
                                         relation: {
-                                            $in: [vendueRelation.administrator, vendueRelation.owner],
+                                            $in: [vendueRelation.manager, vendueRelation.owner],
                                         },
                                     }
                                 }
@@ -533,7 +533,7 @@ const AUTH_MATRIX = {
                                         relation: -1,
                                     }
                                 }
-                                if(userVendue.relation === vendueRelation.administrator){
+                                if(userVendue.relation === vendueRelation.manager){
                                     return{
                                         userId: user.id,
                                         vendueId: row.id,
@@ -547,7 +547,7 @@ const AUTH_MATRIX = {
                                         userId: user.id,
                                         vendueId: row.id,
                                         relation: {
-                                            $in: [vendueRelation.administrator, vendueRelation.owner],
+                                            $in: [vendueRelation.manager, vendueRelation.owner],
                                         },
                                     }
                                 }
@@ -564,7 +564,7 @@ const AUTH_MATRIX = {
                                     userId: user.id,
                                     auctionHouseId: row.auctionHouseId,
                                     relation: {
-                                        $in: [auctionHouseRelation.administrator, auctionHouseRelation.owner],
+                                        $in: [auctionHouseRelation.manager, auctionHouseRelation.owner],
                                     },
                                 };
                                 return query;
@@ -621,13 +621,13 @@ const AUTH_MATRIX = {
                 {
                     '#relation': {
                         attr: 'vendue',
-                        relations: [vendueRelation.owner, vendueRelation.administrator]
+                        relations: [vendueRelation.owner, vendueRelation.manager]
                     }
                 },
                 {
                     '#relation': {
                         attr: 'vendue.auctionHouse',
-                        relations: [auctionHouseRelation.owner, auctionHouseRelation.administrator]
+                        relations: [auctionHouseRelation.owner, auctionHouseRelation.manager]
                     }
                 },
             ]
@@ -636,7 +636,7 @@ const AUTH_MATRIX = {
             auths: [
                 {
                     "#relation": {
-                        relations: [sessionRelation.owner, sessionRelation.administrator, sessionRelation.auctioneer],
+                        relations: [sessionRelation.owner, sessionRelation.manager, sessionRelation.auctioneer],
                     },
                     '#data': [
                         {
@@ -649,7 +649,7 @@ const AUTH_MATRIX = {
                 {
                     "#relation": {
                         attr: 'vendue',
-                        relations: [vendueRelation.owner, vendueRelation.administrator],
+                        relations: [vendueRelation.owner, vendueRelation.manager],
                     },
                     '#data': [
                         {
@@ -662,7 +662,7 @@ const AUTH_MATRIX = {
                 {
                     "#relation": {
                         attr: 'vendue.auctionHouse',
-                        relations: [auctionHouseRelation.owner, auctionHouseRelation.administrator],
+                        relations: [auctionHouseRelation.owner, auctionHouseRelation.manager],
                     },
                     '#data': [
                         {
@@ -690,7 +690,7 @@ const AUTH_MATRIX = {
                 {
                     "#relation": {
                         attr: 'vendue',
-                        relations: [vendueRelation.owner, vendueRelation.administrator],
+                        relations: [vendueRelation.owner, vendueRelation.manager],
                     },
                     '#data': [
                         {
@@ -703,7 +703,7 @@ const AUTH_MATRIX = {
                 {
                     "#relation": {
                         attr: 'vendue.auctionHouse',
-                        relations: [auctionHouseRelation.owner, auctionHouseRelation.administrator],
+                        relations: [auctionHouseRelation.owner, auctionHouseRelation.manager],
                     },
                     '#data': [
                         {
@@ -719,7 +719,7 @@ const AUTH_MATRIX = {
             auths: [
                 {
                     "#relation": {
-                        relations: [sessionRelation.owner, sessionRelation.administrator, sessionRelation.auctioneer],
+                        relations: [sessionRelation.owner, sessionRelation.manager, sessionRelation.auctioneer],
                     },
                     '#data': [
                         {
@@ -732,7 +732,7 @@ const AUTH_MATRIX = {
                 {
                     "#relation": {
                         attr: 'vendue',
-                        relations: [vendueRelation.owner, vendueRelation.administrator],
+                        relations: [vendueRelation.owner, vendueRelation.manager],
                     },
                     '#data': [
                         {
@@ -745,7 +745,7 @@ const AUTH_MATRIX = {
                 {
                     "#relation": {
                         attr: 'vendue.auctionHouse',
-                        relations: [auctionHouseRelation.owner, auctionHouseRelation.administrator],
+                        relations: [auctionHouseRelation.owner, auctionHouseRelation.manager],
                     },
                     '#data': [
                         {
@@ -773,7 +773,7 @@ const AUTH_MATRIX = {
                 {
                     "#relation": {
                         attr: 'vendue',
-                        relations: [vendueRelation.owner, vendueRelation.administrator],
+                        relations: [vendueRelation.owner, vendueRelation.manager],
                     },
                     '#data': [
                         {
@@ -786,7 +786,7 @@ const AUTH_MATRIX = {
                 {
                     "#relation": {
                         attr: 'vendue.auctionHouse',
-                        relations: [auctionHouseRelation.owner, auctionHouseRelation.administrator],
+                        relations: [auctionHouseRelation.owner, auctionHouseRelation.manager],
                     },
                     '#data': [
                         {
@@ -824,7 +824,7 @@ const AUTH_MATRIX = {
                                     userId: user.id,
                                     vendueId: row.vendueId,
                                     relation: {
-                                        $in: [vendueRelation.owner, vendueRelation.administrator],
+                                        $in: [vendueRelation.owner, vendueRelation.manager],
                                     },
                                 };
                                 return query;
@@ -841,7 +841,7 @@ const AUTH_MATRIX = {
                                     userId: user.id,
                                     auctionHouseId: row.vendue.auctionHouseId,
                                     relation: {
-                                        $in: [auctionHouseRelation.owner, auctionHouseRelation.administrator],
+                                        $in: [auctionHouseRelation.owner, auctionHouseRelation.manager],
                                     },
                                 };
                                 return query;
@@ -862,7 +862,7 @@ const AUTH_MATRIX = {
                                     userId: user.id,
                                     sessionId: row.id,
                                     relation: {
-                                        $in: [sessionRelation.owner, sessionRelation.administrator]
+                                        $in: [sessionRelation.owner, sessionRelation.manager]
                                     },
                                 };
                                 return query;
@@ -879,7 +879,7 @@ const AUTH_MATRIX = {
                                     userId: user.id,
                                     vendueId: row.vendueId,
                                     relation: {
-                                        $in: [vendueRelation.owner, vendueRelation.administrator],
+                                        $in: [vendueRelation.owner, vendueRelation.manager],
                                     },
                                 };
                                 return query;
@@ -896,7 +896,7 @@ const AUTH_MATRIX = {
                                     userId: user.id,
                                     auctionHouseId: row.vendue.auctionHouseId,
                                     relation: {
-                                        $in: [auctionHouseRelation.owner, auctionHouseRelation.administrator],
+                                        $in: [auctionHouseRelation.owner, auctionHouseRelation.manager],
                                     },
                                 };
                                 return query;
@@ -917,7 +917,7 @@ const AUTH_MATRIX = {
         //                             userId: user.id,
         //                             sessionId: row.id,
         //                             relation: {
-        //                                 $in: [sessionRelation.owner, sessionRelation.administrator]
+        //                                 $in: [sessionRelation.owner, sessionRelation.manager]
         //                             },
         //                         };
         //                         return query;
@@ -934,7 +934,7 @@ const AUTH_MATRIX = {
         //                             userId: user.id,
         //                             vendueId: row.vendueId,
         //                             relation: {
-        //                                 $in: [vendueRelation.owner, vendueRelation.administrator],
+        //                                 $in: [vendueRelation.owner, vendueRelation.manager],
         //                             },
         //                         };
         //                         return query;
@@ -951,7 +951,7 @@ const AUTH_MATRIX = {
         //                             userId: user.id,
         //                             auctionHouseId: row.vendue.auctionHouseId,
         //                             relation: {
-        //                                 $in: [auctionHouseRelation.owner, auctionHouseRelation.administrator],
+        //                                 $in: [auctionHouseRelation.owner, auctionHouseRelation.manager],
         //                             },
         //                         };
         //                         return query;
@@ -975,7 +975,7 @@ const AUTH_MATRIX = {
                                         userId: user.id,
                                         sessionId: row.id,
                                         relation: {
-                                            $in: [sessionRelation.owner, sessionRelation.administrator]
+                                            $in: [sessionRelation.owner, sessionRelation.manager]
                                         },
                                     }
                                 }
@@ -986,7 +986,7 @@ const AUTH_MATRIX = {
                                         relation: -1,
                                     }
                                 }
-                                if(userSession.relation === sessionRelation.administrator){
+                                if(userSession.relation === sessionRelation.manager){
                                     return {
                                         userId: user.id,
                                         sessionId: row.id,
@@ -1000,7 +1000,7 @@ const AUTH_MATRIX = {
                                         userId: user.id,
                                         sessionId: row.id,
                                         relation: {
-                                            $in: [sessionRelation.owner, sessionRelation.administrator],
+                                            $in: [sessionRelation.owner, sessionRelation.manager],
                                         },
                                     }
                                 }
@@ -1017,7 +1017,7 @@ const AUTH_MATRIX = {
                                     userId: user.id,
                                     vendueId: row.vendueId,
                                     relation: {
-                                        $in: [vendueRelation.owner, vendueRelation.administrator],
+                                        $in: [vendueRelation.owner, vendueRelation.manager],
                                     },
                                 };
                                 return query;
@@ -1034,7 +1034,7 @@ const AUTH_MATRIX = {
                                     userId: user.id,
                                     auctionHouseId: row.vendue.auctionHouseId,
                                     relation: {
-                                        $in: [auctionHouseRelation.owner, auctionHouseRelation.administrator],
+                                        $in: [auctionHouseRelation.owner, auctionHouseRelation.manager],
                                     },
                                 };
                                 return query;
@@ -1048,19 +1048,19 @@ const AUTH_MATRIX = {
             auths: [
                 {
                     "#relation": {
-                        relations: [sessionRelation.owner, sessionRelation.administrator],
+                        relations: [sessionRelation.owner, sessionRelation.manager],
                     },
                 },
                 {
                     "#relation": {
                         attr: 'vendue',
-                        relations: [vendueRelation.owner, vendueRelation.administrator],
+                        relations: [vendueRelation.owner, vendueRelation.manager],
                     },
                 },
                 {
                     "#relation": {
                         attr: 'vendue.auctionHouse',
-                        relations: [auctionHouseRelation.owner, auctionHouseRelation.administrator],
+                        relations: [auctionHouseRelation.owner, auctionHouseRelation.manager],
                     },
                 }
             ]
@@ -1112,7 +1112,7 @@ const AUTH_MATRIX = {
                                     userId: user.id,
                                     vendueId: auction.session.vendueId,
                                     relation: {
-                                        $in: [vendueRelation.administrator, vendueRelation.owner],
+                                        $in: [vendueRelation.manager, vendueRelation.owner],
                                     },
                                 };
                             }
@@ -1130,7 +1130,7 @@ const AUTH_MATRIX = {
                                     userId: user.id,
                                     auctionHouseId: auction.session.vendue.auctionHouseId,
                                     relation: {
-                                        $in: [auctionHouseRelation.administrator, auctionHouseRelation.owner],
+                                        $in: [auctionHouseRelation.manager, auctionHouseRelation.owner],
                                     },
                                 };
                             }
@@ -1155,7 +1155,7 @@ const AUTH_MATRIX = {
         //         {
         //             "#relation": {
         //                 attr: 'session',
-        //                 relations: [sessionRelation.administrator],
+        //                 relations: [sessionRelation.manager],
         //             },
         //             '#data': [
         //                 {
@@ -1168,7 +1168,7 @@ const AUTH_MATRIX = {
         //         {
         //             "#relation": {
         //                 attr: 'session.vendue',
-        //                 relations: [vendueRelation.administrator],
+        //                 relations: [vendueRelation.manager],
         //             },
         //             '#data': [
         //                 {
@@ -1181,7 +1181,7 @@ const AUTH_MATRIX = {
         //         {
         //             "#relation": {
         //                 attr: 'session.vendue.auctionHouse',
-        //                 relations: [auctionHouseRelation.administrator],
+        //                 relations: [auctionHouseRelation.manager],
         //             },
         //             '#data': [
         //                 {
@@ -1202,19 +1202,19 @@ const AUTH_MATRIX = {
                 {
                     "#relation": {
                         attr: 'session',
-                        relations: [sessionRelation.administrator, sessionRelation.auctioneer],
+                        relations: [sessionRelation.manager, sessionRelation.auctioneer],
                     },
                 },
                 {
                     "#relation": {
                         attr: 'session.vendue',
-                        relations: [vendueRelation.administrator, vendueRelation.owner],
+                        relations: [vendueRelation.manager, vendueRelation.owner],
                     },
                 },
                 {
                     "#relation": {
                         attr: 'session.vendue.auctionHouse',
-                        relations: [auctionHouseRelation.administrator, auctionHouseRelation.owner],
+                        relations: [auctionHouseRelation.manager, auctionHouseRelation.owner],
                     },
                 }
             ]
@@ -1235,7 +1235,7 @@ const AUTH_MATRIX = {
                 {
                     "#relation": {
                         attr: 'session',
-                        relations: [sessionRelation.administrator, sessionRelation.owner],
+                        relations: [sessionRelation.manager, sessionRelation.owner],
                     },
                     '#data': [
                         {
@@ -1248,7 +1248,7 @@ const AUTH_MATRIX = {
                 {
                     "#relation": {
                         attr: 'session.vendue',
-                        relations: [vendueRelation.administrator, vendueRelation.owner],
+                        relations: [vendueRelation.manager, vendueRelation.owner],
                     },
                     '#data': [
                         {
@@ -1261,7 +1261,7 @@ const AUTH_MATRIX = {
                 {
                     "#relation": {
                         attr: 'session.vendue.auctionHouse',
-                        relations: [auctionHouseRelation.administrator, auctionHouseRelation.owner],
+                        relations: [auctionHouseRelation.manager, auctionHouseRelation.owner],
                     },
                     '#data': [
                         {
@@ -1278,7 +1278,7 @@ const AUTH_MATRIX = {
                 {
                     "#relation": {
                         attr: 'session',
-                        relations: [sessionRelation.administrator, sessionRelation.auctioneer, sessionRelation.owner],
+                        relations: [sessionRelation.manager, sessionRelation.auctioneer, sessionRelation.owner],
                     },
                     // '#data': [
                     //     {
@@ -1291,7 +1291,7 @@ const AUTH_MATRIX = {
                 {
                     "#relation": {
                         attr: 'session.vendue',
-                        relations: [vendueRelation.administrator, vendueRelation.owner],
+                        relations: [vendueRelation.manager, vendueRelation.owner],
                     },
                     // '#data': [
                     //     {
@@ -1304,7 +1304,7 @@ const AUTH_MATRIX = {
                 {
                     "#relation": {
                         attr: 'session.vendue.auctionHouse',
-                        relations: [auctionHouseRelation.administrator, auctionHouseRelation.owner],
+                        relations: [auctionHouseRelation.manager, auctionHouseRelation.owner],
                     },
                     // '#data': [
                     //     {
@@ -1321,7 +1321,7 @@ const AUTH_MATRIX = {
                 {
                     "#relation": {
                         attr: 'session',
-                        relations: [sessionRelation.administrator, sessionRelation.auctioneer, sessionRelation.owner],
+                        relations: [sessionRelation.manager, sessionRelation.auctioneer, sessionRelation.owner],
                     },
                     '#data': [
                         {
@@ -1334,7 +1334,7 @@ const AUTH_MATRIX = {
                 {
                     "#relation": {
                         attr: 'session.vendue',
-                        relations: [vendueRelation.administrator, vendueRelation.owner],
+                        relations: [vendueRelation.manager, vendueRelation.owner],
                     },
                     '#data': [
                         {
@@ -1347,7 +1347,7 @@ const AUTH_MATRIX = {
                 {
                     "#relation": {
                         attr: 'session.vendue.auctionHouse',
-                        relations: [auctionHouseRelation.administrator, auctionHouseRelation.owner],
+                        relations: [auctionHouseRelation.manager, auctionHouseRelation.owner],
                     },
                     '#data': [
                         {
@@ -1364,7 +1364,7 @@ const AUTH_MATRIX = {
                 {
                     "#relation": {
                         attr: 'session',
-                        relations: [sessionRelation.administrator, sessionRelation.auctioneer, sessionRelation.owner],
+                        relations: [sessionRelation.manager, sessionRelation.auctioneer, sessionRelation.owner],
                     },
                     '#data': [
                         {
@@ -1377,7 +1377,7 @@ const AUTH_MATRIX = {
                 {
                     "#relation": {
                         attr: 'session.vendue',
-                        relations: [vendueRelation.administrator, vendueRelation.owner],
+                        relations: [vendueRelation.manager, vendueRelation.owner],
                     },
                     '#data': [
                         {
@@ -1390,7 +1390,7 @@ const AUTH_MATRIX = {
                 {
                     "#relation": {
                         attr: 'session.vendue.auctionHouse',
-                        relations: [auctionHouseRelation.administrator, auctionHouseRelation.owner],
+                        relations: [auctionHouseRelation.manager, auctionHouseRelation.owner],
                     },
                     '#data': [
                         {
@@ -1407,7 +1407,7 @@ const AUTH_MATRIX = {
         //         {
         //             "#relation": {
         //                 attr: 'session',
-        //                 relations: [sessionRelation.administrator, sessionRelation.auctioneer],
+        //                 relations: [sessionRelation.manager, sessionRelation.auctioneer],
         //             },
         //             '#data': [
         //                 {
@@ -1420,7 +1420,7 @@ const AUTH_MATRIX = {
         //         {
         //             "#relation": {
         //                 attr: 'session.vendue',
-        //                 relations: [vendueRelation.administrator],
+        //                 relations: [vendueRelation.manager],
         //             },
         //             '#data': [
         //                 {
@@ -1433,7 +1433,7 @@ const AUTH_MATRIX = {
         //         {
         //             "#relation": {
         //                 attr: 'session.vendue.auctionHouse',
-        //                 relations: [auctionHouseRelation.administrator],
+        //                 relations: [auctionHouseRelation.manager],
         //             },
         //             '#data': [
         //                 {
@@ -1450,19 +1450,19 @@ const AUTH_MATRIX = {
                 {
                     "#relation": {
                         attr: 'session',
-                        relations: [sessionRelation.administrator, sessionRelation.auctioneer, sessionRelation.owner],
+                        relations: [sessionRelation.manager, sessionRelation.auctioneer, sessionRelation.owner],
                     },
                 },
                 {
                     "#relation": {
                         attr: 'session.vendue',
-                        relations: [vendueRelation.administrator, vendueRelation.owner],
+                        relations: [vendueRelation.manager, vendueRelation.owner],
                     },
                 },
                 {
                     "#relation": {
                         attr: 'session.vendue.auctionHouse',
-                        relations: [auctionHouseRelation.administrator, auctionHouseRelation.owner],
+                        relations: [auctionHouseRelation.manager, auctionHouseRelation.owner],
                     },
                 }
             ]
@@ -1493,7 +1493,7 @@ const AUTH_MATRIX = {
                 {
                     "#relation": {
                         attr: 'auction.session',
-                        relations: [sessionRelation.administrator, sessionRelation.auctioneer, sessionRelation.owner],
+                        relations: [sessionRelation.manager, sessionRelation.auctioneer, sessionRelation.owner],
                     },
                     '#data': [
                         {
@@ -1506,7 +1506,7 @@ const AUTH_MATRIX = {
                 {
                     "#relation": {
                         attr: 'auction.session.vendue',
-                        relations: [vendueRelation.administrator, vendueRelation.owner],
+                        relations: [vendueRelation.manager, vendueRelation.owner],
                     },
                     '#data': [
                         {
@@ -1519,7 +1519,7 @@ const AUTH_MATRIX = {
                 {
                     "#relation": {
                         attr: 'auction.session.vendue.auctionHouse',
-                        relations: [auctionHouseRelation.administrator, auctionHouseRelation.owner],
+                        relations: [auctionHouseRelation.manager, auctionHouseRelation.owner],
                     },
                     '#data': [
                         {
@@ -1536,19 +1536,19 @@ const AUTH_MATRIX = {
                 {
                     "#relation": {
                         attr: 'auction.session',
-                        relations: [sessionRelation.administrator, sessionRelation.auctioneer, sessionRelation.owner],
+                        relations: [sessionRelation.manager, sessionRelation.auctioneer, sessionRelation.owner],
                     },
                 },
                 {
                     "#relation": {
                         attr: 'auction.session.vendue',
-                        relations: [vendueRelation.administrator, vendueRelation.owner],
+                        relations: [vendueRelation.manager, vendueRelation.owner],
                     },
                 },
                 {
                     "#relation": {
                         attr: 'auction.session.vendue.auctionHouse',
-                        relations: [auctionHouseRelation.administrator, auctionHouseRelation.owner],
+                        relations: [auctionHouseRelation.manager, auctionHouseRelation.owner],
                     },
                 }
             ]
@@ -1558,7 +1558,7 @@ const AUTH_MATRIX = {
                 {
                     "#relation": {
                         attr: 'auction.session',
-                        relations: [sessionRelation.administrator, sessionRelation.auctioneer, sessionRelation.owner],
+                        relations: [sessionRelation.manager, sessionRelation.auctioneer, sessionRelation.owner],
                     },
                     '#data': [
                         {
@@ -1571,7 +1571,7 @@ const AUTH_MATRIX = {
                 {
                     "#relation": {
                         attr: 'auction.session.vendue',
-                        relations: [vendueRelation.administrator, vendueRelation.owner],
+                        relations: [vendueRelation.manager, vendueRelation.owner],
                     },
                     '#data': [
                         {
@@ -1584,7 +1584,7 @@ const AUTH_MATRIX = {
                 {
                     "#relation": {
                         attr: 'auction.session.vendue.auctionHouse',
-                        relations: [auctionHouseRelation.administrator, auctionHouseRelation.owner],
+                        relations: [auctionHouseRelation.manager, auctionHouseRelation.owner],
                     },
                     '#data': [
                         {
@@ -1601,19 +1601,19 @@ const AUTH_MATRIX = {
                 {
                     "#relation": {
                         attr: 'auction.session',
-                        relations: [sessionRelation.administrator, sessionRelation.auctioneer, sessionRelation.owner],
+                        relations: [sessionRelation.manager, sessionRelation.auctioneer, sessionRelation.owner],
                     },
                 },
                 {
                     "#relation": {
                         attr: 'auction.session.vendue',
-                        relations: [vendueRelation.administrator, vendueRelation.owner],
+                        relations: [vendueRelation.manager, vendueRelation.owner],
                     },
                 },
                 {
                     "#relation": {
                         attr: 'auction.session.vendue.auctionHouse',
-                        relations: [auctionHouseRelation.administrator, auctionHouseRelation.owner],
+                        relations: [auctionHouseRelation.manager, auctionHouseRelation.owner],
                     },
                 }
             ]
@@ -1670,7 +1670,7 @@ const AUTH_MATRIX = {
                 {
                     "#relation": {
                         attr: 'vendue',
-                        relations: [vendueRelation.worker, vendueRelation.administrator, vendueRelation.owner],
+                        relations: [vendueRelation.worker, vendueRelation.manager, vendueRelation.owner],
                     },
                     '#data': [
                         {
@@ -1686,7 +1686,7 @@ const AUTH_MATRIX = {
                 {
                     "#relation": {
                         attr: 'vendue.auctionHouse',
-                        relations: [auctionHouseRelation.administrator, auctionHouseRelation.owner],
+                        relations: [auctionHouseRelation.manager, auctionHouseRelation.owner],
                     },
                     '#data': [
                         {
@@ -1707,7 +1707,7 @@ const AUTH_MATRIX = {
         [auctionHouseAction.update]: {
             auths: [
                 {
-                    '#exists': AuctionHouseOwnerAndAdministratorExists,
+                    '#exists': AuctionHouseOwnerAndmanagerExists,
                 },
             ],
         },
@@ -1715,7 +1715,7 @@ const AUTH_MATRIX = {
             auths: [
                 {
                     "#relation": {
-                        relations: [auctionHouseRelation.administrator, auctionHouseRelation.owner],
+                        relations: [auctionHouseRelation.manager, auctionHouseRelation.owner],
                     },
                 },
             ],
@@ -1723,7 +1723,7 @@ const AUTH_MATRIX = {
         [auctionHouseAction.enable]: {
             auths: [
                 {
-                    '#exists': AuctionHouseOwnerAndAdministratorExists,
+                    '#exists': AuctionHouseOwnerAndmanagerExists,
                     '#data': [
                         {
                             check: ({ row }) => {
@@ -1737,7 +1737,7 @@ const AUTH_MATRIX = {
         [auctionHouseAction.disable]: {
             auths: [
                 {
-                    '#exists': AuctionHouseOwnerAndAdministratorExists,
+                    '#exists': AuctionHouseOwnerAndmanagerExists,
                     '#data': [
                         {
                             check: ({ row }) => {
@@ -1778,7 +1778,7 @@ const AUTH_MATRIX = {
                                     userId: user.id,
                                     auctionHouseId: row.id,
                                     relation: {
-                                        $in: [auctionHouseRelation.owner, auctionHouseRelation.administrator],
+                                        $in: [auctionHouseRelation.owner, auctionHouseRelation.manager],
                                     },
                                 };
                                 return query;
@@ -1799,7 +1799,7 @@ const AUTH_MATRIX = {
         //                             userId: user.id,
         //                             auctionHouseId: row.id,
         //                             relation: {
-        //                                 $in: [auctionHouseRelation.owner, auctionHouseRelation.administrator],
+        //                                 $in: [auctionHouseRelation.owner, auctionHouseRelation.manager],
         //                             },
         //                         };
         //                         return query;
@@ -1823,7 +1823,7 @@ const AUTH_MATRIX = {
                                         userId: user.id,
                                         auctionHouseId: row.id,
                                         relation: {
-                                            $in: [auctionHouseRelation.owner, auctionHouseRelation.administrator],
+                                            $in: [auctionHouseRelation.owner, auctionHouseRelation.manager],
                                         },
                                     }
                                 }
@@ -1832,7 +1832,7 @@ const AUTH_MATRIX = {
                                         relation: -1,
                                     }
                                 }
-                                if(userAuctionHouse.relation === auctionHouseRelation.administrator){
+                                if(userAuctionHouse.relation === auctionHouseRelation.manager){
                                     return {
                                         userId: user.id,
                                         auctionHouseId: row.id,
@@ -1847,7 +1847,7 @@ const AUTH_MATRIX = {
                                         userId: user.id,
                                         auctionHouseId: row.id,
                                         relation: {
-                                            $in: [auctionHouseRelation.owner, auctionHouseRelation.administrator],
+                                            $in: [auctionHouseRelation.owner, auctionHouseRelation.manager],
                                         },
                                     }
                                 }
@@ -1988,13 +1988,13 @@ const AUTH_MATRIX = {
                 {
                     "#relation": {
                         attr: 'paddle.vendue',
-                        relations: [vendueRelation.administrator, vendueRelation.owner],
+                        relations: [vendueRelation.manager, vendueRelation.owner],
                     },
                 },
                 {
                     "#relation": {
                         attr: 'paddle.vendue.auctionHouse',
-                        relations: [auctionHouseRelation.administrator, auctionHouseRelation.settler, auctionHouseRelation.owner],
+                        relations: [auctionHouseRelation.manager, auctionHouseRelation.settler, auctionHouseRelation.owner],
                     },
                 }
             ]
@@ -2027,13 +2027,13 @@ const AUTH_MATRIX = {
                 {
                     "#relation": {
                         attr: 'paddle.vendue',
-                        relations: [vendueRelation.administrator, vendueRelation.owner],
+                        relations: [vendueRelation.manager, vendueRelation.owner],
                     },
                 },
                 {
                     "#relation": {
                         attr: 'paddle.vendue.auctionHouse',
-                        relations: [auctionHouseRelation.administrator, auctionHouseRelation.settler, auctionHouseRelation.owner],
+                        relations: [auctionHouseRelation.manager, auctionHouseRelation.settler, auctionHouseRelation.owner],
                     },
                 }
             ]
@@ -2043,19 +2043,19 @@ const AUTH_MATRIX = {
                 {
                     "#relation": {
                         attr: 'paddle',
-                        relations: [vendueRelation.administrator, vendueRelation.owner],
+                        relations: [vendueRelation.manager, vendueRelation.owner],
                     },
                 },
                 {
                     "#relation": {
                         attr: 'paddle.vendue',
-                        relations: [vendueRelation.administrator, vendueRelation.owner],
+                        relations: [vendueRelation.manager, vendueRelation.owner],
                     },
                 },
                 {
                     "#relation": {
                         attr: 'paddle.vendue.auctionHouse',
-                        relations: [auctionHouseRelation.administrator, auctionHouseRelation.settler, auctionHouseRelation.owner],
+                        relations: [auctionHouseRelation.manager, auctionHouseRelation.settler, auctionHouseRelation.owner],
                     },
                 }
             ]
@@ -2074,7 +2074,7 @@ const AUTH_MATRIX = {
                                     userId: user.id,
                                     auctionHouseId: row.auctionHouseId,
                                     relation: {
-                                        $in: [auctionHouseRelation.owner, auctionHouseRelation.administrator, auctionHouseRelation.settler],
+                                        $in: [auctionHouseRelation.owner, auctionHouseRelation.manager, auctionHouseRelation.settler],
                                     }
                                 };
                             },
@@ -2108,19 +2108,19 @@ const AUTH_MATRIX = {
                 {
                     "#relation": {
                         attr: 'session',
-                        relations: [sessionRelation.administrator, sessionRelation.auctioneer],
+                        relations: [sessionRelation.manager, sessionRelation.auctioneer],
                     },
                 },
                 {
                     "#relation": {
                         attr: 'session.vendue',
-                        relations: [vendueRelation.administrator],
+                        relations: [vendueRelation.manager],
                     },
                 },
                 {
                     "#relation": {
                         attr: 'session.vendue.auctionHouse',
-                        relations: [auctionHouseRelation.administrator],
+                        relations: [auctionHouseRelation.manager],
                     },
                 }
             ]
@@ -2130,19 +2130,19 @@ const AUTH_MATRIX = {
                 {
                     "#relation": {
                         attr: 'session',
-                        relations: [sessionRelation.administrator, sessionRelation.auctioneer],
+                        relations: [sessionRelation.manager, sessionRelation.auctioneer],
                     },
                 },
                 {
                     "#relation": {
                         attr: 'session.vendue',
-                        relations: [vendueRelation.administrator],
+                        relations: [vendueRelation.manager],
                     },
                 },
                 {
                     "#relation": {
                         attr: 'session.vendue.auctionHouse',
-                        relations: [auctionHouseRelation.administrator],
+                        relations: [auctionHouseRelation.manager],
                     },
                 }
             ]
@@ -2172,7 +2172,7 @@ const AUTH_MATRIX = {
                 {
                     "#relation": {
                         attr: 'contract.auctionHouse',
-                        relations: [auctionHouseRelation.administrator, auctionHouseRelation.worker],
+                        relations: [auctionHouseRelation.manager, auctionHouseRelation.worker],
                     },
                 },
             ]
@@ -2182,7 +2182,7 @@ const AUTH_MATRIX = {
                 {
                     "#relation": {
                         attr: 'contract.auctionHouse',
-                        relations: [auctionHouseRelation.administrator, auctionHouseRelation.worker],
+                        relations: [auctionHouseRelation.manager, auctionHouseRelation.worker],
                     },
                 },
             ]
@@ -2210,19 +2210,19 @@ const AUTH_MATRIX = {
                 // {
                 //     "#relation": {
                 //         attr: 'auction.session',
-                //         relations: [sessionRelation.administrator, sessionRelation.worker],
+                //         relations: [sessionRelation.manager, sessionRelation.worker],
                 //     },
                 // },
                 // {
                 //     "#relation": {
                 //         attr: 'auction.session.vendue',
-                //         relations: [vendueRelation.administrator],
+                //         relations: [vendueRelation.manager],
                 //     },
                 // },
                 // {
                 //     "#relation": {
                 //         attr: 'auction.session.vendue.auctionHouse',
-                //         relations: [auctionHouseRelation.administrator],
+                //         relations: [auctionHouseRelation.manager],
                 //     },
                 // },
             ]
@@ -2246,19 +2246,19 @@ const AUTH_MATRIX = {
                 // {
                 //     "#relation": {
                 //         attr: 'auction.session',
-                //         relations: [sessionRelation.administrator, sessionRelation.worker],
+                //         relations: [sessionRelation.manager, sessionRelation.worker],
                 //     },
                 // },
                 // {
                 //     "#relation": {
                 //         attr: 'auction.session.vendue',
-                //         relations: [vendueRelation.administrator],
+                //         relations: [vendueRelation.manager],
                 //     },
                 // },
                 // {
                 //     "#relation": {
                 //         attr: 'auction.session.vendue.auctionHouse',
-                //         relations: [auctionHouseRelation.administrator],
+                //         relations: [auctionHouseRelation.manager],
                 //     },
                 // },
             ]
