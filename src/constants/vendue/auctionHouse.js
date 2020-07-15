@@ -40,8 +40,6 @@ const relation = Object.assign({}, commonRelation, {
     auctioneer: 402,
     stockKeeper: 403,
     settler: 404,
-
-
 });
 
 const decodeRelation = (r) => {

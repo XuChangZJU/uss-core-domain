@@ -156,7 +156,7 @@ const AnyAuctionHouseWorker = {
     ],
 };
 
-const CollectionOwnerAndGranteeOrAuctionHouseWorker = {
+const CollectionOwnerOrAuctionHouseWorker = {
     auths: [
         {
             'exists': [
@@ -168,7 +168,7 @@ const CollectionOwnerAndGranteeOrAuctionHouseWorker = {
                             userId: user.id,
                             collectionId,
                             relation: {
-                                $in: [collectionRelation.owner, collectionRelation.grantee],
+                                $in: [collectionRelation.owner],
                             },
                         };
                         return query;
@@ -1860,8 +1860,8 @@ const AUTH_MATRIX = {
     },
     collection: {
         [collectionAction.create]: AllowEveryoneAuth,
-        [collectionAction.update]: CollectionOwnerAndGranteeOrAuctionHouseWorker,
-        [collectionAction.remove]: CollectionOwnerAndGranteeOrAuctionHouseWorker,
+        [collectionAction.update]: CollectionOwnerOrAuctionHouseWorker,
+        [collectionAction.remove]: CollectionOwnerOrAuctionHouseWorker,
     },
     contract: {
         [contractAction.create]: AnyAuctionHouseWorker,
