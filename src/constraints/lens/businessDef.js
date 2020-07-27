@@ -3,6 +3,9 @@
  * Created by Xc on 2020/2/20.
  */
 const {
+    action: WorkerOrderAction,
+} = require('../../constants/lens/workerOrder')
+const {
     action: BrandAction,
     relation: BrandRelation,
 } = require('../../constants/lens/brand');
@@ -349,6 +352,179 @@ const transmitterDeviceOrganizationWorker = {
 };
 
 const AUTH_MATRIX = {
+    workerOrder: {
+        [WorkerOrderAction.create]:{
+            auths: [
+                {
+                    '#exists': [
+                        {
+                            relation: 'diagnosis',
+                            needData: true,
+                            condition: ({ user, actionData }) => {
+                                const { check } = actionData;
+                                let query = {
+                                    id: check.diagnosisId,
+                                };
+                                const has = {
+                                    name: 'userWorker',
+                                    projection: {
+                                        id: 1,
+                                    },
+                                    query: {
+                                        userId: user.id,
+                                        workerId: {
+                                            $ref: query,
+                                            $attr: 'workerId',
+                                        },
+                                    },
+                                };
+                                Object.assign(query, { $has: has });
+
+                                return query;
+                            }
+                        },
+                        {
+                            relation: 'diagnosis',
+                            needData: true,
+                            condition: ({ user, actionData }) => {
+                                const { check } = actionData;
+                                let query = {
+                                    id: check.diagnosisId,
+                                };
+                                const has = {
+                                    name: 'userPatient',
+                                    projection: {
+                                        id: 1,
+                                    },
+                                    query: {
+                                        userId: user.id,
+                                        workerId: {
+                                            $ref: query,
+                                            $attr: 'patientId',
+                                        },
+                                    },
+                                };
+                                Object.assign(query, { $has: has });
+                                return query;
+                            }
+                        },
+                    ],
+                },
+            ],
+        },
+        [WorkerOrderAction.update]: {
+            auths: [
+                {
+                    '#exists': [
+                        {
+                            relation: 'diagnosis',
+                            condition: ({user, row}) => {
+                                const { diagnosisId } = row;
+                                let query = {
+                                    id: diagnosisId,
+                                };
+                                const has = {
+                                    name: 'userWorker',
+                                    projection: {
+                                        id: 1,
+                                    },
+                                    query: {
+                                        userId: user.id,
+                                        workerId: {
+                                            $ref: query,
+                                            $attr: 'workerId',
+                                        },
+                                    },
+                                };
+                                Object.assign(query, { $has: has });
+                                return query;
+                            },
+                        },
+                        {
+                            relation: 'diagnosis',
+                            condition: ({user, row}) => {
+                                const { diagnosisId } = row;
+                                let query = {
+                                    id: diagnosisId,
+                                };
+                                const has = {
+                                    name: 'userPatient',
+                                    projection: {
+                                        id: 1,
+                                    },
+                                    query: {
+                                        userId: user.id,
+                                        workerId: {
+                                            $ref: query,
+                                            $attr: 'patientId',
+                                        },
+                                    },
+                                };
+                                Object.assign(query, { $has: has });
+                                return query;
+                            },
+                        },
+                    ],
+                }
+            ],
+        },
+        [WorkerOrderAction.remove]: {
+            auths: [
+                {
+                    '#exists': [
+                        {
+                            relation: 'diagnosis',
+                            condition: ({user, row}) => {
+                                const { diagnosisId } = row;
+                                let query = {
+                                    id: diagnosisId,
+                                };
+                                const has = {
+                                    name: 'userWorker',
+                                    projection: {
+                                        id: 1,
+                                    },
+                                    query: {
+                                        userId: user.id,
+                                        workerId: {
+                                            $ref: query,
+                                            $attr: 'workerId',
+                                        },
+                                    },
+                                };
+                                Object.assign(query, { $has: has });
+                                return query;
+                            },
+                        },
+                        {
+                            relation: 'diagnosis',
+                            condition: ({user, row}) => {
+                                const { diagnosisId } = row;
+                                let query = {
+                                    id: diagnosisId,
+                                };
+                                const has = {
+                                    name: 'userPatient',
+                                    projection: {
+                                        id: 1,
+                                    },
+                                    query: {
+                                        userId: user.id,
+                                        workerId: {
+                                            $ref: query,
+                                            $attr: 'patientId',
+                                        },
+                                    },
+                                };
+                                Object.assign(query, { $has: has });
+                                return query;
+                            },
+                        },
+                    ],
+                }
+            ],
+        },
+    },
     brand: {
         [BrandAction.update]: OwnerRelationAuth,
         [BrandAction.transfer]: OwnerRelationAuth,
@@ -447,33 +623,58 @@ const AUTH_MATRIX = {
                 {
                     '#exists': [
                         {
-                            relation: 'userPatient',
+                            relation: 'diagnosis',
                             needData: true,
                             condition: ({ user, actionData }) => {
                                 const { check } = actionData;
-                                const query = {
-                                    userId: user.id,
-                                    patientId: check.patientId,
+                                let query = {
+                                    id: check.diagnosisId,
                                 };
-                                return  query;
-                            },
-                        },
-                        {
-                            relation: 'userWorker',
-                            needData: true,
-                            condition: ({ user, actionData }) => {
-                                const { check } = actionData;
-                                const query = {
-                                    userId: user.id,
-                                    worker: {
-                                        organizationId: check.organizationId,
+                                const has = {
+                                    name: 'userWorker',
+                                    projection: {
+                                        id: 1,
+                                    },
+                                    query: {
+                                        userId: user.id,
+                                        workerId: {
+                                            $ref: query,
+                                            $attr: 'workerId',
+                                        },
                                     },
                                 };
-                                return  query;
-                            },
-                        }
+                                Object.assign(query, { $has: has });
+
+                                return query;
+                            }
+                        },
+                        {
+                            relation: 'diagnosis',
+                            needData: true,
+                            condition: ({ user, actionData }) => {
+                                const { check } = actionData;
+                                let query = {
+                                    id: check.diagnosisId,
+                                };
+                                const has = {
+                                    name: 'userPatient',
+                                    projection: {
+                                        id: 1,
+                                    },
+                                    query: {
+                                        userId: user.id,
+                                        workerId: {
+                                            $ref: query,
+                                            $attr: 'patientId',
+                                        },
+                                    },
+                                };
+                                Object.assign(query, { $has: has });
+                                return query;
+                            }
+                        },
                     ],
-                }
+                },
             ],
         },
         [CheckAction.update]: {
@@ -481,26 +682,53 @@ const AUTH_MATRIX = {
                 {
                     '#exists': [
                         {
-                            relation: 'userWorker',
+                            relation: 'diagnosis',
                             condition: ({user, row}) => {
-                                const { organizationId, workerId } = row;
-                                const query = {
-                                    userId: user.id,
-                                    worker: {
-                                        id: workerId,
-                                        organizationId,
+                                const { diagnosisId } = row;
+                                let query = {
+                                    id: diagnosisId,
+                                };
+                                const has = {
+                                    name: 'userWorker',
+                                    projection: {
+                                        id: 1,
+                                    },
+                                    query: {
+                                        userId: user.id,
+                                        workerId: {
+                                            $ref: query,
+                                            $attr: 'workerId',
+                                        },
                                     },
                                 };
-                                return  query;
+                                Object.assign(query, { $has: has });
+                                return query;
                             },
                         },
-                    ],
-                    '#data': [                 // 表示对现有对象或者用户的数据有要求，可以有多项，每项之间是AND的关系
                         {
-                            check: ({user, row}) => {
-                                return row.state === CheckState.completed;
+                            relation: 'diagnosis',
+                            condition: ({user, row}) => {
+                                const { diagnosisId } = row;
+                                let query = {
+                                    id: diagnosisId,
+                                };
+                                const has = {
+                                    name: 'userPatient',
+                                    projection: {
+                                        id: 1,
+                                    },
+                                    query: {
+                                        userId: user.id,
+                                        workerId: {
+                                            $ref: query,
+                                            $attr: 'patientId',
+                                        },
+                                    },
+                                };
+                                Object.assign(query, { $has: has });
+                                return query;
                             },
-                        }
+                        },
                     ],
                 }
             ],
@@ -510,15 +738,50 @@ const AUTH_MATRIX = {
                 {
                     '#exists': [
                         {
-                            relation: 'userWorker',
-                            condition: ({ user, row }) => {
-                                const { organizationId } = row;
-                                const query = {
-                                    userId: user.id,
-                                    worker: {
-                                        organizationId,
+                            relation: 'diagnosis',
+                            condition: ({user, row}) => {
+                                const { diagnosisId } = row;
+                                let query = {
+                                    id: diagnosisId,
+                                };
+                                const has = {
+                                    name: 'userWorker',
+                                    projection: {
+                                        id: 1,
+                                    },
+                                    query: {
+                                        userId: user.id,
+                                        workerId: {
+                                            $ref: query,
+                                            $attr: 'workerId',
+                                        },
                                     },
                                 };
+                                Object.assign(query, { $has: has });
+                                return query;
+                            },
+                        },
+                        {
+                            relation: 'diagnosis',
+                            condition: ({user, row}) => {
+                                const { diagnosisId } = row;
+                                let query = {
+                                    id: diagnosisId,
+                                };
+                                const has = {
+                                    name: 'userPatient',
+                                    projection: {
+                                        id: 1,
+                                    },
+                                    query: {
+                                        userId: user.id,
+                                        workerId: {
+                                            $ref: query,
+                                            $attr: 'patientId',
+                                        },
+                                    },
+                                };
+                                Object.assign(query, { $has: has });
                                 return query;
                             },
                         },
@@ -529,6 +792,62 @@ const AUTH_MATRIX = {
                                 return row.state === CheckState.active;
                             },
                         }
+                    ],
+                }
+            ],
+        },
+        [CheckAction.remove]: {
+            auths: [
+                {
+                    '#exists': [
+                        {
+                            relation: 'diagnosis',
+                            condition: ({user, row}) => {
+                                const { diagnosisId } = row;
+                                let query = {
+                                    id: diagnosisId,
+                                };
+                                const has = {
+                                    name: 'userWorker',
+                                    projection: {
+                                        id: 1,
+                                    },
+                                    query: {
+                                        userId: user.id,
+                                        workerId: {
+                                            $ref: query,
+                                            $attr: 'workerId',
+                                        },
+                                    },
+                                };
+                                Object.assign(query, { $has: has });
+                                return query;
+                            },
+                        },
+                        {
+                            relation: 'diagnosis',
+                            condition: ({user, row}) => {
+                                const { diagnosisId } = row;
+                                let query = {
+                                    id: diagnosisId,
+                                };
+                                const has = {
+                                    name: 'userPatient',
+                                    projection: {
+                                        id: 1,
+                                    },
+                                    query: {
+                                        userId: user.id,
+                                        workerId: {
+                                            $ref: query,
+                                            $attr: 'patientId',
+                                        },
+                                    },
+                                };
+                                Object.assign(query, { $has: has });
+                                return query;
+                            },
+                        },
                     ],
                 }
             ],
