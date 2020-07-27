@@ -10,6 +10,12 @@ const {
     relation: DiagnosisRelation,
     } = require('../../constants/lens/diagnosis');
 const {
+    action: CheckAction,
+    state: CheckState,
+    STATE_TRANS_MATRIX: CHECK_STATE_TRANS_MATRIX,
+    relation: CheckRelation,
+} = require('../../constants/lens/check');
+const {
     action: RecordAction,
     state: RecordState,
     relation: RecordRelation,
@@ -419,6 +425,99 @@ const AUTH_MATRIX = {
                         {
                             check: ({user, row}) => {
                                 return row.state === DiagnosisState.active;
+                            },
+                        }
+                    ],
+                }
+            ],
+        },
+    },
+    check: {
+        [CheckAction.create]: {
+            auths: [
+                {
+                    '#exists': [
+                        {
+                            relation: 'userPatient',
+                            needData: true,
+                            condition: ({ user, actionData }) => {
+                                const { check } = actionData;
+                                const query = {
+                                    userId: user.id,
+                                    patientId: check.patientId,
+                                };
+                                return  query;
+                            },
+                        },
+                        {
+                            relation: 'userWorker',
+                            needData: true,
+                            condition: ({ user, actionData }) => {
+                                const { check } = actionData;
+                                const query = {
+                                    userId: user.id,
+                                    worker: {
+                                        organizationId: check.organizationId,
+                                    },
+                                };
+                                return  query;
+                            },
+                        }
+                    ],
+                }
+            ],
+        },
+        [CheckAction.update]: {
+            auths: [
+                {
+                    '#exists': [
+                        {
+                            relation: 'userWorker',
+                            condition: ({user, row}) => {
+                                const { organizationId, workerId } = row;
+                                const query = {
+                                    userId: user.id,
+                                    worker: {
+                                        id: workerId,
+                                        organizationId,
+                                    },
+                                };
+                                return  query;
+                            },
+                        },
+                    ],
+                    '#data': [                 // 表示对现有对象或者用户的数据有要求，可以有多项，每项之间是AND的关系
+                        {
+                            check: ({user, row}) => {
+                                return row.state === CheckState.completed;
+                            },
+                        }
+                    ],
+                }
+            ],
+        },
+        [CheckAction.complete]: {
+            auths: [
+                {
+                    '#exists': [
+                        {
+                            relation: 'userWorker',
+                            condition: ({ user, row }) => {
+                                const { organizationId } = row;
+                                const query = {
+                                    userId: user.id,
+                                    worker: {
+                                        organizationId,
+                                    },
+                                };
+                                return query;
+                            },
+                        },
+                    ],
+                    '#data': [                 // 表示对现有对象或者用户的数据有要求，可以有多项，每项之间是AND的关系
+                        {
+                            check: ({user, row}) => {
+                                return row.state === CheckState.active;
                             },
                         }
                     ],
@@ -1163,6 +1262,7 @@ const AUTH_MATRIX = {
 };
 
 const STATE_TRAN_MATRIX = {
+    check: CHECK_STATE_TRANS_MATRIX,
     diagnosis: DIAGNOSIS_STATE_TRANS_MATRIX,
     device: DEVICE_STATE_TRANS_MATRIX,
     organization: ORGANIZATION_STATE_TRANS_MATRIX,

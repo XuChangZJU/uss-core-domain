@@ -56,3 +56,7 @@ const decodeCurrency = (a) => {
     }
     return STRINGS[a];
 }
+module.exports = {
+    currency,
+    decodeCurrency,
+}
