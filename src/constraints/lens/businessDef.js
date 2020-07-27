@@ -2,7 +2,10 @@
  *
  * Created by Xc on 2020/2/20.
  */
-
+const {
+    action: BrandAction,
+    relation: BrandRelation,
+} = require('../../constants/lens/brand');
 const {
     action: DiagnosisAction,
     state: DiagnosisState,
@@ -346,6 +349,12 @@ const transmitterDeviceOrganizationWorker = {
 };
 
 const AUTH_MATRIX = {
+    brand: {
+        [BrandAction.update]: OwnerRelationAuth,
+        [BrandAction.transfer]: OwnerRelationAuth,
+        [BrandAction.authGrantMulti2]: OwnerRelationAuth,
+        [BrandAction.authRevoke]: OwnerRelationAuth,
+    },
     patient: {
         [PatientAction.create]: AllowEveryoneAuth,
         [PatientAction.update]: AnyRelationAuth,
@@ -733,7 +742,24 @@ const AUTH_MATRIX = {
         },
     },
     organization: {
-        [OrganizationAction.create]: AllowEveryoneAuth,
+        [OrganizationAction.create]: {
+            auths: [{
+                '#exists': [
+                    {
+                        relation: 'userBrand',
+                        needData: true,
+                        condition: ({ user, actionData }) => {
+                            const { organization } = actionData;
+                            const query = {
+                                userId: user.id,
+                                brandId: organization.brandId,
+                            };
+                            return query;
+                        },
+                    },
+                ],
+            }]
+        },
         [OrganizationAction.bind]: {
             auths: [
                 {
