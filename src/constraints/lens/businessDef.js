@@ -221,7 +221,7 @@ const UnboundRecordDeviceOrganizationWorkerOrPatient = {
     ],
 };
 
-const OrganizationOwner = {
+const OrganizationOwnerAndBrandWorker = {
     auths: [
         {
             '#exists': [
@@ -240,6 +240,11 @@ const OrganizationOwner = {
                     },
                 },
             ],
+        },
+        {
+            "#relation": {
+                attr: 'brand',
+            },
         },
     ],
 };
@@ -1082,6 +1087,9 @@ const AUTH_MATRIX = {
         [OrganizationAction.bind]: {
             auths: [
                 {
+                    "#relation": {
+                        attr: 'brand',
+                    },
                     '#data': [
                         {
                             check: ({ row }) => {
@@ -1092,57 +1100,80 @@ const AUTH_MATRIX = {
                 },
             ],
         },
-        [OrganizationAction.update]: OrganizationOwner,
-        [OrganizationAction.remove]: OrganizationOwner,
+        [OrganizationAction.update]: OrganizationOwnerAndBrandWorker,
+        [OrganizationAction.remove]: OrganizationOwnerAndBrandWorker,
         [OrganizationAction.enable]: {
-            auths: [{
-                '#exists': [
-                    {
-                        relation: 'userWorker',
-                        condition: ({ user, row }) => {
-                            const { id: organizationId } = row;
-                            const query = {
-                                userId: user.id,
-                                worker: {
-                                    organizationId,
-                                    jobId: Jobs.superAdministrator
-                                },
-                            };
-                            return query;
+            auths: [
+                {
+                    '#exists': [
+                        {
+                            relation: 'userWorker',
+                            condition: ({ user, row }) => {
+                                const { id: organizationId } = row;
+                                const query = {
+                                    userId: user.id,
+                                    worker: {
+                                        organizationId,
+                                        jobId: Jobs.superAdministrator
+                                    },
+                                };
+                                return query;
+                            },
                         },
+                    ],
+                    '#data': [{
+                        check: ({user, row}) => {
+                            return row.state === OrganizationState.offline;
+                        },
+                    }]
+                },
+                {
+                    "#relation": {
+                        attr: 'brand',
                     },
-                ],
-                '#data': [{
-                    check: ({user, row}) => {
-                        return row.state === OrganizationState.offline;
-                    },
-                }]
-            }]
+                    '#data': [{
+                        check: ({user, row}) => {
+                            return row.state === OrganizationState.offline;
+                        },
+                    }]
+                },
+            ]
         },
         [OrganizationAction.disable]: {
-            auths: [{
-                '#exists': [
-                    {
-                        relation: 'userWorker',
-                        condition: ({ user, row }) => {
-                            const { id: organizationId } = row;
-                            const query = {
-                                userId: user.id,
-                                worker: {
-                                    organizationId,
-                                    jobId: Jobs.superAdministrator
-                                },
-                            };
-                            return query;
+            auths: [
+                {
+                    '#exists': [
+                        {
+                            relation: 'userWorker',
+                            condition: ({ user, row }) => {
+                                const { id: organizationId } = row;
+                                const query = {
+                                    userId: user.id,
+                                    worker: {
+                                        organizationId,
+                                        jobId: Jobs.superAdministrator
+                                    },
+                                };
+                                return query;
+                            },
                         },
+                    ],
+                    '#data': [{
+                        check: ({user, row}) => {
+                            return row.state === OrganizationState.online;
+                        },
+                    }]
+                },
+                {
+                    "#relation": {
+                        attr: 'brand',
                     },
-                ],
-                '#data': [{
-                    check: ({user, row}) => {
-                        return row.state === OrganizationState.online;
-                    },
+                    '#data': [{
+                        check: ({user, row}) => {
+                            return row.state === OrganizationState.online;
+                        },
+                    }]
                 }]
-            }]
         },
     },
     worker: {
