@@ -535,6 +535,7 @@ const AUTH_MATRIX = {
         [BrandAction.transfer]: OwnerRelationAuth,
         [BrandAction.authGrantMulti2]: OwnerRelationAuth,
         [BrandAction.authRevoke]: OwnerRelationAuth,
+        [BrandAction.remove]: OwnerRelationAuth,
     },
     patient: {
         [PatientAction.create]: AllowEveryoneAuth,
