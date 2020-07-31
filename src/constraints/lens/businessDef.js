@@ -16,11 +16,11 @@ const {
     relation: DiagnosisRelation,
     } = require('../../constants/lens/diagnosis');
 const {
-    action: ReviewAction,
-    state: ReviewState,
-    STATE_TRANS_MATRIX: REVIEW_STATE_TRANS_MATRIX,
-    relation: ReviewRelation,
-} = require('../../constants/lens/review');
+    action: RecheckAction,
+    state: RecheckState,
+    STATE_TRANS_MATRIX: RECHECK_STATE_TRANS_MATRIX,
+    relation: RecheckRelation,
+} = require('../../constants/lens/recheck');
 const {
     action: RecordAction,
     state: RecordState,
@@ -630,8 +630,8 @@ const AUTH_MATRIX = {
             ],
         },
     },
-    review: {
-        [ReviewAction.create]: {
+    recheck: {
+        [RecheckAction.create]: {
             auths: [
                 {
                     '#exists': [
@@ -639,9 +639,9 @@ const AUTH_MATRIX = {
                             relation: 'diagnosis',
                             needData: true,
                             condition: ({ user, actionData }) => {
-                                const { review } = actionData;
+                                const { recheck } = actionData;
                                 let query = {
-                                    id: review.diagnosisId,
+                                    id: recheck.diagnosisId,
                                 };
                                 const has = {
                                     name: 'userWorker',
@@ -665,9 +665,9 @@ const AUTH_MATRIX = {
                             relation: 'diagnosis',
                             needData: true,
                             condition: ({ user, actionData }) => {
-                                const { review } = actionData;
+                                const { recheck } = actionData;
                                 let query = {
-                                    id: review.diagnosisId,
+                                    id: recheck.diagnosisId,
                                 };
                                 const has = {
                                     name: 'userPatient',
@@ -690,7 +690,7 @@ const AUTH_MATRIX = {
                 },
             ],
         },
-        [ReviewAction.update]: {
+        [RecheckAction.update]: {
             auths: [
                 {
                     '#exists': [
@@ -746,7 +746,7 @@ const AUTH_MATRIX = {
                 }
             ],
         },
-        [ReviewAction.complete]: {
+        [RecheckAction.complete]: {
             auths: [
                 {
                     '#exists': [
@@ -802,14 +802,14 @@ const AUTH_MATRIX = {
                     '#data': [                 // 表示对现有对象或者用户的数据有要求，可以有多项，每项之间是AND的关系
                         {
                             check: ({user, row}) => {
-                                return row.state === ReviewState.active;
+                                return row.state === RecheckState.active;
                             },
                         }
                     ],
                 }
             ],
         },
-        [ReviewAction.remove]: {
+        [RecheckAction.remove]: {
             auths: [
                 {
                     '#exists': [
@@ -1646,7 +1646,7 @@ const AUTH_MATRIX = {
 };
 
 const STATE_TRAN_MATRIX = {
-    review: REVIEW_STATE_TRANS_MATRIX,
+    recheck: RECHECK_STATE_TRANS_MATRIX,
     diagnosis: DIAGNOSIS_STATE_TRANS_MATRIX,
     device: DEVICE_STATE_TRANS_MATRIX,
     organization: ORGANIZATION_STATE_TRANS_MATRIX,
