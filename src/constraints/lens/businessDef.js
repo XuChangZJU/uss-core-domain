@@ -960,7 +960,7 @@ const AUTH_MATRIX = {
                                 const { device } = actionData;
                                 const query = {
                                     userId: user.id,
-                                    organziationId: device.organizationId,
+                                    organizationId: device.organizationId,
                                     relation: {
                                         $in: [OrganizationRelation.owner, OrganizationRelation.worker],
                                     }
@@ -1413,20 +1413,20 @@ const AUTH_MATRIX = {
     transmitter: {
         [TransmitterAction.create]: {
             auths: [
-                {
-                    '#exists': [
-                        {
-                            relation: 'userRole',
-                            condition: ({ user }) => {
-                                const query = {
-                                    userId: user.id,
-                                    roleId: Roles.BUSINESS.id,
-                                };
-                                return query;
-                            },
-                        },
-                    ],
-                },
+                // {
+                //     '#exists': [
+                //         {
+                //             relation: 'userRole',
+                //             condition: ({ user }) => {
+                //                 const query = {
+                //                     userId: user.id,
+                //                     roleId: Roles.BUSINESS.id,
+                //                 };
+                //                 return query;
+                //             },
+                //         },
+                //     ],
+                // },
                 {
                     '#exists': [
                         {
