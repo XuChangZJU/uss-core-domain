@@ -1,7 +1,8 @@
 const {
-    relation,
-    decodeRelation,
+    relation: commonRelation,
+    decodeRelation: decodeCommonRelation,
 } = require('../action');
+
 
 const {
     action: commonAction,
@@ -21,6 +22,20 @@ const decodeAction = (a) => {
     };
     return TEXT[a] || decodeCommonAction(a);
 };
+
+const relation = Object.assign({}, commonRelation, {
+    worker: 301,
+});
+
+
+const decodeRelation = (r) => {
+    const S = {
+        [relation.worker]: '工作人员',
+    };
+
+    return S[r] || decodeCommonRelation(r);
+};
+
 
 const STATE_TRANS_MATRIX = Object.assign({}, COMMON_STATE_TRANS_MATRIX, {
     [action.bind]: [state.init, state.online],
