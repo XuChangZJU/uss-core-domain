@@ -3,7 +3,13 @@
  * Created by Xc on 2020/2/20.
  */
 const {
+    action: TradeAction,
+    state: TradeState,
+} = require('../../constants/lens/trade');
+const {
     action: WorkerOrderAction,
+    state: WorkerOrderState,
+    STATE_TRAN_MATRIX: WORKERORDER_STATE_TRAN_MATRIX,
 } = require('../../constants/lens/workerOrder')
 const {
     action: BrandAction,
@@ -350,6 +356,59 @@ const OrganizationOwnerAndBrandWorker = {
 // };
 
 const AUTH_MATRIX = {
+    trade: {
+        [TradeAction.create]: {
+            auths: [
+                {
+                    '#exists': [
+                        {
+                            relation: 'diagnosis',
+                            needData: true,
+                            condition: ({ user, actionData }) => {
+                                const { trade } = actionData;
+                                let query = {
+                                    id: trade.diagnosisId,
+                                };
+                                const has = {
+                                    name: 'userOrganization',
+                                    projection: {
+                                        id: 1,
+                                    },
+                                    query: {
+                                        userId: user.id,
+                                        organizationId: {
+                                            $ref: query,
+                                            $attr: 'organizationId',
+                                        },
+                                    },
+                                };
+                                Object.assign(query, { $has: has });
+                                return query;
+                            }
+                        }
+                    ]
+                }
+            ]
+        },
+        [TradeAction.update]: {
+            auths: [
+                {
+                    "#relation": {
+                        attr: 'diagnosis.organization',
+                    },
+                }
+            ]
+        },
+        [TradeAction.remove]: {
+            auths: [
+                {
+                    "#relation": {
+                        attr: 'diagnosis.organization.brand',
+                    },
+                }
+            ]
+        },
+    },
     workerOrder: {
         [WorkerOrderAction.create]:{
             auths: [
@@ -528,6 +587,33 @@ const AUTH_MATRIX = {
                     ],
                 }
             ],
+        },
+        [WorkerOrderAction.solve]: {
+            auths: [
+                {
+                    "#relation": {
+                        attr: 'trade.diagnosis.organization',
+                    },
+                }
+            ]
+        },
+        [WorkerOrderAction.resubmit]: {
+            auths: [
+                {
+                    "#relation": {
+                        attr: 'trade.diagnosis.patient',
+                    },
+                }
+            ]
+        },
+        [WorkerOrderAction.finish]: {
+            auths: [
+                {
+                    "#relation": {
+                        attr: 'trade.diagnosis.patient',
+                    },
+                }
+            ]
         },
     },
     brand: {
@@ -1617,6 +1703,7 @@ const STATE_TRAN_MATRIX = {
     device: DEVICE_STATE_TRANS_MATRIX,
     organization: ORGANIZATION_STATE_TRANS_MATRIX,
     transmitter: TRANSMITTER_STATE_TRANS_MATRIX,
+    workerOrder: WORKERORDER_STATE_TRAN_MATRIX,
 };
 
 module.exports = {
