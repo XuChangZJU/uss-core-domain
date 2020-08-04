@@ -16,6 +16,22 @@ const action = Object.assign({}, commonAction, {
     bind: 1001,
 });
 
+const category = Object.assign({}, {
+    hospital: 1,
+    clinic: 2,
+    shop: 3,
+});
+
+const STRINGS_OF_ORIGINS = {
+    [category.hospital]: "医院",
+    [category.clinic]: "诊所",
+    [category.shop]: '门店',
+};
+
+function decodeCategory(o) {
+    return STRINGS_OF_ORIGINS[o];
+}
+
 const decodeAction = (a) => {
     const TEXT = {
         [action.bind]: '绑定',
@@ -48,5 +64,7 @@ module.exports = {
     decodeState,
     action,
     decodeAction,
+    category,
+    decodeCategory,
     STATE_TRANS_MATRIX,
 };
