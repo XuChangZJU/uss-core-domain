@@ -8,6 +8,7 @@ const action = {
     remove: 3,
     createSub: 4,
     getList: 5,
+    updateRelationData: 6,
 
     authGrant: 11,
     authRevoke: 12,
