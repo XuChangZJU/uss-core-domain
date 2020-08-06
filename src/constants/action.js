@@ -76,6 +76,8 @@ const   state = {
     agreed: 66,
 
 
+
+
     // userEntityGrant相关的
     confirmed: 1001,
 

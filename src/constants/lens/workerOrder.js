@@ -4,8 +4,21 @@ const {
     state: commonState,
     decodeState: decodeCommonState,
 } = require('../action');
+const type =  {
+    refund: 1,
+    exchange: 2,
+    fix: 3,
+};
 
+const decodeType = (t) => {
+    const T = {
+        [type.refund]: '退货',
+        [type.exchange]: '换货',
+        [type.fix]: '修理'
+    };
 
+    return T[t];
+};
 const state = Object.assign({}, commonState, {
     pending: 301,
     solved: 401,
@@ -48,5 +61,7 @@ module.exports = {
     decodeAction,
     state,
     decodeState,
+    type,
+    decodeType,
     STATE_TRAN_MATRIX,
 };
