@@ -6,21 +6,18 @@ const {
 } = require('../action');
 
 
-// const state = Object.assign({}, commonState, {
-//     pending: 301,
-//     solved: 401,
-//     finished: 501,
-// });
-//
-// const decodeState = (s) => {
-//     const S = {
-//         [state.pending]: '待处理',
-//         [state.solved]: '已处理',
-//         [state.finished]: '已完成'
-//     };
-//
-//     return S[s] || decodeCommonState(s);
-// };
+
+const getMethod = {
+    helpYourself: 1,
+};
+
+const decodeGetMethod = (gm) => {
+    const GM = {
+        [getMethod.helpYourself]: '顾客自取',
+    };
+
+    return GM[gm];
+};
 //
 // const action = Object.assign({}, commonAction, {
 //     solve: 301,
@@ -48,4 +45,6 @@ module.exports = {
     decodeAction,
     state,
     decodeState,
+    getMethod,
+    decodeGetMethod,
 };
