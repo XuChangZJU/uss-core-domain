@@ -423,22 +423,6 @@ const AUTH_MATRIX = {
                                     tradeId: workerOrder.tradeId,
                                     userId: user.id,
                                 }
-                                // const has = {
-                                //     name: 'userTrade',
-                                //     projection: {
-                                //         id: 1,
-                                //     },
-                                //     query: {
-                                //         userId: user.id,
-                                //         workerId: {
-                                //             $ref: query,
-                                //             $attr: 'workerId',
-                                //         },
-                                //     },
-                                // };
-                                // Object.assign(query, { $has: has });
-                                //
-                                // return query;
                             }
                         },
                         // {
@@ -632,51 +616,51 @@ const AUTH_MATRIX = {
     },
     diagnosis: {
         [DiagnosisAction.create]: {
-            auths: [
-                {
-                    '#exists': [
-                        {
-                            relation: 'userPatient',
-                            needData: true,
-                            condition: ({ user, actionData }) => {
-                                const { diagnosis } = actionData;
-                                const query = {
-                                    userId: user.id,
-                                    patientId: diagnosis.patientId,
-                                };
-                                return  query;
+                auths: [
+                    {
+                        '#exists': [
+                            {
+                                relation: 'userOrganization',
+                                condition: ({user, actionData}) => {
+                                    const { diagnosis } = actionData;
+                                    const query = {
+                                        userId: user.id,
+                                        organizationId: diagnosis.organizatioId,
+                                    };
+                                    return  query;
+                                },
                             },
-                        },
-                    ],
-                }
-            ],
+                        ],
+                    }
+                ],
         },
-        [DiagnosisAction.update]: {
-            auths: [
-                {
-                    '#exists': [
-                        {
-                            relation: 'userOrganization',
-                            condition: ({user, row}) => {
-                                const { organizationId } = row;
-                                const query = {
-                                    userId: user.id,
-                                    organizationId,
-                                };
-                                return  query;
-                            },
-                        },
-                    ],
-                    '#data': [                 // 表示对现有对象或者用户的数据有要求，可以有多项，每项之间是AND的关系
-                        {
-                            check: ({user, row}) => {
-                                return row.state === DiagnosisState.completed;
-                            },
-                        }
-                    ],
-                }
-            ],
-        },
+        [DiagnosisAction.update]: AllowEveryoneAuth,
+            // {
+        //     auths: [
+        //         {
+        //             '#exists': [
+        //                 {
+        //                     relation: 'userOrganization',
+        //                     condition: ({user, row}) => {
+        //                         const { organizationId } = row;
+        //                         const query = {
+        //                             userId: user.id,
+        //                             organizationId,
+        //                         };
+        //                         return  query;
+        //                     },
+        //                 },
+        //             ],
+        //             '#data': [                 // 表示对现有对象或者用户的数据有要求，可以有多项，每项之间是AND的关系
+        //                 {
+        //                     check: ({user, row}) => {
+        //                         return row.state === DiagnosisState.completed;
+        //                     },
+        //                 }
+        //             ],
+        //         }
+        //     ],
+        // },
         [DiagnosisAction.complete]: {
             auths: [
                 {
