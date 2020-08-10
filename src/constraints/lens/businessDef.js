@@ -572,7 +572,16 @@ const AUTH_MATRIX = {
                 }
             ],
         },
-        [WorkerOrderAction.solve]: {
+        [WorkerOrderAction.accept]: {
+            auths: [
+                {
+                    "#relation": {
+                        attr: 'trade.diagnosis.organization',
+                    },
+                }
+            ]
+        },
+        [WorkerOrderAction.refuse]: {
             auths: [
                 {
                     "#relation": {
