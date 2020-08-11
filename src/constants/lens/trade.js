@@ -6,16 +6,25 @@ const {
 } = require('../action');
 
 const transportState = {
-    dfl: 1,
-    dzdjh: 2,
-    dqhcl: 3,
-    dqj: 4,
-    yqj: 5,
-    tdywc: 6,
-    yth: 7,
-    yzf: 8,
-    tddcksh: 9,
-}
+    dfl: 10001,
+    dzdjh: 10002,
+    dqhcl: 10003,
+    dqj: 10004,
+    yqj: 10005,
+    tdywc: 10006,
+    yth: 10007,
+    yzf: 10008,
+    tddcksh: 10009,
+};
+
+const getActionStateAttr = (action) => {
+    if (action > 10000) {
+        return 'transferState';
+    }
+
+    return state;
+};
+
 const decodeTransportState = (ts) => {
     const TS = {
         [transportState.dfl]: '待发料',
@@ -78,4 +87,5 @@ module.exports = {
     decodeGetMethod,
     transportState,
     decodeTransportState,
+    getActionStateAttr,
 };
