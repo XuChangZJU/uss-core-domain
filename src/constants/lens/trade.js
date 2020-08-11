@@ -5,7 +5,7 @@ const {
     decodeState,
 } = require('../action');
 
-const transferState = {
+const transportState = {
     yqj: 1,
     dqj: 2,
     tdywc: 3,
@@ -16,17 +16,17 @@ const transferState = {
     dzdjh: 8,
     dqhcl: 9,
 }
-const decodeTransferState = (ts) => {
+const decodeTransportState = (ts) => {
     const TS = {
-        [transferState.yqj]: '已取件',
-        [transferState.dqj]: '待取件',
-        [transferState.tdywc]: '退单已完成',
-        [transferState.yth]: '已退货',
-        [transferState.yzf]: '已作废',
-        [transferState.dfl]: '待发料',
-        [transferState.tddcksh]: '退单待仓库审核',
-        [transferState.dzdjh]: '定做待缴回',
-        [transferState.dqhcl]: '待缺货处理',
+        [transportState.yqj]: '已取件',
+        [transportState.dqj]: '待取件',
+        [transportState.tdywc]: '退单已完成',
+        [transportState.yth]: '已退货',
+        [transportState.yzf]: '已作废',
+        [transportState.dfl]: '待发料',
+        [transportState.tddcksh]: '退单待仓库审核',
+        [transportState.dzdjh]: '定做待缴回',
+        [transportState.dqhcl]: '待缺货处理',
     };
     return TS[ts];
 };
