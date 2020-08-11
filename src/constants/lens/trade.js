@@ -63,7 +63,7 @@ const action = Object.assign({}, commonAction, {
     confirmArriveAtShop: 10001,
     confirmGet: 10002,
     send: 10003,
-
+    getAndSendMessage: 1004
 });
 
 const decodeAction = (a) => {
@@ -71,6 +71,7 @@ const decodeAction = (a) => {
         [action.confirmArriveAtShop]: '确认到店',
         [action.confirmGet]: '确认取货',
         [action.send]: '发快递',
+        [action.getAndSendMessage]: '确认取走并发推送'
     };
 
     return S[a] || decodeCommonAction(a);
