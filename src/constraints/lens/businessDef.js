@@ -1147,8 +1147,36 @@ const AUTH_MATRIX = {
                 ],
             }]
         },
-        [OrganizationAction.transfer]: OwnerRelationAuth,
-        [OrganizationAction.authGrantMulti2]: OwnerRelationAuth,
+        [OrganizationAction.transfer]:{
+            auths: [
+                {
+                    "#relation": {
+                        relations: [OrganizationRelation.owner],
+                    },
+                },
+                {
+                    "#relation": {
+                        attr: 'brand',
+                        relations: [BrandRelation.owner, BrandRelation.manager],
+                    },
+                }
+            ]
+        },
+        [OrganizationAction.authGrantMulti2]: {
+            auths: [
+                {
+                    "#relation": {
+                        relations: [OrganizationRelation.owner],
+                    },
+                },
+                {
+                    "#relation": {
+                        attr: 'brand',
+                        relations: [BrandRelation.owner, BrandRelation.manager],
+                    },
+                }
+            ]
+        },
         [OrganizationAction.bind]: {
             auths: [
                 {
