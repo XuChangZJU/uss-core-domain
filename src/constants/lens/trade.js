@@ -76,4 +76,6 @@ module.exports = {
     decodeState,
     getMethod,
     decodeGetMethod,
+    transportState,
+    decodeTransportState,
 };
