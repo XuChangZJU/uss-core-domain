@@ -6,27 +6,27 @@ const {
 } = require('../action');
 
 const transportState = {
-    yqj: 1,
-    dqj: 2,
-    tdywc: 3,
-    yth: 4,
-    yzf: 5,
-    dfl: 6,
-    tddcksh: 7,
-    dzdjh: 8,
-    dqhcl: 9,
+    dfl: 1,
+    dzdjh: 2,
+    dqhcl: 3,
+    dqj: 4,
+    yqj: 5,
+    tdywc: 6,
+    yth: 7,
+    yzf: 8,
+    tddcksh: 9,
 }
 const decodeTransportState = (ts) => {
     const TS = {
-        [transportState.yqj]: '已取件',
+        [transportState.dfl]: '待发料',
+        [transportState.dzdjh]: '定做待缴回',
+        [transportState.dqhcl]: '待缺货处理',
         [transportState.dqj]: '待取件',
+        [transportState.yqj]: '已取件',
         [transportState.tdywc]: '退单已完成',
         [transportState.yth]: '已退货',
         [transportState.yzf]: '已作废',
-        [transportState.dfl]: '待发料',
         [transportState.tddcksh]: '退单待仓库审核',
-        [transportState.dzdjh]: '定做待缴回',
-        [transportState.dqhcl]: '待缺货处理',
     };
     return TS[ts];
 };
