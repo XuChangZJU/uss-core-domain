@@ -5,6 +5,9 @@
 const {
     action: TradeAction,
     state: TradeState,
+    getMethod: TradeGetMethod,
+    STATE_TRAN_MATRIX: TRADE_STATE_TRAN_MATRIX,
+    transportState: TradeTransportState,
 } = require('../../constants/lens/trade');
 const {
     action: WorkerOrderAction,
@@ -406,6 +409,77 @@ const AUTH_MATRIX = {
                         attr: 'diagnosis.organization.brand',
                     },
                 }
+            ]
+        },
+        [TradeAction.confirmArriveAtShop]: {
+            auths: [
+                {
+                    "#relation": {
+                        attr: 'diagnosis.organization.brand',
+                    },
+                    '#data': [                 // 表示对现有对象或者用户的数据有要求，可以有多项，每项之间是AND的关系
+                        {
+                            check: ({user, row}) => {
+                                return [TradeTransportState.dqhcl, TradeTransportState.dzdjh, TradeTransportState.dfl].includes(row.transportState);
+                            },
+                        }
+                    ],
+                },
+                {
+                    "#relation": {
+                        attr: 'diagnosis.organization',
+                    },
+                    '#data': [                 // 表示对现有对象或者用户的数据有要求，可以有多项，每项之间是AND的关系
+                        {
+                            check: ({user, row}) => {
+                                return [TradeTransportState.dqhcl, TradeTransportState.dzdjh, TradeTransportState.dfl].includes(row.transportState);
+                            },
+                        }
+                    ],
+                },
+            ]
+        },
+        [TradeAction.send]: {
+            auths: [
+                {
+                    "#relation": {
+                        attr: 'diagnosis.organization.brand',
+                    },
+                    '#data': [                 // 表示对现有对象或者用户的数据有要求，可以有多项，每项之间是AND的关系
+                        {
+                            check: ({user, row}) => {
+                                return [TradeTransportState.dqhcl, TradeTransportState.dzdjh, TradeTransportState.dfl].includes(row.transportState) && row.getMethod === TradeGetMethod.helpYourself;
+                            },
+                        }
+                    ],
+                },
+                {
+                    "#relation": {
+                        attr: 'diagnosis.organization',
+                    },
+                    '#data': [                 // 表示对现有对象或者用户的数据有要求，可以有多项，每项之间是AND的关系
+                        {
+                            check: ({user, row}) => {
+                                return [TradeTransportState.dqj].includes(row.transportState);
+                            },
+                        }
+                    ],
+                },
+            ]
+        },
+        [TradeAction.confirmGet]: {
+            auths: [
+                {
+                    "#relation": {
+                    },
+                    '#data': [                 // 表示对现有对象或者用户的数据有要求，可以有多项，每项之间是AND的关系
+                        {
+                            check: ({user, row}) => {
+                                return [TradeTransportState.dqj].includes(row.transportState);
+                            },
+                        }
+                    ],
+                },
             ]
         },
     },
