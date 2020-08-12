@@ -732,11 +732,12 @@ const AUTH_MATRIX = {
                         '#exists': [
                             {
                                 relation: 'userOrganization',
+                                needData: true,
                                 condition: ({user, actionData}) => {
                                     const { diagnosis } = actionData;
                                     const query = {
                                         userId: user.id,
-                                        organizationId: diagnosis.organizatioId,
+                                        organizationId: diagnosis.organizationId,
                                     };
                                     return  query;
                                 },
