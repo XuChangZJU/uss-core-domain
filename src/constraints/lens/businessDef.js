@@ -701,15 +701,15 @@ const AUTH_MATRIX = {
                 }
             ]
         },
-        [WorkerOrderAction.finish]: {
-            auths: [
-                {
-                    "#relation": {
-                        attr: 'trade.diagnosis.patient',
-                    },
-                }
-            ]
-        },
+        // [WorkerOrderAction.finish]: {
+        //     auths: [
+        //         {
+        //             "#relation": {
+        //                 attr: 'trade.diagnosis.patient',
+        //             },
+        //         }
+        //     ]
+        // },
     },
     brand: {
         [BrandAction.update]: OwnerRelationAuth,
