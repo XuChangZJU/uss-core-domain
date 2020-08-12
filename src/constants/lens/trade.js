@@ -1,6 +1,6 @@
 const {
-    action,
-    decodeAction,
+    action: commonAction,
+    decodeAction: decodeCommonAction,
     state,
     decodeState,
 } = require('../action');
@@ -19,7 +19,7 @@ const transportState = {
 
 const getActionStateAttr = (action) => {
     if (action > 10000) {
-        return 'transferState';
+        return 'transportState';
     }
 
     return state;
@@ -43,12 +43,14 @@ const decodeTransportState = (ts) => {
 const getMethod = {
     helpYourself: 1,
     express: 2,
+    atOnce: 3,
 };
 
 const decodeGetMethod = (gm) => {
     const GM = {
         [getMethod.helpYourself]: '顾客自取',
         [getMethod.express]: '快递',
+        [getMethod.atOnce]: '当场立取',
     };
 
     return GM[gm];
@@ -56,28 +58,30 @@ const decodeGetMethod = (gm) => {
 
 
 
-//
-// const action = Object.assign({}, commonAction, {
-//     solve: 301,
-//     resubmit: 401,
-//     finish: 501,
-// });
-//
-// const decodeAction = (a) => {
-//     const S = {
-//         [action.solve]: '处理',
-//         [action.resubmit]: '重新提交',
-//         [action.finish]: '完成',
-//     };
-//
-//     return S[a] || decodeCommonAction(a);
-// };
-//
-// const STATE_TRAN_MATRIX = {
-//     [action.solve]: [state.pending, state.solved],
-//     [action.resubmit]: [state.solved, state.pending],
-//     [action.finish]: [state.solved, state.finished],
-// };
+
+const action = Object.assign({}, commonAction, {
+    confirmArriveAtShop: 10001,
+    confirmGet: 10002,
+    send: 10003,
+    getAndSendMessage: 1004
+});
+
+const decodeAction = (a) => {
+    const S = {
+        [action.confirmArriveAtShop]: '确认到店',
+        [action.confirmGet]: '确认取货',
+        [action.send]: '发快递',
+        [action.getAndSendMessage]: '确认取走并发推送'
+    };
+
+    return S[a] || decodeCommonAction(a);
+};
+
+const STATE_TRAN_MATRIX = {
+    [action.confirmArriveAtShop]: [[transportState.dfl, transportState.dzdjh, transportState.dqhcl], state.dqj],
+    [action.confirmGet]: [transportState.dqj, transportState.yqj],
+    [action.send]: [[transportState.dfl, transportState.dzdjh, transportState.dqhcl], state.dqj],
+};
 module.exports = {
     action,
     decodeAction,
@@ -88,4 +92,5 @@ module.exports = {
     transportState,
     decodeTransportState,
     getActionStateAttr,
+    STATE_TRAN_MATRIX,
 };
