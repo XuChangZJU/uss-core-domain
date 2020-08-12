@@ -1828,6 +1828,7 @@ const STATE_TRAN_MATRIX = {
     organization: ORGANIZATION_STATE_TRANS_MATRIX,
     transmitter: TRANSMITTER_STATE_TRANS_MATRIX,
     workerOrder: WORKERORDER_STATE_TRAN_MATRIX,
+    trade: TRADE_STATE_TRAN_MATRIX,
 };
 
 module.exports = {
