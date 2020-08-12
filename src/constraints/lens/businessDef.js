@@ -737,7 +737,7 @@ const AUTH_MATRIX = {
                                     const { diagnosis } = actionData;
                                     const query = {
                                         userId: user.id,
-                                        organizationId: diagnosis.organizatioId,
+                                        organizationId: diagnosis.organizationId,
                                     };
                                     return  query;
                                 },
