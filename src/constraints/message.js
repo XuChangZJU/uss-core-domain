@@ -2,7 +2,7 @@
  * Created by Administrator on 2018/4/17.
  */
 const values = require('lodash/values');
-const { state: State, origin: Origin, weight: Weight } = require('../constants/messageConstant');
+const { state: State, origin: Origin, weight: Weight } = require('../constants/message');
 const { Roles } = require('../constants/roleConstant2');
 
 const { checkConditionThrowString } = require('../utils/checkValidUtils');
