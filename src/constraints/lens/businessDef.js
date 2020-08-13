@@ -612,6 +612,13 @@ const AUTH_MATRIX = {
                         //     },
                         // },
                     ],
+                    '#data': [                 // 表示对现有对象或者用户的数据有要求，可以有多项，每项之间是AND的关系
+                        {
+                            check: ({user, row}) => {
+                                return row.state === WorkerOrderState.pending;
+                            },
+                        }
+                    ],
                 }
             ],
         },
@@ -715,7 +722,7 @@ const AUTH_MATRIX = {
                     '#data': [                 // 表示对现有对象或者用户的数据有要求，可以有多项，每项之间是AND的关系
                         {
                             check: ({user, row}) => {
-                                return  [WorkerOrderState.pending, WorkerOrderState.refused].includes(row.state);
+                                return  [WorkerOrderState.refused].includes(row.state);
                             },
                         }
                     ],
