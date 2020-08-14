@@ -20,12 +20,14 @@ const category = Object.assign({}, {
     hospital: 1,
     clinic: 2,
     shop: 3,
+    others: 4
 });
 
 const STRINGS_OF_ORIGINS = {
     [category.hospital]: "医院",
     [category.clinic]: "诊所",
     [category.shop]: '门店',
+    [category.others]: '其他',
 };
 
 function decodeCategory(o) {
