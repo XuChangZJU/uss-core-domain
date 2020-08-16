@@ -12,6 +12,7 @@ const weight = {
 
 const channel = {
     jPush: "jPush",              // 极光
+    jim: 'jim',                     // 极光IM
     public: "public",           // 公众号
     mp: 'mp',                     // 小程序
     gsm: 'gsm',                  // 短信
