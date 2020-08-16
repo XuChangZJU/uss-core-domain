@@ -399,6 +399,24 @@ const AUTH_MATRIX = {
                     "#relation": {
                         attr: 'diagnosis.organization',
                     },
+                    '#data': [                 // 表示对现有对象或者用户的数据有要求，可以有多项，每项之间是AND的关系
+                        {
+                            check: ({user, row}) => {
+                                return [TradeTransportState.dqhcl, TradeTransportState.dzdjh, TradeTransportState.dfl].includes(row.transportState);
+                            },
+                        }
+                    ],
+                },
+                {
+                    '#relation': {
+                    },
+                    '#data': [                 // 表示对现有对象或者用户的数据有要求，可以有多项，每项之间是AND的关系
+                        {
+                            check: ({user, row}) => {
+                                return [TradeTransportState.dqhcl, TradeTransportState.dzdjh, TradeTransportState.dfl].includes(row.transportState);
+                            },
+                        }
+                    ],
                 }
             ]
         },
@@ -411,34 +429,34 @@ const AUTH_MATRIX = {
                 }
             ]
         },
-        [TradeAction.confirmArriveAtShop]: {
-            auths: [
-                {
-                    "#relation": {
-                        attr: 'diagnosis.organization.brand',
-                    },
-                    '#data': [                 // 表示对现有对象或者用户的数据有要求，可以有多项，每项之间是AND的关系
-                        {
-                            check: ({user, row}) => {
-                                return [TradeTransportState.dqhcl, TradeTransportState.dzdjh, TradeTransportState.dfl].includes(row.transportState);
-                            },
-                        }
-                    ],
-                },
-                {
-                    "#relation": {
-                        attr: 'diagnosis.organization',
-                    },
-                    '#data': [                 // 表示对现有对象或者用户的数据有要求，可以有多项，每项之间是AND的关系
-                        {
-                            check: ({user, row}) => {
-                                return [TradeTransportState.dqhcl, TradeTransportState.dzdjh, TradeTransportState.dfl].includes(row.transportState);
-                            },
-                        }
-                    ],
-                },
-            ]
-        },
+        // [TradeAction.confirmArriveAtShop]: {
+        //     auths: [
+        //         {
+        //             "#relation": {
+        //                 attr: 'diagnosis.organization.brand',
+        //             },
+        //             '#data': [                 // 表示对现有对象或者用户的数据有要求，可以有多项，每项之间是AND的关系
+        //                 {
+        //                     check: ({user, row}) => {
+        //                         return [TradeTransportState.dqhcl, TradeTransportState.dzdjh, TradeTransportState.dfl].includes(row.transportState) && row.getMethod === TradeGetMethod.helpYourself;
+        //                     },
+        //                 }
+        //             ],
+        //         },
+        //         {
+        //             "#relation": {
+        //                 attr: 'diagnosis.organization',
+        //             },
+        //             '#data': [                 // 表示对现有对象或者用户的数据有要求，可以有多项，每项之间是AND的关系
+        //                 {
+        //                     check: ({user, row}) => {
+        //                         return [TradeTransportState.dqhcl, TradeTransportState.dzdjh, TradeTransportState.dfl].includes(row.transportState) && row.getMethod === TradeGetMethod.helpYourself;
+        //                     },
+        //                 }
+        //             ],
+        //         },
+        //     ]
+        // },
         [TradeAction.send]: {
             auths: [
                 {
@@ -448,7 +466,7 @@ const AUTH_MATRIX = {
                     '#data': [                 // 表示对现有对象或者用户的数据有要求，可以有多项，每项之间是AND的关系
                         {
                             check: ({user, row}) => {
-                                return [TradeTransportState.dqhcl, TradeTransportState.dzdjh, TradeTransportState.dfl].includes(row.transportState) && row.getMethod === TradeGetMethod.helpYourself;
+                                return [TradeTransportState.dqhcl, TradeTransportState.dzdjh, TradeTransportState.dfl].includes(row.transportState) && row.getMethod === TradeGetMethod.express;
                             },
                         }
                     ],
@@ -460,41 +478,41 @@ const AUTH_MATRIX = {
                     '#data': [                 // 表示对现有对象或者用户的数据有要求，可以有多项，每项之间是AND的关系
                         {
                             check: ({user, row}) => {
-                                return [TradeTransportState.dqhcl, TradeTransportState.dzdjh, TradeTransportState.dfl].includes(row.transportState) && row.getMethod === TradeGetMethod.helpYourself;
+                                return [TradeTransportState.dqhcl, TradeTransportState.dzdjh, TradeTransportState.dfl].includes(row.transportState) && row.getMethod === TradeGetMethod.express;
                             },
                         }
                     ],
                 },
             ]
         },
-        [TradeAction.getAndSendMessage]: {
-            auths: [
-                {
-                    "#relation": {
-                        attr: 'diagnosis.organization.brand',
-                    },
-                    '#data': [                 // 表示对现有对象或者用户的数据有要求，可以有多项，每项之间是AND的关系
-                        {
-                            check: ({user, row}) => {
-                                return [TradeTransportState.dqj].includes(row.transportState);
-                            },
-                        }
-                    ],
-                },
-                {
-                    "#relation": {
-                        attr: 'diagnosis.organization',
-                    },
-                    '#data': [                 // 表示对现有对象或者用户的数据有要求，可以有多项，每项之间是AND的关系
-                        {
-                            check: ({user, row}) => {
-                                return [TradeTransportState.dqj].includes(row.transportState);
-                            },
-                        }
-                    ],
-                },
-            ]
-        },
+        // [TradeAction.getAndSendMessage]: {
+        //     auths: [
+        //         {
+        //             "#relation": {
+        //                 attr: 'diagnosis.organization.brand',
+        //             },
+        //             '#data': [                 // 表示对现有对象或者用户的数据有要求，可以有多项，每项之间是AND的关系
+        //                 {
+        //                     check: ({user, row}) => {
+        //                         return [TradeTransportState.dqj].includes(row.transportState);
+        //                     },
+        //                 }
+        //             ],
+        //         },
+        //         {
+        //             "#relation": {
+        //                 attr: 'diagnosis.organization',
+        //             },
+        //             '#data': [                 // 表示对现有对象或者用户的数据有要求，可以有多项，每项之间是AND的关系
+        //                 {
+        //                     check: ({user, row}) => {
+        //                         return [TradeTransportState.dqj].includes(row.transportState);
+        //                     },
+        //                 }
+        //             ],
+        //         },
+        //     ]
+        // },
         [TradeAction.confirmGet]: {
             auths: [
                 {
@@ -503,7 +521,31 @@ const AUTH_MATRIX = {
                     '#data': [                 // 表示对现有对象或者用户的数据有要求，可以有多项，每项之间是AND的关系
                         {
                             check: ({user, row}) => {
-                                return [TradeTransportState.dqj].includes(row.transportState);
+                                return [TradeTransportState.dqj].includes(row.transportState) && row.getMethod === TradeGetMethod.express;
+                            },
+                        }
+                    ],
+                },
+                {
+                    "#relation": {
+                        attr: 'diagnosis.organization',
+                    },
+                    '#data': [                 // 表示对现有对象或者用户的数据有要求，可以有多项，每项之间是AND的关系
+                        {
+                            check: ({user, row}) => {
+                                return [TradeTransportState.dfl, TradeTransportState.dzdjh, TradeTransportState.dqhcl, TradeTransportState.dqj].includes(row.transportState) && row.getMethod === TradeGetMethod.helpYourself;
+                            },
+                        }
+                    ],
+                },
+                {
+                    "#relation": {
+                        attr: 'diagnosis.organization.brand',
+                    },
+                    '#data': [                 // 表示对现有对象或者用户的数据有要求，可以有多项，每项之间是AND的关系
+                        {
+                            check: ({user, row}) => {
+                                return [TradeTransportState.dfl, TradeTransportState.dzdjh, TradeTransportState.dqhcl, TradeTransportState.dqj].includes(row.transportState) && row.getMethod === TradeGetMethod.helpYourself;
                             },
                         }
                     ],
@@ -612,6 +654,13 @@ const AUTH_MATRIX = {
                         //     },
                         // },
                     ],
+                    '#data': [                 // 表示对现有对象或者用户的数据有要求，可以有多项，每项之间是AND的关系
+                        {
+                            check: ({user, row}) => {
+                                return row.state === WorkerOrderState.pending;
+                            },
+                        }
+                    ],
                 }
             ],
         },
@@ -680,6 +729,13 @@ const AUTH_MATRIX = {
                     "#relation": {
                         attr: 'trade.diagnosis.organization',
                     },
+                    '#data': [                 // 表示对现有对象或者用户的数据有要求，可以有多项，每项之间是AND的关系
+                        {
+                            check: ({user, row}) => {
+                                return row.state === WorkerOrderState.pending;
+                            },
+                        }
+                    ],
                 }
             ]
         },
@@ -689,7 +745,27 @@ const AUTH_MATRIX = {
                     "#relation": {
                         attr: 'trade.diagnosis.organization',
                     },
-                }
+                    '#data': [                 // 表示对现有对象或者用户的数据有要求，可以有多项，每项之间是AND的关系
+                        {
+                            check: ({user, row}) => {
+                                return row.state === WorkerOrderState.pending;
+                            },
+                        }
+                    ],
+                },
+                {
+                    "#relation": {
+                        attr: 'trade.diagnosis.organization.brand',
+                        relations: [BrandRelation.owner, BrandRelation.manager],
+                    },
+                    '#data': [                 // 表示对现有对象或者用户的数据有要求，可以有多项，每项之间是AND的关系
+                        {
+                            check: ({user, row}) => {
+                                return row.state === WorkerOrderState.pending;
+                            },
+                        }
+                    ],
+                },
             ]
         },
         [WorkerOrderAction.resubmit]: {
@@ -698,18 +774,36 @@ const AUTH_MATRIX = {
                     "#relation": {
                         attr: 'trade.diagnosis.patient',
                     },
-                }
-            ]
-        },
-        [WorkerOrderAction.finish]: {
-            auths: [
+                    '#data': [                 // 表示对现有对象或者用户的数据有要求，可以有多项，每项之间是AND的关系
+                        {
+                            check: ({user, row}) => {
+                                return  [WorkerOrderState.refused].includes(row.state);
+                            },
+                        }
+                    ],
+                },
                 {
                     "#relation": {
-                        attr: 'trade.diagnosis.patient',
                     },
-                }
+                    '#data': [                 // 表示对现有对象或者用户的数据有要求，可以有多项，每项之间是AND的关系
+                        {
+                            check: ({user, row}) => {
+                                return  [WorkerOrderState.refused].includes(row.state);
+                            },
+                        }
+                    ],
+                },
             ]
         },
+        // [WorkerOrderAction.finish]: {
+        //     auths: [
+        //         {
+        //             "#relation": {
+        //                 attr: 'trade.diagnosis.patient',
+        //             },
+        //         }
+        //     ]
+        // },
     },
     brand: {
         [BrandAction.update]: OwnerRelationAuth,
@@ -732,17 +826,18 @@ const AUTH_MATRIX = {
                         '#exists': [
                             {
                                 relation: 'userOrganization',
+                                needData: true,
                                 condition: ({user, actionData}) => {
                                     const { diagnosis } = actionData;
                                     const query = {
                                         userId: user.id,
-                                        organizationId: diagnosis.organizatioId,
+                                        organizationId: diagnosis.organizationId,
                                     };
                                     return  query;
                                 },
                             },
                         ],
-                    }
+                    },
                 ],
         },
         [DiagnosisAction.update]: AllowEveryoneAuth,
@@ -772,32 +867,46 @@ const AUTH_MATRIX = {
         //         }
         //     ],
         // },
-        [DiagnosisAction.complete]: {
+        // [DiagnosisAction.complete]: {
+        //     auths: [
+        //         {
+        //             '#exists': [
+        //                 {
+        //                     relation: 'userOrganization',
+        //                     condition: ({user, row}) => {
+        //                         const { organizationId } = row;
+        //                         const query = {
+        //                             userId: user.id,
+        //                             organizationId,
+        //                         };
+        //                         return  query;
+        //                     },
+        //                 },
+        //             ],
+        //             '#data': [                 // 表示对现有对象或者用户的数据有要求，可以有多项，每项之间是AND的关系
+        //                 {
+        //                     check: ({user, row}) => {
+        //                         return row.state === DiagnosisState.active;
+        //                     },
+        //                 }
+        //             ],
+        //         }
+        //     ],
+        // },
+        [DiagnosisAction.remove]: {
             auths: [
                 {
-                    '#exists': [
-                        {
-                            relation: 'userOrganization',
-                            condition: ({user, row}) => {
-                                const { organizationId } = row;
-                                const query = {
-                                    userId: user.id,
-                                    organizationId,
-                                };
-                                return  query;
-                            },
-                        },
-                    ],
-                    '#data': [                 // 表示对现有对象或者用户的数据有要求，可以有多项，每项之间是AND的关系
-                        {
-                            check: ({user, row}) => {
-                                return row.state === DiagnosisState.active;
-                            },
-                        }
-                    ],
+                    "#relation": {
+                        attr: 'organization'
+                    },
+                },
+                {
+                    "#relation": {
+                        attr: 'organization.brand'
+                    },
                 }
-            ],
-        },
+            ]
+        }
     },
     recheck: {
         [RecheckAction.create]: {
@@ -1249,21 +1358,21 @@ const AUTH_MATRIX = {
                 ],
             }]
         },
-        [OrganizationAction.transfer]:{
-            auths: [
-                {
-                    "#relation": {
-                        relations: [OrganizationRelation.owner],
-                    },
-                },
-                {
-                    "#relation": {
-                        attr: 'brand',
-                        relations: [BrandRelation.owner, BrandRelation.manager],
-                    },
-                }
-            ]
-        },
+        // [OrganizationAction.transfer]:{
+        //     auths: [
+        //         {
+        //             "#relation": {
+        //                 relations: [OrganizationRelation.owner],
+        //             },
+        //         },
+        //         {
+        //             "#relation": {
+        //                 attr: 'brand',
+        //                 relations: [BrandRelation.owner, BrandRelation.manager],
+        //             },
+        //         }
+        //     ]
+        // },
         [OrganizationAction.authGrantMulti2]: {
             auths: [
                 {
@@ -1827,6 +1936,7 @@ const STATE_TRAN_MATRIX = {
     organization: ORGANIZATION_STATE_TRANS_MATRIX,
     transmitter: TRANSMITTER_STATE_TRANS_MATRIX,
     workerOrder: WORKERORDER_STATE_TRAN_MATRIX,
+    trade: TRADE_STATE_TRAN_MATRIX,
 };
 
 module.exports = {

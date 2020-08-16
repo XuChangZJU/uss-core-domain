@@ -23,7 +23,7 @@ const state = Object.assign({}, commonState, {
     pending: 301,
     accepted: 401,
     refused: 410,
-    finished: 501,
+    // finished: 501,
 });
 
 const decodeState = (s) => {
@@ -31,7 +31,7 @@ const decodeState = (s) => {
         [state.pending]: '待处理',
         [state.accepted]: '已同意',
         [state.refused]: '已拒绝',
-        [state.finished]: '已完成'
+        // [state.finished]: '已完成'
     };
 
     return S[s] || decodeCommonState(s);
@@ -41,7 +41,7 @@ const action = Object.assign({}, commonAction, {
     accept: 301,
     refuse: 310,
     resubmit: 401,
-    finish: 501,
+    // finish: 501,
 });
 
 const decodeAction = (a) => {
@@ -49,7 +49,7 @@ const decodeAction = (a) => {
         [action.accept]: '同意',
         [action.refuse]: '拒绝',
         [action.resubmit]: '重新提交',
-        [action.finish]: '完成',
+        // [action.finish]: '完成',
     };
 
     return S[a] || decodeCommonAction(a);
@@ -59,7 +59,7 @@ const STATE_TRAN_MATRIX = {
     [action.accept]: [state.pending, state.accepted],
     [action.refuse]: [state.pending, state.refused],
     [action.resubmit]: [state.refused, state.pending],
-    [action.finish]: [[state.accepted, state.refused], state.finished],
+    // [action.finish]: [[state.accepted, state.refused], state.finished],
 };
 module.exports = {
     action,
