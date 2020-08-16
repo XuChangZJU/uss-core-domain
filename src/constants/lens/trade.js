@@ -69,7 +69,7 @@ const action = Object.assign({}, commonAction, {
 const decodeAction = (a) => {
     const S = {
         // [action.confirmArriveAtShop]: '确认到店',
-        [action.confirmGet]: '确认取货',
+        [action.confirmGet]: '确认收货',
         [action.send]: '发快递',
         // [action.getAndSendMessage]: '确认取走并发推送'
     };

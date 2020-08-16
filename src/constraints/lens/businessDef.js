@@ -867,32 +867,46 @@ const AUTH_MATRIX = {
         //         }
         //     ],
         // },
-        [DiagnosisAction.complete]: {
+        // [DiagnosisAction.complete]: {
+        //     auths: [
+        //         {
+        //             '#exists': [
+        //                 {
+        //                     relation: 'userOrganization',
+        //                     condition: ({user, row}) => {
+        //                         const { organizationId } = row;
+        //                         const query = {
+        //                             userId: user.id,
+        //                             organizationId,
+        //                         };
+        //                         return  query;
+        //                     },
+        //                 },
+        //             ],
+        //             '#data': [                 // 表示对现有对象或者用户的数据有要求，可以有多项，每项之间是AND的关系
+        //                 {
+        //                     check: ({user, row}) => {
+        //                         return row.state === DiagnosisState.active;
+        //                     },
+        //                 }
+        //             ],
+        //         }
+        //     ],
+        // },
+        [DiagnosisAction.remove]: {
             auths: [
                 {
-                    '#exists': [
-                        {
-                            relation: 'userOrganization',
-                            condition: ({user, row}) => {
-                                const { organizationId } = row;
-                                const query = {
-                                    userId: user.id,
-                                    organizationId,
-                                };
-                                return  query;
-                            },
-                        },
-                    ],
-                    '#data': [                 // 表示对现有对象或者用户的数据有要求，可以有多项，每项之间是AND的关系
-                        {
-                            check: ({user, row}) => {
-                                return row.state === DiagnosisState.active;
-                            },
-                        }
-                    ],
+                    "#relation": {
+                        attr: 'organization'
+                    },
+                },
+                {
+                    "#relation": {
+                        attr: 'organization.brand'
+                    },
                 }
-            ],
-        },
+            ]
+        }
     },
     recheck: {
         [RecheckAction.create]: {
