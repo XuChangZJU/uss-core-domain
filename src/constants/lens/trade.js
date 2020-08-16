@@ -63,12 +63,12 @@ const action = Object.assign({}, commonAction, {
     confirmArriveAtShop: 10001,
     confirmGet: 10002,
     send: 10003,
-    getAndSendMessage: 1004
+    // getAndSendMessage: 1004
 });
 
 const decodeAction = (a) => {
     const S = {
-        // [action.confirmArriveAtShop]: '确认到店',
+        [action.confirmArriveAtShop]: '确认到店',
         [action.confirmGet]: '确认收货',
         [action.send]: '发快递',
         // [action.getAndSendMessage]: '确认取走并发推送'
@@ -78,7 +78,7 @@ const decodeAction = (a) => {
 };
 
 const STATE_TRAN_MATRIX = {
-    // [action.confirmArriveAtShop]: [[transportState.dfl, transportState.dzdjh, transportState.dqhcl], transportState.dqj],
+    [action.confirmArriveAtShop]: [[transportState.dfl, transportState.dzdjh, transportState.dqhcl], transportState.dqj],
     [action.confirmGet]: [[transportState.dfl, transportState.dzdjh, transportState.dqhcl, transportState.dqj], transportState.yqj],
     [action.send]: [[transportState.dfl, transportState.dzdjh, transportState.dqhcl], transportState.dqj],
 };
