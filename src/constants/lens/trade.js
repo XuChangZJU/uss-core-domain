@@ -3,6 +3,8 @@ const {
     decodeAction: decodeCommonAction,
     state,
     decodeState,
+    relation,
+    decodeRelation
 } = require('../action');
 
 const transportState = {
@@ -63,6 +65,8 @@ const action = Object.assign({}, commonAction, {
     confirmArriveAtShop: 10001,
     confirmGet: 10002,
     send: 10003,
+    confirmPick: 10004,
+    updateFeedback: 9000,
     // getAndSendMessage: 1004
 });
 
@@ -71,6 +75,8 @@ const decodeAction = (a) => {
         [action.confirmArriveAtShop]: '确认到店',
         [action.confirmGet]: '确认收货',
         [action.send]: '发快递',
+        [action.updateFeedback]: '更新评价',
+        [action.confirmPick]: '确认取货',
         // [action.getAndSendMessage]: '确认取走并发推送'
     };
 
@@ -79,7 +85,8 @@ const decodeAction = (a) => {
 
 const STATE_TRAN_MATRIX = {
     [action.confirmArriveAtShop]: [[transportState.dfl, transportState.dzdjh, transportState.dqhcl], transportState.dqj],
-    [action.confirmGet]: [[transportState.dfl, transportState.dzdjh, transportState.dqhcl, transportState.dqj], transportState.yqj],
+    [action.confirmGet]: [[transportState.dqj], transportState.yqj],
+    [action.confirmPick]:  [[transportState.dqj], transportState.yqj],
     [action.send]: [[transportState.dfl, transportState.dzdjh, transportState.dqhcl], transportState.dqj],
 };
 module.exports = {
@@ -87,6 +94,8 @@ module.exports = {
     decodeAction,
     state,
     decodeState,
+    relation,
+    decodeRelation,
     getMethod,
     decodeGetMethod,
     transportState,
