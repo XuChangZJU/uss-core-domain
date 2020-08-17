@@ -1,7 +1,13 @@
 /**
  * Created by Xc on 2020/2/20.
  */
-const { action: commonAction, decodeAction: decodeCommonAction } = require('../action');
+const {
+    action: commonAction,
+    decodeAction: decodeCommonAction,
+    relation: commonRelation,
+    decodeRelation: decodeCommonRelation,
+    } = require('../action');
+
 const state = {
     noTrade: 301,
     hasTrade: 310,
@@ -52,6 +58,18 @@ const decodeAction = (a) => {
     return S[a]|| decodeCommonAction(a);
 };
 
+const relation = Object.assign({}, commonRelation, {
+    seller: 1001,        // 营业员
+});
+
+const decodeRelation = (r) => {
+    const T = {
+        [relation.seller]: '营业员',
+    };
+
+    return T[r] || decodeCommonRelation(r);
+};
+
 const STATE_TRANS_MATRIX = {
     [action.expire]: [state.noTrade, state.expired],
 };
@@ -63,5 +81,7 @@ module.exports = {
     decodeCategory,
     state,
     decodeState,
+    relation,
+    decodeRelation,
     STATE_TRANS_MATRIX,
 };
