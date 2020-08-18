@@ -13,8 +13,8 @@ const state = {
 
 const decodeState = (s) => {
     const S = {
-        [state.inactive]: '未到期',
-        [state.active]: '已到期',
+        [state.inactive]: '未到复查时间',
+        [state.active]: '已到复查时间',
         [state.confirmed]: '已确认',
         [state.completed]: '已完成',
         [state.expired]: '已过期',
