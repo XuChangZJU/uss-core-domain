@@ -573,30 +573,6 @@ const AUTH_MATRIX = {
                         }
                     ],
                 },
-                {
-                    "#relation": {
-                        attr: 'diagnosis.organization',
-                    },
-                    '#data': [                 // 表示对现有对象或者用户的数据有要求，可以有多项，每项之间是AND的关系
-                        {
-                            check: ({user, row}) => {
-                                return [TradeTransportState.dqj].includes(row.transportState) && row.getMethod === TradeGetMethod.helpYourself;
-                            },
-                        }
-                    ],
-                },
-                {
-                    "#relation": {
-                        attr: 'diagnosis.organization.brand',
-                    },
-                    '#data': [                 // 表示对现有对象或者用户的数据有要求，可以有多项，每项之间是AND的关系
-                        {
-                            check: ({user, row}) => {
-                                return [TradeTransportState.dqj].includes(row.transportState) && row.getMethod === TradeGetMethod.helpYourself;
-                            },
-                        }
-                    ],
-                },
             ]
         },
     },
