@@ -4,18 +4,16 @@
 const {
     action: commonAction,
     decodeAction: decodeCommonAction,
-    state: commonState,
-    decodeState: decodeCommonState,
-
 } = require('../action');
-const state = Object.assign({}, commonState,{
+
+const state = {
     inactive: 2001,          // 待推送
     active: 2002,            // 推送中
     confirmed: 2003,         // 用户已确认
     completed: 2004,         // 复查完成
     expired: 100001,        // 过期
     killed: 100010,         // 用户已回绝
-});
+};
 
 const decodeState = (s) => {
     const S = {
@@ -27,7 +25,7 @@ const decodeState = (s) => {
         [state.killed]: '已回绝'
     };
 
-    return S[s] || decodeCommonState(s);
+    return S[s];
 };
 
 const action = Object.assign({}, commonAction, {
