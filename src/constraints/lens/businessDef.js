@@ -28,7 +28,6 @@ const {
     action: RecheckAction,
     state: RecheckState,
     STATE_TRANS_MATRIX: RECHECK_STATE_TRANS_MATRIX,
-    relation: RecheckRelation,
 } = require('../../constants/lens/recheck');
 const {
     action: RecordAction,
@@ -869,7 +868,7 @@ const AUTH_MATRIX = {
     },
     diagnosis: {
         [DiagnosisAction.create]: {
-                auths: [
+                auths: /*[
                     {
                         '#exists': [
                             {
@@ -886,7 +885,7 @@ const AUTH_MATRIX = {
                             },
                         ],
                     },
-                ],
+                ]*/AllowEveryoneAuth,           // brand的管理员应该也有此项权限，所以没法写成auth
         },
         [DiagnosisAction.update]: AllowEveryoneAuth,
             // {
