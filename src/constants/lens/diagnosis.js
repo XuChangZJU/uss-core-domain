@@ -25,7 +25,7 @@ const category = {
 }
 const decodeCategory = (c) => {
     const C = {
-        [category.成镜]: 1,
+        [category.配镜]: 1,
         [category.角膜塑形镜]: 2,
         [category.成镜]: 3,
         [category.耗品]: 4,
