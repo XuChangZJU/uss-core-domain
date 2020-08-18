@@ -1,15 +1,21 @@
 /**
  * Created by Xc on 2020/2/20.
  */
-const { action: commonAction, decodeAction: decodeCommonAction } = require('../action');
-const state = {
+const {
+    action: commonAction,
+    decodeAction: decodeCommonAction,
+    state: commonState,
+    decodeState: decodeCommonState,
+
+} = require('../action');
+const state = Object.assign({}, commonState,{
     inactive: 2001,          // 待推送
     active: 2002,            // 推送中
     confirmed: 2003,         // 用户已确认
     completed: 2004,         // 复查完成
     expired: 100001,        // 过期
     killed: 100010,         // 用户已回绝
-};
+});
 
 const decodeState = (s) => {
     const S = {
@@ -21,16 +27,16 @@ const decodeState = (s) => {
         [state.killed]: '已回绝'
     };
 
-    return S[s];
+    return S[s] || decodeCommonState(s);
 };
 
-const action = {
+const action = Object.assign({}, commonAction, {
     activate: 2002,
     confirm: 2003,
     complete: 2004,
     expire: 2005,
     kill: 2006,
-};
+});
 
 const decodeAction = (a) => {
     const S = {
@@ -41,7 +47,7 @@ const decodeAction = (a) => {
         [action.kill]: '回绝',
     };
 
-    return S[a];
+    return S[a] || decodeCommonAction(a);
 };
 
 const STATE_TRANS_MATRIX = {
