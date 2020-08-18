@@ -21,7 +21,7 @@ const category = {
     'visionTraining': 5,
     'makeGlassesRecheck': 6,
     'OKGlassesRecheck': 7,
-    'visionTraining': 8,
+    'visionTrainingRecheck': 8,
 }
 const decodeCategory = (c) => {
     const C = {
@@ -32,7 +32,7 @@ const decodeCategory = (c) => {
         [category.visionTraining]: '视训',
         [category.makeGlassesRecheck]: '配镜复查',
         [category.OKGlassesRecheck]: '角膜塑形镜复查',
-        [category.visionTraining]: '视训复查',
+        [category.visionTrainingRecheck]: '视训复查',
     }
     return C[c];
 }
