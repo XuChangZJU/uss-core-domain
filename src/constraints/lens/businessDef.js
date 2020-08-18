@@ -1134,6 +1134,32 @@ const AUTH_MATRIX = {
                 }
             ],
         },
+        [RecheckAction.confirm]: {
+            auths: [
+                {
+                    '#exists': [
+                        {
+                            relation: 'diagnosis',
+                            condition: ({user, row}) => {
+                                const { diagnosisId } = row;
+                                const query = {
+                                    id: diagnosisId,
+                                    userId: user.id,
+                                };
+                                return  query;
+                            },
+                        },
+                    ],
+                    '#data': [                 // 表示对现有对象或者用户的数据有要求，可以有多项，每项之间是AND的关系
+                        {
+                            check: ({user, row}) => {
+                                return row.state === RecheckState.active;
+                            },
+                        }
+                    ],
+                },
+            ]
+        },
         [RecheckAction.remove]: {
             auths: [
                 {
