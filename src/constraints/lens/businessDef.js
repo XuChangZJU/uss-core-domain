@@ -867,8 +867,7 @@ const AUTH_MATRIX = {
         [PatientAction.authAbandon]: AnyRelationAuth,
     },
     diagnosis: {
-        [DiagnosisAction.create]: {
-                auths: /*[
+        [DiagnosisAction.create]: /*[
                     {
                         '#exists': [
                             {
@@ -886,7 +885,6 @@ const AUTH_MATRIX = {
                         ],
                     },
                 ]*/AllowEveryoneAuth,           // brand的管理员应该也有此项权限，所以没法写成auth
-        },
         [DiagnosisAction.update]: AllowEveryoneAuth,
             // {
         //     auths: [
