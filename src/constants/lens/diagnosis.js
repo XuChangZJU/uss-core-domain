@@ -25,14 +25,14 @@ const category = {
 }
 const decodeCategory = (c) => {
     const C = {
-        [category.makeGlasses]: 1,
-        [category.OKGlasses]: 2,
-        [category.DoneGlasses]: 3,
-        [category.consumables]: 4,
-        [category.visionTraining]: 5,
-        [category.makeGlassesRecheck]: 6,
-        [category.OKGlassesRecheck]: 7,
-        [category.visionTraining]: 8,
+        [category.makeGlasses]: '配镜',
+        [category.OKGlasses]: '角膜塑形镜',
+        [category.DoneGlasses]: '成镜',
+        [category.consumables]: '耗品',
+        [category.visionTraining]: '视训',
+        [category.makeGlassesRecheck]: '配镜复查',
+        [category.OKGlassesRecheck]: '角膜塑形镜复查',
+        [category.visionTraining]: '视训复查',
     }
     return C[c];
 }
