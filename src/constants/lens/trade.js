@@ -33,7 +33,7 @@ const decodeTransportState = (ts) => {
         [transportState.dfl]: '待发料',
         [transportState.dzdjh]: '定做待缴回',
         [transportState.dqhcl]: '待缺货处理',
-        [transportState.dqj]: '待取件',
+        [transportState.dqj]: '已发货',
         [transportState.ydd]: '已到店',
         [transportState.yqj]: '已取件',
         [transportState.tdywc]: '退单已完成',
@@ -87,9 +87,9 @@ const decodeAction = (a) => {
 
 const STATE_TRAN_MATRIX = {
     [action.confirmArriveAtShop]: [[transportState.dfl, transportState.dzdjh, transportState.dqhcl], transportState.ydd],
-    [action.confirmGet]: [[transportState.ydd], transportState.yqj],
+    [action.confirmGet]: [transportState.ydd, transportState.yqj],
     [action.confirmPick]:  [[transportState.dqj], transportState.yqj],
-    [action.send]: [transportState.ydd, transportState.dqj],
+    [action.send]: [[transportState.dfl, transportState.dzdjh, transportState.dqhcl, transportState.ydd], transportState.dqj],
 };
 module.exports = {
     action,
