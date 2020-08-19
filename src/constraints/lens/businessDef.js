@@ -930,65 +930,65 @@ const AUTH_MATRIX = {
         }
     },
     recheck: {
-        [RecheckAction.create]: {
-            auths: [
-                {
-                    '#exists': [
-                        {
-                            relation: 'diagnosis',
-                            needData: true,
-                            condition: ({ user, actionData }) => {
-                                const { recheck } = actionData;
-                                let query = {
-                                    id: recheck.diagnosisId,
-                                };
-                                const has = {
-                                    name: 'userOrganization',
-                                    projection: {
-                                        id: 1,
-                                    },
-                                    query: {
-                                        userId: user.id,
-                                        organizationId: {
-                                            $ref: query,
-                                            $attr: 'organizationId',
-                                        },
-                                    },
-                                };
-                                Object.assign(query, { $has: has });
-
-                                return query;
-                            }
-                        },
-                        {
-                            relation: 'diagnosis',
-                            needData: true,
-                            condition: ({ user, actionData }) => {
-                                const { recheck } = actionData;
-                                let query = {
-                                    id: recheck.diagnosisId,
-                                };
-                                const has = {
-                                    name: 'userPatient',
-                                    projection: {
-                                        id: 1,
-                                    },
-                                    query: {
-                                        userId: user.id,
-                                        patientId: {
-                                            $ref: query,
-                                            $attr: 'patientId',
-                                        },
-                                    },
-                                };
-                                Object.assign(query, { $has: has });
-                                return query;
-                            }
-                        },
-                    ],
-                },
-            ],
-        },
+        // [RecheckAction.create]: {
+        //     auths: [
+        //         {
+        //             '#exists': [
+        //                 {
+        //                     relation: 'diagnosis',
+        //                     needData: true,
+        //                     condition: ({ user, actionData }) => {
+        //                         const { recheck } = actionData;
+        //                         let query = {
+        //                             id: recheck.diagnosisId,
+        //                         };
+        //                         const has = {
+        //                             name: 'userOrganization',
+        //                             projection: {
+        //                                 id: 1,
+        //                             },
+        //                             query: {
+        //                                 userId: user.id,
+        //                                 organizationId: {
+        //                                     $ref: query,
+        //                                     $attr: 'organizationId',
+        //                                 },
+        //                             },
+        //                         };
+        //                         Object.assign(query, { $has: has });
+        //
+        //                         return query;
+        //                     }
+        //                 },
+        //                 {
+        //                     relation: 'diagnosis',
+        //                     needData: true,
+        //                     condition: ({ user, actionData }) => {
+        //                         const { recheck } = actionData;
+        //                         let query = {
+        //                             id: recheck.diagnosisId,
+        //                         };
+        //                         const has = {
+        //                             name: 'userPatient',
+        //                             projection: {
+        //                                 id: 1,
+        //                             },
+        //                             query: {
+        //                                 userId: user.id,
+        //                                 patientId: {
+        //                                     $ref: query,
+        //                                     $attr: 'patientId',
+        //                                 },
+        //                             },
+        //                         };
+        //                         Object.assign(query, { $has: has });
+        //                         return query;
+        //                     }
+        //                 },
+        //             ],
+        //         },
+        //     ],
+        // },
         [RecheckAction.update]: {
             auths: [
                 {
@@ -1045,69 +1045,69 @@ const AUTH_MATRIX = {
                 }
             ],
         },
-        [RecheckAction.complete]: {
-            auths: [
-                {
-                    '#exists': [
-                        {
-                            relation: 'diagnosis',
-                            condition: ({user, row}) => {
-                                const { diagnosisId } = row;
-                                let query = {
-                                    id: diagnosisId,
-                                };
-                                const has = {
-                                    name: 'userOrganization',
-                                    projection: {
-                                        id: 1,
-                                    },
-                                    query: {
-                                        userId: user.id,
-                                        organizationId: {
-                                            $ref: query,
-                                            $attr: 'organizationId',
-                                        },
-                                    },
-                                };
-                                Object.assign(query, { $has: has });
-                                return query;
-                            },
-                        },
-                        {
-                            relation: 'diagnosis',
-                            condition: ({user, row}) => {
-                                const { diagnosisId } = row;
-                                let query = {
-                                    id: diagnosisId,
-                                };
-                                const has = {
-                                    name: 'userPatient',
-                                    projection: {
-                                        id: 1,
-                                    },
-                                    query: {
-                                        userId: user.id,
-                                        patientId: {
-                                            $ref: query,
-                                            $attr: 'patientId',
-                                        },
-                                    },
-                                };
-                                Object.assign(query, { $has: has });
-                                return query;
-                            },
-                        },
-                    ],
-                    '#data': [                 // 表示对现有对象或者用户的数据有要求，可以有多项，每项之间是AND的关系
-                        {
-                            check: ({user, row}) => {
-                                return row.state === RecheckState.active;
-                            },
-                        }
-                    ],
-                }
-            ],
-        },
+        // [RecheckAction.complete]: {
+        //     auths: [
+        //         {
+        //             '#exists': [
+        //                 {
+        //                     relation: 'diagnosis',
+        //                     condition: ({user, row}) => {
+        //                         const { diagnosisId } = row;
+        //                         let query = {
+        //                             id: diagnosisId,
+        //                         };
+        //                         const has = {
+        //                             name: 'userOrganization',
+        //                             projection: {
+        //                                 id: 1,
+        //                             },
+        //                             query: {
+        //                                 userId: user.id,
+        //                                 organizationId: {
+        //                                     $ref: query,
+        //                                     $attr: 'organizationId',
+        //                                 },
+        //                             },
+        //                         };
+        //                         Object.assign(query, { $has: has });
+        //                         return query;
+        //                     },
+        //                 },
+        //                 {
+        //                     relation: 'diagnosis',
+        //                     condition: ({user, row}) => {
+        //                         const { diagnosisId } = row;
+        //                         let query = {
+        //                             id: diagnosisId,
+        //                         };
+        //                         const has = {
+        //                             name: 'userPatient',
+        //                             projection: {
+        //                                 id: 1,
+        //                             },
+        //                             query: {
+        //                                 userId: user.id,
+        //                                 patientId: {
+        //                                     $ref: query,
+        //                                     $attr: 'patientId',
+        //                                 },
+        //                             },
+        //                         };
+        //                         Object.assign(query, { $has: has });
+        //                         return query;
+        //                     },
+        //                 },
+        //             ],
+        //             '#data': [                 // 表示对现有对象或者用户的数据有要求，可以有多项，每项之间是AND的关系
+        //                 {
+        //                     check: ({user, row}) => {
+        //                         return row.state === RecheckState.active;
+        //                     },
+        //                 }
+        //             ],
+        //         }
+        //     ],
+        // },
         [RecheckAction.confirm]: {
             auths: [
                 {
@@ -1128,6 +1128,34 @@ const AUTH_MATRIX = {
                         {
                             check: ({user, row}) => {
                                 return row.state === RecheckState.active;
+                            },
+                        }
+                    ],
+                },
+            ]
+        },
+        [RecheckAction.kill]: {
+            auths: [
+                {
+                    '#relation': {
+                        attr: 'diagnosis.organization',
+                    },
+                    '#data': [                 // 表示对现有对象或者用户的数据有要求，可以有多项，每项之间是AND的关系
+                        {
+                            check: ({user, row}) => {
+                                return row.state === RecheckState.expired;
+                            },
+                        }
+                    ],
+                },
+                {
+                    '#relation': {
+                        attr: 'diagnosis.organization.brand',
+                    },
+                    '#data': [                 // 表示对现有对象或者用户的数据有要求，可以有多项，每项之间是AND的关系
+                        {
+                            check: ({user, row}) => {
+                                return row.state === RecheckState.expired;
                             },
                         }
                     ],
