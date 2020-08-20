@@ -588,6 +588,9 @@ const AUTH_MATRIX = {
                                 const { workerOrder } = actionData;
                                 return {
                                     tradeId: workerOrder.tradeId,
+                                    trade: {
+                                        transportState: TradeTransportState.yqj,
+                                    },
                                     userId: user.id,
                                 }
                             }
