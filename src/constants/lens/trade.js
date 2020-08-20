@@ -87,7 +87,7 @@ const decodeAction = (a) => {
 
 const STATE_TRAN_MATRIX = {
     [action.confirmArriveAtShop]: [[transportState.dfl, transportState.dzdjh, transportState.dqhcl], transportState.dqj],
-    [action.confirmGet]: [transportState.ydd, transportState.yqj],
+    [action.confirmGet]: [transportState.yfh, transportState.yqj],
     [action.confirmPick]:  [[transportState.dqj], transportState.yqj],
     [action.send]: [[transportState.dfl, transportState.dzdjh, transportState.dqhcl, transportState.dqj], transportState.yfh],
 };
