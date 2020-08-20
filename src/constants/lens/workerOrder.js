@@ -3,6 +3,8 @@ const {
     decodeAction: decodeCommonAction,
     state: commonState,
     decodeState: decodeCommonState,
+    relation,
+    decodeRelation,
 } = require('../action');
 const type =  {
     refund: 1,
@@ -66,6 +68,8 @@ module.exports = {
     decodeAction,
     state,
     decodeState,
+    relation,
+    decodeRelation,
     type,
     decodeType,
     STATE_TRAN_MATRIX,

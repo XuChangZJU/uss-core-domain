@@ -11,6 +11,7 @@ const {
 } = require('../../constants/lens/trade');
 const {
     action: WorkerOrderAction,
+    relation: WorkerOrderRelation,
     state: WorkerOrderState,
     STATE_TRAN_MATRIX: WORKERORDER_STATE_TRAN_MATRIX,
 } = require('../../constants/lens/workerOrder')
@@ -799,6 +800,7 @@ const AUTH_MATRIX = {
                 {
                     "#relation": {
                         attr: 'trade.diagnosis.patient',
+                        relations: [WorkerOrderRelation.owner],
                     },
                     '#data': [                 // 表示对现有对象或者用户的数据有要求，可以有多项，每项之间是AND的关系
                         {
