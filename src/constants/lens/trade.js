@@ -74,10 +74,10 @@ const decodeAction = (a) => {
 };
 
 const STATE_TRAN_MATRIX = {
-    [action.confirmArriveAtShop]: [[transportState.dfl, transportState.dzdjh, transportState.dqhcl], transportState.dqj],
+    [action.confirmArriveAtShop]: [transportState.wdd, transportState.dqj],
     [action.confirmGet]: [transportState.yfh, transportState.yqj],
-    [action.confirmPick]:  [[transportState.dqj], transportState.yqj],
-    [action.send]: [[transportState.dfl, transportState.dzdjh, transportState.dqhcl, transportState.dqj], transportState.yfh],
+    [action.confirmPick]:  [transportState.dqj, transportState.yqj],
+    [action.send]: [transportState.wdd, transportState.yfh],
 };
 module.exports = {
     action,
