@@ -5,13 +5,15 @@ const {
     decodeAction
 } = require('../action');
 const relation = Object.assign({}, commonRelation, {
-    worker: 301
+    worker: 301,
+    customerService: 401,
 });
 
 
 const decodeRelation = (r) => {
     const S = {
         [relation.worker]: '工作人员',
+        [relation.customerService]: '客服'
     };
 
     return S[r] || decodeCommonRelation(r);

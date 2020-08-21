@@ -843,7 +843,35 @@ const AUTH_MATRIX = {
     },
     patient: {
         [PatientAction.create]: AllowEveryoneAuth,
-        [PatientAction.update]: AnyRelationAuth,
+        [PatientAction.update]: {
+            auths: [
+                {
+                    "#relation": {
+                        relations: [PatientRelation.owner],
+                    },
+                },
+                {
+                    '#exists': [
+                        {
+                            relation: 'userOrganization',
+                            condition: ({user, row}) => {
+                                return {
+                                    userId: user.id,
+                                }
+                            },
+                        },
+                        {
+                            relation: 'userBrand',
+                            condition: ({user, row}) => {
+                                return {
+                                    userId: user.id,
+                                }
+                            },
+                        },
+                    ],
+                },
+            ],
+        },
         [PatientAction.remove]: OwnerRelationAuth,
         [PatientAction.acquire]: AllowEveryoneAuth,
         [PatientAction.authAbandon]: AnyRelationAuth,
