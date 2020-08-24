@@ -113,7 +113,7 @@ const StockAuctionHouseWorkerExists = [
                 userId: user.id,
                 auctionHouseId,
                 relation: {
-                    $in: [auctionHouseRelation.stockKeeper, auctionHouseRelation.owner],
+                    $in: [auctionHouseRelation.stockKeeper, auctionHouseRelation.owner, auctionHouseRelation.manager],
                 },
             };
             return query;
