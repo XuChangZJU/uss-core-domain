@@ -8,15 +8,9 @@ const {
 } = require('../action');
 
 const transportState = {
-    dfl: 10001,
-    dzdjh: 10002,
-    dqhcl: 10003,
+    wdd: 10003,
     dqj: 10004,
     yqj: 10005,
-    tdywc: 10006,
-    yth: 10007,
-    yzf: 10008,
-    tddcksh: 10009,
     yfh: 10010,
 };
 
@@ -30,16 +24,10 @@ const getActionStateAttr = (action) => {
 
 const decodeTransportState = (ts) => {
     const TS = {
-        [transportState.dfl]: '待发料',
-        [transportState.dzdjh]: '定做待缴回',
-        [transportState.dqhcl]: '待缺货处理',
+        [transportState.wdd]: '未到店',
         [transportState.dqj]: '待取件（到店）',
         [transportState.yfh]: '已发货',        // 快递已发出
         [transportState.yqj]: '已取件',
-        [transportState.tdywc]: '退单已完成',
-        [transportState.yth]: '已退货',
-        [transportState.yzf]: '已作废',
-        [transportState.tddcksh]: '退单待仓库审核',
     };
     return TS[ts];
 };
@@ -86,10 +74,10 @@ const decodeAction = (a) => {
 };
 
 const STATE_TRAN_MATRIX = {
-    [action.confirmArriveAtShop]: [[transportState.dfl, transportState.dzdjh, transportState.dqhcl], transportState.dqj],
+    [action.confirmArriveAtShop]: [transportState.wdd, transportState.dqj],
     [action.confirmGet]: [transportState.yfh, transportState.yqj],
-    [action.confirmPick]:  [[transportState.dqj], transportState.yqj],
-    [action.send]: [[transportState.dfl, transportState.dzdjh, transportState.dqhcl, transportState.dqj], transportState.yfh],
+    [action.confirmPick]:  [transportState.dqj, transportState.yqj],
+    [action.send]: [transportState.wdd, transportState.yfh],
 };
 module.exports = {
     action,

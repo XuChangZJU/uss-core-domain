@@ -13,6 +13,7 @@ const {
 } = require('./common');
 
 const action = Object.assign({}, commonAction, {
+    eternaliseQrCode: 2001,
     bind: 1001,
 });
 
@@ -37,6 +38,7 @@ function decodeCategory(o) {
 const decodeAction = (a) => {
     const TEXT = {
         [action.bind]: '绑定',
+        [action.eternaliseQrCode]: '二维码变为永久',
     };
     return TEXT[a] || decodeCommonAction(a);
 };

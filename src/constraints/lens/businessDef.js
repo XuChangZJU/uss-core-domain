@@ -402,7 +402,7 @@ const AUTH_MATRIX = {
                     '#data': [                 // 表示对现有对象或者用户的数据有要求，可以有多项，每项之间是AND的关系
                         {
                             check: ({user, row}) => {
-                                return [TradeTransportState.dqhcl, TradeTransportState.dzdjh, TradeTransportState.dfl].includes(row.transportState);
+                                return [TradeTransportState.wdd].includes(row.transportState);
                             },
                         }
                     ],
@@ -414,7 +414,7 @@ const AUTH_MATRIX = {
                     '#data': [                 // 表示对现有对象或者用户的数据有要求，可以有多项，每项之间是AND的关系
                         {
                             check: ({user, row}) => {
-                                return [TradeTransportState.dqhcl, TradeTransportState.dzdjh, TradeTransportState.dfl].includes(row.transportState);
+                                return [TradeTransportState.wdd].includes(row.transportState);
                             },
                         }
                     ],
@@ -425,7 +425,7 @@ const AUTH_MATRIX = {
                     '#data': [                 // 表示对现有对象或者用户的数据有要求，可以有多项，每项之间是AND的关系
                         {
                             check: ({user, row}) => {
-                                return [TradeTransportState.dqhcl, TradeTransportState.dzdjh, TradeTransportState.dfl].includes(row.transportState);
+                                return [TradeTransportState.wdd].includes(row.transportState);
                             },
                         }
                     ],
@@ -486,7 +486,7 @@ const AUTH_MATRIX = {
                     '#data': [                 // 表示对现有对象或者用户的数据有要求，可以有多项，每项之间是AND的关系
                         {
                             check: ({user, row}) => {
-                                return [TradeTransportState.dqhcl, TradeTransportState.dzdjh, TradeTransportState.dfl].includes(row.transportState) && row.getMethod === TradeGetMethod.helpYourself;
+                                return [TradeTransportState.wdd].includes(row.transportState) && row.getMethod === TradeGetMethod.helpYourself;
                             },
                         }
                     ],
@@ -498,7 +498,7 @@ const AUTH_MATRIX = {
                     '#data': [                 // 表示对现有对象或者用户的数据有要求，可以有多项，每项之间是AND的关系
                         {
                             check: ({user, row}) => {
-                                return [TradeTransportState.dqhcl, TradeTransportState.dzdjh, TradeTransportState.dfl].includes(row.transportState) && row.getMethod !== TradeGetMethod.helpYourself;
+                                return [TradeTransportState.wdd].includes(row.transportState) && row.getMethod === TradeGetMethod.helpYourself;
                             },
                         }
                     ],
@@ -514,7 +514,7 @@ const AUTH_MATRIX = {
                     '#data': [                 // 表示对现有对象或者用户的数据有要求，可以有多项，每项之间是AND的关系
                         {
                             check: ({user, row}) => {
-                                return [TradeTransportState.dqhcl, TradeTransportState.dzdjh, TradeTransportState.dfl, TradeTransportState.dqj].includes(row.transportState) && row.getMethod === TradeGetMethod.express;
+                                return [TradeTransportState.wdd, TradeTransportState.dqj].includes(row.transportState) && row.getMethod === TradeGetMethod.express;
                             },
                         }
                     ],
@@ -526,7 +526,7 @@ const AUTH_MATRIX = {
                     '#data': [                 // 表示对现有对象或者用户的数据有要求，可以有多项，每项之间是AND的关系
                         {
                             check: ({user, row}) => {
-                                return [TradeTransportState.dqhcl, TradeTransportState.dzdjh, TradeTransportState.dfl, TradeTransportState.dqj].includes(row.transportState) && row.getMethod === TradeGetMethod.express;
+                                return [TradeTransportState.wdd, TradeTransportState.dqj].includes(row.transportState) && row.getMethod === TradeGetMethod.express;
                             },
                         }
                     ],
@@ -625,72 +625,25 @@ const AUTH_MATRIX = {
                 },
             ],
         },
-        // [WorkerOrderAction.update]: {
-        //     auths: [
-        //         {
-        //             '#exists': [
-        //                 {
-        //                     relation: 'userTrade',
-        //                     condition: ({user, row}) => {
-        //                         const { tradeId } = row;
-        //                         // let query = {
-        //                         //     id: diagnosisId,
-        //                         // };
-        //                         // const has = {
-        //                         //     name: 'userWorker',
-        //                         //     projection: {
-        //                         //         id: 1,
-        //                         //     },
-        //                         //     query: {
-        //                         //         userId: user.id,
-        //                         //         workerId: {
-        //                         //             $ref: query,
-        //                         //             $attr: 'workerId',
-        //                         //         },
-        //                         //     },
-        //                         // };
-        //                         // Object.assign(query, { $has: has });
-        //                         return {
-        //                             tradeId: row.tradeId,
-        //                             userId: user.id,
-        //                         }
-        //                     },
-        //                 },
-        //                 // {
-        //                 //     relation: 'diagnosis',
-        //                 //     condition: ({user, row}) => {
-        //                 //         const { diagnosisId } = row;
-        //                 //         let query = {
-        //                 //             id: diagnosisId,
-        //                 //         };
-        //                 //         const has = {
-        //                 //             name: 'userPatient',
-        //                 //             projection: {
-        //                 //                 id: 1,
-        //                 //             },
-        //                 //             query: {
-        //                 //                 userId: user.id,
-        //                 //                 workerId: {
-        //                 //                     $ref: query,
-        //                 //                     $attr: 'patientId',
-        //                 //                 },
-        //                 //             },
-        //                 //         };
-        //                 //         Object.assign(query, { $has: has });
-        //                 //         return query;
-        //                 //     },
-        //                 // },
-        //             ],
-        //             '#data': [                 // 表示对现有对象或者用户的数据有要求，可以有多项，每项之间是AND的关系
-        //                 {
-        //                     check: ({user, row}) => {
-        //                         return row.state === WorkerOrderState.pending;
-        //                     },
-        //                 }
-        //             ],
-        //         }
-        //     ],
-        // },
+        [WorkerOrderAction.update]: {
+            auths: [
+                {
+                    "#relation": {
+                        attr: 'trade.diagnosis.organization',
+                    },
+                },
+                {
+                    "#relation": {
+                        attr: 'trade.diagnosis.organization.brand',
+                    },
+                },
+                {
+                    "#relation": {
+                        attr: '',
+                    },
+                }
+            ],
+        },
         [WorkerOrderAction.remove]: {
             auths: [
                 {
@@ -843,7 +796,35 @@ const AUTH_MATRIX = {
     },
     patient: {
         [PatientAction.create]: AllowEveryoneAuth,
-        [PatientAction.update]: AnyRelationAuth,
+        [PatientAction.update]: {
+            auths: [
+                {
+                    "#relation": {
+                        relations: [PatientRelation.owner],
+                    },
+                },
+                {
+                    '#exists': [
+                        {
+                            relation: 'userOrganization',
+                            condition: ({user, row}) => {
+                                return {
+                                    userId: user.id,
+                                }
+                            },
+                        },
+                        {
+                            relation: 'userBrand',
+                            condition: ({user, row}) => {
+                                return {
+                                    userId: user.id,
+                                }
+                            },
+                        },
+                    ],
+                },
+            ],
+        },
         [PatientAction.remove]: OwnerRelationAuth,
         [PatientAction.acquire]: AllowEveryoneAuth,
         [PatientAction.authAbandon]: AnyRelationAuth,
@@ -1438,6 +1419,21 @@ const AUTH_MATRIX = {
                     },
                 ],
             }]
+        },
+        [OrganizationAction.eternaliseQrCode]: {
+            auths: [
+                {
+                    "#relation": {
+                        relations: [OrganizationRelation.owner],
+                    },
+                },
+                {
+                    "#relation": {
+                        attr: 'brand',
+                        relations: [BrandRelation.owner],
+                    },
+                }
+            ]
         },
         // [OrganizationAction.transfer]:{
         //     auths: [
