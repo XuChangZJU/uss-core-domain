@@ -1532,15 +1532,30 @@ const AUTH_MATRIX = {
                 },
             ]
         },
-        [OrganizationAction.authAbandon]: {
+        // [OrganizationAction.authAbandon]: {
+        //     auths: [
+        //         {
+        //             "#relation": {
+        //             },
+        //         },
+        //         {
+        //             "#relation": {
+        //                 attr: 'brand',
+        //             },
+        //         }
+        //     ]
+        // },
+        [OrganizationAction.authRevoke]: {
             auths: [
                 {
-                    "#relation": {
+                    "#relation":{
+                        relations: [OrganizationRelation.owner, OrganizationRelation.manager],
                     },
                 },
                 {
                     "#relation": {
                         attr: 'brand',
+                        relations: [BrandRelation.owner, BrandRelation.manager],
                     },
                 }
             ]
