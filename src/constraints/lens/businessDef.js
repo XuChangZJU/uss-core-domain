@@ -805,6 +805,7 @@ const AUTH_MATRIX = {
         [BrandAction.transfer]: OwnerRelationAuth,
         [BrandAction.authGrantMulti2]: OwnerRelationAuth,
         [BrandAction.authRevoke]: OwnerRelationAuth,
+        [BrandAction.authAbandon]: OwnerRelationAuth,
         [BrandAction.remove]: OwnerRelationAuth,
     },
     patient: {
@@ -1529,6 +1530,19 @@ const AUTH_MATRIX = {
                         },
                     }]
                 },
+            ]
+        },
+        [OrganizationAction.authAbandon]: {
+            auths: [
+                {
+                    "#relation": {
+                    },
+                },
+                {
+                    "#relation": {
+                        attr: 'brand',
+                    },
+                }
             ]
         },
         [OrganizationAction.disable]: {

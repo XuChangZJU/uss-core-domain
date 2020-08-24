@@ -2,8 +2,9 @@ const {
     relation: commonRelation,
     decodeRelation: decodeCommonRelation,
     action,
-    decodeAction
+    decodeAction,
 } = require('../action');
+
 const relation = Object.assign({}, commonRelation, {
     worker: 301,
     customerService: 401,
