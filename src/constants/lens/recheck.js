@@ -22,7 +22,7 @@ const decodeState = (s) => {
         [state.confirmed]: '已确认',
         [state.completed]: '已完成',
         [state.expired]: '已过期',
-        [state.killed]: '已回绝'
+        [state.killed]: '已被回绝'
     };
 
     return S[s];

@@ -625,72 +625,25 @@ const AUTH_MATRIX = {
                 },
             ],
         },
-        // [WorkerOrderAction.update]: {
-        //     auths: [
-        //         {
-        //             '#exists': [
-        //                 {
-        //                     relation: 'userTrade',
-        //                     condition: ({user, row}) => {
-        //                         const { tradeId } = row;
-        //                         // let query = {
-        //                         //     id: diagnosisId,
-        //                         // };
-        //                         // const has = {
-        //                         //     name: 'userWorker',
-        //                         //     projection: {
-        //                         //         id: 1,
-        //                         //     },
-        //                         //     query: {
-        //                         //         userId: user.id,
-        //                         //         workerId: {
-        //                         //             $ref: query,
-        //                         //             $attr: 'workerId',
-        //                         //         },
-        //                         //     },
-        //                         // };
-        //                         // Object.assign(query, { $has: has });
-        //                         return {
-        //                             tradeId: row.tradeId,
-        //                             userId: user.id,
-        //                         }
-        //                     },
-        //                 },
-        //                 // {
-        //                 //     relation: 'diagnosis',
-        //                 //     condition: ({user, row}) => {
-        //                 //         const { diagnosisId } = row;
-        //                 //         let query = {
-        //                 //             id: diagnosisId,
-        //                 //         };
-        //                 //         const has = {
-        //                 //             name: 'userPatient',
-        //                 //             projection: {
-        //                 //                 id: 1,
-        //                 //             },
-        //                 //             query: {
-        //                 //                 userId: user.id,
-        //                 //                 workerId: {
-        //                 //                     $ref: query,
-        //                 //                     $attr: 'patientId',
-        //                 //                 },
-        //                 //             },
-        //                 //         };
-        //                 //         Object.assign(query, { $has: has });
-        //                 //         return query;
-        //                 //     },
-        //                 // },
-        //             ],
-        //             '#data': [                 // 表示对现有对象或者用户的数据有要求，可以有多项，每项之间是AND的关系
-        //                 {
-        //                     check: ({user, row}) => {
-        //                         return row.state === WorkerOrderState.pending;
-        //                     },
-        //                 }
-        //             ],
-        //         }
-        //     ],
-        // },
+        [WorkerOrderAction.update]: {
+            auths: [
+                {
+                    "#relation": {
+                        attr: 'trade.diagnosis.organization',
+                    },
+                },
+                {
+                    "#relation": {
+                        attr: 'trade.diagnosis.organization.brand',
+                    },
+                },
+                {
+                    "#relation": {
+                        attr: '',
+                    },
+                }
+            ],
+        },
         [WorkerOrderAction.remove]: {
             auths: [
                 {
