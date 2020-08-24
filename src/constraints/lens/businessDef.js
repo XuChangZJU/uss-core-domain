@@ -1420,21 +1420,21 @@ const AUTH_MATRIX = {
                 ],
             }]
         },
-        [OrganizationAction.eternaliseQrCode]: {
-            auths: [
-                {
-                    "#relation": {
-                        relations: [OrganizationRelation.owner],
-                    },
-                },
-                {
-                    "#relation": {
-                        attr: 'brand',
-                        relations: [BrandRelation.owner],
-                    },
-                }
-            ]
-        },
+        // [OrganizationAction.eternaliseQrCode]: {
+        //     auths: [
+        //         {
+        //             "#relation": {
+        //                 relations: [OrganizationRelation.owner],
+        //             },
+        //         },
+        //         {
+        //             "#relation": {
+        //                 attr: 'brand',
+        //                 relations: [BrandRelation.owner],
+        //             },
+        //         }
+        //     ]
+        // },
         // [OrganizationAction.transfer]:{
         //     auths: [
         //         {
