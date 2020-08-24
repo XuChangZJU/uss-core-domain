@@ -13,7 +13,7 @@ const relation = Object.assign({}, commonRelation, {
 const decodeRelation = (r) => {
     const S = {
         [relation.worker]: '工作人员',
-        [relation.customerService]: '客服'
+        [relation.customerService]: '运营人员'
     };
 
     return S[r] || decodeCommonRelation(r);
