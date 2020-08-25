@@ -14,6 +14,20 @@ const transportState = {
     yfh: 10010,
 };
 
+const messageState = {
+    sending: 10001,
+    success: 10002,
+    failure: 10003,
+};
+
+const decodeMessageState = (s) => {
+    const STRINGS = {
+        [messageState.sending]: '发送中',
+        [messageState.success]: '发送成功',
+        [messageState.failure]: '发送失败',
+    }
+};
+
 const getActionStateAttr = (action) => {
     if (action > 10000) {
         return 'transportState';
@@ -90,6 +104,8 @@ module.exports = {
     decodeGetMethod,
     transportState,
     decodeTransportState,
+    messageState,
+    decodeMessageState,
     getActionStateAttr,
     STATE_TRAN_MATRIX,
 };
