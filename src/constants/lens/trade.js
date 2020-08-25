@@ -26,6 +26,7 @@ const decodeMessageState = (s) => {
         [messageState.success]: '发送成功',
         [messageState.failure]: '发送失败',
     }
+    return STRINGS[s];
 };
 
 const getActionStateAttr = (action) => {

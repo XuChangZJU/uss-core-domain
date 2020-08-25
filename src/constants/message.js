@@ -30,6 +30,7 @@ const decodeState = (s) => {
         [state.success]: '发送成功',
         [state.failure]: '发送失败',
     }
+    return STRINGS[s];
 };
 
 module.exports = {
