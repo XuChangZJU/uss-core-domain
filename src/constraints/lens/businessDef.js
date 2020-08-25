@@ -804,7 +804,44 @@ const AUTH_MATRIX = {
         [BrandAction.update]: OwnerRelationAuth,
         [BrandAction.transfer]: OwnerRelationAuth,
         [BrandAction.authGrantMulti2]: OwnerRelationAuth,
-        [BrandAction.authRevoke]: OwnerRelationAuth,
+        [BrandAction.authRevoke]: {
+            auths: [
+                {
+                    '#exists': [
+                        {
+                            relation: 'userBrand',
+                            needData: true,
+                            condition: ({ user, row, actionData }) => {
+                                const { userBrand } = actionData;
+
+                                if(userBrand.relation === BrandRelation.owner){
+                                    return {
+                                        relation: -1,
+                                    }
+                                }
+                                if(userBrand.relation === BrandRelation.manager){
+                                    return {
+                                        userId: user.id,
+                                        auctionHouseId: row.id,
+                                        relation: {
+                                            $in: [BrandRelation.owner],
+                                        },
+                                    }
+                                }
+
+                                return {
+                                    userId: user.id,
+                                    auctionHouseId: row.id,
+                                    relation: {
+                                        $in: [BrandRelation.owner, BrandRelation.manager],
+                                    },
+                                }
+                            },
+                        },
+                    ],
+                }
+            ]
+        },
         [BrandAction.authAbandon]: OwnerRelationAuth,
         [BrandAction.remove]: OwnerRelationAuth,
     },
