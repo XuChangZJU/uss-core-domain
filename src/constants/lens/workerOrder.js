@@ -25,7 +25,7 @@ const state = Object.assign({}, commonState, {
     pending: 301,
     accepted: 401,
     refused: 410,
-    // finished: 501,
+    finished: 501,
 });
 
 const decodeState = (s) => {
@@ -33,7 +33,7 @@ const decodeState = (s) => {
         [state.pending]: '待处理',
         [state.accepted]: '已同意',
         [state.refused]: '已拒绝',
-        // [state.finished]: '已完成'
+        [state.finished]: '已完成'
     };
 
     return S[s] || decodeCommonState(s);
