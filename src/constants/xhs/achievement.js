@@ -22,7 +22,7 @@ const decodeCategory = (c) => {
     return T[c];
 }
 
-const action = pick(CommonAction, ['update']);
+const action = pick(CommonAction, ['create','update','remove']);
 
 module.exports = {
     category: category,
