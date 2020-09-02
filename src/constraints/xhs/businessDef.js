@@ -8,6 +8,10 @@ const {
 } = require('../../constants/xhs/member');
 
 const {
+    action: AchievementAction,
+} = require('../../constants/xhs/achievement');
+
+const {
     AllowEveryoneAuth,
     OwnerRelationAuth,
     AnyRelationAuth,
@@ -15,35 +19,22 @@ const {
 
 const { Roles } = require('../../constants/lens/roles');
 
-
-
-
-
-const OrganizationOwnerAndBrandWorker = {
-    auths: [
+const MemberOfAchievement = {
+    '#exists': [
         {
-            '#exists': [
-                {
-                    relation: 'userOrganization',
-                    condition: ({ user, row }) => {
-                        const { id: organizationId } = row;
-                        const query = {
-                            userId: user.id,
-                            organizationId,
-                        };
-                        return query;
+            relation: 'memberAchievement',
+            condition: ({ user, row }) => {
+                const query = {
+                    member: {
+                        userId: user.id,
                     },
-                },
-            ],
-        },
-        {
-            "#relation": {
-                attr: 'brand',
+                    achievementId: row.id,
+                };
+                return query;
             },
         },
     ],
 };
-
 
 const AUTH_MATRIX = {
     member: {
@@ -60,6 +51,38 @@ const AUTH_MATRIX = {
                 }
             ]
         }
+    },
+    achievement: {
+        [AchievementAction.create]: {
+            auths: [
+                {
+                    '#exists': [
+                        {
+                            relation: 'member',
+                            condition: ({ user }) => {
+                                const query = {
+                                    userId: user.id,
+                                    role: {
+                                        $in: [MemberRole.teacher, MemberRole.graduate],
+                                    }
+                                };
+                                return query;
+                            },
+                        },
+                    ],
+                }
+            ],
+        },
+        [AchievementAction.update]: {
+            auths: [
+                MemberOfAchievement,
+            ],
+        },
+        [AchievementAction.remove]: {
+            auths: [
+                MemberOfAchievement,
+            ],
+        },
     },
 };
 
