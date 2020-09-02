@@ -2100,33 +2100,11 @@ const AUTH_MATRIX = {
                 {
                     '#exists': [
                         {
-                            relation: 'schedule',
-                            needData: true,
-                            condition: ({ user, actionData }) => {
-                                const { clockIn } = actionData;
-                                const { scheduleId } = clockIn;
-                                const query = {
-                                    userId: user.id,
-                                    id: scheduleId,
-                                };
-                                return query;
-                            },
-                        },
-                    ],
-                },
-                {
-                    '#exists': [
-                        {
                             relation: 'userBrand',
-                            needData: true,
-                            condition: ({ user, actionData }) => {
-                                const { clockIn } = actionData;
+                            condition: ({ user }) => {
                                 // actionData取不到brandId,目前写到definition中
                                 const query = {
                                     userId: user.id,
-                                    relation: {
-                                        $in: [BrandRelation.owner, BrandRelation.customerService, BrandRelation.manager],
-                                    },
                                 };
                                 return query;
                             },
@@ -2162,8 +2140,7 @@ const AUTH_MATRIX = {
                     '#exists': [
                         {
                             relation: 'userBrand',
-                            needData: true,
-                            condition: ({ user, actionData }) => {
+                            condition: ({ user }) => {
                                 // 这里brandId取不到，权限判断写在definition里
                                 const query = {
                                     userId: user.id,
