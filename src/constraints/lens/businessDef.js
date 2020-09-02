@@ -3,6 +3,17 @@
  * Created by Xc on 2020/2/20.
  */
 const {
+    action: ClockInAction,
+    category: ClockInCategory,
+} = require('../../constants/lens/clockIn');
+const {
+    action: ScheduleAction,
+} = require('../../constants/lens/schedule');
+const {
+    action: LimitsAction,
+    type: LimitsType,
+} = require('../../constants/lens/limits');
+const {
     action: TradeAction,
     state: TradeState,
     getMethod: TradeGetMethod,
@@ -2083,6 +2094,148 @@ const AUTH_MATRIX = {
             ],
         },
     },
+    clockIn: {
+        [ClockInAction.create]: {
+            auths: [
+                {
+                    '#exists': [
+                        {
+                            relation: 'schedule',
+                            needData: true,
+                            condition: ({ user, actionData }) => {
+                                const { clockIn } = actionData;
+                                const { scheduleId } = clockIn;
+                                const query = {
+                                    userId: user.id,
+                                    id: scheduleId,
+                                };
+                                return query;
+                            },
+                        },
+                    ],
+                },
+                {
+                    '#exists': [
+                        {
+                            relation: 'userBrand',
+                            needData: true,
+                            condition: ({ user, actionData }) => {
+                                const { clockIn } = actionData;
+                                // actionData取不到brandId,目前写到definition中
+                                const query = {
+                                    userId: user.id,
+                                    relation: {
+                                        $in: [BrandRelation.owner, BrandRelation.customerService, BrandRelation.manager],
+                                    },
+                                };
+                                return query;
+                            },
+                        },
+                    ],
+                },
+            ]
+        },
+        [ClockInAction.update]: {
+            auths: [
+                {
+                    "#relation": {
+                        attr: 'organization.brand',
+                        relations: [BrandRelation.owner, BrandRelation.manager, BrandRelation.customerService],
+                    },
+                },
+                {
+                    '#data': [
+                        {
+                            check: ({ user, row }) => {
+                                return user.id === row.userId && row.category === ClockInCategory.off;
+                            },
+                        }
+                    ],
+                },
+            ]
+        },
+    },
+    schedule: {
+        [ScheduleAction.create]: {
+            auths: [
+                {
+                    '#exists': [
+                        {
+                            relation: 'userBrand',
+                            needData: true,
+                            condition: ({ user, actionData }) => {
+                                // 这里brandId取不到，权限判断写在definition里
+                                const query = {
+                                    userId: user.id,
+                                    relation: {
+                                        relation: {
+                                            $in: [BrandRelation.owner, BrandRelation.customerService, BrandRelation.manager],
+                                        },
+                                    }
+                                };
+                                return query;
+                            },
+                        },
+                    ],
+                },
+            ]
+        },
+        [ScheduleAction.update]: {
+            auths: [
+                {
+                    "#relation": {
+                        attr: 'organization.brand',
+                        relations: [BrandRelation.owner, BrandRelation.manager, BrandRelation.customerService],
+                    },
+                },
+                {
+                    '#data': [
+                        {
+                            check: ({ user, row }) => {
+                                return user.id === row.userId && row.category === ClockInCategory.off;
+                                // definition中要加一条：只能更新时间且只能向大更新
+                            },
+                        }
+                    ],
+                },
+            ]
+        },
+    },
+    limits: {
+        [LimitsAction.create]: {
+            auths: [
+                {
+                    '#exists': [
+                        {
+                            relation: 'userBrand',
+                            condition: ({ user }) => {
+                                // 需要根据类型判断，且需要actionData是，过于复杂放在defination中
+                                const query = {
+                                    userId: user.id,
+                                    relation: {
+                                        relation: {
+                                            $in: [BrandRelation.owner, BrandRelation.customerService, BrandRelation.manager, BrandRelation.seller],
+                                        },
+                                    }
+                                };
+                                return query;
+                            },
+                        },
+                    ],
+                },
+            ]
+        },
+        [LimitsAction.update]: {
+            auths: [
+                {
+                    "#relation": {
+                        attr: 'organization.brand',
+                        // 具体权限需要根据actionData
+                    },
+                },
+            ]
+        },
+    }
 };
 
 const STATE_TRAN_MATRIX = {
