@@ -2163,16 +2163,6 @@ const AUTH_MATRIX = {
                         relations: [BrandRelation.owner, BrandRelation.manager, BrandRelation.customerService],
                     },
                 },
-                {
-                    '#data': [
-                        {
-                            check: ({ user, row }) => {
-                                return user.id === row.userId && row.category === ClockInCategory.off;
-                                // definition中要加一条：只能更新时间且只能向大更新
-                            },
-                        }
-                    ],
-                },
             ]
         },
     },

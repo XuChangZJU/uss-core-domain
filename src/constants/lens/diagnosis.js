@@ -22,7 +22,7 @@ const category = {
     'makeGlassesRecheck': 6,
     'OKGlassesRecheck': 7,
     'visionTrainingRecheck': 8,
-    'check': 10,
+    'check': 9,
 }
 const decodeCategory = (c) => {
     const C = {
