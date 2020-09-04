@@ -25,8 +25,8 @@ const decodeCategory = (c) => {
 const action = pick(CommonAction, ['create','update','remove']);
 
 module.exports = {
-    category: category,
-    decodeCategory: decodeCategory,
-    action: action,
-    decodeAction: decodeAction
+    category,
+    decodeCategory,
+    action,
+    decodeAction,
 }
