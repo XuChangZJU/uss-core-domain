@@ -12,6 +12,10 @@ const {
 } = require('../../constants/xhs/achievement');
 
 const {
+    action: MemberAchievementAction,
+} = require('../../constants/xhs/memberAchievement');
+
+const {
     AllowEveryoneAuth,
     OwnerRelationAuth,
     AnyRelationAuth,
@@ -29,6 +33,24 @@ const MemberOfAchievement = {
                         userId: user.id,
                     },
                     achievementId: row.id,
+                };
+                return query;
+            },
+        },
+    ],
+};
+
+const MemberAchievementOption = {
+    '#exists': [
+        {
+            relation: 'memberAchievement',
+            condition: ({ user, row }) => {
+                const query = {
+                    member: {
+                        userId: user.id,
+                    },
+                    // achievementId: row.id,
+                    memberAchievementId: row.id,
                 };
                 return query;
             },
@@ -81,6 +103,37 @@ const AUTH_MATRIX = {
         [AchievementAction.remove]: {
             auths: [
                 MemberOfAchievement,
+            ],
+        },
+    },
+    memberAchievement: {
+        [MemberAchievementAction.create]: {
+            auths: [
+                {
+                    '#exists': [
+                        {
+                            relation: 'member',
+                            condition: ({ user }) => {
+                                const query = {
+                                    member: {
+                                        userId: user.id,
+                                    },
+                                };
+                                return query;
+                            },
+                        },
+                    ],
+                }
+            ],
+        },
+        [MemberAchievementAction.update]: {
+            auths: [
+                MemberAchievementOption,
+            ],
+        },
+        [MemberAchievementAction.remove]: {
+            auths: [
+                MemberAchievementOption,
             ],
         },
     },
