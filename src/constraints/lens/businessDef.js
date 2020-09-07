@@ -930,7 +930,7 @@ const AUTH_MATRIX = {
                     '#data': [
                         {
                             check: ({user, row}) => {
-                                return !row.userId && Date.now() - row._createAt_ < 86400000;
+                                return !row.userId && Date.now() - (row._createAt_ || row.createAt) < 86400000;
                             },
                         }
                     ],
@@ -942,7 +942,7 @@ const AUTH_MATRIX = {
                     '#data': [
                         {
                             check: ({user, row}) => {
-                                return !row.userId && Date.now() - row._createAt_ < 86400000;
+                                return !row.userId && Date.now() - (row._createAt_ || row.createAt)  < 86400000;
                             },
                         }
                     ],

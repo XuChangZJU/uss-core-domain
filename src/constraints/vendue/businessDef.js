@@ -2172,9 +2172,8 @@ const AUTH_MATRIX = {
                 {
                     '#exists': [
                         {
-                            needData: true,
                             relation: 'userAuctionHouse',
-                            condition: ({user, actionData}) => {
+                            condition: ({user}) => {
                                 const query = {
                                     userId: user.id,
                                 };
