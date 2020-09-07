@@ -42,7 +42,10 @@ const AttrsUpdateMatrix = {
         ],
         cardType: [
             State.normal
-        ]
+        ],
+        birth: [
+            State.normal
+        ],
     },
 };
 
