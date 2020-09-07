@@ -4,10 +4,9 @@
 const pick = require('lodash/pick');
 const { action: CommonAction, decodeAction } = require('../action');
 
-
 const action = pick(CommonAction, ['create','update','remove']);
 
 module.exports = {
-    action: action,
-    decodeAction: decodeAction
+    action,
+    decodeAction,
 }
