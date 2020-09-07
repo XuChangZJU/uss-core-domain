@@ -2,7 +2,6 @@
  *
  * Created by Xc on 2020/2/20.
  */
-const moment = require('moment');
 const {
     action: ClockInAction,
     category: ClockInCategory,
@@ -889,28 +888,11 @@ const AUTH_MATRIX = {
             ],
         },
         [PatientAction.remove]: OwnerRelationAuth,
-        [PatientAction.acquire]: AllowEveryoneAuth,
+        // [PatientAction.acquire]: AllowEveryoneAuth,
         [PatientAction.authAbandon]: AnyRelationAuth,
     },
     diagnosis: {
-        [DiagnosisAction.create]: /*[
-                    {
-                        '#exists': [
-                            {
-                                relation: 'userOrganization',
-                                needData: true,
-                                condition: ({user, actionData}) => {
-                                    const { diagnosis } = actionData;
-                                    const query = {
-                                        userId: user.id,
-                                        organizationId: diagnosis.organizationId,
-                                    };
-                                    return  query;
-                                },
-                            },
-                        ],
-                    },
-                ]*/AllowEveryoneAuth,           // brand的管理员应该也有此项权限，所以没法写成auth
+        [DiagnosisAction.create]: AllowEveryoneAuth,           // brand的管理员应该也有此项权限，所以没法写成auth
         [DiagnosisAction.update]: {
             auths: [
                 {
@@ -925,8 +907,7 @@ const AUTH_MATRIX = {
                 }
             ]
         },
-
-        [DiagnosisAction.acquire]: {
+        [DiagnosisAction.assign]: {
             auths: [
                 {
                     "#relation": {

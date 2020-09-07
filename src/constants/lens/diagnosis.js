@@ -50,6 +50,7 @@ const decodeState = (s) => {
 
 const action = Object.assign({},commonAction,{
     expire: 320,
+
 });
 
 const decodeAction = (a) => {
