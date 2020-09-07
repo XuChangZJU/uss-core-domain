@@ -2,6 +2,7 @@
  *
  * Created by Xc on 2020/2/20.
  */
+const moment = require('moment');
 const {
     action: ClockInAction,
     category: ClockInCategory,
@@ -910,60 +911,7 @@ const AUTH_MATRIX = {
                         ],
                     },
                 ]*/AllowEveryoneAuth,           // brand的管理员应该也有此项权限，所以没法写成auth
-        [DiagnosisAction.update]: AllowEveryoneAuth,
-            // {
-        //     auths: [
-        //         {
-        //             '#exists': [
-        //                 {
-        //                     relation: 'userOrganization',
-        //                     condition: ({user, row}) => {
-        //                         const { organizationId } = row;
-        //                         const query = {
-        //                             userId: user.id,
-        //                             organizationId,
-        //                         };
-        //                         return  query;
-        //                     },
-        //                 },
-        //             ],
-        //             '#data': [                 // 表示对现有对象或者用户的数据有要求，可以有多项，每项之间是AND的关系
-        //                 {
-        //                     check: ({user, row}) => {
-        //                         return row.state === DiagnosisState.completed;
-        //                     },
-        //                 }
-        //             ],
-        //         }
-        //     ],
-        // },
-        // [DiagnosisAction.complete]: {
-        //     auths: [
-        //         {
-        //             '#exists': [
-        //                 {
-        //                     relation: 'userOrganization',
-        //                     condition: ({user, row}) => {
-        //                         const { organizationId } = row;
-        //                         const query = {
-        //                             userId: user.id,
-        //                             organizationId,
-        //                         };
-        //                         return  query;
-        //                     },
-        //                 },
-        //             ],
-        //             '#data': [                 // 表示对现有对象或者用户的数据有要求，可以有多项，每项之间是AND的关系
-        //                 {
-        //                     check: ({user, row}) => {
-        //                         return row.state === DiagnosisState.active;
-        //                     },
-        //                 }
-        //             ],
-        //         }
-        //     ],
-        // },
-        [DiagnosisAction.remove]: {
+        [DiagnosisAction.update]: {
             auths: [
                 {
                     "#relation": {
@@ -974,6 +922,49 @@ const AUTH_MATRIX = {
                     "#relation": {
                         attr: 'organization.brand'
                     },
+                }
+            ]
+        },
+
+        [DiagnosisAction.acquire]: {
+            auths: [
+                {
+                    "#relation": {
+                        attr: 'organization'
+                    },
+                },
+                {
+                    "#relation": {
+                        attr: 'organization.brand'
+                    },
+                }
+            ]
+        },
+        [DiagnosisAction.remove]: {
+            auths: [
+                {
+                    "#relation": {
+                        attr: 'organization'
+                    },
+                    '#data': [
+                        {
+                            check: ({user, row}) => {
+                                return !row.userId && Date.now() - row._createAt_ < 86400000;
+                            },
+                        }
+                    ],
+                },
+                {
+                    "#relation": {
+                        attr: 'organization.brand'
+                    },
+                    '#data': [
+                        {
+                            check: ({user, row}) => {
+                                return !row.userId && Date.now() - row._createAt_ < 86400000;
+                            },
+                        }
+                    ],
                 }
             ]
         }
@@ -2174,7 +2165,7 @@ const AUTH_MATRIX = {
                         {
                             relation: 'userBrand',
                             condition: ({ user }) => {
-                                // 需要根据类型判断，且需要actionData是，过于复杂放在defination中
+                                // 需要根据类型判断，且需要actionData，过于复杂放在defination中
                                 const query = {
                                     userId: user.id,
                                     relation: {
@@ -2194,7 +2185,7 @@ const AUTH_MATRIX = {
             auths: [
                 {
                     "#relation": {
-                        attr: 'organization.brand',
+                        attr: 'brand',
                         // 具体权限需要根据actionData
                     },
                 },
