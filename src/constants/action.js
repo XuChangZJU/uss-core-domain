@@ -20,6 +20,7 @@ const action = {
 
     transfer: 21,           // 转让
     acquire: 22,            // 申请
+    assign: 23,             // 授权（建立一个已有的entity和某个user间的关系
 
     confirmToPay: 31,       // 确认下单
     cancel: 32,             // 取消
@@ -133,6 +134,7 @@ const decodeAction = (a) => {
         [action.authGrantMulti2]: '邀请',
         [action.transfer]: '转让',
         [action.acquire]: '申请',
+        [action.assign]: '直接授权',
 
         [action.confirmToPay]: '确认下单',
         [action.pay]: '支付成功',
