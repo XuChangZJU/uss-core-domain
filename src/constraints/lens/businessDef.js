@@ -261,6 +261,7 @@ const OrganizationOwnerAndBrandWorker = {
         {
             "#relation": {
                 attr: 'brand',
+                relations: [BrandRelation.owner, BrandRelation.manager],
             },
         },
     ],
