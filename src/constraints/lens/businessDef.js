@@ -1552,19 +1552,19 @@ const AUTH_MATRIX = {
                 },
             ]
         },
-        // [OrganizationAction.authAbandon]: {
-        //     auths: [
-        //         {
-        //             "#relation": {
-        //             },
-        //         },
-        //         {
-        //             "#relation": {
-        //                 attr: 'brand',
-        //             },
-        //         }
-        //     ]
-        // },
+        [OrganizationAction.assign]: {
+            auths: [
+                {
+                    "#relation": {
+                    },
+                },
+                {
+                    "#relation": {
+                        attr: 'brand',
+                    },
+                }
+            ]
+        },
         [OrganizationAction.authRevoke]: {
             auths: [
                 {

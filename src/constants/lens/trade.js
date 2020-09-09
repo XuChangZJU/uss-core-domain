@@ -12,6 +12,9 @@ const transportState = {
     dqj: 10004,
     yqj: 10005,
     yfh: 10010,
+    yth: 10011,
+    yzf: 10012,
+    dxh: 10013,
 };
 
 const messageState = {
@@ -43,6 +46,9 @@ const decodeTransportState = (ts) => {
         [transportState.dqj]: '待取件（到店）',
         [transportState.yfh]: '已发货',        // 快递已发出
         [transportState.yqj]: '已取件',
+        [transportState.yth]: '已退货',
+        [transportState.yzf]: '已作废',
+        [transportState.dxh]: '待销号',
     };
     return TS[ts];
 };
