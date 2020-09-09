@@ -3,6 +3,10 @@
  * Created by Xc on 2020/2/20.
  */
 const {
+    action: qiniuFileAction,
+    state: qiniuFileState,
+} = require('../../constants/lens/qiniuFile');
+const {
     action: ClockInAction,
     category: ClockInCategory,
 } = require('../../constants/lens/clockIn');
@@ -370,6 +374,10 @@ const OrganizationOwnerAndBrandWorker = {
 // };
 
 const AUTH_MATRIX = {
+    qiniuFile: {
+        [qiniuFileAction.create]: AllowEveryoneAuth,
+        [qiniuFileAction.remove]: AllowEveryoneAuth,
+    },
     trade: {
         [TradeAction.create]: {
             auths: [
@@ -888,7 +896,7 @@ const AUTH_MATRIX = {
             ],
         },
         [PatientAction.remove]: OwnerRelationAuth,
-        // [PatientAction.acquire]: AllowEveryoneAuth,
+        [PatientAction.acquire]: AllowEveryoneAuth,
         [PatientAction.authAbandon]: AnyRelationAuth,
     },
     diagnosis: {
