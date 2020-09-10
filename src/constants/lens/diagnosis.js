@@ -9,8 +9,8 @@ const {
     } = require('../action');
 
 const state = {
-    noTrade: 301,
-    hasTrade: 310,
+    fitted: 301,
+    unfitted: 401,
     expired: 511,
 };
 const category = {
@@ -23,6 +23,7 @@ const category = {
     'OKGlassesRecheck': 7,
     'visionTrainingRecheck': 8,
     'check': 9,
+    'checkRecheck': 10,
 }
 const decodeCategory = (c) => {
     const C = {
@@ -35,13 +36,14 @@ const decodeCategory = (c) => {
         [category.OKGlassesRecheck]: '角膜塑形镜复查',
         [category.visionTrainingRecheck]: '视训复查',
         [category.check]: '检查',
+        [category.checkRecheck]: '检查复查',
     }
     return C[c];
 }
 const decodeState = (s) => {
     const S = {
-        [state.noTrade]: '无交易',
-        [state.hasTrade]: '有交易',
+        [state.unfitted]: '价格不匹配',
+        [state.fitted]: '价格匹配',
         [state.expired]: '已过期',
     };
 
