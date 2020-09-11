@@ -2176,6 +2176,18 @@ const AUTH_MATRIX = {
                 {
                     "#relation": {
                         attr: 'brand',
+                        relations: [BrandRelation.owner, BrandRelation.customerService, BrandRelation.manager],
+                        // 具体权限需要根据actionData
+                    },
+                },
+            ]
+        },
+        [LimitsAction.remove]: {
+            auths: [
+                {
+                    "#relation": {
+                        attr: 'brand',
+                        relations: [BrandRelation.owner, BrandRelation.customerService, BrandRelation.manager],
                         // 具体权限需要根据actionData
                     },
                 },
