@@ -9,8 +9,8 @@ const {
     } = require('../action');
 
 const state = {
-    fitted: 301,
-    unfitted: 401,
+    unfitted: 301,
+    fitted: 310,
     expired: 511,
 };
 const category = {
