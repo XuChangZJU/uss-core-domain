@@ -7,9 +7,9 @@ const {
     state: qiniuFileState,
 } = require('../../constants/lens/qiniuFile');
 const {
-    action: ClockInAction,
-    category: ClockInCategory,
-} = require('../../constants/lens/clockIn');
+    action: CheckInAction,
+    category: CheckInCategory,
+} = require('../../constants/lens/checkIn');
 const {
     action: ScheduleAction,
 } = require('../../constants/lens/schedule');
@@ -2075,8 +2075,8 @@ const AUTH_MATRIX = {
             ],
         },
     },
-    clockIn: {
-        [ClockInAction.create]: {
+    checkIn: {
+        [CheckInAction.create]: {
             auths: [
                 {
                     '#exists': [
@@ -2094,7 +2094,7 @@ const AUTH_MATRIX = {
                 },
             ]
         },
-        [ClockInAction.update]: {
+        [CheckInAction.update]: {
             auths: [
                 {
                     "#relation": {
@@ -2106,7 +2106,7 @@ const AUTH_MATRIX = {
                     '#data': [
                         {
                             check: ({ user, row }) => {
-                                return user.id === row.userId && row.category === ClockInCategory.off;
+                                return user.id === row.userId && row.category === CheckInCategory.off;
                             },
                         }
                     ],
