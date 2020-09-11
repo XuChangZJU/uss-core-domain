@@ -864,6 +864,16 @@ const AUTH_MATRIX = {
         },
         [BrandAction.authAbandon]: OwnerRelationAuth,
         [BrandAction.remove]: OwnerRelationAuth,
+        [BrandAction.assign]: {
+            auths: [
+                {
+                    "#relation": {
+                        attr: '',
+                        relations: [BrandRelation.owner, BrandRelation.manager, BrandRelation.customerService],
+                    },
+                }
+            ]
+        }
     },
     patient: {
         [PatientAction.create]: AllowEveryoneAuth,
