@@ -10,7 +10,7 @@ const {
 
 const state = {
     fitted: 310,
-    unfitted: 401,
+    unfitted: 301,
     expired: 511,
 };
 const category = {
