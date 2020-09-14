@@ -78,7 +78,7 @@ const decodeRelation = (r) => {
 };
 
 const STATE_TRANS_MATRIX = {
-    [action.expire]: [state.noTrade, state.expired],
+    [action.expire]: [state.unfitted, state.expired],
 };
 
 module.exports = {
