@@ -1009,6 +1009,16 @@ const AUTH_MATRIX = {
                 },
             ]
         },
+        [ScheduleAction.remove]: {
+            auths: [
+                {
+                    "#relation": {
+                        attr: 'organization.brand',
+                        relations: [BrandRelation.owner, BrandRelation.manager, BrandRelation.customerService],
+                    },
+                },
+            ]
+        },
     },
     limits: {
         [LimitsAction.create]: {

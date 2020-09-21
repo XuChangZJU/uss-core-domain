@@ -8,43 +8,43 @@ const { Roles } = require('../constants/roleConstant2');
 const AttrsUpdateMatrix = {
     [Roles.LOGGEDIN.name]: {
         mobile: [
-            State.normal
+            State.normal, State.shadow
         ],
         nickname: [
-            State.normal
+            State.normal, State.shadow
         ],
         name: [
-            State.normal
+            State.normal, State.shadow
         ],
         gender: [
-            State.normal
+            State.normal, State.shadow
         ],
         head: [
-            State.normal
+            State.normal, State.shadow
         ],
         city: [
-            State.normal
+            State.normal, State.shadow
         ],
         province: [
-            State.normal
+            State.normal, State.shadow
         ],
         country: [
-            State.normal
+            State.normal, State.shadow
         ],
         password: [
-            State.normal
+            State.normal, State.shadow
         ],
         cardNo: [
-            State.normal
+            State.normal, State.shadow
         ],
         cardImage: [
-            State.normal
+            State.normal, State.shadow
         ],
         cardType: [
-            State.normal
+            State.normal, State.shadow
         ],
         birth: [
-            State.normal
+            State.normal, State.shadow
         ],
     },
 };
