@@ -2099,26 +2099,42 @@ const AUTH_MATRIX = {
                                 }
                             },
                         },
+                        {
+                            relation: 'userVendue',
+                            condition: ({ user }) => {
+                                return {
+                                    userId: user.id,
+                                }
+                            },
+                        },
+                        {
+                            relation: 'userAuctionHouse',
+                            condition: ({ user }) => {
+                                return {
+                                    userId: user.id,
+                                }
+                            },
+                        },
                     ]
                 },
-                {
-                    "#relation": {
-                        attr: 'session',
-                        relations: [sessionRelation.owner, sessionRelation.manager],
-                    },
-                },
-                {
-                    "#relation": {
-                        attr: 'session.vendue',
-                        relations: [vendueRelation.owner, vendueRelation.manager],
-                    },
-                },
-                {
-                    "#relation": {
-                        attr: 'session.vendue.auctionHouse',
-                        relations: [auctionHouseRelation.owner, auctionHouseRelation.manager, auctionHouseRelation.settler],
-                    },
-                }
+                // {
+                //     "#relation": {
+                //         attr: 'session',
+                //         relations: [sessionRelation.owner, sessionRelation.manager],
+                //     },
+                // },
+                // {
+                //     "#relation": {
+                //         attr: 'session.vendue',
+                //         relations: [vendueRelation.owner, vendueRelation.manager],
+                //     },
+                // },
+                // {
+                //     "#relation": {
+                //         attr: 'session.vendue.auctionHouse',
+                //         relations: [auctionHouseRelation.owner, auctionHouseRelation.manager, auctionHouseRelation.settler],
+                //     },
+                // }
             ]
         },
         [licenseAction.update]: {
