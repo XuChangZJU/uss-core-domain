@@ -17,6 +17,18 @@ const decodeCategory = (c) => {
     }
     return C[c];
 }
+const state = {
+    normal: 1,
+    add: 2,
+}
+const decodeState = (s) => {
+    const S = {
+        [state.normal]: '正常打卡',
+        [category.add]: '补卡',
+    }
+    return S[s];
+}
+
 
 module.exports = {
     action,
