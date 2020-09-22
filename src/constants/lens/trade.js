@@ -78,7 +78,6 @@ const action = Object.assign({}, commonAction, {
     send: 10003,
     confirmPick: 10004,
     updateFeedback: 9000,
-    // getAndSendMessage: 1004
 });
 
 const decodeAction = (a) => {
@@ -88,7 +87,6 @@ const decodeAction = (a) => {
         [action.send]: '发快递',
         [action.updateFeedback]: '更新评价',
         [action.confirmPick]: '确认取货',
-        // [action.getAndSendMessage]: '确认取走并发推送'
     };
 
     return S[a] || decodeCommonAction(a);
@@ -100,6 +98,26 @@ const STATE_TRAN_MATRIX = {
     [action.confirmPick]:  [transportState.dqj, transportState.yqj],
     [action.send]: [transportState.wdd, transportState.yfh],
 };
+
+const category = {
+    'makeGlasses': 1,
+    'OKGlasses': 2,
+    'DoneGlasses': 3,
+    'consumables': 4,
+    'visionTraining': 5,
+    'check': 6,
+}
+const decodeCategory = (c) => {
+    const C = {
+        [category.makeGlasses]: '框架眼镜',
+        [category.OKGlasses]: '角膜塑形镜',
+        [category.DoneGlasses]: '成镜',
+        [category.consumables]: '耗品',
+        [category.visionTraining]: '视训',
+        [category.check]: '检查',
+    }
+    return C[c];
+}
 module.exports = {
     action,
     decodeAction,

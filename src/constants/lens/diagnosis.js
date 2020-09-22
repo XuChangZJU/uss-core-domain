@@ -14,29 +14,13 @@ const state = {
     expired: 511,
 };
 const category = {
-    'makeGlasses': 1,
-    'OKGlasses': 2,
-    'DoneGlasses': 3,
-    'consumables': 4,
-    'visionTraining': 5,
-    // 'makeGlassesRecheck': 6,
-    // 'OKGlassesRecheck': 7,
-    // 'visionTrainingRecheck': 8,
-    // 'check': 9,
-    'recheck': 10,
+    'normal': 1,
+    'OKGlasses': 2
 }
 const decodeCategory = (c) => {
     const C = {
-        [category.makeGlasses]: '框架眼镜',
-        [category.OKGlasses]: '角膜塑形镜',
-        [category.DoneGlasses]: '成镜',
-        [category.consumables]: '耗品',
-        [category.visionTraining]: '视训',
-        // [category.makeGlassesRecheck]: '配镜复查',
-        // [category.OKGlassesRecheck]: '角膜塑形镜复查',
-        // [category.visionTrainingRecheck]: '视训复查',
-        // [category.check]: '检查',
-        [category.recheck]: '复查',
+        [category.normal]: '普通业务',
+        [category.OKGlasses]: '角膜塑形镜业务',
     }
     return C[c];
 }
