@@ -20,11 +20,15 @@ const decodeCategory = (c) => {
 const state = {
     normal: 1,
     add: 2,
+    late: 3,
+    earlyLeave: 4,
 }
 const decodeState = (s) => {
     const S = {
         [state.normal]: '正常打卡',
-        [category.add]: '补卡',
+        [state.add]: '补卡',
+        [state.late]: '迟到',
+        [state.earlyLeave]: '早退'
     }
     return S[s];
 }
@@ -35,4 +39,6 @@ module.exports = {
     decodeAction,
     category,
     decodeCategory,
+    state,
+    decodeState,
 };
