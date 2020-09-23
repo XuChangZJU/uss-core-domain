@@ -11,6 +11,7 @@ const transportState = {
     wdd: 10003,
     dqj: 10004,
     yqj: 10005,
+    dgkqr: 10006,
     yfh: 10010,
     yth: 10011,
     yzf: 10012,
@@ -44,6 +45,7 @@ const decodeTransportState = (ts) => {
     const TS = {
         [transportState.wdd]: '未到店',
         [transportState.dqj]: '待取件（到店）',
+        [transportState.dgkqr]: '待顾客确认',
         [transportState.yfh]: '已发货',        // 快递已发出
         [transportState.yqj]: '已取件',
         [transportState.yth]: '已退货',
@@ -77,6 +79,7 @@ const action = Object.assign({}, commonAction, {
     confirmGet: 10002,
     send: 10003,
     confirmPick: 10004,
+    customConfirm: 10005,
     updateFeedback: 9000,
 });
 
@@ -86,6 +89,7 @@ const decodeAction = (a) => {
         [action.confirmGet]: '确认收货',
         [action.send]: '发快递',
         [action.updateFeedback]: '更新评价',
+        [action.customConfirm]: '顾客确认',
         [action.confirmPick]: '确认取货',
     };
 
@@ -95,7 +99,8 @@ const decodeAction = (a) => {
 const STATE_TRAN_MATRIX = {
     [action.confirmArriveAtShop]: [transportState.wdd, transportState.dqj],
     [action.confirmGet]: [transportState.yfh, transportState.yqj],
-    [action.confirmPick]:  [transportState.dqj, transportState.yqj],
+    [action.confirmPick]:  [transportState.dqj, transportState.dgkqr],
+    [action.customConfirm]: [transportState.dgkqr, transportState.yqj],
     [action.send]: [transportState.wdd, transportState.yfh],
 };
 
