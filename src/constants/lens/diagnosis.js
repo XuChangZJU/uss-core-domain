@@ -16,11 +16,13 @@ const state = {
 const category = {
     'normal': 1,
     'OKGlasses': 2
+    'check': 3,
 }
 const decodeCategory = (c) => {
     const C = {
         [category.normal]: '普通业务',
         [category.OKGlasses]: '角膜塑形镜业务',
+        [category.check]: '检查'
     }
     return C[c];
 }
