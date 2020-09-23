@@ -1032,9 +1032,7 @@ const AUTH_MATRIX = {
                                 const query = {
                                     userId: user.id,
                                     relation: {
-                                        relation: {
-                                            $in: [BrandRelation.owner, BrandRelation.customerService, BrandRelation.manager, BrandRelation.seller],
-                                        },
+                                        $in: [BrandRelation.owner, BrandRelation.customerService, BrandRelation.manager, BrandRelation.seller],
                                     }
                                 };
                                 return query;
