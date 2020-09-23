@@ -131,6 +131,8 @@ module.exports = {
     decodeTransportState,
     messageState,
     decodeMessageState,
+    category,
+    decodeCategory,
     getActionStateAttr,
     STATE_TRAN_MATRIX,
 };
