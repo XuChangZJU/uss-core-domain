@@ -15,7 +15,7 @@ const state = {
 };
 const category = {
     'normal': 1,
-    'OKGlasses': 2
+    'OKGlasses': 2,
     'check': 3,
 }
 const decodeCategory = (c) => {
