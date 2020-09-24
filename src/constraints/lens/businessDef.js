@@ -61,7 +61,6 @@ const {
     state: DeviceState,
     STATE_TRANS_MATRIX: DEVICE_STATE_TRANS_MATRIX,
     } = require('../../constants/lens/device');
-
 const {
     action: OrganizationAction,
     state: OrganizationState,
