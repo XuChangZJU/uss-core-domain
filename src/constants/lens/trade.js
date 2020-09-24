@@ -11,6 +11,7 @@ const transportState = {
     wdd: 10003,
     dqj: 10004,
     yqj: 10005,
+    dgkqr: 10006,
     yfh: 10010,
     yth: 10011,
     yzf: 10012,
@@ -44,6 +45,7 @@ const decodeTransportState = (ts) => {
     const TS = {
         [transportState.wdd]: '未到店',
         [transportState.dqj]: '待取件（到店）',
+        [transportState.dgkqr]: '待顾客确认',
         [transportState.yfh]: '已发货',        // 快递已发出
         [transportState.yqj]: '已取件',
         [transportState.yth]: '已退货',
@@ -77,8 +79,8 @@ const action = Object.assign({}, commonAction, {
     confirmGet: 10002,
     send: 10003,
     confirmPick: 10004,
+    customerConfirm: 10005,
     updateFeedback: 9000,
-    // getAndSendMessage: 1004
 });
 
 const decodeAction = (a) => {
@@ -87,8 +89,8 @@ const decodeAction = (a) => {
         [action.confirmGet]: '确认收货',
         [action.send]: '发快递',
         [action.updateFeedback]: '更新评价',
+        [action.customerConfirm]: '顾客确认',
         [action.confirmPick]: '确认取货',
-        // [action.getAndSendMessage]: '确认取走并发推送'
     };
 
     return S[a] || decodeCommonAction(a);
@@ -97,9 +99,30 @@ const decodeAction = (a) => {
 const STATE_TRAN_MATRIX = {
     [action.confirmArriveAtShop]: [transportState.wdd, transportState.dqj],
     [action.confirmGet]: [transportState.yfh, transportState.yqj],
-    [action.confirmPick]:  [transportState.dqj, transportState.yqj],
+    [action.confirmPick]:  [transportState.dqj, transportState.dgkqr],
+    [action.customerConfirm]: [transportState.dgkqr, transportState.yqj],
     [action.send]: [transportState.wdd, transportState.yfh],
 };
+
+const category = {
+    'makeGlasses': 1,
+    'OKGlasses': 2,
+    'DoneGlasses': 3,
+    'consumables': 4,
+    'visionTraining': 5,
+    'check': 6,
+}
+const decodeCategory = (c) => {
+    const C = {
+        [category.makeGlasses]: '框架眼镜',
+        [category.OKGlasses]: '角膜塑形镜',
+        [category.DoneGlasses]: '成镜',
+        [category.consumables]: '耗品',
+        [category.visionTraining]: '视训',
+        [category.check]: '检查',
+    }
+    return C[c];
+}
 module.exports = {
     action,
     decodeAction,
@@ -113,6 +136,8 @@ module.exports = {
     decodeTransportState,
     messageState,
     decodeMessageState,
+    category,
+    decodeCategory,
     getActionStateAttr,
     STATE_TRAN_MATRIX,
 };

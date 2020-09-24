@@ -239,6 +239,21 @@ const AUTH_MATRIX = {
                 },
             ]
         },
+        [TradeAction.customerConfirm]: {
+            auths: [
+                {
+                    "#relation": {
+                    },
+                    '#data': [                 // 表示对现有对象或者用户的数据有要求，可以有多项，每项之间是AND的关系
+                        {
+                            check: ({user, row}) => {
+                                return [TradeTransportState.dgkqr].includes(row.transportState) && row.getMethod === TradeGetMethod.helpYourself;
+                            },
+                        }
+                    ],
+                },
+            ]
+        },
     },
     workerOrder: {
         [WorkerOrderAction.create]:{
