@@ -181,7 +181,7 @@ const COMMON_STATE_TRAN_MATRIX = {
     [action.abandon2]: [state.legal, state.abandoning],
     [action.makeAbandoned]: [state.legal2, state.abandoned],
     [action.abandon2Success]: [state.abandoning, state.abandoned],
-    [action.refund]: [state.legal, state.refunding],
+    [action.refund]: [[state.legal, state.abandoned, state.aborted], state.refunding],
     [action.refundSuccess]: [[state.legal2, state.refunding, state.partialRefunded], state.refunded],
     [action.refundPartially]: [[state.legal2, state.refunding], state.partialRefunded],
 
