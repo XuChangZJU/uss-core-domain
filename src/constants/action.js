@@ -21,6 +21,7 @@ const action = {
     transfer: 21,           // 转让
     acquire: 22,            // 申请
     assign: 23,             // 授权（建立一个已有的entity和某个user间的关系
+    allocWeChatQrCode: 24,      // 为某个对象显式分配临时二维码
 
     confirmToPay: 31,       // 确认下单
     cancel: 32,             // 取消
@@ -127,6 +128,7 @@ const decodeAction = (a) => {
         [action.authConfirm]: '确认',
         [action.authGrantMulti]: '散发',
         [action.authGrantMulti2]: '邀请',
+        [action.allocWeChatQrCode]: '生成微信公众号关注链接',
         [action.transfer]: '转让',
         [action.acquire]: '申请',
         [action.assign]: '直接授权',
