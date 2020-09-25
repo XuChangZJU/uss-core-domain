@@ -36,16 +36,20 @@ const action = {
     abandon2Success: 42,     // 异步中止成功
     makeAbandoned: 43,       // 管理员强制中止
 
-    send: 61,                 // 发货（后续状态sent）
-    reject: 62,              // 拒绝（后续状态rejected）
-    apply: 65,              // 申请（后续状态applied）
-    agree: 66,              // 同意（后续状态agreed
+    startToPay: 44,          // 开始支付
+    payPartially: 45,          //部分支付成功
+
+    refund: 51,                 // 退款
+    refundSuccess: 52,          // 退款成功
+    refundPartially: 53,        // 部分退款成功
 };
 
 // 全局抽象的关系 0-1000
 const relation = {
     owner: 1,
     manager: 2,         // 管理员
+    financial: 3,         // 财务
+
     grantee: 11,        // 被授权者（泛义上的)
 };
 
@@ -65,19 +69,12 @@ const   state = {
 
     aborting: 38,
     abandoning: 39,
+    paying: 40,
+    partialPaid: 41,
 
     refunding: 51,
     refunded: 52,
-
-    // 发货相关
-    sent: 61,               // 已发货
-    rejected: 62,           // 拒签收
-    // 申请相关
-    applied: 65,
-    agreed: 66,
-
-
-
+    partialRefunded: 53,
 
     // userEntityGrant相关的
     confirmed: 1001,
@@ -97,17 +94,15 @@ const decodeState = (s) => {
         [state.aborted]: '中止的',
         [state.cancelled]: '取消的',
         [state.cantPaid]: '暂不可支付的',
+        [state.abandoned]: '已取消',
+        [state.partialPaid]: '已部分支付',
+        [state.paying]: '支付中',
         [state.refunding]: '退款中',
         [state.refunded]: '已退款',
-        [state.abandoned]: '已取消',
+        [state.partialRefunded]: '已部分退款',
 
         [state.aborting]: '正在中止',
         [state.abandoning]: '正在取消',
-
-        [state.sent]: '已发货',
-        [state.rejected]: '已拒收',
-        [state.applied]: '已申请',
-        [state.agreed]: '已同意',
 
         [state.confirmed]: '确认的',
         [state.expired]: '过期的',
@@ -137,7 +132,9 @@ const decodeAction = (a) => {
         [action.assign]: '直接授权',
 
         [action.confirmToPay]: '确认下单',
+        [action.startToPay]: '开始支付',
         [action.pay]: '支付成功',
+        [action.payPartially]: '部分支付成功',
         [action.cancel]: '取消',
         [action.abort]: '中止',
         [action.expire]: '过期',
@@ -151,10 +148,9 @@ const decodeAction = (a) => {
         [action.abandon2Success]: '异步取消成功',
 
 
-        [action.send]: '发货',
-        [action.reject]: '拒收',
-        [action.apply]: '申请',
-        [action.agree]: '同意',
+        [action.refund]: '退款',
+        [action.refundSuccess]: '退款成功',
+        [action.refundPartially]: '部分退款成功',
     };
 
     return STRINGS[a];
@@ -164,6 +160,7 @@ const decodeRelation = (r) => {
     const STRINGS = {
         [relation.owner]: '所有者',
         [relation.manager]: '管理者',
+        [relation.financial]: '财务帐户',
         [relation.grantee]: '被授权者',
     };
     return STRINGS[r];
@@ -172,7 +169,9 @@ const decodeRelation = (r) => {
 
 const COMMON_STATE_TRAN_MATRIX = {
     [action.confirmToPay]: [state.init, state.unpaid],
-    [action.pay]: [state.unpaid, state.legal],
+    [action.pay]: [[state.unpaid, state.paying], state.legal],
+    [action.startToPay]: [[state.unpaid, state.partialPaid], state.paying],
+    [action.payPartially]: [[state.unpaid, state.paying], state.partialPaid],
     [action.makePaid]: [[state.init, state.unpaid], state.legal2],
     [action.cancel]: [[state.init, state.unpaid], state.cancelled],
     [action.abort]: [state.legal, state.aborted],
@@ -182,15 +181,13 @@ const COMMON_STATE_TRAN_MATRIX = {
     [action.abandon2]: [state.legal, state.abandoning],
     [action.makeAbandoned]: [state.legal2, state.abandoned],
     [action.abandon2Success]: [state.abandoning, state.abandoned],
-    [action.complete]: [state.legal, state.completed],
-    [action.expire]: [[state.init, state.unpaid], state.expired],
-    [action.send]: [state.legal, state.sent],
-    [action.confirm]: [[state.applied, state.sent], state.confirmed],
-    [action.complete]: [[state.legal, state.confirmed], state.completed],
+    [action.refund]: [state.legal, state.refunding],
+    [action.refundSuccess]: [[state.legal2, state.refunding, state.partialRefunded], state.refunded],
+    [action.refundPartially]: [[state.legal2, state.refunding], state.partialRefunded],
 
-    [action.apply]: [[state.init, state.rejected], state.applied],
-    [action.reject]: [[state.sent, state.applied], state.rejected],
-    [action.agree]: [state.applied, state.agreed],
+    [action.expire]: [[state.init, state.unpaid], state.expired],
+    [action.confirm]: [[state.applied, state.sent], state.confirmed],
+    [action.complete]: [[state.legal, state.legal2], state.completed],
 };
 
 module.exports = {
