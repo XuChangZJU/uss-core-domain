@@ -2,7 +2,8 @@
  * Created by Xc on 2020/8/20.
  */
 const pick = require('lodash/pick');
-const { action: CommonAction, decodeAction } = require('../action');
+const assign = require('lodash/assign');
+const { action: CommonAction, decodeAction: decodeCommonAction } = require('../action');
 
 const category = {
     thesis: 1, // 论文
@@ -23,6 +24,8 @@ const decodeCategory = (c) => {
 }
 
 const action = pick(CommonAction, ['create','update','remove']);
+
+const decodeAction = (a) => decodeCommonAction(a);
 
 module.exports = {
     category,
