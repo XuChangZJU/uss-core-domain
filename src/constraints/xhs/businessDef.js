@@ -63,7 +63,7 @@ const AUTH_MATRIX = {
         [MemberAction.update]: {
             auths: [
                 {
-                    '#data': [                 // 表示对现有对象或者用户的数据有要求，可以有多项，每项之间是AND的关系
+                    '#data': [      // 表示对现有对象或者用户的数据有要求，可以有多项，每项之间是AND的关系
                         {
                             check: ({user, row}) => {
                                 return row.userId === user.id;
