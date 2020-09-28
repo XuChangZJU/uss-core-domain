@@ -212,6 +212,21 @@ const CollectionOwnerOrAuctionHouseWorker = {
 
 const AUTH_MATRIX = {
     vendue: {
+        [vendueAction.assign]: {
+            auths: [
+                {
+                    "#relation": {
+                        relations: [vendueRelation.manager, vendueRelation.owner],
+                    },
+                },
+                {
+                    "#relation": {
+                        attr: 'auctionHouse',
+                        relations: [auctionHouseRelation.manager, auctionHouseRelation.owner],
+                    },
+                },
+            ],
+        },
         [vendueAction.create]: {
             auths: [
                 {
@@ -576,6 +591,27 @@ const AUTH_MATRIX = {
         }
     },
     session: {
+        [sessionAction.assign]: {
+            auths: [
+                {
+                    "#relation": {
+                        relations: [sessionRelation.manager, sessionRelation.owner],
+                    },
+                },
+                {
+                    "#relation": {
+                        attr: 'vendue',
+                        relations: [vendueRelation.manager, vendueRelation.owner],
+                    },
+                },
+                {
+                    "#relation": {
+                        attr: 'vendue.auctionHouse',
+                        relations: [auctionHouseRelation.manager, auctionHouseRelation.owner],
+                    },
+                },
+            ],
+        },
         [sessionAction.create]: {
             auths: [
                 {
@@ -1703,6 +1739,15 @@ const AUTH_MATRIX = {
         }
     },
     auctionHouse: {
+        [auctionHouseAction.assign]: {
+            auths: [
+                {
+                    "#relation": {
+                        relations: [auctionHouseRelation.manager, auctionHouseRelation.owner],
+                    },
+                },
+            ],
+        },
         [auctionHouseAction.create]: AllowEveryoneAuth,
         [auctionHouseAction.update]: {
             auths: [
