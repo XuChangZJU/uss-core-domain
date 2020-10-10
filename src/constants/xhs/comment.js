@@ -10,7 +10,7 @@ const action = pick(CommonAction, ['create','update']);
 
 const decodeAction = (a) => decodeCommonAction(a);
 
-module.export = {
+module.exports = {
     action,
     decodeAction,
 };
