@@ -8,7 +8,7 @@ const action = pick(CommonAction, ['update']);
 
 const decodeAction = (a) => decodeCommonAction(a);
 
-module.export={
+module.exports={
     action,
     decodeAction,
 };
