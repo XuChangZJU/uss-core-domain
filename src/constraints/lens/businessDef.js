@@ -391,7 +391,7 @@ const AUTH_MATRIX = {
                                         relation: -1,
                                     }
                                 }
-                                if(userBrand.relation === BrandRelation.manager){
+                                if(userBrand.relation === BrandRelation.manager || userBrand === BrandRelation.customerService){
                                     return {
                                         userId: user.id,
                                         brandId: row.id,
@@ -405,7 +405,7 @@ const AUTH_MATRIX = {
                                     userId: user.id,
                                     brandId: row.id,
                                     relation: {
-                                        $in: [BrandRelation.owner, BrandRelation.manager],
+                                        $in: [BrandRelation.owner, BrandRelation.manager, BrandRelation.customerService],
                                     },
                                 }
                             },
