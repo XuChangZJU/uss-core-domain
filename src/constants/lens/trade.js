@@ -49,8 +49,8 @@ const decodeTransportState = (ts) => {
         [transportState.yfh]: '已发货',        // 快递已发出
         [transportState.yqj]: '已取件',
         [transportState.yth]: '已退货',
-        [transportState.yzf]: '已作废',
-        [transportState.dxh]: '待销号',
+        // [transportState.yzf]: '已作废',
+        // [transportState.dxh]: '待销号',
     };
     return TS[ts];
 };
