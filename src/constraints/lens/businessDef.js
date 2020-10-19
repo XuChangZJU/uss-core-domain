@@ -526,6 +526,15 @@ const AUTH_MATRIX = {
                 }
             ]
         },
+        [DiagnosisAction.authRevoke]: {
+            auths: [
+                {
+                    "#relation": {
+                        attr: 'organization.brand'
+                    },
+                }
+            ]
+        },
         [DiagnosisAction.remove]: {
             auths: [
                 {
