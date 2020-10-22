@@ -111,6 +111,7 @@ const category = {
     'consumables': 4,
     'visionTraining': 5,
     'check': 6,
+    'DISCGlasses': 7,
 }
 const decodeCategory = (c) => {
     const C = {
@@ -120,6 +121,7 @@ const decodeCategory = (c) => {
         [category.consumables]: '耗品',
         [category.visionTraining]: '视训',
         [category.check]: '检查',
+        [category.DISCGlasses]: '多焦软镜',
     }
     return C[c];
 }
