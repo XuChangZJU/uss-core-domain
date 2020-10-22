@@ -116,6 +116,15 @@ const AUTH_MATRIX = {
         [qiniuFileAction.remove]: AllowEveryoneAuth,
     },
     trade: {
+        [TradeAction.abandon]: {
+            auths: [
+                {
+                    '#relation': {
+                        attr: 'organization.brand',
+                    },
+                }
+            ],
+        },
         [TradeAction.allocWeChatQrCode]: {
             auths: [
                 {
