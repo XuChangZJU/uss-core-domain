@@ -1,6 +1,7 @@
 const {
     action: commonAction,
     decodeAction: decodeCommonAction,
+    COMMON_STATE_TRAN_MATRIX,
     state,
     decodeState,
     relation,
@@ -96,13 +97,14 @@ const decodeAction = (a) => {
     return S[a] || decodeCommonAction(a);
 };
 
-const STATE_TRAN_MATRIX = {
+const STATE_TRAN_MATRIX =    Object.assign({}, COMMON_STATE_TRAN_MATRIX, {
     [action.confirmArriveAtShop]: [transportState.wdd, transportState.dqj],
     [action.confirmGet]: [transportState.yfh, transportState.yqj],
     [action.confirmPick]:  [transportState.dqj, transportState.dgkqr],
     [action.customConfirm]: [transportState.dgkqr, transportState.yqj],
     [action.send]: [transportState.wdd, transportState.yfh],
-};
+});
+
 
 const category = {
     'makeGlasses': 1,
