@@ -39,7 +39,7 @@ const getActionStateAttr = (action) => {
         return 'transportState';
     }
 
-    return state;
+    return 'state';
 };
 
 const decodeTransportState = (ts) => {
