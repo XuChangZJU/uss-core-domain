@@ -116,7 +116,7 @@ const AUTH_MATRIX = {
         [qiniuFileAction.remove]: AllowEveryoneAuth,
     },
     trade: {
-        [TradeAction.refundSuccess]: {
+        [TradeAction.makeAbandoned]: {
             auths: [
                 {
                     '#relation': {
