@@ -334,7 +334,7 @@ const AUTH_MATRIX = {
                 {
                     "#relation": {
                         attr: 'trade.diagnosis.organization.brand',
-                        relations: [BrandRelation.owner, BrandRelation.manager, BrandRelation.customerService],
+                        relations: [BrandRelation.owner, BrandRelation.manager, BrandRelation.customerService, BrandRelation.financialStuff],
                     },
                     '#data': [                 // 表示对现有对象或者用户的数据有要求，可以有多项，每项之间是AND的关系
                         {
@@ -351,7 +351,7 @@ const AUTH_MATRIX = {
                 {
                     "#relation": {
                         attr: 'trade.diagnosis.organization.brand',
-                        relations: [BrandRelation.owner, BrandRelation.manager, BrandRelation.customerService],
+                        relations: [BrandRelation.owner, BrandRelation.manager, BrandRelation.customerService, BrandRelation.financialStuff],
                     },
                     '#data': [                 // 表示对现有对象或者用户的数据有要求，可以有多项，每项之间是AND的关系
                         {
