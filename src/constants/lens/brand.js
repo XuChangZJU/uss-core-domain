@@ -1,3 +1,4 @@
+const omit = require('lodash/omit');
 const {
     relation: commonRelation,
     decodeRelation: decodeCommonRelation,
@@ -5,13 +6,12 @@ const {
     decodeAction,
 } = require('../action');
 
-const relation = Object.assign({}, commonRelation, {
+const relation = omit(Object.assign({}, commonRelation, {
     worker: 301,
     customerService: 401,
     seller: 501,
     financialStuff: 601,
-});
-
+}), 'financial');
 
 const decodeRelation = (r) => {
     const S = {
