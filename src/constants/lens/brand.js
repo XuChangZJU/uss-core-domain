@@ -11,7 +11,7 @@ const relation = omit(Object.assign({}, commonRelation, {
     customerService: 401,
     seller: 501,
     financialStuff: 601,
-}), 'financial');
+}), ['financial']);
 
 const decodeRelation = (r) => {
     const S = {
