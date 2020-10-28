@@ -2137,21 +2137,29 @@ const AUTH_MATRIX = {
                         {
                             relation: 'userSession',
                             needData: true,
-                            condition: ({ user, actionData }) => {
+                            condition: ({user, actionData}) => {
                                 return {
                                     userId: user.id,
                                     sessionId: actionData.license.sessionId,
                                 }
                             },
                         },
+                    ],
+                },
+                {
+                    '#exists': [
                         {
                             relation: 'userVendue',
-                            condition: ({ user }) => {
+                            condition: ({user}) => {
                                 return {
                                     userId: user.id,
                                 }
                             },
                         },
+                    ],
+                },
+                {
+                    '#exists': [
                         {
                             relation: 'userAuctionHouse',
                             condition: ({ user }) => {
@@ -2160,7 +2168,7 @@ const AUTH_MATRIX = {
                                 }
                             },
                         },
-                    ]
+                    ],
                 },
                 // {
                 //     "#relation": {
