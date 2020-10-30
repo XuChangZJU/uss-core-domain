@@ -1708,32 +1708,12 @@ const AUTH_MATRIX = {
                         attr: 'vendue',
                         relations: [vendueRelation.worker, vendueRelation.manager, vendueRelation.owner],
                     },
-                    '#data': [
-                        {
-                            check: ({ row }) => {
-                                if(row.number){
-                                    return isPaddleOnline(row.number);
-                                };
-                                return true;
-                            },
-                        },
-                    ],
                 },
                 {
                     "#relation": {
                         attr: 'vendue.auctionHouse',
                         relations: [auctionHouseRelation.manager, auctionHouseRelation.owner],
                     },
-                    '#data': [
-                        {
-                            check: ({ row }) => {
-                                if(row.number){
-                                    return isPaddleOnline(row.number);
-                                };
-                                return true;
-                            },
-                        },
-                    ],
                 },
             ]
         }
