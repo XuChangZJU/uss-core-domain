@@ -2068,7 +2068,27 @@ const AUTH_MATRIX = {
                 {
                     "#relation": {
                         attr: 'paddle',
+                    },
+                },
+                {
+                    "#relation": {
+                        attr: 'paddle.vendue',
                         relations: [vendueRelation.manager, vendueRelation.owner],
+                    },
+                },
+                {
+                    "#relation": {
+                        attr: 'paddle.vendue.auctionHouse',
+                        relations: [auctionHouseRelation.manager, auctionHouseRelation.settler, auctionHouseRelation.owner],
+                    },
+                }
+            ]
+        },
+        [checkOutAction.cancel]: {
+            auths: [
+                {
+                    "#relation": {
+                        attr: 'paddle',
                     },
                 },
                 {

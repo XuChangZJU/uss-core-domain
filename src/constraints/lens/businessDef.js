@@ -1052,7 +1052,7 @@ const AUTH_MATRIX = {
                                 const query = {
                                     userId: user.id,
                                     relation: {
-                                        $in: [BrandRelation.owner, BrandRelation.customerService, BrandRelation.manager],
+                                        $in: [BrandRelation.owner, BrandRelation.customerService, BrandRelation.manager, BrandRelation.worker],
                                     },
                                 };
                                 return query;
@@ -1067,7 +1067,7 @@ const AUTH_MATRIX = {
                 {
                     "#relation": {
                         attr: 'organization.brand',
-                        relations: [BrandRelation.owner, BrandRelation.manager, BrandRelation.customerService],
+                        relations: [BrandRelation.owner, BrandRelation.manager, BrandRelation.customerService, BrandRelation.worker],
                     },
                 },
             ]
@@ -1077,7 +1077,7 @@ const AUTH_MATRIX = {
                 {
                     "#relation": {
                         attr: 'organization.brand',
-                        relations: [BrandRelation.owner, BrandRelation.manager, BrandRelation.customerService],
+                        relations: [BrandRelation.owner, BrandRelation.manager, BrandRelation.customerService, BrandRelation.worker],
                     },
                 },
             ]
