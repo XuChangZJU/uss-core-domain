@@ -2328,6 +2328,13 @@ const AUTH_MATRIX = {
                             },
                         },
                     ],
+                    '#data': [
+                        {
+                            check: ({user, row}) => {
+                                return [agentState.failed].includes(row.state) || (row.state === agentState.normal && row.auction.state!== auctionState.ongoing);
+                            },
+                        }
+                    ],
                 },
                 // {
                 //     "#relation": {
