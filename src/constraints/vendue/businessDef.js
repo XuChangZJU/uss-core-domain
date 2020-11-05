@@ -1675,25 +1675,12 @@ const AUTH_MATRIX = {
                 {
                     '#unexists': [
                         {
+                            relation: 'paddle',
                             needData: true,
-                            relation: 'userPaddle',
                             condition: ({ user, actionData }) => {
-                                const {userId, paddle} = actionData;
-                                if (userId) {
-                                    return {
-                                        paddle: {
-                                            vendueId: paddle.vendueId,
-                                        },
-                                        userId,
-                                    }
-                                }
-                                else {
-                                    return {
-                                        paddle: {
-                                            vendueId: paddle.vendueId,
-                                        },
-                                        userId: user.id,
-                                    }
+                                return {
+                                    userId: user.id,
+                                    vendueId: actionData.paddle.vendueId,
                                 }
                             },
                         },
@@ -2280,13 +2267,13 @@ const AUTH_MATRIX = {
                 {
                     '#exists': [
                         {
-                            relation: 'userPaddle',
+                            relation: 'paddle',
                             needData: true,
                             condition: ({ user, actionData }) => {
                                 const { agent } = actionData;
                                 const query = {
                                     userId: user.id,
-                                    paddleId: agent.paddleId,
+                                    id: agent.paddleId,
                                 };
                                 return query;
                             },
@@ -2318,11 +2305,11 @@ const AUTH_MATRIX = {
                 {
                     '#exists': [
                         {
-                            relation: 'userPaddle',
+                            relation: 'paddle',
                             condition: ({ user, row }) => {
                                 const query = {
                                     userId: user.id,
-                                    paddleId: row.paddleId,
+                                    id: row.paddleId,
                                 };
                                 return query;
                             },
