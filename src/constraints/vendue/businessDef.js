@@ -89,6 +89,9 @@ const {
     action: qiniuFileAction,
     state: qiniuFileState,
 } = require('../../constants/vendue/qiniuFile');
+const {
+    action: paymentRecordAction,
+} = require('../../constants/vendue/paymentRecord');
 
 const ContractAuctionHouseWorkerExists = [
     {
@@ -2347,7 +2350,11 @@ const AUTH_MATRIX = {
     qiniuFile: {
         [qiniuFileAction.create]: AllowEveryoneAuth,
         [qiniuFileAction.remove]: AllowEveryoneAuth,
-    }
+    },
+    paymentRecord: {
+        [paymentRecordAction.create]: AllowEveryoneAuth,
+        [paymentRecordAction.remove]: AllowEveryoneAuth,
+    },
 };
 
 const STATE_TRAN_MATRIX = {
