@@ -818,7 +818,17 @@ const AUTH_MATRIX = {
                 },
             ],
         },
-        [OrganizationAction.update]: OrganizationManagement,
+        [OrganizationAction.update]: {
+            auths: [
+                {
+                    "#relation": {
+                        attr: 'brand',
+                        relations: [BrandRelation.owner, BrandRelation.manager, BrandRelation.customerService, BrandRelation.worker],
+                    },
+                }
+            ]
+        },
+        [OrganizationAction.bind]: OrganizationManagement,
         [OrganizationAction.remove]: OrganizationManagement,
         [OrganizationAction.enable]: {
             auths: [
