@@ -1505,7 +1505,9 @@ const AUTH_MATRIX = {
                     },
                 }
             ]
-        }
+        },
+        [auctionAction.assign]: AllowEveryoneAuth,
+        [auctionAction.authRevoke]: AllowEveryoneAuth,
     },
     bid: {
         [bidAction.create]: {
