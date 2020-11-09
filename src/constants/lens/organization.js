@@ -44,15 +44,15 @@ const decodeAction = (a) => {
 };
 
 const relation = Object.assign({}, commonRelation, {
-    // worker: 301,
     doctor: 401,
+    keeper: 501
 });
 
 
 const decodeRelation = (r) => {
     const S = {
-        // [relation.worker]: '工作人员',
         [relation.doctor]: '医生',
+        [relation.keeper]: '店长',
     };
 
     return S[r] || decodeCommonRelation(r);
