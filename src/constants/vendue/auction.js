@@ -1,12 +1,22 @@
 const {
-    relation,
-    decodeRelation,
+    relation: commonRelation,
+    decodeRelation: decodeCommonRelation,
     action: commonAction,
     decodeAction: decodeCommonAction,
     state: commonState,
     decodeState: decodeCommonState,
 } = require('../action');
 
+const relation = Object.assign({}, commonRelation, {
+    favourite: 301,
+});
+
+const decodeRelation = (r) => {
+    const R = {
+        [relation.favourite]: '收藏',
+    };
+    return R[r] || decodeCommonRelation(r);
+};
 const state = Object.assign({}, commonState, {
     // preparing: 301,
     ready: 310,
