@@ -112,6 +112,7 @@ const AUTH_MATRIX = {
     member: {
         [MemberAction.update]: {
             auths: [
+                /*  这里不能写data，不然会导致前台认为root没有更新的权限，因为data的限制对root也有效
                 {
                     '#data': [      // 表示对现有对象或者用户的数据有要求，可以有多项，每项之间是AND的关系
                         {
@@ -119,6 +120,20 @@ const AUTH_MATRIX = {
                                 return row && row.userId === user.id;
                             },
                         }
+                    ],
+                },*/
+                {
+                    '#exists': [
+                        {
+                            relation: 'member',
+                            condition: ({user, row}) => {
+                                const query = {
+                                    id: row.id,
+                                    userId: user.id,
+                                };
+                                return query;
+                            },
+                        },
                     ],
                 }
             ]

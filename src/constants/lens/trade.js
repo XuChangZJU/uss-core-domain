@@ -1,6 +1,7 @@
 const {
     action: commonAction,
     decodeAction: decodeCommonAction,
+    COMMON_STATE_TRAN_MATRIX,
     state,
     decodeState,
     relation,
@@ -38,7 +39,7 @@ const getActionStateAttr = (action) => {
         return 'transportState';
     }
 
-    return state;
+    return 'state';
 };
 
 const decodeTransportState = (ts) => {
@@ -49,8 +50,8 @@ const decodeTransportState = (ts) => {
         [transportState.yfh]: '已发货',        // 快递已发出
         [transportState.yqj]: '已取件',
         [transportState.yth]: '已退货',
-        [transportState.yzf]: '已作废',
-        [transportState.dxh]: '待销号',
+        // [transportState.yzf]: '已作废',
+        // [transportState.dxh]: '待销号',
     };
     return TS[ts];
 };
@@ -96,13 +97,14 @@ const decodeAction = (a) => {
     return S[a] || decodeCommonAction(a);
 };
 
-const STATE_TRAN_MATRIX = {
+const STATE_TRAN_MATRIX =    Object.assign({}, COMMON_STATE_TRAN_MATRIX, {
     [action.confirmArriveAtShop]: [transportState.wdd, transportState.dqj],
     [action.confirmGet]: [transportState.yfh, transportState.yqj],
     [action.confirmPick]:  [transportState.dqj, transportState.dgkqr],
     [action.customConfirm]: [transportState.dgkqr, transportState.yqj],
     [action.send]: [transportState.wdd, transportState.yfh],
-};
+});
+
 
 const category = {
     'makeGlasses': 1,
@@ -111,6 +113,7 @@ const category = {
     'consumables': 4,
     'visionTraining': 5,
     'check': 6,
+    'DISCGlasses': 7,
 }
 const decodeCategory = (c) => {
     const C = {
@@ -120,6 +123,7 @@ const decodeCategory = (c) => {
         [category.consumables]: '耗品',
         [category.visionTraining]: '视训',
         [category.check]: '检查',
+        [category.DISCGlasses]: '多焦软镜',
     }
     return C[c];
 }

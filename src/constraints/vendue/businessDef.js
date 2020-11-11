@@ -89,6 +89,9 @@ const {
     action: qiniuFileAction,
     state: qiniuFileState,
 } = require('../../constants/vendue/qiniuFile');
+const {
+    action: paymentRecordAction,
+} = require('../../constants/vendue/paymentRecord');
 
 const ContractAuctionHouseWorkerExists = [
     {
@@ -1502,7 +1505,9 @@ const AUTH_MATRIX = {
                     },
                 }
             ]
-        }
+        },
+        [auctionAction.assign]: AllowEveryoneAuth,
+        [auctionAction.authRevoke]: AllowEveryoneAuth,
     },
     bid: {
         [bidAction.create]: {
@@ -1675,25 +1680,12 @@ const AUTH_MATRIX = {
                 {
                     '#unexists': [
                         {
+                            relation: 'paddle',
                             needData: true,
-                            relation: 'userPaddle',
                             condition: ({ user, actionData }) => {
-                                const {userId, paddle} = actionData;
-                                if (userId) {
-                                    return {
-                                        paddle: {
-                                            vendueId: paddle.vendueId,
-                                        },
-                                        userId,
-                                    }
-                                }
-                                else {
-                                    return {
-                                        paddle: {
-                                            vendueId: paddle.vendueId,
-                                        },
-                                        userId: user.id,
-                                    }
+                                return {
+                                    userId: user.id,
+                                    vendueId: actionData.paddle.vendueId,
                                 }
                             },
                         },
@@ -1708,32 +1700,12 @@ const AUTH_MATRIX = {
                         attr: 'vendue',
                         relations: [vendueRelation.worker, vendueRelation.manager, vendueRelation.owner],
                     },
-                    '#data': [
-                        {
-                            check: ({ row }) => {
-                                if(row.number){
-                                    return isPaddleOnline(row.number);
-                                };
-                                return true;
-                            },
-                        },
-                    ],
                 },
                 {
                     "#relation": {
                         attr: 'vendue.auctionHouse',
                         relations: [auctionHouseRelation.manager, auctionHouseRelation.owner],
                     },
-                    '#data': [
-                        {
-                            check: ({ row }) => {
-                                if(row.number){
-                                    return isPaddleOnline(row.number);
-                                };
-                                return true;
-                            },
-                        },
-                    ],
                 },
             ]
         }
@@ -2088,7 +2060,27 @@ const AUTH_MATRIX = {
                 {
                     "#relation": {
                         attr: 'paddle',
+                    },
+                },
+                {
+                    "#relation": {
+                        attr: 'paddle.vendue',
                         relations: [vendueRelation.manager, vendueRelation.owner],
+                    },
+                },
+                {
+                    "#relation": {
+                        attr: 'paddle.vendue.auctionHouse',
+                        relations: [auctionHouseRelation.manager, auctionHouseRelation.settler, auctionHouseRelation.owner],
+                    },
+                }
+            ]
+        },
+        [checkOutAction.cancel]: {
+            auths: [
+                {
+                    "#relation": {
+                        attr: 'paddle',
                     },
                 },
                 {
@@ -2137,21 +2129,29 @@ const AUTH_MATRIX = {
                         {
                             relation: 'userSession',
                             needData: true,
-                            condition: ({ user, actionData }) => {
+                            condition: ({user, actionData}) => {
                                 return {
                                     userId: user.id,
                                     sessionId: actionData.license.sessionId,
                                 }
                             },
                         },
+                    ],
+                },
+                {
+                    '#exists': [
                         {
                             relation: 'userVendue',
-                            condition: ({ user }) => {
+                            condition: ({user}) => {
                                 return {
                                     userId: user.id,
                                 }
                             },
                         },
+                    ],
+                },
+                {
+                    '#exists': [
                         {
                             relation: 'userAuctionHouse',
                             condition: ({ user }) => {
@@ -2160,7 +2160,7 @@ const AUTH_MATRIX = {
                                 }
                             },
                         },
-                    ]
+                    ],
                 },
                 // {
                 //     "#relation": {
@@ -2272,13 +2272,13 @@ const AUTH_MATRIX = {
                 {
                     '#exists': [
                         {
-                            relation: 'userPaddle',
+                            relation: 'paddle',
                             needData: true,
                             condition: ({ user, actionData }) => {
                                 const { agent } = actionData;
                                 const query = {
                                     userId: user.id,
-                                    paddleId: agent.paddleId,
+                                    id: agent.paddleId,
                                 };
                                 return query;
                             },
@@ -2310,15 +2310,22 @@ const AUTH_MATRIX = {
                 {
                     '#exists': [
                         {
-                            relation: 'userPaddle',
+                            relation: 'paddle',
                             condition: ({ user, row }) => {
                                 const query = {
                                     userId: user.id,
-                                    paddleId: row.paddleId,
+                                    id: row.paddleId,
                                 };
                                 return query;
                             },
                         },
+                    ],
+                    '#data': [
+                        {
+                            check: ({user, row}) => {
+                                return [agentState.failed].includes(row.state) || (row.state === agentState.normal && row.auction.state!== auctionState.ongoing);
+                            },
+                        }
                     ],
                 },
                 // {
@@ -2345,7 +2352,11 @@ const AUTH_MATRIX = {
     qiniuFile: {
         [qiniuFileAction.create]: AllowEveryoneAuth,
         [qiniuFileAction.remove]: AllowEveryoneAuth,
-    }
+    },
+    paymentRecord: {
+        [paymentRecordAction.create]: AllowEveryoneAuth,
+        [paymentRecordAction.remove]: AllowEveryoneAuth,
+    },
 };
 
 const STATE_TRAN_MATRIX = {

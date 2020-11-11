@@ -8,13 +8,13 @@ const {
 } = require('../action');
 
 const type = Object.assign({}, {
-    noInsurance: 1,
+    // noInsurance: 1,
     rewardBenifit: 2,
-    depositBenifit: 3,
+    depositBenifit: 1,
 });
 
 const STRINGS_OF_ORIGINS = {
-    [type.noInsurance]: "免保",
+    // [type.noInsurance]: "免保",
     [type.rewardBenifit]: "佣金优惠",
     [type.depositBenifit]: "保证金优惠",
 };

@@ -7,6 +7,7 @@ const {
     decodeState: decodeCommonState,
 } = require('../action');
 
+const omit = require('lodash/omit');
 const state = Object.assign({}, commonState, {
     preparing: 301,
     ready: 310,
@@ -48,14 +49,16 @@ const action = Object.assign({}, commonAction, {
     // pause: 610,
     // stop: 611,
 });
-const relation = Object.assign({}, commonRelation, {
+const relation = omit(Object.assign({}, commonRelation, {
     worker: 301,
+    authorizer: 401
+}), ['financial']);
 
-});
 
 const decodeRelation = (r) => {
     const R = {
         [relation.worker]: '员工',
+        [relation.authorizer]: '授权人'
     };
     return R[r] || decodeCommonRelation(r);
 };

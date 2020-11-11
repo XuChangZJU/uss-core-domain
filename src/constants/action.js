@@ -39,6 +39,7 @@ const action = {
 
     startToPay: 44,          // 开始支付
     payPartially: 45,          //部分支付成功
+    stopPaying: 46,          // 支付失败
 
     refund: 51,                 // 退款
     refundSuccess: 52,          // 退款成功
@@ -135,6 +136,8 @@ const decodeAction = (a) => {
 
         [action.confirmToPay]: '确认下单',
         [action.startToPay]: '开始支付',
+        [action.stopPaying]: '中止支付',
+
         [action.pay]: '支付成功',
         [action.payPartially]: '部分支付成功',
         [action.cancel]: '取消',
@@ -174,6 +177,7 @@ const COMMON_STATE_TRAN_MATRIX = {
     [action.pay]: [[state.unpaid, state.paying], state.legal],
     [action.startToPay]: [[state.unpaid, state.partialPaid], state.paying],
     [action.payPartially]: [[state.unpaid, state.paying], state.partialPaid],
+    [action.stopPaying]: [state.paying, state.unpaid],
     [action.makePaid]: [[state.init, state.unpaid], state.legal2],
     [action.cancel]: [[state.init, state.unpaid], state.cancelled],
     [action.abort]: [state.legal, state.aborted],

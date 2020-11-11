@@ -1,12 +1,22 @@
 const {
-    relation,
-    decodeRelation,
+    relation: commonRelation,
+    decodeRelation: decodeCommonRelation,
     action: commonAction,
     decodeAction: decodeCommonAction,
     state: commonState,
     decodeState: decodeCommonState,
 } = require('../action');
 
+const relation = Object.assign({}, commonRelation, {
+    favourite: 301,
+});
+
+const decodeRelation = (r) => {
+    const R = {
+        [relation.favourite]: '收藏',
+    };
+    return R[r] || decodeCommonRelation(r);
+};
 const state = Object.assign({}, commonState, {
     // preparing: 301,
     ready: 310,
@@ -72,7 +82,7 @@ const STATE_TRAN_MATRIX = {
     [action.ready]: [state.preparing, state.ready],
     [action.start]: [[state.ready, state.unsold, state.pausing, state.sold], state.ongoing],
     [action.sold]: [state.ongoing, state.sold],
-    [action.unsold]: [state.ongoing, state.unsold],
+    [action.unsold]: [[state.ongoing, state.sold], state.unsold],
     [action.pause]: [state.ongoing, state.pausing],
     // [action.cancel]: [[state.preparing, state.ready, state.ongoing, state.pausing], state.cancelled],
 };
