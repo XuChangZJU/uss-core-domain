@@ -56,7 +56,6 @@ const MemberOfAchievement = {
     ],
 };
 
-
 const MemberAchievementOption = {
     '#exists': [
         {

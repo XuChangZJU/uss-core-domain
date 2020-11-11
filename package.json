@@ -9,8 +9,7 @@
   "scripts": {
     "test": "mocha --recursive",
     "build": "cross-env BABEL_ENV=commonjs babel src --out-dir lib",
-    "precommit": "npm run build",
-    "postcommit": "git add lib* && git commit -m auto-build"
+    "precommit": "npm run build && git add lib*"
   },
   "dependencies": {
     "sha1": "^1.1.1",
