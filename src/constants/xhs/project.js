@@ -26,6 +26,7 @@ const type = {
     app: 1,
     mp: 2,
     web: 3,
+    public: 4,
 };
 
 const decodeType = (t) => {
@@ -33,6 +34,7 @@ const decodeType = (t) => {
         [type.app]: 'App',
         [type.mp]: '小程序',
         [type.web]: '网页',
+        [type.public]: '公众号',
     };
 
     return T[t];
