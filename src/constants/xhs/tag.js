@@ -11,29 +11,15 @@ const decodeAction = (a) => decodeCommonAction(a);
 
 const data = {
     member: {
-        goodGrad: 'goodGrad',
+        goodGrad: '优秀毕业生',
     },
     material: {
-        competition: 'competition',
+        competition: '竞赛',
     }
-};
-
-const decoder = (entity, tag) => {
-    const STR = {
-        member: {
-            goodGrad: '优秀毕业生',
-        },
-        material: {
-            competition: '竞赛',
-        },
-    };
-
-    return STR[entity][tag];
 };
 
 const def = {
     data,
-    decoder,
 };
 
 
