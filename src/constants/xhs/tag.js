@@ -18,24 +18,17 @@ const data = {
     }
 };
 
-const decoder = {
-    decodeMember: (tag) => {
-        const { goodGrad } = data.member;
-        const STRING = {
-            [goodGrad]: '优秀毕业生',
-        };
+const decoder = (entity, tag) => {
+    const STR = {
+        member: {
+            goodGrad: '优秀毕业生',
+        },
+        material: {
+            competition: '竞赛',
+        },
+    };
 
-        return STRING[tag];
-    },
-    decodeMaterial: (tag) => {
-        const { competition } = data.material;
-
-        const STRING = {
-            [competition]: '竞赛',
-        };
-
-        return STRING[tag];
-    },
+    return STR[entity][tag];
 };
 
 const def = {
