@@ -32,6 +32,7 @@ const {
 } = require('../../constants/xhs/comment');
 
 const {
+    action: CommonAction,
     AllowEveryoneAuth,
     OwnerRelationAuth,
     AnyRelationAuth,
@@ -108,6 +109,31 @@ const MemberProjectOption = {
     ],
 };
 
+// 现在用tag来定义管理员
+const IsManagerOption = {
+    '#exists': [
+        {
+            relation: 'member',
+            condition: ({user, row}) => {
+                const query = {
+                    userId: user.id,
+                    id: {
+                        $in: {
+                            name: 'tag',
+                            projection: 'entityId',
+                            query: {
+                                entity: 'member',
+                                tag: 'manager',
+                            },
+                        },
+                    },
+                };
+                return query;
+            },
+        },
+    ],
+};
+
 const AUTH_MATRIX = {
     member: {
         [MemberAction.update]: {
@@ -135,7 +161,8 @@ const AUTH_MATRIX = {
                             },
                         },
                     ],
-                }
+                },
+                IsManagerOption,
             ]
         }
     },
@@ -362,6 +389,18 @@ const AUTH_MATRIX = {
                     ],
                 }
             ]
+        },
+    },
+    tag: {
+        [CommonAction.create]: {
+            auths: [
+                IsManagerOption
+            ],
+        },
+        [CommonAction.remove]: {
+            auths: [
+                IsManagerOption,
+            ],
         },
     },
 };
