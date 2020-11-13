@@ -8,6 +8,9 @@ const role = {
     teacher: 1,
     graduate: 2,
     student: 3,
+    colorA: 1,
+    colorB: 2,
+    colorC: 3,
 };
 
 const decodeRole = (r) => {
@@ -15,6 +18,9 @@ const decodeRole = (r) => {
         [role.teacher]: '教师',
         [role.graduate]: '研究生',
         [role.student]: '学生',
+        [role.colorA]: '#FA7474',
+        [role.colorB]: '#396A9F',
+        [role.colorC]: '#68A0DD',
     };
 
     return T[r];
