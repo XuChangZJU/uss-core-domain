@@ -11,9 +11,9 @@ const role = {
 };
 
 const roleColor = {
-    colorTeacher: 10,
-    colorGraduate: 11,
-    colorStudent: 12,
+    colorTeacher: 1,
+    colorGraduate: 2,
+    colorStudent: 3,
 };
 const decodeRole = (r) => {
     const T = {
