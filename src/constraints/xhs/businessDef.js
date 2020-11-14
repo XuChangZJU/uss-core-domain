@@ -36,7 +36,7 @@ const {
     AllowEveryoneAuth,
     OwnerRelationAuth,
     AnyRelationAuth,
-} = require('../action');
+} = require('../../constants/xhs/tag');
 
 const {Roles} = require('../../constants/lens/roles');
 
