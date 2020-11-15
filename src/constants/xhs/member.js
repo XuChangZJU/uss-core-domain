@@ -10,6 +10,11 @@ const role = {
     student: 3,
 };
 
+const roleColor = {
+    colorTeacher: 1,
+    colorGraduate: 2,
+    colorStudent: 3,
+};
 const decodeRole = (r) => {
     const T = {
         [role.teacher]: '教师',
@@ -20,11 +25,23 @@ const decodeRole = (r) => {
     return T[r];
 };
 
+const decodeRoleColor = (r) => {
+    const T = {
+        [roleColor.colorTeacher]: '#FA7474',
+        [roleColor.colorGraduate]: '#396A9F',
+        [roleColor.colorStudent]: '#68A0DD',
+    };
+
+    return T[r];
+};
+
 const action = pick(CommonAction, ['update']);
 
 module.exports = {
     role,
+    roleColor,
     decodeRole,
+    decodeRoleColor,
     action,
     decodeAction,
 };

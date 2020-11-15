@@ -12,6 +12,7 @@ const decodeAction = (a) => decodeCommonAction(a);
 const data = {
     member: {
         goodGrad: '优秀毕业生',
+        manager: '管理员',
     },
     material: {
         competition: '竞赛',
