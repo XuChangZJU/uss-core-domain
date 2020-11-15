@@ -23,9 +23,9 @@ const {
 //
 //     return S[s] || decodeCommonState(s);
 // };
-function isPaddleOnline(paddleId){
+function isPaddleOnline(number){
     const maxOfflineNum = 10000;
-    return (paddleId > maxOfflineNum);
+    return ( number > maxOfflineNum);
 }
 module.exports = {
     relation,
