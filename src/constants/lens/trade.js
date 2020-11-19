@@ -114,6 +114,7 @@ const category = {
     'visionTraining': 5,
     'check': 6,
     'DISCGlasses': 7,
+    'SCL': 8,
 }
 const decodeCategory = (c) => {
     const C = {
@@ -124,6 +125,7 @@ const decodeCategory = (c) => {
         [category.visionTraining]: '视训',
         [category.check]: '检查',
         [category.DISCGlasses]: '多焦软镜',
+        [category.SCL]: '软性隐形眼镜',
     }
     return C[c];
 }

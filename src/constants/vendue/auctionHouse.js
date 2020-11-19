@@ -40,6 +40,8 @@ const relation = omit(Object.assign({}, commonRelation, {
     auctioneer: 402,
     stockKeeper: 403,
     settler: 404,
+    stuff: 405,
+    freeGranter: 406,
 }), ['financial']);
 
 
@@ -49,6 +51,8 @@ const decodeRelation = (r) => {
         [relation.auctioneer]: '拍卖师',
         [relation.stockKeeper]: '库管员',
         [relation.settler]: '结算员',
+        [relation.stuff]: '业务员',
+        [relation.freeGranter]: '免保授权人',
     };
     return R[r] || decodeCommonRelation(r);
 };

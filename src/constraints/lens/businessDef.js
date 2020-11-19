@@ -491,6 +491,7 @@ const AUTH_MATRIX = {
         [PatientAction.remove]: OwnerRelationAuth,
         [PatientAction.acquire]: AllowEveryoneAuth,
         [PatientAction.authAbandon]: OwnerRelationAuth,
+        [PatientAction.assign]: AllowEveryoneAuth,
     },
     diagnosis: {
         [DiagnosisAction.allocWeChatQrCode]: {
