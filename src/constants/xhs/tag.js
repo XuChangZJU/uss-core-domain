@@ -13,6 +13,7 @@ const data = {
     member: {
         goodGrad: '优秀毕业生',
         manager: '管理员',
+        engineer: '工程部成员'
     },
     material: {
         competition: '竞赛',
