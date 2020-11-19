@@ -4,7 +4,7 @@
 const pick = require('lodash/pick');
 const { action: CommonAction, decodeAction: decodeCommonAction } = require('../action');
 
-const action = pick(CommonAction, ['update']);
+const action = pick(CommonAction, ['create','update']);
 
 const decodeAction = (a) => decodeCommonAction(a);
 

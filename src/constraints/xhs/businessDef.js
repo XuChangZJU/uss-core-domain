@@ -343,6 +343,25 @@ const AUTH_MATRIX = {
         },
     },
     star: {
+        [StarAction.create]:{
+            auths: [
+                {
+                    '#exists': [
+                        {
+                            relation: 'member',
+                            condition: ({user}) => {
+                                const query = {
+                                    member: {
+                                        userId: user.id,
+                                    },
+                                };
+                                return query;
+                            },
+                        }
+                    ],
+                }
+            ],
+        },
         [StarAction.update]: {
             auths: [
                 {
