@@ -774,6 +774,16 @@ const AUTH_MATRIX = {
         },
     },
     organization: {
+        [OrganizationAction.allocWeChatQrCode]: {
+            auths: [
+                {
+                    "#relation": {
+                        attr: 'brand',
+                        relations: [BrandRelation.owner, BrandRelation.manager, BrandRelation.customerService],
+                    },
+                }
+            ],
+        },
         [OrganizationAction.create]: {
             auths: [{
                 '#exists': [
