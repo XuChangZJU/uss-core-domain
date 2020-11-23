@@ -17,6 +17,9 @@ const transportState = {
     yth: 10011,
     yzf: 10012,
     dxh: 10013,
+
+    checkInQueue: 11001,
+    checkCompleted: 11002,
 };
 
 const messageState = {
@@ -52,6 +55,8 @@ const decodeTransportState = (ts) => {
         [transportState.yth]: '已退货',
         // [transportState.yzf]: '已作废',
         // [transportState.dxh]: '待销号',
+        [transportState.checkInQueue]: '检查排队中',
+        [transportState.checkCompleted]: '检查完成',
     };
     return TS[ts];
 };
@@ -115,6 +120,7 @@ const category = {
     'check': 6,
     'DISCGlasses': 7,
     'SCL': 8,
+    'OkGlassCheck': 9,
 }
 const decodeCategory = (c) => {
     const C = {
@@ -126,6 +132,7 @@ const decodeCategory = (c) => {
         [category.check]: '检查',
         [category.DISCGlasses]: '多焦软镜',
         [category.SCL]: '软性隐形眼镜',
+        [category.OkGlassCheck]: '角膜塑形镜检查',
     }
     return C[c];
 }
