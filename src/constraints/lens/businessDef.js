@@ -116,6 +116,21 @@ const AUTH_MATRIX = {
         [qiniuFileAction.remove]: AllowEveryoneAuth,
     },
     trade: {
+        [TradeAction.completeOkGlassCheck]: {
+            auths: [
+                {
+                    '#relation': {
+                        attr: 'organization.brand',
+                    },
+                },
+                {
+                    '#relation': {
+                        attr: 'organization',
+                        relations: [OrganizationRelation.doctor],
+                    },
+                }
+            ],
+        },
         [TradeAction.makeAbandoned]: {
             auths: [
                 {

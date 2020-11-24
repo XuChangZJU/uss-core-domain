@@ -86,7 +86,9 @@ const action = Object.assign({}, commonAction, {
     send: 10003,
     confirmPick: 10004,
     customConfirm: 10005,
+    completeOkGlassCheck: 10006,
     updateFeedback: 9000,
+
 });
 
 const decodeAction = (a) => {
@@ -97,6 +99,7 @@ const decodeAction = (a) => {
         [action.updateFeedback]: '更新评价',
         [action.customConfirm]: '顾客确认',
         [action.confirmPick]: '确认取货',
+        [action.completeOkGlassCheck]: '完成Ok镜检查'
     };
 
     return S[a] || decodeCommonAction(a);
@@ -108,6 +111,7 @@ const STATE_TRAN_MATRIX =    Object.assign({}, COMMON_STATE_TRAN_MATRIX, {
     [action.confirmPick]:  [transportState.dqj, transportState.dgkqr],
     [action.customConfirm]: [transportState.dgkqr, transportState.yqj],
     [action.send]: [transportState.wdd, transportState.yfh],
+    [action.completeOkGlassCheck]: [transportState.checkInQueue, transportState.checkCompleted],
 });
 
 
