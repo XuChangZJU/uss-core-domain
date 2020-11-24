@@ -46,6 +46,9 @@ const AttrsUpdateMatrix = {
         birth: [
             State.normal, State.shadow
         ],
+        _createAt_: [
+            State.normal, State.shadow
+        ],
     },
 };
 
