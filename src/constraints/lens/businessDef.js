@@ -4,6 +4,7 @@
  */
 
 // userOrganization不再用于权限判断，根据人员当日打卡所在门店赋予权限，由于复杂写在definition中，这里只做基础的判断
+const moment = require('moment');
 const {
     action: qiniuFileAction,
     state: qiniuFileState,
@@ -262,6 +263,13 @@ const AUTH_MATRIX = {
                     "#relation": {
                         attr: 'diagnosis.organization.brand',
                     },
+                    '#data': [                 // 表示对现有对象或者用户的数据有要求，可以有多项，每项之间是AND的关系
+                        {
+                            check: ({user, row}) => {
+                                return !row.diagnosis.userId && new Date().setHours(23, 59) - row._createAt_ < 86400000;
+                            },
+                        }
+                    ],
                 }
             ]
         },
@@ -631,7 +639,7 @@ const AUTH_MATRIX = {
                     '#data': [
                         {
                             check: ({user, row}) => {
-                                return !row.userId && Date.now() - (row._createAt_ || row.createAt)  < 86400000;
+                                return !row.userId && new Date().setHours(23, 59) - row._createAt_ < 86400000;
                             },
                         }
                     ],
