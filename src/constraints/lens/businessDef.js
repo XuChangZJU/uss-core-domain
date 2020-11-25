@@ -266,7 +266,7 @@ const AUTH_MATRIX = {
                     '#data': [                 // 表示对现有对象或者用户的数据有要求，可以有多项，每项之间是AND的关系
                         {
                             check: ({user, row}) => {
-                                return !row.diagnosis.userId && new Date().setHours(23, 59) - row._createAt_ < 86400000;
+                                return !row.diagnosis.userId && new Date().setHours(23, 59) - (row._createAt_ || row.createAt) < 86400000;
                             },
                         }
                     ],
@@ -639,7 +639,7 @@ const AUTH_MATRIX = {
                     '#data': [
                         {
                             check: ({user, row}) => {
-                                return !row.userId && new Date().setHours(23, 59) - row._createAt_ < 86400000;
+                                return !row.userId && new Date().setHours(23, 59) - (row._createAt_ || row.createAt) < 86400000;
                             },
                         }
                     ],
