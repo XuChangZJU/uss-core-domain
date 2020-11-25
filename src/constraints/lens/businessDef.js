@@ -116,18 +116,73 @@ const AUTH_MATRIX = {
         [qiniuFileAction.remove]: AllowEveryoneAuth,
     },
     trade: {
-        [TradeAction.completeOkGlassCheck]: {
+        [TradeAction.completeCheck]: {
             auths: [
                 {
                     '#relation': {
                         attr: 'organization.brand',
                     },
+                    '#data': [                 // 表示对现有对象或者用户的数据有要求，可以有多项，每项之间是AND的关系
+                        {
+                            check: ({user, row}) => {
+                                return [TradeTransportState.checkInQueue].includes(row.transportState);
+                            },
+                        }
+                    ],
                 },
                 {
                     '#relation': {
                         attr: 'organization',
                         relations: [OrganizationRelation.doctor],
                     },
+                    '#data': [                 // 表示对现有对象或者用户的数据有要求，可以有多项，每项之间是AND的关系
+                        {
+                            check: ({user, row}) => {
+                                return [TradeTransportState.checkInQueue].includes(row.transportState);
+                            },
+                        }
+                    ],
+                }
+            ],
+        },
+        [TradeAction.cancelCheck]: {
+            auths: [
+                {
+                    '#relation': {
+                        attr: 'organization.brand',
+                    },
+                    '#data': [                 // 表示对现有对象或者用户的数据有要求，可以有多项，每项之间是AND的关系
+                        {
+                            check: ({user, row}) => {
+                                return [TradeTransportState.checkInQueue].includes(row.transportState);
+                            },
+                        }
+                    ],
+                },
+                {
+                    '#relation': {
+                        attr: 'organization',
+                        relations: [OrganizationRelation.doctor],
+                    },
+                    '#data': [                 // 表示对现有对象或者用户的数据有要求，可以有多项，每项之间是AND的关系
+                        {
+                            check: ({user, row}) => {
+                                return [TradeTransportState.checkInQueue].includes(row.transportState);
+                            },
+                        }
+                    ],
+                },
+                {
+                    "#relation": {
+                        attr: 'patient',
+                    },
+                    '#data': [                 // 表示对现有对象或者用户的数据有要求，可以有多项，每项之间是AND的关系
+                        {
+                            check: ({user, row}) => {
+                                return [TradeTransportState.checkInQueue].includes(row.transportState);
+                            },
+                        }
+                    ],
                 }
             ],
         },
