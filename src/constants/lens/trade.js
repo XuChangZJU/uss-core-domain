@@ -115,7 +115,7 @@ const STATE_TRAN_MATRIX =    Object.assign({}, COMMON_STATE_TRAN_MATRIX, {
     [action.customConfirm]: [transportState.dgkqr, transportState.yqj],
     [action.send]: [transportState.wdd, transportState.yfh],
     [action.completeCheck]: [transportState.checkInQueue, transportState.checkCompleted],
-    [action.cancelCheck]: [transportState.checkInQueue, transportState.cancelCheck],
+    [action.cancelCheck]: [transportState.checkInQueue, transportState.checkCanceled],
 });
 
 
