@@ -4,7 +4,6 @@
  */
 
 // userOrganization不再用于权限判断，根据人员当日打卡所在门店赋予权限，由于复杂写在definition中，这里只做基础的判断
-const moment = require('moment');
 const {
     action: qiniuFileAction,
     state: qiniuFileState,
