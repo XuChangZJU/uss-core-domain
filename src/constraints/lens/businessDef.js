@@ -116,6 +116,76 @@ const AUTH_MATRIX = {
         [qiniuFileAction.remove]: AllowEveryoneAuth,
     },
     trade: {
+        [TradeAction.completeCheck]: {
+            auths: [
+                {
+                    '#relation': {
+                        attr: 'organization.brand',
+                    },
+                    '#data': [                 // 表示对现有对象或者用户的数据有要求，可以有多项，每项之间是AND的关系
+                        {
+                            check: ({user, row}) => {
+                                return [TradeTransportState.checkInQueue].includes(row.transportState);
+                            },
+                        }
+                    ],
+                },
+                {
+                    '#relation': {
+                        attr: 'organization',
+                        relations: [OrganizationRelation.doctor],
+                    },
+                    '#data': [                 // 表示对现有对象或者用户的数据有要求，可以有多项，每项之间是AND的关系
+                        {
+                            check: ({user, row}) => {
+                                return [TradeTransportState.checkInQueue].includes(row.transportState);
+                            },
+                        }
+                    ],
+                }
+            ],
+        },
+        [TradeAction.cancelCheck]: {
+            auths: [
+                {
+                    '#relation': {
+                        attr: 'organization.brand',
+                    },
+                    '#data': [                 // 表示对现有对象或者用户的数据有要求，可以有多项，每项之间是AND的关系
+                        {
+                            check: ({user, row}) => {
+                                return [TradeTransportState.checkInQueue].includes(row.transportState);
+                            },
+                        }
+                    ],
+                },
+                {
+                    '#relation': {
+                        attr: 'organization',
+                        relations: [OrganizationRelation.doctor],
+                    },
+                    '#data': [                 // 表示对现有对象或者用户的数据有要求，可以有多项，每项之间是AND的关系
+                        {
+                            check: ({user, row}) => {
+                                return [TradeTransportState.checkInQueue].includes(row.transportState);
+                            },
+                        }
+                    ],
+                },
+                {
+                    "#relation": {
+                        attr: 'patient',
+                    },
+                    '#data': [                 // 表示对现有对象或者用户的数据有要求，可以有多项，每项之间是AND的关系
+                        {
+                            check: ({user, row}) => {
+                                return [TradeTransportState.checkInQueue].includes(row.transportState);
+                            },
+                        }
+                    ],
+                }
+            ],
+        },
         [TradeAction.makeAbandoned]: {
             auths: [
                 {
@@ -192,6 +262,13 @@ const AUTH_MATRIX = {
                     "#relation": {
                         attr: 'diagnosis.organization.brand',
                     },
+                    '#data': [                 // 表示对现有对象或者用户的数据有要求，可以有多项，每项之间是AND的关系
+                        {
+                            check: ({user, row}) => {
+                                return row.diagnosis && !row.diagnosis.userId && new Date().setHours(23, 59) - (row._createAt_ || row.createAt) < 86400000;
+                            },
+                        }
+                    ],
                 }
             ]
         },
@@ -561,7 +638,7 @@ const AUTH_MATRIX = {
                     '#data': [
                         {
                             check: ({user, row}) => {
-                                return !row.userId && Date.now() - (row._createAt_ || row.createAt)  < 86400000;
+                                return !row.userId && new Date().setHours(23, 59) - (row._createAt_ || row.createAt) < 86400000;
                             },
                         }
                     ],
@@ -774,6 +851,16 @@ const AUTH_MATRIX = {
         },
     },
     organization: {
+        [OrganizationAction.allocWeChatQrCode]: {
+            auths: [
+                {
+                    "#relation": {
+                        attr: 'brand',
+                        relations: [BrandRelation.owner, BrandRelation.manager, BrandRelation.customerService],
+                    },
+                }
+            ],
+        },
         [OrganizationAction.create]: {
             auths: [{
                 '#exists': [

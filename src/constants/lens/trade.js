@@ -17,6 +17,10 @@ const transportState = {
     yth: 10011,
     yzf: 10012,
     dxh: 10013,
+
+    checkInQueue: 11001,
+    checkCompleted: 11002,
+    checkCanceled: 11003,
 };
 
 const messageState = {
@@ -52,6 +56,9 @@ const decodeTransportState = (ts) => {
         [transportState.yth]: '已退货',
         // [transportState.yzf]: '已作废',
         // [transportState.dxh]: '待销号',
+        [transportState.checkInQueue]: '排队中',
+        [transportState.checkCompleted]: '已完成',
+        [transportState.checkCanceled]: '已取消',
     };
     return TS[ts];
 };
@@ -81,6 +88,8 @@ const action = Object.assign({}, commonAction, {
     send: 10003,
     confirmPick: 10004,
     customConfirm: 10005,
+    completeCheck: 10006,
+    cancelCheck: 10007,
     updateFeedback: 9000,
 });
 
@@ -92,6 +101,8 @@ const decodeAction = (a) => {
         [action.updateFeedback]: '更新评价',
         [action.customConfirm]: '顾客确认',
         [action.confirmPick]: '确认取货',
+        [action.completeCheck]: '完成',
+        [action.cancelCheck]: '取消'
     };
 
     return S[a] || decodeCommonAction(a);
@@ -103,6 +114,8 @@ const STATE_TRAN_MATRIX =    Object.assign({}, COMMON_STATE_TRAN_MATRIX, {
     [action.confirmPick]:  [transportState.dqj, transportState.dgkqr],
     [action.customConfirm]: [transportState.dgkqr, transportState.yqj],
     [action.send]: [transportState.wdd, transportState.yfh],
+    [action.completeCheck]: [transportState.checkInQueue, transportState.checkCompleted],
+    [action.cancelCheck]: [transportState.checkInQueue, transportState.checkCanceled],
 });
 
 
@@ -115,6 +128,7 @@ const category = {
     'check': 6,
     'DISCGlasses': 7,
     'SCL': 8,
+    'OkGlassCheck': 9,
 }
 const decodeCategory = (c) => {
     const C = {
@@ -126,6 +140,7 @@ const decodeCategory = (c) => {
         [category.check]: '检查',
         [category.DISCGlasses]: '多焦软镜',
         [category.SCL]: '软性隐形眼镜',
+        [category.OkGlassCheck]: '角膜塑形镜检查',
     }
     return C[c];
 }
