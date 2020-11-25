@@ -28,6 +28,10 @@ const {
 } = require('../../constants/xhs/star');
 
 const {
+    action: commentStarAction,
+} = require('../../constants/xhs/commentStar');
+
+const {
     action: CommentAction,
 } = require('../../constants/xhs/comment');
 
@@ -362,18 +366,26 @@ const AUTH_MATRIX = {
                 }
             ],
         },
-        [StarAction.update]: {
+    },
+    commentStar: {
+        [commentStarAction.create]:{
             auths: [
                 {
-                    '#data': [
+                    '#exists': [
                         {
-                            check: ({user, row}) => {
-                                return user.id;
+                            relation: 'member',
+                            condition: ({user}) => {
+                                const query = {
+                                    member: {
+                                        userId: user.id,
+                                    },
+                                };
+                                return query;
                             },
                         }
                     ],
                 }
-            ]
+            ],
         },
     },
     comment: {
