@@ -56,9 +56,9 @@ const decodeTransportState = (ts) => {
         [transportState.yth]: '已退货',
         // [transportState.yzf]: '已作废',
         // [transportState.dxh]: '待销号',
-        [transportState.checkInQueue]: '检查排队中',
-        [transportState.checkCompleted]: '检查完成',
-        [transportState.checkCanceled]: '检查取消',
+        [transportState.checkInQueue]: '排队中',
+        [transportState.checkCompleted]: '已完成',
+        [transportState.checkCanceled]: '已取消',
     };
     return TS[ts];
 };
@@ -101,8 +101,8 @@ const decodeAction = (a) => {
         [action.updateFeedback]: '更新评价',
         [action.customConfirm]: '顾客确认',
         [action.confirmPick]: '确认取货',
-        [action.completeCheck]: '完成检查',
-        [action.cancelCheck]: '取消检查'
+        [action.completeCheck]: '完成',
+        [action.cancelCheck]: '取消'
     };
 
     return S[a] || decodeCommonAction(a);
@@ -115,7 +115,7 @@ const STATE_TRAN_MATRIX =    Object.assign({}, COMMON_STATE_TRAN_MATRIX, {
     [action.customConfirm]: [transportState.dgkqr, transportState.yqj],
     [action.send]: [transportState.wdd, transportState.yfh],
     [action.completeCheck]: [transportState.checkInQueue, transportState.checkCompleted],
-    [action.cancelCheck]: [transportState.checkInQueue, transportState.cancelCheck],
+    [action.cancelCheck]: [transportState.checkInQueue, transportState.checkCanceled],
 });
 
 
