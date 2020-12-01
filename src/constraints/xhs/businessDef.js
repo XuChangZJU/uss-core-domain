@@ -28,7 +28,7 @@ const {
 } = require('../../constants/xhs/star');
 
 const {
-    action: commentStarAction,
+    action: CommentStarAction,
 } = require('../../constants/xhs/commentStar');
 
 const {
@@ -368,7 +368,7 @@ const AUTH_MATRIX = {
         },
     },
     commentStar: {
-        [commentStarAction.create]:{
+        [CommentStarAction.create]:{
             auths: [
                 {
                     '#exists': [
