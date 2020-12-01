@@ -738,53 +738,46 @@ const AUTH_MATRIX = {
             auths: [
                 {
                     '#relation': {
-                        attr: 'diagnosis.organization.brand',
+                        attr: 'trade.organization.brand',
                     },
                 },
             ],
         },
-        [RecordAction.bind]: {
-            auths: [
-                {
-                    '#data': [
-                        {
-                            check: ({row}) => {
-                                return !row.diagnosisId;
-                            },
-                        }
-                    ],
-                },
-            ],
-        },
-        [RecordAction.unbind]: {
-            auths: [
-                {
-                    '#relation': {
-                        attr: 'diagnosis.organization.brand',
-                    },
-                    '#data': [
-                        {
-                            check: ({row}) => {
-                                return row.diagnosisId;
-                            },
-                        }
-                    ],
-                },
-            ],
-        },
+        // [RecordAction.bind]: {
+        //     auths: [
+        //         {
+        //             '#data': [
+        //                 {
+        //                     check: ({row}) => {
+        //                         return !row.diagnosisId;
+        //                     },
+        //                 }
+        //             ],
+        //         },
+        //     ],
+        // },
+        // [RecordAction.unbind]: {
+        //     auths: [
+        //         {
+        //             '#relation': {
+        //                 attr: 'diagnosis.organization.brand',
+        //             },
+        //             '#data': [
+        //                 {
+        //                     check: ({row}) => {
+        //                         return row.diagnosisId;
+        //                     },
+        //                 }
+        //             ],
+        //         },
+        //     ],
+        // },
         [RecordAction.remove]: {
             auths: [
                 {
                     '#relation': {
-                        attr: 'diagnosis.organization.brand',
+                        attr: 'trade.organization.brand',
                     },
-                    '#data': [
-                        {
-                            check: ({ row }) => {
-                                return !row.diagnosisId;
-                            },
-                        }
-                    ],
                 },
             ],
         }
