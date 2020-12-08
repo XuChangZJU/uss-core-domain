@@ -5,6 +5,13 @@
 
 // userOrganization不再用于权限判断，根据人员当日打卡所在门店赋予权限，由于复杂写在definition中，这里只做基础的判断
 const {
+    action: appointmentAction,
+    STATE_TRANS_MATRIX: APPOINTMENT_STATE_TRANS_MATRIX,
+    state: appointmentState,
+    relation: appointmentRelation,
+} = require('../../constants/lens/appointment')
+
+const {
     action: qiniuFileAction,
     state: qiniuFileState,
 } = require('../../constants/lens/qiniuFile');
@@ -1218,10 +1225,58 @@ const AUTH_MATRIX = {
                 },
             ]
         },
-    }
+    },
+    appointment: {
+        [appointmentAction.create]: AllowEveryoneAuth,
+        [appointmentAction.cancel]: {
+            auths: [
+                {
+                    "#relation": {
+                        attr: 'brand',
+                    },
+                    '#data': [
+                        {
+                            check: ({ user, row }) => {
+                                return  row.state === appointmentState.normal;
+                            },
+                        }
+                    ]
+                },
+                {
+                    "#relation": {
+                        attr: 'patient',
+                    },
+                    '#data': [
+                        {
+                            check: ({ user, row }) => {
+                                return  row.state === appointmentState.normal;
+                            },
+                        }
+                    ]
+                },
+            ],
+        },
+        [appointmentAction.regist]: {
+            auths: [
+                {
+                    "#relation": {
+                        attr: 'brand',
+                    },
+                    '#data': [
+                        {
+                            check: ({ user, row }) => {
+                                return  row.state === appointmentState.normal;
+                            },
+                        }
+                    ]
+                },
+            ],
+        }
+    },
 };
 
 const STATE_TRAN_MATRIX = {
+    appointment: APPOINTMENT_STATE_TRANS_MATRIX,
     recheck: RECHECK_STATE_TRANS_MATRIX,
     diagnosis: DIAGNOSIS_STATE_TRANS_MATRIX,
     device: DEVICE_STATE_TRANS_MATRIX,

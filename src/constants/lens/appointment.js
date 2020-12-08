@@ -1,6 +1,6 @@
 const {
-    relation: commonRelation,
-    decodeRelation: decodeCommonRelation,
+    relation,
+    decodeRelation,
     action: commonAction,
     decodeAction: decodeCommonAction,
     state: commonState,
@@ -47,12 +47,18 @@ const decodeAction = (a) => {
     }
     return A[a] || decodeCommonAction(a);
 }
-
+const STATE_TRANS_MATRIX = {
+    [action.regist]: [state.normal, state.completed],
+    [action.cancel]: [state.normal, state.cancelled],
+};
 module.exports = {
+    relation,
+    decodeRelation,
     action,
     decodeAction,
     state,
     decodeState,
     category,
     decodeCategory,
+    STATE_TRANS_MATRIX,
 };
