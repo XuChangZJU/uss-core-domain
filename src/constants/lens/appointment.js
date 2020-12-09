@@ -7,17 +7,21 @@ const {
     decodeState: decodeCommonState,
 } = require('../action');
 
-const category = {
+const {
+    category,
+    decodeCategory
+} = require('./trade');
+const type = {
     appointment: 1,
     register: 2,
 }
 
-const decodeCategory = (c) => {
-    const C = {
-        [category.appointment]: '预约',
-        [category.register]: '挂号',
+const decodeType = (t) => {
+    const T = {
+        [type.appointment]: '预约',
+        [type.register]: '挂号',
     }
-    return C[c] || decodeCommonRelation(c);
+    return T[t];
 }
 
 const state = {
@@ -58,6 +62,8 @@ module.exports = {
     decodeAction,
     state,
     decodeState,
+    type,
+    decodeType,
     category,
     decodeCategory,
     STATE_TRANS_MATRIX,
