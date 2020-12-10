@@ -12,7 +12,7 @@ const relation = omit(Object.assign({}, commonRelation, {
     seller: 501,
     financialStuff: 601,
     doctor: 701,
-    OKGlassDoctor: 801,
+    OKGlassesDoctor: 801,
 }), ['financial']);
 
 const decodeRelation = (r) => {
@@ -22,7 +22,7 @@ const decodeRelation = (r) => {
         [relation.seller]: '门店销售人员',
         [relation.financialStuff]: '财务人员',
         [relation.doctor]: '医生',
-        [relation.OKGlassDoctor]: '角膜塑形镜验配师',
+        [relation.OKGlassesDoctor]: '角膜塑形镜验配师',
     };
 
     return S[r] || decodeCommonRelation(r);
