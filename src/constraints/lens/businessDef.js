@@ -1274,6 +1274,9 @@ const AUTH_MATRIX = {
             ],
         }
     },
+    register: {
+        [appointmentAction.create]: AllowEveryoneAuth,
+    },
 };
 
 const STATE_TRAN_MATRIX = {
