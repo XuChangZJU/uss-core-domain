@@ -7,7 +7,13 @@ const {
     decodeState: decodeCommonState,
 } = require('../action');
 
-function decodeTimeSlot(timeSlot){
+const timeSlot = {
+    morning: 1,
+    afternoon: 2,
+    evening: 3,
+    allday: 4,
+};
+const decodeTimeSlot = (timeSlot) => {
     const t = {
         1: '上午',
         2: '下午',
@@ -76,6 +82,7 @@ module.exports = {
     decodeType,
     category,
     decodeCategory,
+    timeSlot,
     decodeTimeSlot,
     STATE_TRANS_MATRIX,
 };
