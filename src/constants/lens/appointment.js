@@ -42,7 +42,7 @@ const state = {
 
 const decodeState = (s) => {
     const S = {
-        [state.normal]: '正常的',
+        [state.normal]: '待就诊',
         [state.cancelled]: '已取消',
         [state.completed]: '已完成',
     }
