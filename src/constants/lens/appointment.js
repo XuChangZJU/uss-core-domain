@@ -52,7 +52,7 @@ const decodeState = (s) => {
         [state.cancelled]: '已取消',
         [state.completed]: '已完成',
     }
-    return S[s] || decodeCommonRelation(s);
+    return S[s] || decodeCommonState(s);
 }
 
 const action = Object.assign({
