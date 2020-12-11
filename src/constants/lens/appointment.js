@@ -50,8 +50,8 @@ const decodeState = (s) => {
 }
 
 const action = Object.assign({
-    regist: 1,
-    cancel: 1,
+    regist: 301,
+    cancel: 401,
 }, commonAction);
 
 const decodeAction = (a) => {

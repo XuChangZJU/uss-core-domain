@@ -1231,6 +1231,7 @@ const AUTH_MATRIX = {
         [appointmentAction.cancel]: {
             auths: [
                 {
+
                     "#relation": {
                         attr: 'brand',
                     },
