@@ -55,14 +55,14 @@ const decodeState = (s) => {
     return S[s] || decodeCommonState(s);
 }
 
-const action = Object.assign({
+const action = Object.assign({}, commonAction, {
     regist: 301,
     cancel: 401,
-}, commonAction);
+});
 
 const decodeAction = (a) => {
     const A = {
-        [action.regist]: '挂号',
+        [action.regist]: '确认',
         [action.cancel]: '取消',
     }
     return A[a] || decodeCommonAction(a);
