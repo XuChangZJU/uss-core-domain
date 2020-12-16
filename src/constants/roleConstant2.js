@@ -24,7 +24,10 @@ const Roles = {
         name: 'systemManager',
         id: 10,
     },
-
+    REPORTER: {
+        name: 'reporter',
+        id: 20,
+    },
 
     //  for 交易系统
     BUYER: {
