@@ -21,7 +21,7 @@ const systemUsers = {
 		id: 1001,
 		mobile: "13000000003",
 		nickname: "平台帐户"
-	}
+	},
 };
 
 const userState = {

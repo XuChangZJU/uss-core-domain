@@ -52,6 +52,7 @@ const decodeState = (s) => {
     return S[s] || decodeCommonState(s);
 };
 const STATE_TRAN_MATRIX = {
+    [action.cancel]: [state.bidding, state.cancelledBidding],
     [action.cancelBidding]: [state.bidding, state.cancelledBidding],
     [action.cancelSuccess]: [state.success, state.cancelledSuccess],
     [action.success]: [state.bidding, state.success],

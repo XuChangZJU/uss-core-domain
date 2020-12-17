@@ -1594,6 +1594,49 @@ const AUTH_MATRIX = {
                 }
             ]
         },
+        [bidAction.cancel]: {
+            auths: [
+                {
+                    "#relation": {
+                        attr: 'auction.session',
+                        relations: [sessionRelation.manager, sessionRelation.auctioneer, sessionRelation.owner],
+                    },
+                    '#data': [
+                        {
+                            check: ({ row }) => {
+                                return row.state === bidState.bidding;
+                            },
+                        },
+                    ],
+                },
+                {
+                    "#relation": {
+                        attr: 'auction.session.vendue',
+                        relations: [vendueRelation.manager, vendueRelation.owner],
+                    },
+                    '#data': [
+                        {
+                            check: ({ row }) => {
+                                return row.state === bidState.bidding;
+                            },
+                        },
+                    ],
+                },
+                {
+                    "#relation": {
+                        attr: 'auction.session.vendue.auctionHouse',
+                        relations: [auctionHouseRelation.manager, auctionHouseRelation.owner],
+                    },
+                    '#data': [
+                        {
+                            check: ({ row }) => {
+                                return row.state === bidState.bidding;
+                            },
+                        },
+                    ],
+                }
+            ]
+        },
         [bidAction.cancelBidding]: {
             auths: [
                 {
