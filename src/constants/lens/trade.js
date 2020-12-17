@@ -130,6 +130,7 @@ const category = {
     'SCL': 8,
     'OkGlassCheck': 9,
     'doctorService': 10,
+    'visionTrainingCheck': 11,
 }
 const decodeCategory = (c) => {
     const C = {
@@ -143,6 +144,7 @@ const decodeCategory = (c) => {
         [category.SCL]: '软性隐形眼镜',
         [category.OkGlassCheck]: '角膜塑形镜检查',
         [category.doctorService]: '医生问诊',
+        [category.visionTrainingCheck]: '视训检查',
     }
     return C[c];
 }
