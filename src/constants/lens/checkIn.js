@@ -26,6 +26,7 @@ const state = {
     earlyLeave: 4,
     different: 8,
     business: 16,
+    noCheckIn: 32,
 }
 const decodeState = (s) => {
     const S = {
@@ -34,7 +35,8 @@ const decodeState = (s) => {
         [state.late]: '迟到',
         [state.earlyLeave]: '早退',
         [state.different]: '打卡门店与排班门店不同',
-        [state.business]: '出差'
+        [state.business]: '出差',
+        [state.noCheckIn]: '缺卡'
     }
     return S[s];
 }

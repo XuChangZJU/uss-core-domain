@@ -3,6 +3,7 @@ const {
     decodeRelation: decodeCommonRelation,
 } = require('../action');
 
+const omit = require('lodash/omit');
 
 const {
     action: commonAction,
@@ -43,10 +44,10 @@ const decodeAction = (a) => {
     return TEXT[a] || decodeCommonAction(a);
 };
 
-const relation = Object.assign({}, commonRelation, {
+const relation = omit(Object.assign({}, commonRelation, {
     doctor: 401,
     keeper: 501
-});
+}), ['financial']);
 
 
 const decodeRelation = (r) => {
