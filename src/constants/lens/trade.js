@@ -139,7 +139,7 @@ const decodeCategory = (c) => {
         [category.DoneGlasses]: '成镜',
         [category.consumables]: '耗品',
         [category.visionTraining]: '视训',
-        [category.check]: '检查',
+        [category.check]: '验光检查',
         [category.DISCGlasses]: '多焦软镜',
         [category.SCL]: '软性隐形眼镜',
         [category.OkGlassCheck]: '角膜塑形镜检查',
