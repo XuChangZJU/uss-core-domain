@@ -1319,13 +1319,6 @@ const AUTH_MATRIX = {
                         attr: 'session',
                         relations: [sessionRelation.manager, sessionRelation.auctioneer, sessionRelation.owner],
                     },
-                    // '#data': [
-                    //     {
-                    //         check: ({user, row}) => {
-                    //             return [auctionState.ready, auctionState.pausing, auctionState.unsold].includes(row.state);
-                    //         },
-                    //     }
-                    // ],
                 },
                 {
                     "#relation": {

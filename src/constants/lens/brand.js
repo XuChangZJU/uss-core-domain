@@ -5,6 +5,7 @@ const {
     action,
     decodeAction,
 } = require('../action');
+const { category } = require('./trade');
 
 const relation = omit(Object.assign({}, commonRelation, {
     worker: 301,
@@ -29,9 +30,20 @@ const decodeRelation = (r) => {
 
     return S[r] || decodeCommonRelation(r);
 };
+const everyOneAbleCategory = [category.check, category.consumables, category.DoneGlasses, category.DISCGlasses, category.SCL, category.makeGlasses];
+const relationCategory = {
+    [relation.worker]: everyOneAbleCategory,
+    [relation.seller]: everyOneAbleCategory,
+    [relation.customerService]: everyOneAbleCategory,
+    [relation.financialStuff]: everyOneAbleCategory,
+    [relation.doctor]: everyOneAbleCategory.concat([category.doctorService]),
+    [relation.OKGlassesDoctor]: everyOneAbleCategory.concat([category.OKGlasses, category.OkGlassCheck]),
+    [relation.visionTrainingDoctor]: everyOneAbleCategory.concat([category.visionTraining, category.visionTrainingCheck]),
+}
 module.exports = {
     action,
     decodeAction,
     relation,
     decodeRelation,
+    relationCategory,
 };
