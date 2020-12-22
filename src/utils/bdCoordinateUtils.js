@@ -24,7 +24,19 @@ function bdDecrypt(bdLng, bdLat)
     const ggLat = Math.ceil((z * Math.sin(theta)) * precision) / precision;
     return [ggLng, ggLat];
 }
+function rad(v) {
+    return v * Math.PI / 180;
+}
+function getDist(lng1, lat1, lng2, lat2) {
+    const a = rad(lat1) - rad(lat2);
+    const b = rad(lng1) - rad(lng2);
+
+    const s = 2 * Math.sin(Math.sqrt(Math.pow(Math.sin(a / 2), 2) + Math.cos(rad(lat1)) * Math.cos(rad(lat2)) * Math.pow(Math.sin(b / 2), 2)));
+    const EARTH_RADIUS = 6378.137;
+    return Math.round(s * EARTH_RADIUS * 10000) / 10;
+}
 module.exports = {
+    getDist,
     bdEncrypt,
     bdDecrypt,
 };
