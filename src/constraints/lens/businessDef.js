@@ -1307,6 +1307,15 @@ const AUTH_MATRIX = {
                 },
             ],
         },
+        [activityAction.allocWeChatQrCode]: {
+            auths: [
+                {
+                    "#relation": {
+                        attr: 'brand',
+                    },
+                },
+            ],
+        }
     },
 };
 
