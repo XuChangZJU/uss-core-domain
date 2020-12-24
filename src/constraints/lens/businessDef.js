@@ -10,7 +10,10 @@ const {
     state: appointmentState,
     relation: appointmentRelation,
 } = require('../../constants/lens/appointment')
-
+const {
+    action: activityAction,
+    category: activityCategory,
+} = require('../../constants/lens/activity')
 const {
     action: qiniuFileAction,
     state: qiniuFileState,
@@ -1274,8 +1277,36 @@ const AUTH_MATRIX = {
             ],
         }
     },
-    register: {
-        [appointmentAction.create]: AllowEveryoneAuth,
+    activity: {
+        [activityAction.create]: {
+            auths: [
+                {
+                    '#exists': [
+                        {
+                            relation: 'userBrand',
+                            needData: true,
+                            condition: ({ actionData, user }) => {
+                                const { activity } = actionData;
+                                const query = {
+                                    userId: user.id,
+                                    brandId: activity.brandId,
+                                };
+                                return query;
+                            },
+                        },
+                    ],
+                },
+            ]
+        },
+        [activityAction.update]: {
+            auths: [
+                {
+                    "#relation": {
+                        attr: 'brand',
+                    },
+                },
+            ],
+        },
     },
 };
 
