@@ -13,10 +13,14 @@ const state = {
     finished: 401,
     cancelled: 501,
 }
-const decodeState = {
-    [state.ongoing]: '进行中',
-    [state.finished]: '已结束',
-    [state.cancelled]: '已取消'
+const decodeState = (s) => {
+    const S = {
+        [state.ongoing]: '进行中',
+        [state.finished]: '已结束',
+        [state.cancelled]: '已取消'
+    };
+    return S[s];
+
 }
 const action = Object.assign({},commonAction,{
     cancel: 301,
