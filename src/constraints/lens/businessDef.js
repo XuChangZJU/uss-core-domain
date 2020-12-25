@@ -13,6 +13,8 @@ const {
 const {
     action: activityAction,
     category: activityCategory,
+    STATE_TRANS_MATRIX: ACTIVITY_STATE_TRANS_MATRIX,
+    state: activityState,
 } = require('../../constants/lens/activity')
 const {
     action: qiniuFileAction,
@@ -1304,6 +1306,45 @@ const AUTH_MATRIX = {
                     "#relation": {
                         attr: 'brand',
                     },
+                    '#data': [
+                        {
+                            check: ({ user, row }) => {
+                                return  row.state === activityState.ongoing;
+                            },
+                        }
+                    ]
+                },
+            ],
+        },
+        [activityAction.cancel]: {
+            auths: [
+                {
+                    "#relation": {
+                        attr: 'brand',
+                    },
+                    '#data': [
+                        {
+                            check: ({ user, row }) => {
+                                return  row.state === activityState.ongoing;
+                            },
+                        }
+                    ]
+                },
+            ],
+        },
+        [activityAction.restart]: {
+            auths: [
+                {
+                    "#relation": {
+                        attr: 'brand',
+                    },
+                    '#data': [
+                        {
+                            check: ({ user, row }) => {
+                                return  row.state === activityState.cancelled;
+                            },
+                        }
+                    ]
                 },
             ],
         },
@@ -1313,6 +1354,13 @@ const AUTH_MATRIX = {
                     "#relation": {
                         attr: 'brand',
                     },
+                    '#data': [
+                        {
+                            check: ({ user, row }) => {
+                                return  row.state === activityState.ongoing;
+                            },
+                        }
+                    ]
                 },
             ],
         }
@@ -1328,6 +1376,7 @@ const STATE_TRAN_MATRIX = {
     transmitter: TRANSMITTER_STATE_TRANS_MATRIX,
     workerOrder: WORKERORDER_STATE_TRAN_MATRIX,
     trade: TRADE_STATE_TRAN_MATRIX,
+    activity: ACTIVITY_STATE_TRANS_MATRIX,
 };
 
 module.exports = {
