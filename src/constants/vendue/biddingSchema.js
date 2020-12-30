@@ -58,7 +58,13 @@ function getChangedPrice(params){
             return (parseInt(myPrice1[0]) * 10 + secondPos[posJudge + add]) * basic;
         },
         [type.sequentiallyIncreasing]: ({ price, section, add }) => {
-            const { step } = section;
+            const { step, min, max } = section;
+            if((price - min) % step !== 0){
+                price = min + (Math.floor((price - min)/step )) * step;
+                if(add < 0){
+                    add ++;
+                }
+            }
             if(price + step * add < 0){
                 return 0;
             }
