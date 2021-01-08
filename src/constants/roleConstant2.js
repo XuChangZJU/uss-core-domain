@@ -50,7 +50,7 @@ const Roles = {
         id: 1101,
     },
 
-
+/*
     // for 车小宝
     CXBCUSTOMER:{
         name: 'cxbCustomer',
@@ -59,8 +59,9 @@ const Roles = {
     CXBWORKER: {
         name: 'cxbWorker',
         logic: true,
-    },
+    },*/
 };
 module.exports = {
     Roles,
+    roles: Roles,
 };

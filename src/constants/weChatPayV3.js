@@ -49,3 +49,4 @@ const obCtMatrix = {
     [organizationType['党政、机关及事业单位']]: [contactType['经营者、法人'], contactType['负责人']],
     [organizationType['其它组织']]: [contactType['经营者、法人'], contactType['负责人']],
 };
+
