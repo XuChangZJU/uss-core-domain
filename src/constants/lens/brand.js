@@ -31,12 +31,13 @@ const decodeRelation = (r) => {
     return S[r] || decodeCommonRelation(r);
 };
 const everyOneAbleCategory = [category.check, category.consumables, category.DoneGlasses, category.DISCGlasses, category.SCL, category.makeGlasses];
+const allCategory = [category.check, category.consumables, category.DoneGlasses, category.DISCGlasses, category.SCL, category.makeGlasses, category.doctorService, category.visionTraining, category.visionTrainingCheck, category.OKGlasses, category.OkGlassCheck];
 const relationCategory = {
-    [relation.owner]: everyOneAbleCategory,
-    [relation.manager]: everyOneAbleCategory,
+    [relation.owner]: allCategory,
+    [relation.manager]: allCategory,
     [relation.worker]: everyOneAbleCategory,
     [relation.seller]: everyOneAbleCategory,
-    [relation.customerService]: everyOneAbleCategory,
+    [relation.customerService]: allCategory,
     [relation.financialStuff]: everyOneAbleCategory,
     [relation.doctor]: everyOneAbleCategory.concat([category.doctorService]),
     [relation.OKGlassesDoctor]: everyOneAbleCategory.concat([category.OKGlasses, category.OkGlassCheck]),

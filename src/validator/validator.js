@@ -18,6 +18,42 @@ function isIdCardNumber(text) {
     return ((typeof text === "string") && text.length===18 && (/^\d{6}(18|19|20)\d{2}(0[1-9]|1[012])(0[1-9]|[12]\d|3[01])\d{3}(\d|X)$/i.test(text)))
 }
 
+function isPassportNumber(text) {
+    // 护照
+    // 规则： 14/15开头 + 7位数字, G + 8位数字, P + 7位数字, S/D + 7或8位数字,等
+    // 样本： 141234567, G12345678, P1234567
+    return typeof text === 'string' && /^([a-zA-z]|[0-9]){5,17}$/.test(text);
+}
+
+function isHkCardNumber(text) {
+    // 港澳居民来往内地通行证
+    // 规则： H/M + 10位或6位数字
+    // 样本： H1234567890
+    return typeof text === 'string' && /^([A-Z]\d{6,10}(\(\w{1}\))?)$/.test(text);
+}
+
+function isAmCardNumber(text) {
+    return typeof text === 'string' && /^([A-Z]\d{6,10}(\(\w{1}\))?)$/.test(text);
+}
+
+function isTwCardNumber(text) {
+    // 台湾居民来往大陆通行证
+    // 规则： 新版8位或18位数字， 旧版10位数字 + 英文字母
+    // 样本： 12345678 或 1234567890B
+    return typeof text === 'string' && /^\d{8}|^[a-zA-Z0-9]{10}|^\d{18}$/.test(text);
+}
+
+function isBirthNumber(text) {
+    return typeof text === 'string' && /^[a-zA-Z0-9]{5,21}$/.test(text);
+}
+
+function isSoldierNumber(text) {
+    // 军官证
+    // 规则： 军/兵/士/文/职/广/（其他中文） + "字第" + 4到8位字母或数字 + "号"
+    // 样本： 军字第2001988号, 士字第P011816X号
+    return typeof text === 'string' && /^[\u4E00-\u9FA5](字第)([0-9a-zA-Z]{4,8})(号?)$/.test(text);
+}
+
 // todo untested
 function isUrl(str) {
     // return ((str) &&  (typeof str === "string") && !!str.match(/(((^https?:(?:\/\/)?)(?:[-;:&=\+\$,\w]+@)?[A-Za-z0-9.-]+|(?:www.|[-;:&=\+\$,\w]+@)[A-Za-z0-9.-]+)((?:\/[\+~%\/.\w-_]*)?\??(?:[-\+=&;%@.\w_]*)#?(?:[\w]*))?)$/g));
@@ -31,7 +67,7 @@ function isNickname(str) {
 }
 
 function isSizedCaptcha(text, size) {
-    return typeof text === 'string' && text.length === size && !isNan(parseInt(text, 10));
+    return typeof text === 'string' && text.length === size && !isNaN(parseInt(text, 10));
 }
 
 function isDigital(digital) {
@@ -48,6 +84,12 @@ module.exports = {
     isCaptcha,
     isPassword,
     isIdCardNumber,
+    isPassportNumber,
+    isHkCardNumber,
+    isAmCardNumber,
+    isTwCardNumber,
+    isBirthNumber,
+    isSoldierNumber,
     isUrl,
     isNickname,
     isDigital,

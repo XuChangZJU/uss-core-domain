@@ -470,6 +470,13 @@ const AUTH_MATRIX = {
                     "#relation": {
                         relations: [vendueRelation.manager, vendueRelation.owner],
                     },
+                    "#data": [
+                        {
+                            check: ({user, row}) => {
+                                return [vendueState.preparing, vendueState.ready].includes(row.state);
+                            },
+                        }
+                    ],
                 },
                 {
                     '#exists': [
