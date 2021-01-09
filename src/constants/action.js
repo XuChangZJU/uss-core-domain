@@ -196,6 +196,54 @@ const COMMON_STATE_TRAN_MATRIX = {
     [action.complete]: [[state.legal, state.legal2], state.completed],
 };
 
+const transportState = {
+    inPreparing: 1,
+    sending: 11,
+    accepted: 21,
+    rejected: 22,
+    abnormal: 101,
+};
+
+const decodeTransportState = (ts) => {
+    const TEXT = {
+        [transportState.inPreparing]: '备货中',
+        [transportState.sending]: '发货中',
+        [transportState.accepted]: '已收货',
+        [transportState.rejected]: '已拒收',
+        [transportState.abnormal]: '异常中止',
+    };
+
+    return TEXT[ts];
+};
+
+const transportAction = {
+    send: 11,
+    accept: 21,
+    reject: 22,
+    abort: 101,
+};
+
+const decodeTransportAction = (ta) => {
+    const TEXT = {
+        [transportAction.send]: '发货',
+        [transportAction.accept]: '接收',
+        [transportAction.reject]: '拒绝',
+        [transportAction.abort]: '中止',
+    };
+
+    return TEXT[ta];
+};
+
+const TRANSPORT_STATE_TRANS_MATRIX = {
+    [transportAction.send]: [transportState.inPreparing, transportState.sending],
+    [transportAction.accept]: [transportState.sending, transportState.accepted],
+    [transportAction.reject]: [transportState.sending, transportState.rejected],
+    [transportAction.abort]: [[transportState.inPreparing,
+        transportState.sending,
+        transportState.accepted,
+        transportState.rejected], transportState.abnormal],
+};
+
 module.exports = {
     action,
     decodeAction,
@@ -205,4 +253,10 @@ module.exports = {
     decodeRelation,
 
     COMMON_STATE_TRAN_MATRIX,
+
+    transportState,
+    decodeTransportState,
+    transportAction,
+    decodeTransportAction,
+    TRANSPORT_STATE_TRANS_MATRIX
 };
