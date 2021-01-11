@@ -1237,10 +1237,10 @@ const AUTH_MATRIX = {
     },
     appointment: {
         [appointmentAction.create]: AllowEveryoneAuth,
+        [appointmentAction.update]: AllowEveryoneAuth,
         [appointmentAction.cancel]: {
             auths: [
                 {
-
                     "#relation": {
                         attr: 'organization.brand',
                     },
