@@ -4,6 +4,10 @@
  */
 
 // userOrganization不再用于权限判断，根据人员当日打卡所在门店赋予权限，由于复杂写在definition中，这里只做基础的判断
+
+const {
+    action: reportAction,
+} = require('../../constants/lens/report')
 const {
     action: appointmentAction,
     STATE_TRANS_MATRIX: APPOINTMENT_STATE_TRANS_MATRIX,
@@ -1365,6 +1369,42 @@ const AUTH_MATRIX = {
             ],
         }
     },
+    report: {
+        [reportAction.create]: {
+            auths: [
+                {
+                    '#exists': [
+                        {
+                            relation: 'userBrand',
+                            condition: ({user}) => {
+                                return {
+                                    userId: user.id,
+                                }
+                            }
+                        },
+                    ]
+                }
+            ]
+        },
+        [reportAction.update]: {
+            auths: [
+                {
+                    "#relation": {
+                        attr: 'brand',
+                    },
+                },
+            ],
+        },
+        [reportAction.remove]: {
+            auths: [
+                {
+                    "#relation": {
+                        attr: 'brand',
+                    },
+                },
+            ],
+        }
+    }
 };
 
 const STATE_TRAN_MATRIX = {
