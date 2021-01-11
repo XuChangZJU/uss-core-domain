@@ -26,12 +26,20 @@ function maskName(name) {
     return name.slice(0, name.length - 1).concat("*");
 }
 
-
+function maskStar(str, frontLen, endLen, star = '*') {
+    const len = str.length - frontLen - endLen;
+    let xing = '';
+    for (let i = 0; i < len; i++) {
+        xing += star;
+    }
+    return str.substring(0, frontLen) + xing + str.substring(str.length - endLen);
+}
 
 
 
 module.exports = {
     maskIdCard,
     maskMobile,
-    maskName
+    maskName,
+    maskStar,
 }
