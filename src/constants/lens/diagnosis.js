@@ -51,15 +51,22 @@ const decodeAction = (a) => {
 
 const relation = Object.assign({}, commonRelation, {
     seller: 1001,        // 营业员
-    doctor: 401
+    doctor: 401,
+    VIP: 501,
+    regularCostomer: 601,
+    hospitalInsider: 701,
+    others: 801,
 });
 
 const decodeRelation = (r) => {
     const T = {
         [relation.seller]: '营业员',
-        [relation.doctor]: '业务扩展人员',
+        [relation.doctor]: '验光医生',
+        [relation.VIP]: 'VIP顾客',
+        [relation.regularCostomer]: '熟客',
+        [relation.hospitalInsider]: '医院内部人士',
+        [relation.others]: '其他',
     };
-
     return T[r] || decodeCommonRelation(r);
 };
 

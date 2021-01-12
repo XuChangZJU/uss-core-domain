@@ -7,6 +7,7 @@ const {
 
 const { category: tradeCategory } = require('./trade');
 
+
 const getReportCategoryId  = (c) => {
     const S = {
         [tradeCategory.OkGlassCheck]: 2,
