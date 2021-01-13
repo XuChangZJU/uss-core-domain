@@ -132,6 +132,23 @@ const AUTH_MATRIX = {
         [qiniuFileAction.remove]: AllowEveryoneAuth,
     },
     trade: {
+        [TradeAction.financialRefund]: {
+            auths: [
+                {
+                    '#relation': {
+                        attr: 'organization.brand',
+                        relation: [BrandRelation.owner, BrandRelation.manager, BrandRelation.customerService, BrandRelation.financialStuff],
+                    },
+                    '#data': [                 // 表示对现有对象或者用户的数据有要求，可以有多项，每项之间是AND的关系
+                        {
+                            check: ({user, row}) => {
+                                return [TradeState.legal, TradeState.legal2, TradeState.refunded, TradeState.abandoned].includes(row.state);
+                            },
+                        }
+                    ],
+                },
+            ],
+        },
         [TradeAction.completeCheck]: {
             auths: [
                 {

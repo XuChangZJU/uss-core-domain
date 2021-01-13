@@ -2,8 +2,8 @@ const {
     action: commonAction,
     decodeAction: decodeCommonAction,
     COMMON_STATE_TRAN_MATRIX,
-    state,
-    decodeState,
+    state: commonState,
+    decodeState: decodeCommonState,
     relation,
     decodeRelation
 } = require('../action');
@@ -27,6 +27,18 @@ const messageState = {
     sending: 10001,
     success: 10002,
     failure: 10003,
+};
+
+const state = Object.assign({}, commonState, {
+    financialRefunded: 501,
+});
+
+const decodeState = (s) => {
+    const S = {
+        [state.financialRefunded]: '财务已退款',
+    };
+
+    return S[s] || decodeCommonState(s);
 };
 
 const decodeMessageState = (s) => {
@@ -83,6 +95,7 @@ const decodeGetMethod = (gm) => {
 
 
 const action = Object.assign({}, commonAction, {
+    financialRefund: 501,
     confirmArriveAtShop: 10001,
     confirmGet: 10002,
     send: 10003,
@@ -95,6 +108,7 @@ const action = Object.assign({}, commonAction, {
 
 const decodeAction = (a) => {
     const S = {
+        [action.financialRefund]: '财务退款',
         [action.confirmArriveAtShop]: '确认到店',
         [action.confirmGet]: '确认收货',
         [action.send]: '发快递',
@@ -109,6 +123,7 @@ const decodeAction = (a) => {
 };
 
 const STATE_TRAN_MATRIX =    Object.assign({}, COMMON_STATE_TRAN_MATRIX, {
+    [action.financialRefund]: [[state.legal2, state.legal, state.abandoned], state.financialRefunded],
     [action.confirmArriveAtShop]: [transportState.wdd, transportState.dqj],
     [action.confirmGet]: [transportState.yfh, transportState.yqj],
     [action.confirmPick]:  [transportState.dqj, transportState.dgkqr],
