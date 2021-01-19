@@ -1488,7 +1488,7 @@ const AUTH_MATRIX = {
             auths: [
                 {
                     "#relation": {
-                        attr: 'brand',
+                        attr: 'trade.organization.brand',
                         relations: [BrandRelation.owner, BrandRelation.manager, BrandRelation.customerService, BrandRelation.worker, BrandRelation.supporter],
                     },
                 },
