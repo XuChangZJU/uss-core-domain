@@ -494,6 +494,13 @@ const AUTH_MATRIX = {
                             },
                         },
                     ],
+                    "#data": [
+                        {
+                            check: ({user, row}) => {
+                                return [vendueState.preparing, vendueState.ready].includes(row.state);
+                            },
+                        }
+                    ],
                 }
             ]
         },
