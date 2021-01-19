@@ -4,9 +4,9 @@ const {
 } = require('./common');
 
 const type = Object.assign({}, {
-    singleChoice: 1,
-    multipleChoice: 2,
-    fillBlank: 3,
+    'singleChoice': 1,
+    'multipleChoice': 2,
+    'fillBlank': 3,
 });
 
 

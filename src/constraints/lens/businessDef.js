@@ -1505,10 +1505,17 @@ const AUTH_MATRIX = {
                     },
                 },
                 {
-                    "#relation": {
-                        attr: '',
-                        relations: [revisitRelation.supporter],
-                    },
+                    '#exists': [
+                        {
+                            relation: 'revisit',
+                            condition: ({ user, row }) => {
+                                return {
+                                    userId: user.id,
+                                    id: row.revisitId,
+                                }
+                            }
+                        }
+                    ]
                 },
             ],
         },
