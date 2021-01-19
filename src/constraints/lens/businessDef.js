@@ -6,6 +6,13 @@
 // userOrganization不再用于权限判断，根据人员当日打卡所在门店赋予权限，由于复杂写在definition中，这里只做基础的判断
 
 const {
+    action: revisitAction,
+    STATE_TRANS_MATRIX: REVISIT_STATE_TRANS_MATRIX,
+} = require('../../constants/lens/revisit')
+const {
+    action: questionAction,
+} = require('../../constants/lens/question')
+const {
     action: reportAction,
 } = require('../../constants/lens/report')
 const {
@@ -1421,7 +1428,69 @@ const AUTH_MATRIX = {
                 },
             ],
         }
-    }
+    },
+    question: {
+        [questionAction.create]: {
+            auths: [
+                {
+                    '#exists': [
+                        {
+                            relation: 'userBrand',
+                            condition: ({user}) => {
+                                return {
+                                    userId: user.id,
+                                    relation: {
+                                        $in: [BrandRelation.owner, BrandRelation.manager, BrandRelation.customerService, BrandRelation.worker],
+                                    }
+                                }
+                            }
+                        },
+                    ]
+                }
+            ]
+        },
+        [questionAction.update]: {
+            auths: [
+                {
+                    "#relation": {
+                        attr: 'brand',
+                        relations: [BrandRelation.owner, BrandRelation.manager, BrandRelation.customerService, BrandRelation.worker],
+                    },
+                },
+            ],
+        },
+    },
+    revisit: {
+        [revisitAction.create]: {
+            auths: [
+                {
+                    '#exists': [
+                        {
+                            relation: 'userBrand',
+                            condition: ({user}) => {
+                                return {
+                                    userId: user.id,
+                                    relation: {
+                                        $in: [BrandRelation.owner, BrandRelation.manager, BrandRelation.customerService, BrandRelation.worker, BrandRelation.supporter],
+                                    }
+                                }
+                            }
+                        },
+                    ]
+                }
+            ]
+        },
+        [revisitAction.update]: {
+            auths: [
+                {
+                    "#relation": {
+                        attr: 'brand',
+                        relations: [BrandRelation.owner, BrandRelation.manager, BrandRelation.customerService, BrandRelation.worker, BrandRelation.supporter],
+                    },
+                },
+            ],
+        },
+    },
 };
 
 const STATE_TRAN_MATRIX = {
@@ -1434,6 +1503,7 @@ const STATE_TRAN_MATRIX = {
     workerOrder: WORKERORDER_STATE_TRAN_MATRIX,
     trade: TRADE_STATE_TRAN_MATRIX,
     activity: ACTIVITY_STATE_TRANS_MATRIX,
+    revisit: REVISIT_STATE_TRANS_MATRIX,
 };
 
 module.exports = {
