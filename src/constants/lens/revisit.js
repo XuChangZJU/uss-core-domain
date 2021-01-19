@@ -4,6 +4,8 @@
 const {
     action: commonAction,
     decodeAction: decodeCommonAction,
+    relation: commonRelation,
+    decodeRelation: decodeCommonRelation,
 } = require('../action');
 
 const state = {
@@ -20,6 +22,18 @@ const decodeState = (s) => {
     };
 
     return S[s];
+};
+
+
+const relation = Object.assign({}, commonRelation, {
+    supporter: 301,
+});
+const decodeRelation = (r) => {
+    const R = {
+        [relation.supporter]: '客服',
+    };
+
+    return R[r] || decodeCommonRelation(a);
 };
 
 const action = Object.assign({}, commonAction, {
@@ -43,5 +57,7 @@ module.exports = {
     decodeAction,
     state,
     decodeState,
+    relation,
+    decodeRelation,
     STATE_TRANS_MATRIX,
 };

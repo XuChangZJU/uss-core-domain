@@ -6,7 +6,11 @@
 // userOrganization不再用于权限判断，根据人员当日打卡所在门店赋予权限，由于复杂写在definition中，这里只做基础的判断
 
 const {
+    action: revisitQuestionAction,
+} = require('../../constants/lens/revisitQuestion')
+const {
     action: revisitAction,
+    relation: revisitRelation,
     STATE_TRANS_MATRIX: REVISIT_STATE_TRANS_MATRIX,
 } = require('../../constants/lens/revisit')
 const {
@@ -1486,6 +1490,24 @@ const AUTH_MATRIX = {
                     "#relation": {
                         attr: 'brand',
                         relations: [BrandRelation.owner, BrandRelation.manager, BrandRelation.customerService, BrandRelation.worker, BrandRelation.supporter],
+                    },
+                },
+            ],
+        },
+    },
+    revisitQuestion: {
+        [revisitQuestionAction.update]: {
+            auths: [
+                {
+                    "#relation": {
+                        attr: 'question.brand',
+                        relations: [BrandRelation.owner, BrandRelation.manager, BrandRelation.customerService, BrandRelation.worker],
+                    },
+                },
+                {
+                    "#relation": {
+                        attr: '',
+                        relations: [revisitRelation.supporter],
                     },
                 },
             ],
