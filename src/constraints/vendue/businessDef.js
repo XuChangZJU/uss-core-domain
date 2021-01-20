@@ -4,6 +4,9 @@ const {
     AnyRelationAuth,
 } = require('../action');
 const {
+    action: bannerAction,
+} = require('../../constants/vendue/banner');
+const {
     action: agentAction,
     state: agentState,
 } = require('../../constants/vendue/agent');
@@ -2396,6 +2399,42 @@ const AUTH_MATRIX = {
     paymentRecord: {
         [paymentRecordAction.create]: AllowEveryoneAuth,
         [paymentRecordAction.remove]: AllowEveryoneAuth,
+    },
+    banner: {
+        [bannerAction.create]: {
+            auths: [
+                {
+                    '#exists': [
+                        {
+                            relation: 'userAuctionHouse',
+                            condition: ({user}) => {
+                                const query = {
+                                    userId: user.id,
+                                };
+                                return query;
+                            },
+                        },
+                    ],
+                }
+            ],
+        },
+        [bannerAction.remove]: {
+            auths: [
+                {
+                    '#exists': [
+                        {
+                            relation: 'userAuctionHouse',
+                            condition: ({user}) => {
+                                const query = {
+                                    userId: user.id,
+                                };
+                                return query;
+                            },
+                        },
+                    ],
+                }
+            ],
+        },
     },
 };
 
