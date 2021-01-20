@@ -30,8 +30,8 @@ const ageGroup = {
         min: 7,
     },
     3: {
-        max: 13,
-        min: 18,
+        max: 18,
+        min: 13,
     },
     4: {
         max: 60,
