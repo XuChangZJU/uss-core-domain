@@ -7,6 +7,7 @@
 
 const {
     action: revisitQuestionAction,
+    state: revisitState,
 } = require('../../constants/lens/revisitQuestion')
 const {
     action: revisitAction,
@@ -1491,6 +1492,23 @@ const AUTH_MATRIX = {
                         attr: 'trade.organization.brand',
                         relations: [BrandRelation.owner, BrandRelation.manager, BrandRelation.customerService, BrandRelation.worker, BrandRelation.supporter],
                     },
+                },
+            ],
+        },
+        [revisitAction.manage]: {
+            auths: [
+                {
+                    "#relation": {
+                        attr: 'trade.organization.brand',
+                        relations: [BrandRelation.owner, BrandRelation.manager, BrandRelation.customerService, BrandRelation.worker, BrandRelation.supporter],
+                    },
+                    '#data': [                 // 表示对现有对象或者用户的数据有要求，可以有多项，每项之间是AND的关系
+                        {
+                            check: ({user, row}) => {
+                                return [revisitState.pending].includes(row.state);
+                            },
+                        }
+                    ],
                 },
             ],
         },

@@ -49,7 +49,7 @@ const decodeAction = (a) => {
 };
 
 const STATE_TRANS_MATRIX = {
-    [action.manage]: [state.processing, state.pending],
+    [action.manage]: [state.pending, state.processing],
 };
 
 module.exports = {
