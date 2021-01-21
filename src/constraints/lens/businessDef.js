@@ -7,11 +7,11 @@
 
 const {
     action: revisitQuestionAction,
-    state: revisitState,
 } = require('../../constants/lens/revisitQuestion')
 const {
     action: revisitAction,
     relation: revisitRelation,
+    state: revisitState,
     STATE_TRANS_MATRIX: REVISIT_STATE_TRANS_MATRIX,
 } = require('../../constants/lens/revisit')
 const {
