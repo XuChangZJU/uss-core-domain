@@ -2160,7 +2160,7 @@ const AUTH_MATRIX = {
                     '#data': [
                         {
                             check: ({user, row}) => {
-                                return checkOutState.legal > row.state;
+                                return [checkOutState.init, checkOutState.unpaid].includes(row.state);
                             },
                         }
                     ],
@@ -2173,7 +2173,7 @@ const AUTH_MATRIX = {
                     '#data': [
                         {
                             check: ({user, row}) => {
-                                return checkOutState.legal > row.state;
+                                return [checkOutState.init, checkOutState.unpaid].includes(row.state);
                             },
                         }
                     ],
@@ -2186,7 +2186,7 @@ const AUTH_MATRIX = {
                     '#data': [
                         {
                             check: ({user, row}) => {
-                                return checkOutState.legal > row.state;
+                                return [checkOutState.init, checkOutState.unpaid].includes(row.state);
                             },
                         }
                     ],
@@ -2202,7 +2202,7 @@ const AUTH_MATRIX = {
                     '#data': [
                         {
                             check: ({user, row}) => {
-                                return checkOutState.legal > row.state;
+                                return [checkOutState.init, checkOutState.unpaid].includes(row.state);
                             },
                         }
                     ],
@@ -2216,7 +2216,7 @@ const AUTH_MATRIX = {
                     '#data': [
                         {
                             check: ({user, row}) => {
-                                return checkOutState.legal > row.state;
+                                return [checkOutState.init, checkOutState.unpaid].includes(row.state);
                             },
                         }
                     ],
@@ -2229,7 +2229,7 @@ const AUTH_MATRIX = {
                     '#data': [
                         {
                             check: ({user, row}) => {
-                                return checkOutState.legal > row.state;
+                                return [checkOutState.init, checkOutState.unpaid].includes(row.state);
                             },
                         }
                     ],
