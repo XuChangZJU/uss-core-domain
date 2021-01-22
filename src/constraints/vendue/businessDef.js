@@ -2157,18 +2157,39 @@ const AUTH_MATRIX = {
                     "#relation": {
                         attr: 'paddle',
                     },
+                    '#data': [
+                        {
+                            check: ({user, row}) => {
+                                return checkOutState.legal > row.state;
+                            },
+                        }
+                    ],
                 },
                 {
                     "#relation": {
                         attr: 'paddle.vendue',
                         relations: [vendueRelation.manager, vendueRelation.owner],
                     },
+                    '#data': [
+                        {
+                            check: ({user, row}) => {
+                                return checkOutState.legal > row.state;
+                            },
+                        }
+                    ],
                 },
                 {
                     "#relation": {
                         attr: 'paddle.vendue.auctionHouse',
                         relations: [auctionHouseRelation.manager, auctionHouseRelation.settler, auctionHouseRelation.owner],
                     },
+                    '#data': [
+                        {
+                            check: ({user, row}) => {
+                                return checkOutState.legal > row.state;
+                            },
+                        }
+                    ],
                 }
             ]
         },
@@ -2178,6 +2199,13 @@ const AUTH_MATRIX = {
                     "#relation": {
                         attr: 'paddle',
                     },
+                    '#data': [
+                        {
+                            check: ({user, row}) => {
+                                return checkOutState.legal > row.state;
+                            },
+                        }
+                    ],
                 },
                 {
 
@@ -2185,12 +2213,26 @@ const AUTH_MATRIX = {
                         attr: 'paddle.vendue',
                         relations: [vendueRelation.manager, vendueRelation.owner],
                     },
+                    '#data': [
+                        {
+                            check: ({user, row}) => {
+                                return checkOutState.legal > row.state;
+                            },
+                        }
+                    ],
                 },
                 {
                     "#relation": {
                         attr: 'paddle.vendue.auctionHouse',
                         relations: [auctionHouseRelation.manager, auctionHouseRelation.settler, auctionHouseRelation.owner],
                     },
+                    '#data': [
+                        {
+                            check: ({user, row}) => {
+                                return checkOutState.legal > row.state;
+                            },
+                        }
+                    ],
                 }
             ]
         },
