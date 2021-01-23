@@ -12,24 +12,7 @@ const state = {
     disabled: 21,
     fresh: 22,
 };
-const type = {
-    microBusiness: 1,
-    selfEmployedSeller: 2,
-    selfEmployedBusiness: 3,
-    company: 4,
-    office: 5,
-    others: 6,
-}
-const decodeType = (t) => {
-    const T = {
-        [type.microBusiness]: '小微商户',
-        [type.selfEmployedSeller]: '个人卖家',
-        [type.selfEmployedBusiness]: '个体工商户',
-        [type.company]: '企业',
-        [type.office]: '党政，机关及事业单位',
-        [type.others]: '其他',
-    }
-}
+
 const decodeState = (s) => {
     const TEXT = {
         [state.online]: '上线中',
@@ -39,6 +22,26 @@ const decodeState = (s) => {
     };
 
     return TEXT[s];
+};
+
+const type = {
+    microBusiness: 1,
+    selfEmployedSeller: 2,
+    selfEmployedBusiness: 3,
+    company: 4,
+    office: 5,
+    others: 6,
+};
+const decodeType = (t) => {
+    const TEXT = {
+        [type.microBusiness]: '小微商户',
+        [type.selfEmployedSeller]: '个人卖家',
+        [type.selfEmployedBusiness]: '个体工商户',
+        [type.company]: '企业',
+        [type.office]: '党政，机关及事业单位',
+        [type.others]: '其他',
+    };
+    return TEXT[t];
 };
 
 const action = {
