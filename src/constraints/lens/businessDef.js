@@ -1419,7 +1419,7 @@ const AUTH_MATRIX = {
             auths: [
                 {
                     "#relation": {
-                        attr: 'brand',
+                        attr: 'trade.organization.brand',
                     },
                 },
             ],
@@ -1428,7 +1428,7 @@ const AUTH_MATRIX = {
             auths: [
                 {
                     "#relation": {
-                        attr: 'brand',
+                        attr: 'trade.organization.brand',
                     },
                 },
             ],
