@@ -2154,9 +2154,18 @@ const AUTH_MATRIX = {
         [checkOutAction.remove]: {
             auths: [
                 {
-                    "#relation": {
-                        attr: 'paddle',
-                    },
+                    '#exists': [
+                        {
+                            relation: 'paddle',
+                            condition: ({ user, row }) => {
+                                const query = {
+                                    userId: user.id,
+                                    id: row.paddleId,
+                                };
+                                return query;
+                            },
+                        },
+                    ],
                     '#data': [
                         {
                             check: ({user, row}) => {
@@ -2196,9 +2205,18 @@ const AUTH_MATRIX = {
         [checkOutAction.cancel]: {
             auths: [
                 {
-                    "#relation": {
-                        attr: 'paddle',
-                    },
+                    '#exists': [
+                        {
+                            relation: 'paddle',
+                            condition: ({ user, row }) => {
+                                const query = {
+                                    userId: user.id,
+                                    id: row.paddleId,
+                                };
+                                return query;
+                            },
+                        },
+                    ],
                     '#data': [
                         {
                             check: ({user, row}) => {
