@@ -15,6 +15,4 @@ const decodeRole = (r) => {
         [role.taxiDriver]: '的士司机',
         [role.customer]: '顾客',
     };
-
-
 }

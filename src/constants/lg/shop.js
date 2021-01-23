@@ -79,6 +79,8 @@ const STATE_TRANS_MATRIX = {
 };
 
 module.exports = {
+    type,
+    decodeType,
     state,
     decodeState,
     action,
