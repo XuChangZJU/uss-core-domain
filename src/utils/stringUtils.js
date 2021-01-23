@@ -29,9 +29,24 @@ function checkMobile(str) {
     }
 }
 
+/**
+ * 生成随机字符串
+ * @param {长度} len 
+ */
+function random(len = 32) {
+    const DICT = 'ABCDEFGHJKMNPQRSTWXYZabcdefhijkmnprstwxyz2345678';    /****默认去掉了容易混淆的字符oOLl,9gq,Vv,Uu,I1****/
+　　const maxPos = DICT.length;
+　　let pwd = '';
+　　for (i = 0; i < len; i++) {
+　　　　pwd += DICT.charAt(Math.floor(Math.random() * maxPos));
+　　}
+　　return pwd;
+}
+
 
 
 module.exports = {
     template,
     checkMobile,
+    random,
 }
