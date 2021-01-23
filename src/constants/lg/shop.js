@@ -4,6 +4,8 @@
 const {
     relation: commonRelation,
     decodeRelation: decodeCommonRelation,
+    action: commonAction,
+    decodeAction: decodeCommonAction,
 } = require('../action');
 
 const state = {
@@ -44,11 +46,13 @@ const decodeType = (t) => {
     return TEXT[t];
 };
 
-const action = {
-    online: 1,
-    offline: 11,
-    disable: 21,
-};
+const action = Object.assign({}, commonAction,
+    {
+        online: 301,
+        offline: 401,
+        disable: 501,
+    }
+);
 
 const decodeAction = (a) => {
     const TEXT = {
@@ -57,19 +61,17 @@ const decodeAction = (a) => {
         [action.disable]: '禁用',
     };
 
-    return TEXT[a];
+    return TEXT[a] || decodeCommonAction(a);
 };
 
 
 const relation = Object.assign({}, commonRelation, {
     seller: 1001,        // 营业员
-    master: 1011,        // 管理员
 });
 
 const decodeRelation = (r) => {
     const T = {
         [relation.seller]: '营业员',
-        [relation.master]: '管理员',
     };
 
     return T[r] || decodeCommonRelation(r);

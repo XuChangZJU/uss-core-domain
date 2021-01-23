@@ -1,6 +1,11 @@
 /**
  * Created by Xc on 2021/1/7.
  */
+const {
+    action: commonAction,
+    decodeAction: decodeCommonAction,
+} = require('../action');
+
 const state = {
     online: 1,
     offline: 11,
@@ -19,11 +24,13 @@ const decodeState = (s) => {
     return TEXT[s];
 };
 
-const action = {
-    online: 1,
-    offline: 11,
-    disable: 21,
-};
+const action =  Object.assign({}, commonAction,
+    {
+        online: 101,
+        offline: 111,
+        disable: 211,
+    },
+);
 
 const decodeAction = (a) => {
     const TEXT = {
@@ -32,7 +39,7 @@ const decodeAction = (a) => {
         [action.disable]: '禁用',
     };
 
-    return TEXT[a];
+    return TEXT[a] || decodeCommonAction(a);
 };
 
 const STATE_TRANS_MATRIX = {
