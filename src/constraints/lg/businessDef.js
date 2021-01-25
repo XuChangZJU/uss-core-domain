@@ -219,6 +219,33 @@ const AUTH_MATRIX = {
                 },
             ],
         },
+        [shopAction.transfer]: {
+            auths: [
+                {
+                    "#relation": {
+                        relations: [shopRelation.owner],
+                    },
+                },
+            ],
+        },
+        [shopAction.authGrantMulti2]: {
+            auths: [
+                {
+                    "#relation": {
+                        relations: [shopRelation.owner, shopRelation.manager],
+                    },
+                },
+            ],
+        },
+        [shopAction.authRevoke]: {
+            auths: [
+                {
+                    "#relation": {
+                        relations: [shopRelation.owner],
+                    },
+                },
+            ],
+        },
     },
 };
 const STATE_TRAN_MATRIX = {
