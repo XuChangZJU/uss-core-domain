@@ -125,7 +125,7 @@ const Jobs = {
     superAdministrator: 5, // 超级管理员
 };
 
-
+const insideBrandRelation = [BrandRelation.owner, BrandRelation.manager, BrandRelation.customerService, BrandRelation.financialStuff, BrandRelation.worker];
 
 const OrganizationManagement = {
     auths: [
@@ -244,6 +244,12 @@ const AUTH_MATRIX = {
                             },
                         }
                     ],
+                },
+                {
+                    '#relation': {  // 内部人员可以不受流转状态限制退单
+                        attr: 'organization.brand',
+                        relations: insideBrandRelation,
+                    },
                 }
             ],
         },
