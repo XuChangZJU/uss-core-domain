@@ -13,6 +13,12 @@ const {
     STATE_TRANS_MATRIX: SHOP_STATE_TRANS_MATRIX,
 } = require('../../constants/lg/shop');
 
+const {
+    action: storeAction,
+    state: storeState,
+    relation: storeRelation,
+} = require('../../constants/lg/store');
+
 const AUTH_MATRIX = {
     lgDistrict: {
         [districtAction.update]: {
@@ -40,10 +46,13 @@ const AUTH_MATRIX = {
                 {
                     '#exists': [
                         {
-                            relation: 'userDistrict',
-                            condition: ({ user, row }) => {
+                            relation: 'userLgDistrict',
+                            needData: true,
+                            condition: ({ user, actionData }) => {
+                                const { lgMall } = actionData;
                                 const query = {
                                     userId: user.id,
+                                    lgMallId: lgMall.lgDistrictId,
                                 };
                                 return query;
                             },
@@ -89,7 +98,7 @@ const AUTH_MATRIX = {
                 {
                     '#exists': [
                         {
-                            relation: 'userDistrict',
+                            relation: 'userLgDistrict',
                             condition: ({ user }) => {
                                 const query = {
                                     userId: user.id,
@@ -102,10 +111,13 @@ const AUTH_MATRIX = {
                 {
                     '#exists': [
                         {
-                            relation: 'userMall',
-                            condition: ({ user }) => {
+                            relation: 'userLgMall',
+                            needData: true,
+                            condition: ({ user, actionData }) => {
+                                const { lgShop } = actionData;
                                 const query = {
                                     userId: user.id,
+                                    lgMallId: lgShop.lgMallId,
                                 };
                                 return query;
                             },
@@ -241,6 +253,39 @@ const AUTH_MATRIX = {
             auths: [
                 {
                     "#relation": {
+                        relations: [shopRelation.owner],
+                    },
+                },
+            ],
+        },
+    },
+    lgStore: {
+        [storeAction.create]: {
+            auths: [
+                {
+                    '#exists': [
+                        {
+                            relation: 'userLgShop',
+                            needData: true,
+                            condition: ({ user, actionData }) => {
+                                const { lgStore } = actionData;
+                                const query = {
+                                    userId: user.id,
+                                    lgShopId: lgStore.lgShopId,
+                                    relation: shopRelation.owner,
+                                };
+                                return query;
+                            },
+                        },
+                    ],
+                },
+            ]
+        },
+        [storeAction.update]: {
+            auths: [
+                {
+                    "#relation": {
+                        attr: 'lgShop',
                         relations: [shopRelation.owner],
                     },
                 },
