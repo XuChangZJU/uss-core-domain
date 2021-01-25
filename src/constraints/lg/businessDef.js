@@ -196,5 +196,26 @@ const AUTH_MATRIX = {
                 },
             ],
         },
+        [shopAction.assign]: {
+            auths: [
+                {
+                    "#relation": {
+                        attr: 'lgMall',
+                        relations: [mallRelation.owner, mallRelation.manager],
+                    },
+                },
+                {
+                    "#relation": {
+                        attr: 'lgMall.lgDistrict',
+                        relations: [districtRelation.owner, districtRelation.manager],
+                    },
+                },
+                {
+                    "#relation": {
+                        relations: [shopRelation.owner],
+                    },
+                },
+            ],
+        },
     },
 };
