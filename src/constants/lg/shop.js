@@ -1,6 +1,4 @@
-/**
- * Created by Xc on 2021/1/7.
- */
+
 const {
     relation: commonRelation,
     decodeRelation: decodeCommonRelation,
