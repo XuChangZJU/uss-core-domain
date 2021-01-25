@@ -10,7 +10,9 @@ const {
 const {
     action: shopAction,
     relation: shopRelation,
+    STATE_TRANS_MATRIX: SHOP_STATE_TRANS_MATRIX,
 } = require('../../constants/lg/shop');
+
 const AUTH_MATRIX = {
     lgDistrict: {
         [districtAction.update]: {
@@ -218,4 +220,11 @@ const AUTH_MATRIX = {
             ],
         },
     },
+};
+const STATE_TRAN_MATRIX = {
+    lgShop: SHOP_STATE_TRANS_MATRIX,
+};
+module.exports = {
+    AUTH_MATRIX,
+    STATE_TRAN_MATRIX,
 };
