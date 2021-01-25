@@ -83,7 +83,7 @@ const AUTH_MATRIX = {
             ],
         },
     },
-    lgshop: {
+    lgShop: {
         [shopAction.create]: {
             auths: [
                 {
