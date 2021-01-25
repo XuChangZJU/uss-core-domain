@@ -1318,9 +1318,13 @@ const AUTH_MATRIX = {
             ],
         },
         [appointmentAction.allocWeChatQrCode]: {
-            "#relation": {
-                attr: 'organization.brand',
-            },
+            auths: [
+                {
+                    "#relation": {
+                        attr: 'organization.brand',
+                    },
+                }
+            ],
         },
     },
     activity: {
