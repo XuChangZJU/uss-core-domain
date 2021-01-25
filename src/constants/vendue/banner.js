@@ -7,6 +7,21 @@ const {
     decodeState,
 } = require('../action');
 
+const type = {
+    in: 1,
+    out: 2,
+    none: 3,
+}
+
+const decodeType = (c) => {
+    const C = {
+        [type.in]: '内部跳转',
+        [type.out]: '外部跳转',
+        [type.none]: '无',
+    };
+    return C[c];
+}
+
 const category = {
     'auctionList': 1,
     'auctionDetail': 2,
@@ -36,5 +51,7 @@ module.exports = {
     decodeAction,
     category,
     decodeCategory,
+    type,
+    decodeType,
 };
 
