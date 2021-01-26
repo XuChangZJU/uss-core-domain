@@ -104,6 +104,5 @@ module.exports = {
     getContactType,
     docType,
     decodeDocType,
-    docType,
 };
 
