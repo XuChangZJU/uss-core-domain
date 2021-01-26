@@ -87,6 +87,20 @@ const STATE_TRAN_MATRIX = {
     // [action.cancel]: [[state.preparing, state.ready, state.ongoing, state.pausing], state.cancelled],
 };
 
+const category = {
+    guqian: 1,
+    yinding: 2,
+    jizhibi: 3,
+};
+
+const decodeCategory = (c) => {
+    const C = {
+        [category.guqian]: '古钱',
+        [category.yinding]: '银锭',
+        [category.jizhibi]: '机制币',
+    };
+    return C[c];
+}
 module.exports = {
     relation,
     decodeRelation,
@@ -97,4 +111,6 @@ module.exports = {
     mode,
     decodeMode,
     STATE_TRAN_MATRIX,
+    category,
+    decodeCategory,
 };
