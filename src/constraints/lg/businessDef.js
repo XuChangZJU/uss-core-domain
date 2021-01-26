@@ -366,6 +366,75 @@ const AUTH_MATRIX = {
             ]
         },
     },
+    lgTrade: {
+        [skuAction.create]: {
+            auths: [
+                {
+                    '#exists': [
+                        {
+                            relation: 'userLgShop',
+                            needData: true,
+                            condition: ({ user, actionData }) => {
+                                const { lgSku } = actionData;
+                                const query = {
+                                    userId: user.id,
+                                    lgShopId: lgSku.lgShopId,
+                                    relation: {
+                                        $in: [shopRelation.owner, shopRelation.manager],
+                                    },
+                                };
+                                return query;
+                            },
+                        },
+                    ],
+                },
+            ]
+        },
+        [skuAction.update]: {
+            auths: [
+                {
+                    "#relation": {
+                        attr: 'lgShop',
+                        relations: [shopRelation.owner, shopRelation.manager],
+                    },
+                }
+            ]
+        },
+        [skuAction.online]: {
+            auths: [
+                {
+                    "#relation": {
+                        attr: 'lgShop',
+                        relations: [shopRelation.owner, shopRelation.manager],
+                    },
+                    '#data': [
+                        {
+                            check: ({user, row}) => {
+                                return [skuState.offline].includes(row.state);
+                            },
+                        }
+                    ],
+                }
+            ]
+        },
+        [skuAction.offline]: {
+            auths: [
+                {
+                    "#relation": {
+                        attr: 'lgShop',
+                        relations: [shopRelation.owner, shopRelation.manager],
+                    },
+                    '#data': [
+                        {
+                            check: ({user, row}) => {
+                                return [skuState.online].includes(row.state);
+                            },
+                        }
+                    ],
+                }
+            ]
+        },
+    },
 };
 const STATE_TRAN_MATRIX = {
     lgShop: SHOP_STATE_TRANS_MATRIX,
