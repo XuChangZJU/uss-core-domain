@@ -1,4 +1,9 @@
 const {
+    AllowEveryoneAuth,
+    OwnerRelationAuth,
+    AnyRelationAuth,
+} = require('../action');
+const {
     action: districtAction,
     relation: districtRelation,
 } = require('../../constants/lg/district');
@@ -24,6 +29,13 @@ const {
     state: skuState,
     STATE_TRANS_MATRIX: SKU_STATE_TRANS_MATRIX,
 } = require('../../constants/lg/sku');
+
+const {
+    action: tradeAction,
+    transportState: tradeTransportState,
+    state: tradeState,
+    STATE_TRANS_MATRIX: TRADE_STATE_TRANS_MATRIX,
+} = require('../../constants/lg/trade');
 const AUTH_MATRIX = {
     lgDistrict: {
         [districtAction.update]: {
@@ -367,67 +379,60 @@ const AUTH_MATRIX = {
         },
     },
     lgTrade: {
-        [skuAction.create]: {
-            auths: [
-                {
-                    '#exists': [
-                        {
-                            relation: 'userLgShop',
-                            needData: true,
-                            condition: ({ user, actionData }) => {
-                                const { lgSku } = actionData;
-                                const query = {
-                                    userId: user.id,
-                                    lgShopId: lgSku.lgShopId,
-                                    relation: {
-                                        $in: [shopRelation.owner, shopRelation.manager],
-                                    },
-                                };
-                                return query;
-                            },
-                        },
-                    ],
-                },
-            ]
-        },
-        [skuAction.update]: {
+        [tradeAction.create]: AllowEveryoneAuth,
+        [tradeAction.makePaid]: {
             auths: [
                 {
                     "#relation": {
                         attr: 'lgShop',
-                        relations: [shopRelation.owner, shopRelation.manager],
                     },
                 }
             ]
         },
-        [skuAction.online]: {
+        [tradeAction.makeAbandoned]: {
             auths: [
                 {
                     "#relation": {
                         attr: 'lgShop',
-                        relations: [shopRelation.owner, shopRelation.manager],
+                        relations: [shopRelation.manager],
                     },
                     '#data': [
                         {
                             check: ({user, row}) => {
-                                return [skuState.offline].includes(row.state);
+                                return [tradeTransportState.unsend].includes(row.transportState);
+                            },
+                        }
+                    ],
+                },
+                {
+                    "#relation": {
+                        attr: 'lgShop',
+                        relations: [shopRelation.owner],
+                    },
+                }
+            ]
+        },
+        [tradeAction.send]: {
+            auths: [
+                {
+                    '#data': [
+                        {
+                            check: ({user, row}) => {
+                                return [tradeTransportState.unsend].includes(row.transportState) && user.id === row.buyerId;
                             },
                         }
                     ],
                 }
             ]
         },
-        [skuAction.offline]: {
+        [tradeAction.confirmArrive]: {
             auths: [
                 {
-                    "#relation": {
-                        attr: 'lgShop',
-                        relations: [shopRelation.owner, shopRelation.manager],
-                    },
+
                     '#data': [
                         {
                             check: ({user, row}) => {
-                                return [skuState.online].includes(row.state);
+                                return [tradeTransportState.unsend].includes(row.transportState);
                             },
                         }
                     ],
@@ -438,6 +443,7 @@ const AUTH_MATRIX = {
 };
 const STATE_TRAN_MATRIX = {
     lgShop: SHOP_STATE_TRANS_MATRIX,
+    lgTrade: TRADE_STATE_TRANS_MATRIX,
 };
 module.exports = {
     AUTH_MATRIX,
