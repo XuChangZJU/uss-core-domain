@@ -93,6 +93,26 @@ const getContactType = (t) => {
     };
     return T[t];
 }
+const accountBank = {
+    工商银行: '工商银行',
+    交通银行: '交通银行',
+    招商银行: '招商银行',
+    民生银行: '民生银行',
+    中信银行: '中信银行',
+    浦发银行: '浦发银行',
+    兴业银行: '兴业银行',
+    光大银行: '光大银行',
+    广发银行: '广发银行',
+    平安银行: '平安银行',
+    北京银行: '北京银行',
+    华夏银行: '华夏银行',
+    农业银行: '农业银行',
+    建设银行: '建设银行',
+    邮政储蓄银行: '邮政储蓄银行',
+    中国银行: '中国银行',
+    宁波银行: '宁波银行',
+    其他银行: '其他银行',
+};
 module.exports = {
     state,
     decodeState,
@@ -108,5 +128,6 @@ module.exports = {
     getContactType,
     docType,
     decodeDocType,
+    accountBank,
 };
 
