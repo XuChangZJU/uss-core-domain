@@ -19,6 +19,11 @@ const {
     relation: storeRelation,
 } = require('../../constants/lg/store');
 
+const {
+    action: skuAction,
+    state: skuState,
+    STATE_TRANS_MATRIX: SKU_STATE_TRANS_MATRIX,
+} = require('../../constants/lg/sku');
 const AUTH_MATRIX = {
     lgDistrict: {
         [districtAction.update]: {
@@ -290,6 +295,75 @@ const AUTH_MATRIX = {
                     },
                 },
             ],
+        },
+    },
+    lgSku: {
+        [skuAction.create]: {
+            auths: [
+                {
+                    '#exists': [
+                        {
+                            relation: 'userLgShop',
+                            needData: true,
+                            condition: ({ user, actionData }) => {
+                                const { lgSku } = actionData;
+                                const query = {
+                                    userId: user.id,
+                                    lgShopId: lgSku.lgShopId,
+                                    relation: {
+                                        $in: [shopRelation.owner, shopRelation.manager],
+                                    },
+                                };
+                                return query;
+                            },
+                        },
+                    ],
+                },
+            ]
+        },
+        [skuAction.update]: {
+            auths: [
+                {
+                    "#relation": {
+                        attr: 'lgShop',
+                        relations: [shopRelation.owner, shopRelation.manager],
+                    },
+                }
+            ]
+        },
+        [skuAction.online]: {
+            auths: [
+                {
+                    "#relation": {
+                        attr: 'lgShop',
+                        relations: [shopRelation.owner, shopRelation.manager],
+                    },
+                    '#data': [
+                        {
+                            check: ({user, row}) => {
+                                return [skuState.offline].includes(row.state);
+                            },
+                        }
+                    ],
+                }
+            ]
+        },
+        [skuAction.offline]: {
+            auths: [
+                {
+                    "#relation": {
+                        attr: 'lgShop',
+                        relations: [shopRelation.owner, shopRelation.manager],
+                    },
+                    '#data': [
+                        {
+                            check: ({user, row}) => {
+                                return [skuState.online].includes(row.state);
+                            },
+                        }
+                    ],
+                }
+            ]
         },
     },
 };

@@ -9,16 +9,12 @@ const {
 const state = {
     online: 1,
     offline: 11,
-    disabled: 21,
-    fresh: 22,
 };
 
 const decodeState = (s) => {
     const TEXT = {
-        [state.online]: '上线中',
-        [state.offline]: '下线中',
-        [state.disabled]: '禁用中',
-        [state.fresh]: '未审核',
+        [state.online]: '已上架',
+        [state.offline]: '已下架',
     };
 
     return TEXT[s];
@@ -28,24 +24,21 @@ const action =  Object.assign({}, commonAction,
     {
         online: 101,
         offline: 111,
-        disable: 211,
     },
 );
 
 const decodeAction = (a) => {
     const TEXT = {
-        [action.online]: '上线',
-        [action.offline]: '下线',
-        [action.disable]: '禁用',
+        [action.online]: '上架',
+        [action.offline]: '下架',
     };
 
     return TEXT[a] || decodeCommonAction(a);
 };
 
 const STATE_TRANS_MATRIX = {
-    [action.online]: [[state.fresh, state.offline, state.disabled], state.online],
+    [action.online]: [state.offline, state.online],
     [action.offline]: [state.online, state.offline],
-    [action.disable]: [[state.online, state.offline], state.disabled],
 };
 
 module.exports = {
