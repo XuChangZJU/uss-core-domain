@@ -25,12 +25,12 @@ const decodeState = (s) => {
 };
 
 const type = {
-    microBusiness: 1,
-    selfEmployedSeller: 2,
-    selfEmployedBusiness: 3,
-    company: 4,
-    office: 5,
-    others: 6,
+    microBusiness: 2401,
+    selfEmployedSeller: 2500,
+    selfEmployedBusiness: 4,
+    company: 2,
+    office: 3,
+    others: 1708,
 };
 const decodeType = (t) => {
     const TEXT = {
