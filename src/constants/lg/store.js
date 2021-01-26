@@ -10,13 +10,17 @@ const {
     type: shopType
 } = require('./shop');
 const state = {
-    approved: 11,
     fresh: 22,
+    checking: 31,
+    approved: 32,
+    failed: 41,
 };
 
 const decodeState = (s) => {
     const TEXT = {
         [state.approved]: '审核已通过',
+        [state.checking]: '审核中',
+        [state.failed]: '审核未通过',
         [state.fresh]: '未审核',
     };
     return TEXT[s];
