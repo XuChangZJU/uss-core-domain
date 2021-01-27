@@ -36,7 +36,616 @@ const {
     state: tradeState,
     STATE_TRANS_MATRIX: TRADE_STATE_TRANS_MATRIX,
 } = require('../../constants/lg/trade');
+
+const {
+    action: skuItemAction,
+    state: skuItemState,
+    STATE_TRANS_MATRIX: SKUITEM_STATE_TRANS_MATRIX,
+} = require('../../constants/lg/skuItem');
+
+const {
+    action: brandAction,
+} = require('../../constants/lg/brand');
+
+const {
+    action: speciesAction,
+} = require('../../constants/lg/species');
+
+const {
+    action: propertyAction
+} = require('../../constants/lg/property');
+
+const {
+    action: propertySpeciesAction,
+} = require('../../constants/lg/propertySpecies');
+
+const {
+    action: valueAction,
+} = require('../../constants/lg/value');
+
+const {
+    action: skuValueAction,
+} = require('../../constants/lg/skuValue');
+
 const AUTH_MATRIX = {
+    lgSkuValue: {
+        [skuValueAction.create]: {
+            auths: [
+                {
+                    "#exists": [
+                        {
+                            relation: 'userLgShop',
+                            condition: ({ user }) => {
+                                return {
+                                    userId: user.id,
+                                    relation: {
+                                        $in: [shopRelation.owner, shopRelation.manager],
+                                    },
+                                };
+                            },
+                        },
+                    ]
+                },
+            ]
+        },
+        [skuValueAction.update]: {
+            auths: [
+                {
+                    "#relation": {
+                        attr: 'lgSku.lgShop',
+                        relations: [shopRelation.owner, shopRelation.manager],
+                    },
+                },
+            ]
+        },
+        [valueAction.remove]: {
+            auths: [
+                {
+                    "#relation": {
+                        attr: 'lgSku.lgShop',
+                        relations: [shopRelation.owner, shopRelation.manager],
+                    },
+                },
+            ]
+        },
+    },
+    lgValue: {
+        [valueAction.create]: {
+            auths: [
+                {
+                    "#exists": [
+                        {
+                            relation: 'userLgDistrict',
+                            condition: ({ user }) => {
+                                const query = {
+                                    userId: user.id,
+                                    relation: {
+                                        $in: [districtRelation.owner, districtRelation.manager],
+                                    },
+                                };
+                                return query;
+                            },
+                        },
+                    ]
+                },
+                {
+                    "#exists": [
+                        {
+                            relation: 'userLgMall',
+                            condition: ({ user }) => {
+                                const query = {
+                                    userId: user.id,
+                                    relation: {
+                                        $in: [mallRelation.owner, mallRelation.manager],
+                                    },
+                                };
+                                return query;
+                            },
+                        },
+                    ]
+                },
+                {
+                    "#exists": [
+                        {
+                            relation: 'userLgShop',
+                            needData: true,
+                            condition: ({ user, actionData }) => {
+                                const { lgValue } = actionData;
+                                if(lgValue.lgSkuId){
+                                    return {
+                                        userId: user.id,
+                                        relation: {
+                                            $in: [shopRelation.owner, shopRelation.manager],
+                                        },
+                                    }
+                                }
+                                return {
+                                    userId: -1,
+                                };
+                            },
+                        },
+                    ]
+                },
+            ]
+        },
+        [valueAction.update]: {
+            auths: [
+                {
+                    "#exists": [
+                        {
+                            relation: 'userLgDistrict',
+                            condition: ({ user }) => {
+                                const query = {
+                                    userId: user.id,
+                                    relation: {
+                                        $in: [districtRelation.owner, districtRelation.manager],
+                                    },
+                                };
+                                return query;
+                            },
+                        },
+                    ]
+                },
+                {
+                    "#exists": [
+                        {
+                            relation: 'userLgMall',
+                            condition: ({ user }) => {
+                                const query = {
+                                    userId: user.id,
+                                    relation: {
+                                        $in: [mallRelation.owner, mallRelation.manager],
+                                    },
+                                };
+                                return query;
+                            },
+                        },
+                    ]
+                },
+                {
+                    "#relation": {
+                        attr: 'lgSku.lgShop',
+                        relations: [shopRelation.owner, shopRelation.manager],
+                    },
+                },
+            ]
+        },
+        [valueAction.remove]: {
+            auths: [
+                {
+                    "#exists": [
+                        {
+                            relation: 'userLgDistrict',
+                            condition: ({ user }) => {
+                                const query = {
+                                    userId: user.id,
+                                    relation: {
+                                        $in: [districtRelation.owner, districtRelation.manager],
+                                    },
+                                };
+                                return query;
+                            },
+                        },
+                    ]
+                },
+                {
+                    "#exists": [
+                        {
+                            relation: 'userLgMall',
+                            condition: ({ user }) => {
+                                const query = {
+                                    userId: user.id,
+                                    relation: {
+                                        $in: [mallRelation.owner, mallRelation.manager],
+                                    },
+                                };
+                                return query;
+                            },
+                        },
+                    ]
+                },
+                {
+                    "#relation": {
+                        attr: 'lgSku.lgShop',
+                        relations: [shopRelation.owner, shopRelation.manager],
+                    },
+                },
+            ]
+        },
+    },
+    lgProperty: {
+        [propertyAction.create]: {
+            auths: [
+                {
+                    "#exists": [
+                        {
+                            relation: 'userLgDistrict',
+                            condition: ({ user }) => {
+                                const query = {
+                                    userId: user.id,
+                                    relation: {
+                                        $in: [districtRelation.owner, districtRelation.manager],
+                                    },
+                                };
+                                return query;
+                            },
+                        },
+                    ]
+                },
+                {
+                    "#exists": [
+                        {
+                            relation: 'userLgMall',
+                            condition: ({ user }) => {
+                                const query = {
+                                    userId: user.id,
+                                    relation: {
+                                        $in: [mallRelation.owner, mallRelation.manager],
+                                    },
+                                };
+                                return query;
+                            },
+                        },
+                    ]
+                },
+                {
+                    "#exists": [
+                        {
+                            relation: 'userLgShop',
+                            needData: true,
+                            condition: ({ user, actionData }) => {
+                                const { lgProperty } = actionData;
+                                if(lgProperty.lgSkuId){
+                                    return {
+                                        userId: user.id,
+                                        relation: {
+                                            $in: [shopRelation.owner, shopRelation.manager],
+                                        },
+                                    }
+                                }
+                                return {
+                                    userId: -1,
+                                };
+                            },
+                        },
+                    ]
+                },
+            ]
+        },
+        [propertyAction.update]: {
+            auths: [
+                {
+                    "#exists": [
+                        {
+                            relation: 'userLgDistrict',
+                            condition: ({ user }) => {
+                                const query = {
+                                    userId: user.id,
+                                    relation: {
+                                        $in: [districtRelation.owner, districtRelation.manager],
+                                    },
+                                };
+                                return query;
+                            },
+                        },
+                    ]
+                },
+                {
+                    "#exists": [
+                        {
+                            relation: 'userLgMall',
+                            condition: ({ user }) => {
+                                const query = {
+                                    userId: user.id,
+                                    relation: {
+                                        $in: [mallRelation.owner, mallRelation.manager],
+                                    },
+                                };
+                                return query;
+                            },
+                        },
+                    ]
+                },
+                {
+                    "#relation": {
+                        attr: 'lgSku.lgShop',
+                        relations: [shopRelation.owner, shopRelation.manager],
+                    },
+                },
+            ]
+        },
+        [propertyAction.remove]: {
+            auths: [
+                {
+                    "#exists": [
+                        {
+                            relation: 'userLgDistrict',
+                            condition: ({ user }) => {
+                                const query = {
+                                    userId: user.id,
+                                    relation: {
+                                        $in: [districtRelation.owner, districtRelation.manager],
+                                    },
+                                };
+                                return query;
+                            },
+                        },
+                    ]
+                },
+                {
+                    "#exists": [
+                        {
+                            relation: 'userLgMall',
+                            condition: ({ user }) => {
+                                const query = {
+                                    userId: user.id,
+                                    relation: {
+                                        $in: [mallRelation.owner, mallRelation.manager],
+                                    },
+                                };
+                                return query;
+                            },
+                        },
+                    ]
+                },
+                {
+                    "#relation": {
+                        attr: 'lgSku.lgShop',
+                        relations: [shopRelation.owner, shopRelation.manager],
+                    },
+                },
+            ]
+        },
+    },
+    lgPropertySpecies: {
+        [propertySpeciesAction.create]: {
+            auths: [
+                {
+                    "#exists": [
+                        {
+                            relation: 'userLgDistrict',
+                            condition: ({ user }) => {
+                                const query = {
+                                    userId: user.id,
+                                    relation: {
+                                        $in: [districtRelation.owner, districtRelation.manager],
+                                    },
+                                };
+                                return query;
+                            },
+                        },
+                    ]
+                }
+            ]
+        },
+        [propertySpeciesAction.update]: {
+            auths: [
+                {
+                    "#exists": [
+                        {
+                            relation: 'userLgDistrict',
+                            condition: ({ user }) => {
+                                const query = {
+                                    userId: user.id,
+                                    relation: {
+                                        $in: [districtRelation.owner, districtRelation.manager],
+                                    },
+                                };
+                                return query;
+                            },
+                        },
+                    ]
+                }
+            ]
+        },
+        [propertySpeciesAction.remove]: {
+            auths: [
+                {
+                    "#exists": [
+                        {
+                            relation: 'userLgDistrict',
+                            condition: ({ user }) => {
+                                const query = {
+                                    userId: user.id,
+                                    relation: {
+                                        $in: [districtRelation.owner, districtRelation.manager],
+                                    },
+                                };
+                                return query;
+                            },
+                        },
+                    ]
+                }
+            ]
+        },
+    },
+    lgSpecies: {
+        [speciesAction.create]: {
+            auths: [
+                {
+                    "#exists": [
+                        {
+                            relation: 'userLgDistrict',
+                            condition: ({ user }) => {
+                                const query = {
+                                    userId: user.id,
+                                    relation: {
+                                        $in: [districtRelation.owner, districtRelation.manager],
+                                    },
+                                };
+                                return query;
+                            },
+                        },
+                    ]
+                }
+            ]
+        },
+        [speciesAction.update]: {
+            auths: [
+                {
+                    "#exists": [
+                        {
+                            relation: 'userLgDistrict',
+                            condition: ({ user }) => {
+                                const query = {
+                                    userId: user.id,
+                                    relation: {
+                                        $in: [districtRelation.owner, districtRelation.manager],
+                                    },
+                                };
+                                return query;
+                            },
+                        },
+                    ]
+                }
+            ]
+        },
+        [speciesAction.remove]: {
+            auths: [
+                {
+                    "#exists": [
+                        {
+                            relation: 'userLgDistrict',
+                            condition: ({ user }) => {
+                                const query = {
+                                    userId: user.id,
+                                    relation: {
+                                        $in: [districtRelation.owner, districtRelation.manager],
+                                    },
+                                };
+                                return query;
+                            },
+                        },
+                    ]
+                }
+            ]
+        },
+    },
+    lgBrand: {
+        [brandAction.create]: {
+            auths: [
+                {
+                    "#exists": [
+                        {
+                            relation: 'userLgDistrict',
+                            condition: ({ user }) => {
+                                const query = {
+                                    userId: user.id,
+                                    relation: {
+                                        $in: [districtRelation.owner, districtRelation.manager],
+                                    },
+                                };
+                                return query;
+                            },
+                        },
+                    ]
+                }
+            ]
+        },
+        [brandAction.update]: {
+            auths: [
+                {
+                    '#exists': [
+                        {
+                            relation: 'userLgDistrict',
+                            condition: ({ user }) => {
+                                const query = {
+                                    userId: user.id,
+                                    relation: {
+                                        $in: [districtRelation.owner, districtRelation.manager],
+                                    },
+                                };
+                                return query;
+                            },
+                        },
+                    ]
+                }
+            ]
+        },
+        [brandAction.remove]: {
+            auths: [
+                {
+                    "#exists": [
+                        {
+                            relation: 'userLgDistrict',
+                            condition: ({ user }) => {
+                                const query = {
+                                    userId: user.id,
+                                    relation: {
+                                        $in: [districtRelation.owner, districtRelation.manager],
+                                    },
+                                };
+                                return query;
+                            },
+                        },
+                    ]
+                }
+            ]
+        },
+    },
+    lgSkuItem: {
+        [skuItemAction.create]: {  // todo 细化写在definition中
+            auths: [
+                {
+                    "#exists": [
+                        {
+                            relation: 'userLgShop',
+                            condition: ({ user }) => {
+                                const query = {
+                                    userId: user.id,
+                                };
+                                return query;
+                            },
+                        },
+                    ],
+                },
+            ],
+        },
+        [skuItemAction.update]: {
+            auths: [
+                {
+                    "#relation": {
+                        attr: 'lgSku.lgShop',
+                        relations: [shopRelation.owner, shopRelation.manager],
+                    },
+                },
+            ],
+        },
+        [skuItemAction.online]: {
+            auths: [
+                {
+                    "#relation": {
+                        attr: 'lgSku.lgShop',
+                        relations: [shopRelation.owner, shopRelation.manager],
+                    },
+                    '#data': [
+                        {
+                            check: ({user, row}) => {
+                                return [skuItemState.offline].includes(row.state);
+                            },
+                        }
+                    ],
+                }
+            ]
+        },
+        [skuAction.offline]: {
+            auths: [
+                {
+                    "#relation": {
+                        attr: 'lgSku.lgShop',
+                        relations: [shopRelation.owner, shopRelation.manager],
+                    },
+                    '#data': [
+                        {
+                            check: ({user, row}) => {
+                                return [skuItemState.online].includes(row.state);
+                            },
+                        }
+                    ],
+                }
+            ]
+        },
+    },
     lgDistrict: {
         [districtAction.update]: {
             auths: [
@@ -444,6 +1053,8 @@ const AUTH_MATRIX = {
 const STATE_TRAN_MATRIX = {
     lgShop: SHOP_STATE_TRANS_MATRIX,
     lgTrade: TRADE_STATE_TRANS_MATRIX,
+    lgSku: SKU_STATE_TRANS_MATRIX,
+    lgSkuItem: SKUITEM_STATE_TRANS_MATRIX,
 };
 module.exports = {
     AUTH_MATRIX,

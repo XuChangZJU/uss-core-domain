@@ -1,6 +1,11 @@
 /**
  * Created by Xc on 2021/1/8.
  */
+const {
+    action,
+    decodeAction,
+} = require('../action');
+
 const type = {
     enumerable: 1,
     assignable: 2,
@@ -16,6 +21,8 @@ const decodeType = (t) => {
 };
 
 module.exports = {
+    action,
+    decodeAction,
     type,
     decodeType,
 };

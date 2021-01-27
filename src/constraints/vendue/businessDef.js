@@ -210,6 +210,7 @@ const CollectionOwnerOrAuctionHouseWorker = {
                         Object.assign(query, { $has: has });
                         return query;
                     },
+
                 },
             ],
         },
