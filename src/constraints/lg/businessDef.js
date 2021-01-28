@@ -19,10 +19,10 @@ const {
 } = require('../../constants/lg/shop');
 
 const {
-    action: storeAction,
-    state: storeState,
-    relation: storeRelation,
-} = require('../../constants/lg/store');
+    action: weChatStoreAction,
+    state: weChatStoreState,
+    relation: weChatStoreRelation,
+} = require('../../constants/lg/weChatStore');
 
 const {
     action: skuAction,
@@ -885,8 +885,8 @@ const AUTH_MATRIX = {
             ],
         },
     },
-    lgStore: {
-        [storeAction.create]: {
+    lgWeChatStore: {
+        [weChatStoreAction.create]: {
             auths: [
                 {
                     '#exists': [
@@ -894,10 +894,10 @@ const AUTH_MATRIX = {
                             relation: 'userLgShop',
                             needData: true,
                             condition: ({ user, actionData }) => {
-                                const { lgStore } = actionData;
+                                const { lgWeChatStore } = actionData;
                                 const query = {
                                     userId: user.id,
-                                    lgShopId: lgStore.lgShopId,
+                                    lgShopId: lgWeChatStore.lgShopId,
                                     relation: shopRelation.owner,
                                 };
                                 return query;
@@ -907,7 +907,7 @@ const AUTH_MATRIX = {
                 },
             ]
         },
-        [storeAction.update]: {
+        [weChatStoreAction.update]: {
             auths: [
                 {
                     "#relation": {
