@@ -51,6 +51,10 @@ const origin = {
     alipay: "alipay",
     account: "account",
     weChat: "weChat",
+    weChatV3: 'weChatV3',
+
+    shouQianBa: 'shouQianBa',
+    lianLian: 'lianLian'
 };
 
 /**
@@ -77,6 +81,9 @@ const STRINGS_OF_ORIGINS = {
     [origin.alipay]: "支付宝",
     [origin.account]: "余额",
     [origin.weChat]: "微信",
+    [origin.weChatV3]: "微信支付V3",
+    [origin.shouQianBa]: "收钱吧",
+    [origin.lianLian]: '连连支付',
 };
 
 function decodeOrigin(o) {
