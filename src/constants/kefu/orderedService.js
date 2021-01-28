@@ -39,7 +39,7 @@ const STATE_TRANS_MATRIX = {
     [action.subscribe]: [state.unsubscribed, state.subscribed],
     [action.unsubscribe]: [state.subscribed, state.unsubscribed],
     [action.expire]: [state.subscribed, state.expired],
-    [action.renew]: [state.expired, state.subscribed],
+    [action.renew]: [[state.subscribed, state.expired], state.subscribed],
 };
 
 module.export = {
