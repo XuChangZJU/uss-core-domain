@@ -6,37 +6,44 @@ const {
 } = require('../action');
 
 const state = Object.assign({}, commonState, {
+    // init
     binded: 301,
-    notBind: 302,
-    // expired 过期的
+    inCall: 302,
+    endCall: 303,
+    // expired
 });
 
 const decodeState = (s) => {
     const S = {
         [state.binded]: '已绑定',
-        [state.unbind]: '未绑定',
+        [state.inCall]: '通话中',
+        [state.endCall]: '通话已结束',
     };
     return S[s] || decodeCommonState(s);
 };
 
 const action = Object.assign({}, commonAction, {
+    // create
     bind: 1101,
-    unbind: 1102,
+    answer: 1102,
+    disconnect: 1103
     // expire
 });
 
 const decodeAction = (a) => {
     const A = {
         [action.bind]: '绑定',
-        [action.unbind]: '解绑',
+        [action.answer]: '接通',
+        [action.disconnect]: '挂机',
     };
     return A[a] || decodeCommonAction(a);
 };
 
 const STATE_TRANS_MATRIX = {
-    [action.unbind]: [state.binded, state.unbind],
-    [action.bind]: [state.unbind, state.binded],
-    [action.expire]: [state.binded, state.expired],
+    [action.bind]: [state.init, state.binded],
+    [action.answer]: [state.binded, state.inCall],
+    [action.disconnect]: [state.inCall, state.endCall],
+    [action.expire]: [state.disconnected, state.expired],
 };
 
 module.export = {

@@ -34,6 +34,7 @@ const decodeAction = (a) => {
 };
 
 const relation = Object.assign({}, commonRelation, {
+    // owner
     service: 401,
 });
 
