@@ -2482,34 +2482,18 @@ const AUTH_MATRIX = {
         [bannerAction.update]: {
             auths: [
                 {
-                    '#exists': [
-                        {
-                            relation: 'userAuctionHouse',
-                            condition: ({user}) => {
-                                const query = {
-                                    userId: user.id,
-                                };
-                                return query;
-                            },
-                        },
-                    ],
+                    "#relation": {
+                        attr: 'auctionHouse',
+                    },
                 }
             ],
         },
         [bannerAction.remove]: {
             auths: [
                 {
-                    '#exists': [
-                        {
-                            relation: 'userAuctionHouse',
-                            condition: ({user}) => {
-                                const query = {
-                                    userId: user.id,
-                                };
-                                return query;
-                            },
-                        },
-                    ],
+                    "#relation": {
+                        attr: 'auctionHouse',
+                    },
                 }
             ],
         },
