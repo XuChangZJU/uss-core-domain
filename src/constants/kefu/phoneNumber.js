@@ -30,7 +30,6 @@ const decodeAction = (a) => {
     const A = {
         [action.bind]: '绑定',
         [action.unbind]: '解绑',
-        [action.delete]: '删除',
         [action.arrear]: '欠费',
         [action.halt]: '停机',
     };
@@ -40,12 +39,11 @@ const decodeAction = (a) => {
 const STATE_TRANS_MATRIX = {
     [action.bind]: [state.available, state.unavailable],
     [action.unbind]: [state.unavailable, state.available],
-    [action.delete]: [state.available, state.unavailable],
     [action.arrear]: [state.available, state.unavailable],
     [action.halt]: [state.available, state.unavailable],
 };
 
-module.export = {
+module.exports = {
     action,
     decodeAction,
     state,
