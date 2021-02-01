@@ -67,6 +67,11 @@ const {
     action: skuValueAction,
 } = require('../../constants/lg/skuValue');
 
+const {
+    action: serviceCompanyAction,
+    relation: serviceCompanyRelation
+} = require('../../constants/lg/serviceCompany');
+
 const AUTH_MATRIX = {
     lgSkuValue: {
         [skuValueAction.create]: {
@@ -1049,6 +1054,27 @@ const AUTH_MATRIX = {
             ]
         },
     },
+    lgServiceCompany: {
+        [serviceCompanyAction.create]: AllowEveryoneAuth,
+        [serviceCompanyAction.update]: {
+            auths: [
+                {
+                    "#relation": {
+                        relations: [serviceCompanyRelation.owner, serviceCompanyRelation.manager],
+                    },
+                }
+            ]
+        },
+        [serviceCompanyAction.remove]: {
+            auths: [
+                {
+                    "#relation": {
+                        relations: [serviceCompanyRelation.owner],
+                    },
+                }
+            ]
+        },
+    }
 };
 const STATE_TRAN_MATRIX = {
     lgShop: SHOP_STATE_TRANS_MATRIX,
