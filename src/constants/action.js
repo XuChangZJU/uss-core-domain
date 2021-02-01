@@ -56,7 +56,7 @@ const relation = {
 };
 
 // 全局抽象的状态 0 - 100
-const   state = {
+const state = {
     init: 1,
 
     // pay相关的
