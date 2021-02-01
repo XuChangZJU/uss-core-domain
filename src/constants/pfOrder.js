@@ -25,6 +25,7 @@ const action = pick(commonAction, [
     'expire',
     'complete',
     'payPartially',
+    'startToPay',
     'stopPaying',
     'refund',
     'refundSuccess',
