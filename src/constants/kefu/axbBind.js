@@ -25,15 +25,15 @@ const decodeState = (s) => {
 const action = Object.assign({}, commonAction, {
     // create
     bind: 1101,
-    answer: 1102,
-    disconnect: 1103
+    call: 1102,
+    disconnect: 1103,
     // expire
 });
 
 const decodeAction = (a) => {
     const A = {
         [action.bind]: '绑定',
-        [action.answer]: '接通',
+        [action.call]: '呼叫',
         [action.disconnect]: '挂机',
     };
     return A[a] || decodeCommonAction(a);
@@ -41,12 +41,12 @@ const decodeAction = (a) => {
 
 const STATE_TRANS_MATRIX = {
     [action.bind]: [state.init, state.binded],
-    [action.answer]: [state.binded, state.inCall],
+    [action.call]: [state.binded, state.inCall],
     [action.disconnect]: [state.inCall, state.endCall],
     [action.expire]: [state.disconnected, state.expired],
 };
 
-module.export = {
+module.exports = {
     action,
     decodeAction,
     state,

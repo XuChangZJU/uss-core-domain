@@ -13,7 +13,7 @@ const state = Object.assign({}, commonState, {
 
 const decodeState = (s) => {
     const S = {
-        [state.subscribed]: '已订阅',
+        [state.subscribed]: '订阅中',
         [state.unsubscribed]: '未订阅',
     };
     return S[s] || decodeCommonState(s);
@@ -37,12 +37,12 @@ const decodeAction = (a) => {
 
 const STATE_TRANS_MATRIX = {
     [action.subscribe]: [state.unsubscribed, state.subscribed],
-    [action.unsubscribe]: [state.subscribed, state.unsubscribed],
+    [action.unsubscribe]: [[state.subscribed, state.expired], state.unsubscribed],
     [action.expire]: [state.subscribed, state.expired],
     [action.renew]: [[state.subscribed, state.expired], state.subscribed],
 };
 
-module.export = {
+module.exports = {
     action,
     decodeAction,
     state,

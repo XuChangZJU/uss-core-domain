@@ -45,7 +45,7 @@ const decodeRelation = (r) => {
     return R[r] || decodeCommonRelation(r);
 };
 
-const STATE_TRAN_MATRIX = {
+const STATE_TRANS_MATRIX = {
     [action.enable]: [state.offline, state.online],
     [action.disable]: [state.online, state.offline],
 };
@@ -56,5 +56,5 @@ module.exports = {
     decodeAction,
     state,
     decodeState,
-    STATE_TRAN_MATRIX,
+    STATE_TRANS_MATRIX,
 };
