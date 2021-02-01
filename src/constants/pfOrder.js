@@ -39,12 +39,12 @@ const action = pick(commonAction, [
     'refundPartially',
 ]);
 
-const STATE_TRAN_MATRIX = pick(TRANSPORT_STATE_TRANS_MATRIX, Object.keys(action));
+const STATE_TRANS_MATRIX = pick(TRANSPORT_STATE_TRANS_MATRIX, Object.keys(action));
 
 module.exports = {
     action,
     state,
     decodeAction,
     decodeState,
-    STATE_TRAN_MATRIX,
+    STATE_TRANS_MATRIX,
 };
