@@ -15,6 +15,8 @@ const state = pick(commonState, [
     'refunding',
     'refunded',
     'partialRefunded',
+    'refundCancel',
+    'refundCancelPartially',
     'expired',
     'completed',
 ]);
