@@ -8,29 +8,24 @@ const {
  } = require('./action');
 
 const state = pick(commonState, [
-    'init',
-    'unpaid',
     'legal',
-    'legal2',
-    'abandoned',
     'cancelled',
     'paying',
     'partialPaid',
     'refunding',
     'refunded',
     'partialRefunded',
+    'refundCancel',
+    'refundCancelPartially',
     'expired',
     'completed',
 ]);
 
 const action = pick(commonAction, [
-    'confirmToPay',
     'cancel',
     'pay',
     'expire',
-    'makePaid',
     'complete',
-    'makeAbandoned',
     'payPartially',
     'startToPay',
     'stopPaying',

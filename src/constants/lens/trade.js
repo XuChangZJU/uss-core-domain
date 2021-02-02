@@ -68,7 +68,7 @@ const decodeTransportState = (ts) => {
         [transportState.yth]: '已退货',
         // [transportState.yzf]: '已作废',
         // [transportState.dxh]: '待销号',
-        [transportState.checkInQueue]: '排队中',
+        [transportState.checkInQueue]: '待检查',
         [transportState.checkCompleted]: '已完成',
         [transportState.checkCanceled]: '已取消',
     };

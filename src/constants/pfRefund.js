@@ -20,6 +20,7 @@ const decodeState = (s) => {
 
 const action = {
     refundSuccess: 10201,
+    refundManually: 10202,
     refundFailure: 11001,
     cancel: 10899,
 };
@@ -28,6 +29,7 @@ const decodeAction = (a) => {
     const TEXT = {
         [action.refundSuccess]: '退款成功',
         [action.refundFailure]: '退款失败',
+        [action.refundManually]: '手动退款完成',
         [action.cancel]: '退款异常',
     };
 
@@ -38,6 +40,7 @@ const STATE_TRANS_MATRIX = {
     [action.refundSuccess]: [state.refunding, state.refunded],
     [action.refundFailure]: [state.refunding, state.abnormal],
     [action.cancel]: [state.refunding, state.cancelled],
+    [action.refundManually]: [state.abnormal, state.refunded],
 };
 
 const channel = {

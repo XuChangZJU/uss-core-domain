@@ -44,6 +44,8 @@ const action = {
     refund: 51,                 // 退款
     refundSuccess: 52,          // 退款成功
     refundPartially: 53,        // 部分退款成功
+    refundCancelPartially: 54,  // 取消退款（恢复到部分退款状态）
+    refundCancel: 55,           // 取消退款（恢复到legal状态）
 };
 
 // 全局抽象的关系 0-1000
@@ -156,6 +158,8 @@ const decodeAction = (a) => {
         [action.refund]: '退款',
         [action.refundSuccess]: '退款成功',
         [action.refundPartially]: '部分退款成功',
+        [action.refundCancelPartially]: '取消退款',
+        [action.refundCancel]: '取消退款',
     };
 
     return STRINGS[a];
@@ -190,6 +194,8 @@ const COMMON_STATE_TRAN_MATRIX = {
     [action.refund]: [[state.legal, state.abandoned, state.aborted], state.refunding],
     [action.refundSuccess]: [[state.legal2, state.refunding, state.partialRefunded], state.refunded],
     [action.refundPartially]: [[state.legal2, state.refunding], state.partialRefunded],
+    [action.refundCancel]: [state.refunding, state.legal],
+    [action.refundCancelPartially]: [state.refunding, state.partialRefunded],
 
     [action.expire]: [[state.init, state.unpaid], state.expired],
     [action.confirm]: [[state.applied, state.sent], state.confirmed],
