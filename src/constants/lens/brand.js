@@ -22,7 +22,7 @@ const decodeRelation = (r) => {
     const S = {
         [relation.worker]: '工作人员',
         [relation.customerService]: '运营人员',
-        [relation.seller]: '门店销售人员',
+        [relation.seller]: '验光师',
         [relation.financialStuff]: '财务人员',
         [relation.doctor]: '医生',
         [relation.OKGlassesDoctor]: '角膜塑形镜验配师',
