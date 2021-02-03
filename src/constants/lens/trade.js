@@ -147,6 +147,7 @@ const category = {
     'doctorService': 10,
     'visionTrainingCheck': 11,
     'service': 12,
+    'gift': 13,
 }
 const decodeCategory = (c) => {
     const C = {
@@ -161,10 +162,55 @@ const decodeCategory = (c) => {
         [category.OkGlassCheck]: '角膜塑形镜检查',
         [category.doctorService]: '医生问诊',
         [category.visionTrainingCheck]: '视训检查',
-        [category.service]: '服务',
+        [category.service]: '服务/线下宣讲',
+        [category.gift]: '赠品',
     }
     return C[c];
 }
+
+const mainCategory = {
+    makeBill: 1,
+    check: 2,
+    others: 3,
+};
+
+const decodeMainCategory = (mc) => {
+    const MC = {
+        [mainCategory.makeBill]: '开单',
+        [mainCategory.check]: '检查',
+        [mainCategory.others]: '其他',
+    }
+    return MC[mc];
+}
+
+const getMainCategory = (c) => {
+    const C = {
+        [category.makeGlasses]: mainCategory.makeBill,
+        [category.OKGlasses]: mainCategory.makeBill,
+        [category.DoneGlasses]: mainCategory.makeBill,
+        [category.consumables]: mainCategory.makeBill,
+        [category.visionTraining]: mainCategory.makeBill,
+        [category.check]: mainCategory.check,
+        [category.DISCGlasses]: mainCategory.makeBill,
+        [category.SCL]: mainCategory.makeBill,
+        [category.OkGlassCheck]: mainCategory.check,
+        [category.doctorService]: mainCategory.check,
+        [category.visionTrainingCheck]: mainCategory.check,
+        [category.service]: mainCategory.others,
+        [category.gift]: mainCategory.makeBill,
+    }
+    return C[c];
+}
+
+const getCategory = (mc) => {
+    const MC = {
+        [mainCategory.makeBill]: [category.makeGlasses, category.OKGlasses, category.visionTraining, category.DISCGlasses, category.SCL, category.gift],
+        [mainCategory.check]: [category.OkGlassCheck, category.visionTrainingCheck, category.check, category.doctorService],
+        [mainCategory.others]: [category.service],
+    }
+    return MC[mc];
+}
+
 module.exports = {
     action,
     decodeAction,
@@ -181,5 +227,9 @@ module.exports = {
     category,
     decodeCategory,
     getActionStateAttr,
+    mainCategory,
+    decodeMainCategory,
+    getMainCategory,
+    getCategory,
     STATE_TRAN_MATRIX,
 };

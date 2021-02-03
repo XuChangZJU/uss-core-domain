@@ -42,6 +42,8 @@ const STATE_TRANS_MATRIX = {
     [action.confirmArrive]: [transportState.sending, transportState.arrived],
 };
 
+
+
 module.exports = {
     transportState,
     decodeTransportState,
