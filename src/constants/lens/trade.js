@@ -204,7 +204,7 @@ const getMainCategory = (c) => {
 
 const getCategory = (mc) => {
     const MC = {
-        [mainCategory.makeBill]: [category.makeGlasses, category.OKGlasses, category.visionTraining, category.DISCGlasses, category.SCL, category.gift],
+        [mainCategory.makeBill]: [category.makeGlasses, category.OKGlasses, category.visionTraining, category.DISCGlasses, category.SCL, category.gift, category.DoneGlasses, category.consumables],
         [mainCategory.check]: [category.OkGlassCheck, category.visionTrainingCheck, category.check, category.doctorService],
         [mainCategory.others]: [category.service],
     }
