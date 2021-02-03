@@ -5,6 +5,11 @@ const {
     decodeState: decodeCommonState,
 } = require('../action');
 
+const origin = {
+    huaweiCloud: 1,
+    aliCloud: 2,
+};
+
 const state = Object.assign({}, commonState, {
     // init
     binded: 301,
@@ -47,6 +52,7 @@ const STATE_TRANS_MATRIX = {
 };
 
 module.exports = {
+    origin,
     action,
     decodeAction,
     state,
