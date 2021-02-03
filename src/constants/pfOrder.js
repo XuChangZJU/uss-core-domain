@@ -8,8 +8,8 @@ const {
  } = require('./action');
 
 const state = pick(commonState, [
+    'unpaid',
     'legal',
-    'cancelled',
     'paying',
     'partialPaid',
     'refunding',
