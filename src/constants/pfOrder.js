@@ -34,7 +34,7 @@ const action = pick(commonAction, [
     'refundPartially',
 ]);
 
-const STATE_TRANS_MATRIX = pick(TRANSPORT_STATE_TRANS_MATRIX, Object.keys(action));
+const STATE_TRANS_MATRIX = pick(TRANSPORT_STATE_TRANS_MATRIX, Object.values(action));
 
 module.exports = {
     action,

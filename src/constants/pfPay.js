@@ -21,7 +21,7 @@ const action = pick(commonAction, [
     'pay',
 ]);
 
-const STATE_TRAN_MATRIX = pick(TRANSPORT_STATE_TRANS_MATRIX, Object.keys(action));
+const STATE_TRANS_MATRIX = pick(TRANSPORT_STATE_TRANS_MATRIX, Object.values(action));
 
 const origin = {
     'weChatV3Partner': 1,
@@ -60,7 +60,7 @@ module.exports = {
     state,
     decodeAction,
     decodeState,
-    STATE_TRAN_MATRIX,
+    STATE_TRANS_MATRIX,
 
     origin,
     decodeOrigin,
