@@ -4,7 +4,7 @@ const {
     action: commonAction,
     decodeState,
     decodeAction,
-    TRANSPORT_STATE_TRANS_MATRIX,
+    COMMON_STATE_TRAN_MATRIX,
  } = require('./action');
 
 const state = pick(commonState, [
@@ -34,7 +34,7 @@ const action = pick(commonAction, [
     'refundPartially',
 ]);
 
-const STATE_TRANS_MATRIX = pick(TRANSPORT_STATE_TRANS_MATRIX, Object.values(action));
+const STATE_TRANS_MATRIX = pick(COMMON_STATE_TRAN_MATRIX, Object.values(action));
 
 module.exports = {
     action,
