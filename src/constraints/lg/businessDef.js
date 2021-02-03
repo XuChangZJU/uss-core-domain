@@ -1074,6 +1074,15 @@ const AUTH_MATRIX = {
                 }
             ]
         },
+        [serviceCompanyAction.authGrantMulti2]: {
+            auths: [
+                {
+                    "#relation": {
+                        relations: [serviceCompanyRelation.owner, serviceCompanyRelation.manager],
+                    },
+                }
+            ]
+        },
     }
 };
 const STATE_TRAN_MATRIX = {
