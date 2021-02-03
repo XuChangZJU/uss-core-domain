@@ -211,6 +211,18 @@ const getCategory = (mc) => {
     return MC[mc];
 }
 
+const checkType = {
+    'firstVisit': 1,
+    'revisit': 2,
+}
+const decodeCheckType = (ct) => {
+    const CT = {
+        [checkType.firstVisit]: '初诊',
+        [checkType.revisit]: '复查',
+    };
+    return CT[ct];
+}
+
 module.exports = {
     action,
     decodeAction,
@@ -231,5 +243,7 @@ module.exports = {
     decodeMainCategory,
     getMainCategory,
     getCategory,
+    checkType,
+    decodeCheckType,
     STATE_TRAN_MATRIX,
 };
