@@ -18,6 +18,7 @@ const action = pick(commonAction, [
     'payPartially',
     'startToPay',
     'stopPaying',
+    'pay',
 ]);
 
 const STATE_TRAN_MATRIX = pick(TRANSPORT_STATE_TRANS_MATRIX, Object.keys(action));

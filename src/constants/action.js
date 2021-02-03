@@ -181,7 +181,7 @@ const COMMON_STATE_TRAN_MATRIX = {
     [action.pay]: [[state.unpaid, state.paying], state.legal],
     [action.startToPay]: [[state.unpaid, state.partialPaid], state.paying],
     [action.payPartially]: [[state.unpaid, state.paying], state.partialPaid],
-    [action.stopPaying]: [state.paying, state.unpaid],
+    [action.stopPaying]: [[state.paying, state.partialPaid], state.unpaid],
     [action.makePaid]: [[state.init, state.unpaid], state.legal2],
     [action.cancel]: [[state.init, state.unpaid], state.cancelled],
     [action.abort]: [state.legal, state.aborted],
