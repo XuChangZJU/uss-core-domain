@@ -4,6 +4,9 @@ const {
     AnyRelationAuth,
 } = require('../action');
 const {
+    action: enterUpAction,
+} = require('../../constants/lg/enterUp');
+const {
     action: districtAction,
     relation: districtRelation,
 } = require('../../constants/lg/district');
@@ -1083,6 +1086,10 @@ const AUTH_MATRIX = {
                 }
             ]
         },
+    },
+    enterUp: {
+        [enterUpAction.create]: AllowEveryoneAuth,
+        [enterUpAction.update]: AnyRelationAuth,
     }
 };
 const STATE_TRAN_MATRIX = {
