@@ -9,6 +9,7 @@ const {
 } = require('../../constants/action');
 
 const {
+    origin,
     action: axbBindAction,
     state: axbBindState,
     STATE_TRANS_MATRIX: AXB_BIND_STATES_TRAN_MATRIX,
@@ -403,9 +404,21 @@ const AUTH_MATRIX = {
         [phoneCallAction.update]: {},
         [phoneCallAction.remove]: {},
         [phoneCallAction.answer]: {},*/
-        [phoneCallAction.disconnect]: {
+        /*[phoneCallAction.disconnect]: {
             auths: [
                 {
+                    '#exists': [
+                        // 只有华为云的号码可以手动中断电话
+                        {
+                            relation: 'axbBind',
+                            condition: ({ user, row }) => {
+                                return {
+                                    id: row.axbBind.id,
+                                    origin: origin.huaweiCloud,
+                                }
+                            },
+                        },
+                    ],
                     '#data': [
                         {
                             check: ({ user, row }) => {
@@ -415,7 +428,7 @@ const AUTH_MATRIX = {
                     ],
                 },
             ],
-        },
+        },*/
     },
 };
 

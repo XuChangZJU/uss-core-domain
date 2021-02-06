@@ -26,7 +26,7 @@ const decodeReleaseReason = (r) => {
         [releaseReason.calleeBusy]: '用户忙',
         [releaseReason.noReply]: '用户未响应',
         [releaseReason.calleeDisconnect]: '用户振铃时挂断',
-        [releaseReason.phoneOff]: '用户处于关机、飞行模式、无网络等',
+        [releaseReason.phoneOff]: '用户处于关机、停机、飞行模式、无网络等',
         [releaseReason.others]: '其他',
     };
     return R[r];
