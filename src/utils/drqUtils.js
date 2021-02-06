@@ -30,6 +30,7 @@ function destructRequestOptions(req) {
 	result.appName = req._appName;
 	result.systemId = req._systemId;
 	result.tokenId = req._tokenId;
+	result.isRoot = req._isRoot;
 
 	let ip = req.headers['x-forwarded-for'] || req.headers['x-real-ip'] || req.ip || '';
 	if (ip.indexOf(',') !== -1) {
