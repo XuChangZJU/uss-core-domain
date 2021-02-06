@@ -12,10 +12,24 @@ const direction = {
 };
 
 const releaseReason = {
-    hangup: 0,          // 挂断
-    calleeBusy: 1,      // 用户忙
-    noReply: 2,         // 用户未接听
-    phoneOff: 3,        // 用户关机（不在服务器，欠费...）
+    hangup: 0,
+    calleeBusy: 1,
+    noReply: 2,
+    calleeDisconnect: 3,
+    phoneOff: 4,
+    others: 5,
+};
+
+const decodeReleaseReason = (r) => {
+    const R = {
+        [releaseReason.hangup]: '正常挂断',
+        [releaseReason.calleeBusy]: '用户忙',
+        [releaseReason.noReply]: '用户未响应',
+        [releaseReason.calleeDisconnect]: '用户振铃时挂断',
+        [releaseReason.phoneOff]: '用户处于关机、飞行模式、无网络等',
+        [releaseReason.others]: '其他',
+    };
+    return R[r];
 };
 
 const state = Object.assign({}, commonState, {
@@ -54,6 +68,7 @@ const STATE_TRANS_MATRIX = {
 module.exports = {
     direction,
     releaseReason,
+    decodeReleaseReason,
     action,
     decodeAction,
     state,
