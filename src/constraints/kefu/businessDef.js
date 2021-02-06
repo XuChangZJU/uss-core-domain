@@ -9,6 +9,7 @@ const {
 } = require('../../constants/action');
 
 const {
+    origin,
     action: axbBindAction,
     state: axbBindState,
     STATE_TRANS_MATRIX: AXB_BIND_STATES_TRAN_MATRIX,
@@ -23,14 +24,18 @@ const {
 
 const {
     action: orderedServiceAction,
-    relation: orderedServiceRelation,
     state: orderedServiceState,
     STATE_TRANS_MATRIX: ORDERED_SERVICE_STATE_TRANS_MATRIX,
 } = require('../../constants/kefu/orderedService');
 
 const {
+    action: phoneCallAction,
+    state: phoneCallState,
+    STATE_TRANS_MATRIX: PHONE_CALL_STATE_TRANS_MATRIX,
+} = require('../../constants/kefu/phoneCall');
+
+const {
     action: phoneNumberAction,
-    relation: phoneNumberRelation,
     state: phoneNumberState,
     STATE_TRANS_MATRIX: PHONE_NUMBER_STATE_TRANS_MATRIX,
 } = require('../../constants/kefu/phoneNumber');
@@ -138,7 +143,7 @@ const AUTH_MATRIX = {
                 },
             ],
         },
-        [axbBindAction.bind]: {
+        /*[axbBindAction.bind]: {
             auths: [
                 {
                     '#exists': axbBindManager,
@@ -161,8 +166,8 @@ const AUTH_MATRIX = {
                     ],
                 },
             ],
-        },
-        [axbBindAction.call]: {
+        },*/
+        /*[axbBindAction.call]: {
             auths: [
                 {
                     '#exists': axbBindApiManager,
@@ -182,14 +187,52 @@ const AUTH_MATRIX = {
                     '#exists': axbBindApiManager,
                 },
             ],
+        },*/
+        [axbBindAction.unbind]: {
+            auths: [
+                {
+                    '#exists': axbBindManager,
+                    '#data': [
+                        {
+                            check: ({ user, row }) => {
+                                return row.state === axbBindState.binded || row.state === axbBindState.expired;
+                            }
+                        },
+                    ],
+                },
+                {
+                    '#exists': axbBindApiManager,
+                    '#data': [
+                        {
+                            check: ({ user, row }) => {
+                                return row.state === axbBindState.binded || row.state === axbBindState.expired;
+                            }
+                        },
+                    ],
+                },
+            ],
         },
         [axbBindAction.expire]: {
             auths: [
                 {
                     '#exists': axbBindManager,
+                    '#data': [
+                        {
+                            check: ({ user, row }) => {
+                                return row.state === axbBindState.binded;
+                            }
+                        },
+                    ],
                 },
                 {
                     '#exists': axbBindApiManager,
+                    '#data': [
+                        {
+                            check: ({ user, row }) => {
+                                return row.state === axbBindState.binded;
+                            }
+                        },
+                    ],
                 },
             ],
         },
@@ -356,11 +399,37 @@ const AUTH_MATRIX = {
         [phoneNumberAction.arrear]: {},
         [phoneNumberAction.halt]: {},
     },*/
-    /*callHistory: {
-        [commonAction.create]: {},
-        [commonAction.update]: {},
-        [commonAction.remove]: {},
-    },*/
+    phoneCall: {
+        /*[phoneCallAction.create]: {},
+        [phoneCallAction.update]: {},
+        [phoneCallAction.remove]: {},
+        [phoneCallAction.answer]: {},*/
+        /*[phoneCallAction.disconnect]: {
+            auths: [
+                {
+                    '#exists': [
+                        // 只有华为云的号码可以手动中断电话
+                        {
+                            relation: 'axbBind',
+                            condition: ({ user, row }) => {
+                                return {
+                                    id: row.axbBind.id,
+                                    origin: origin.huaweiCloud,
+                                }
+                            },
+                        },
+                    ],
+                    '#data': [
+                        {
+                            check: ({ user, row }) => {
+                                return row.state === phoneCallState.inCall;
+                            }
+                        },
+                    ],
+                },
+            ],
+        },*/
+    },
 };
 
 const STATE_TRANS_MATRIX = {
@@ -368,6 +437,7 @@ const STATE_TRANS_MATRIX = {
     company: COMPANY_STATE_TRANS_MATRIX,
     orderedService: ORDERED_SERVICE_STATE_TRANS_MATRIX,
     phoneNumber: PHONE_NUMBER_STATE_TRANS_MATRIX,
+    phoneCall: PHONE_NUMBER_STATE_TRANS_MATRIX,
 };
 
 module.exports = {

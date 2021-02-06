@@ -42,7 +42,7 @@ const action = Object.assign({}, commonAction, {
 
 const decodeAction = (a) => {
     const S = {
-        [action.manage]: '处理',
+         [action.manage]: '处理',
     };
 
     return S[a] || decodeCommonAction(a);
