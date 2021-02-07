@@ -46,6 +46,14 @@ const action = {
     refundPartially: 53,        // 部分退款成功
     refundCancelPartially: 54,  // 取消退款（恢复到部分退款状态）
     refundCancel: 55,           // 取消退款（恢复到legal状态）
+
+
+
+    getList: 60,
+    getItem: 61,
+    count: 62,
+    stat: 63,
+    download: 64,
 };
 
 // 全局抽象的关系 0-1000
@@ -160,6 +168,12 @@ const decodeAction = (a) => {
         [action.refundPartially]: '部分退款成功',
         [action.refundCancelPartially]: '取消退款',
         [action.refundCancel]: '取消退款',
+
+        [action.getList]: '查看列表',
+        [action.getItem]: '查看单项',
+        [action.count]: '计数',
+        [action.stat]: '统计',
+        [action.download]: '下载',
     };
 
     return STRINGS[a];
