@@ -3,11 +3,11 @@
  */
 
  /**
-  * 每个promise都执行完，若allowFailure为真，则返回结果数组，否则有异常会抛出异常
+  * 每个promise都执行完，formatErrorFn处理单个promise抛出的异常数据
   * @param {*} promises 
-  * @param {*} allowFailure 
+  * @param {*} formatErrorFn 
   */
-Promise.every = async (promises, allowFailure) => {
+Promise.every = async (promises, formatErrorFn) => {
     const result = promises.map(
         () => false
     );
@@ -17,13 +17,18 @@ Promise.every = async (promises, allowFailure) => {
                 result [idx] = await ele;
             }
             catch (err) {
-                result [idx] = err;
+                if (formatErrorFn) {
+                    result [idx] = formatErrorFn(err);
+                }
+                else {
+                    result [idx] = err;
+                }
             }
         }
     );
 
     await Promise.all(promises2);
-    if (allowFailure) {
+    if (formatErrorFn) {
         return result;
     }
     
