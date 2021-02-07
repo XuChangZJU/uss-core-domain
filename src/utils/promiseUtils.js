@@ -1,40 +1,42 @@
 /**
  * Created by Administrator on 2017/2/16.
  */
-Promise.every = (promises) => {
+
+ /**
+  * 每个promise都执行完，若allowFailure为真，则返回结果数组，否则有异常会抛出异常
+  * @param {*} promises 
+  * @param {*} allowFailure 
+  */
+Promise.every = async (promises, allowFailure) => {
     const result = promises.map(
         () => false
     );
     const promises2 = promises.map(
-        (ele, idx) =>
-            ele.then(
-                (res) => {
-                    result[idx] = true;
-                    return Promise.resolve(res);
-                }
-            ).catch(
-                (err) => {
-                    return Promise.resolve(err);
-                }
-            )
+        async (ele, idx) => {
+            try {
+                result [idx] = await ele;
+            }
+            catch (err) {
+                result [idx] = err;
+            }
+        }
     );
 
-    return Promise.all(promises2)
-        .then(
-            (res) => {
-                const failure = result.findIndex(
-                    (ele) => ele === false
-                );
-                if (failure !== -1) {
-                    throw res[failure];
-                }
-                return Promise.resolve(res);
-            }
-        );
+    await Promise.all(promises2);
+    if (allowFailure) {
+        return result;
+    }
+    
+    const firstFailure = result.find(
+        ele => ele instanceof Error
+    );
+    if (firstFailure) {
+        throw firstFailure;
+    }
+    return result;
 };
 
-Promise.oneByOne = (promises) => {
-    const result = [];
+Promise.oneByOne = async (promises) => {
     function iterator (idx){
         if (idx === promises.length){
             return Promise.resolve(result);
