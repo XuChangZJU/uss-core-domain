@@ -46,6 +46,7 @@ Promise.every = async (promises, formatErrorFn) => {
  * @param {*} promises 
  */
 Promise.oneByOne = async (promises) => {
+    const result = [];
     function iterator (idx){
         if (idx === promises.length){
             return Promise.resolve(result);
