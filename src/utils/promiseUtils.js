@@ -36,6 +36,10 @@ Promise.every = async (promises, allowFailure) => {
     return result;
 };
 
+/**
+ * 依次执行异步动作
+ * @param {*} promises 
+ */
 Promise.oneByOne = async (promises) => {
     function iterator (idx){
         if (idx === promises.length){
