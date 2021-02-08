@@ -1310,7 +1310,7 @@ const AUTH_MATRIX = {
                     '#data': [
                         {
                             check: ({ user, row }) => {
-                                return  row.state === appointmentState.normal && row.patientId;
+                                return  row.state === appointmentState.normal && !!row.patientId;
                             },
                         }
                     ]
