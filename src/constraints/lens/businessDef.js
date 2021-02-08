@@ -1504,7 +1504,7 @@ const AUTH_MATRIX = {
             auths: [
                 {
                     "#relation": {
-                        attr: 'trade.organization.brand',
+                        attr: 'organization.brand',
                         relations: [BrandRelation.owner, BrandRelation.manager, BrandRelation.customerService, BrandRelation.worker, BrandRelation.supporter],
                     },
                 },
@@ -1514,7 +1514,7 @@ const AUTH_MATRIX = {
             auths: [
                 {
                     "#relation": {
-                        attr: 'trade.organization.brand',
+                        attr: 'organization.brand',
                         relations: [BrandRelation.owner, BrandRelation.manager, BrandRelation.customerService, BrandRelation.worker, BrandRelation.supporter],
                     },
                     '#data': [                 // 表示对现有对象或者用户的数据有要求，可以有多项，每项之间是AND的关系
