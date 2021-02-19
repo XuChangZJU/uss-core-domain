@@ -105,7 +105,12 @@ const orderedServiceApiCompany = {
 
 const AUTH_MATRIX = {
     axbBind: {
-        [axbBindAction.create]: {
+        [axbBindAction.create]: AllowEveryoneAuth,
+        [axbBindAction.update]: AllowEveryoneAuth,
+        [axbBindAction.remove]: AllowEveryoneAuth,
+        [axbBindAction.unbind]: AllowEveryoneAuth,
+        [axbBindAction.expire]: AllowEveryoneAuth,
+        /*[axbBindAction.create]: {
             auths: [
                 {
                     '#exists': [
@@ -143,7 +148,7 @@ const AUTH_MATRIX = {
                 },
             ],
         },
-        /*[axbBindAction.bind]: {
+        /!*[axbBindAction.bind]: {
             auths: [
                 {
                     '#exists': axbBindManager,
@@ -166,8 +171,8 @@ const AUTH_MATRIX = {
                     ],
                 },
             ],
-        },*/
-        /*[axbBindAction.call]: {
+        },*!/
+        /!*[axbBindAction.call]: {
             auths: [
                 {
                     '#exists': axbBindApiManager,
@@ -187,7 +192,7 @@ const AUTH_MATRIX = {
                     '#exists': axbBindApiManager,
                 },
             ],
-        },*/
+        },*!/
         [axbBindAction.unbind]: {
             auths: [
                 {
@@ -235,10 +240,15 @@ const AUTH_MATRIX = {
                     ],
                 },
             ],
-        },
+        },*/
     },
     company: {
-        [companyAction.create]: {
+        [companyAction.create]: AllowEveryoneAuth,
+        [companyAction.update]: AllowEveryoneAuth,
+        [companyAction.remove]: AllowEveryoneAuth,
+        [companyAction.enable]: AllowEveryoneAuth,
+        [companyAction.disable]: AllowEveryoneAuth,
+        /*[companyAction.create]: {
             auths: [
                 {
                     '#relation': {
@@ -292,11 +302,16 @@ const AUTH_MATRIX = {
                     },
                 },
             ],
-        },
+        },*/
     },
     orderedService: {
-        // [orderedServiceAction.create]: {},
-        [orderedServiceAction.update]: {
+        [orderedServiceAction.create]: AllowEveryoneAuth,
+        [orderedServiceAction.update]: AllowEveryoneAuth,
+        [orderedServiceAction.remove]: AllowEveryoneAuth,
+        [orderedServiceAction.subscribe]: AllowEveryoneAuth,
+        [orderedServiceAction.unsubscribe]: AllowEveryoneAuth,
+        [orderedServiceAction.renew]: AllowEveryoneAuth,
+        /*[orderedServiceAction.update]: {
             auths: [
                 {
                     '#exists': [orderedServiceApiCompany],
@@ -387,7 +402,7 @@ const AUTH_MATRIX = {
                     ],
                 },
             ],
-        },
+        },*/
         // [orderedServiceAction.expire]: {},
     },
     /*phoneNumber: {
@@ -400,10 +415,11 @@ const AUTH_MATRIX = {
         [phoneNumberAction.halt]: {},
     },*/
     phoneCall: {
-        /*[phoneCallAction.create]: {},
-        [phoneCallAction.update]: {},
-        [phoneCallAction.remove]: {},
-        [phoneCallAction.answer]: {},*/
+        [phoneCallAction.create]: AllowEveryoneAuth,
+        [phoneCallAction.update]: AllowEveryoneAuth,
+        [phoneCallAction.remove]: AllowEveryoneAuth,
+        [phoneCallAction.answer]: AllowEveryoneAuth,
+        [phoneCallAction.disconnect]: AllowEveryoneAuth,
         /*[phoneCallAction.disconnect]: {
             auths: [
                 {
