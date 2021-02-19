@@ -11,7 +11,9 @@ const {
 const state = {
     pending: 301,
     processing: 401,
-    completed: 501,
+    waitingForData: 501,
+    completed: 601,
+    noData: 701
 };
 
 const decodeState = (s) => {
@@ -19,22 +21,12 @@ const decodeState = (s) => {
         [state.pending]: '待处理',
         [state.processing]: '处理中',
         [state.completed]: '已完成',
+        [state.waitingForData]: '已完成等待通话记录生成',
+        [state.noData]: '无通话记录',
     };
-
     return S[s];
 };
 
-
-const relation = Object.assign({}, commonRelation, {
-    supporter: 301,
-});
-const decodeRelation = (r) => {
-    const R = {
-        [relation.supporter]: '客服',
-    };
-
-    return R[r] || decodeCommonRelation(a);
-};
 
 const action = Object.assign({}, commonAction, {
     manage: 301,
@@ -57,7 +49,5 @@ module.exports = {
     decodeAction,
     state,
     decodeState,
-    relation,
-    decodeRelation,
     STATE_TRANS_MATRIX,
 };
