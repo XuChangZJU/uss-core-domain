@@ -8,8 +8,8 @@ const {
 } = require('../action');
 
 const state = Object.assign({}, commonState, {
-    online: 501,
-    offline: 511,
+    online: 701,
+    offline: 711,
 });
 
 const decodeState = (s) => {
