@@ -44,7 +44,19 @@ const STATE_TRANS_MATRIX = {
     [action.manage]: [state.pending, state.processing],
 };
 
+const type = {
+    recheck: 1,
+    appointment: 2,
+};
+
+const decodeType = {
+    [type.recheck]: '邀请复查',
+    [type.appointment]: '询问预约未到原因',
+};
+
 module.exports = {
+    type,
+    decodeType,
     action,
     decodeAction,
     state,
