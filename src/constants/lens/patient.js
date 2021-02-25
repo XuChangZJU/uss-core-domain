@@ -37,10 +37,24 @@ const decodeRelation = (r) => {
     return S[r] || decodeCommonRelation(r);
 };
 
+const tag = {
+    VIP: 501,
+    regularCostomer: 601,
+    hospitalInsider: 701,
+};
 
+const decodeTag = (t) => {
+    const T = {
+        [tag.VIP]: 'VIP顾客',
+        [tag.regularCostomer]: '熟客',
+        [tag.hospitalInsider]: '医院内部人士',
+    }
+}
 module.exports = {
     relation,
     decodeRelation,
+    tag,
+    decodeTag,
     action: commonAction,
     decodeAction: decodeCommonAction,
 };
