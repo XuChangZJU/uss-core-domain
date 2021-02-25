@@ -28,8 +28,7 @@ function genGetListUrl(api, indexFrom, count, sort, query, extras) {
         url += first ? '?' : '&';
         first = false;
         const _query = JSON.stringify(query);
-        url += `query=${encodeURIComponent(_query)}`;
-        // url += '&query=' + encodeURIComponent(_query);
+        url += `query=${encodeURIComponent(_query).replace(/'/g, '%27')}`; //encodeURIComponent不会对- _ . ! ~ * ' ( )进行编码
     }
     if (extras && typeof extras === 'object') {
         // for (const item in extras) {
