@@ -448,7 +448,7 @@ const AUTH_MATRIX = {
     },
 };
 
-const STATE_TRANS_MATRIX = {
+const STATE_TRAN_MATRIX = {
     axbBind: AXB_BIND_STATES_TRAN_MATRIX,
     company: COMPANY_STATE_TRANS_MATRIX,
     orderedService: ORDERED_SERVICE_STATE_TRANS_MATRIX,
@@ -458,5 +458,5 @@ const STATE_TRANS_MATRIX = {
 
 module.exports = {
     AUTH_MATRIX,
-    STATE_TRANS_MATRIX,
+    STATE_TRAN_MATRIX,
 };
