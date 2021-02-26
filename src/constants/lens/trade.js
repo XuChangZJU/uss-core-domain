@@ -148,6 +148,7 @@ const category = {
     'visionTrainingCheck': 11,
     'service': 12,
     'gift': 13,
+    'classIIIMedicineDevice': 14,
 }
 const decodeCategory = (c) => {
     const C = {
@@ -164,6 +165,7 @@ const decodeCategory = (c) => {
         [category.visionTrainingCheck]: '视训检查',
         [category.service]: '服务/线下宣讲',
         [category.gift]: '赠品',
+        [category.classIIIMedicineDevice]: '三类医疗器械',
     }
     return C[c];
 }
@@ -198,13 +200,14 @@ const getMainCategory = (c) => {
         [category.visionTrainingCheck]: mainCategory.check,
         [category.service]: mainCategory.others,
         [category.gift]: mainCategory.makeBill,
+        [category.classIIIMedicineDevice]: mainCategory.makeBill,
     }
     return C[c];
 }
 
 const getCategory = (mc) => {
     const MC = {
-        [mainCategory.makeBill]: [category.makeGlasses, category.OKGlasses, category.visionTraining, category.DISCGlasses, category.SCL, category.gift, category.DoneGlasses, category.consumables],
+        [mainCategory.makeBill]: [category.makeGlasses, category.OKGlasses, category.visionTraining, category.DISCGlasses, category.SCL, category.gift, category.DoneGlasses, category.consumables, category.classIIIMedicineDevice],
         [mainCategory.check]: [category.OkGlassCheck, category.visionTrainingCheck, category.check, category.doctorService],
         [mainCategory.others]: [category.service],
     }
