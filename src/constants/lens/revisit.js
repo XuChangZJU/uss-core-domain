@@ -49,6 +49,7 @@ const type = {
     appointment: 2,
 };
 
+
 const decodeType = (t) => {
     const T ={
         [type.recheck]: '邀请复查',
