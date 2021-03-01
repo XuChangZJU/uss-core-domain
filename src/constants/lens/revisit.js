@@ -49,9 +49,12 @@ const type = {
     appointment: 2,
 };
 
-const decodeType = {
-    [type.recheck]: '邀请复查',
-    [type.appointment]: '询问预约未到原因',
+const decodeType = (s) => {
+    const S = {
+        [type.recheck]: '邀请复查',
+        [type.appointment]: '询问预约未到原因',
+    };
+    return S[s]
 };
 
 module.exports = {
