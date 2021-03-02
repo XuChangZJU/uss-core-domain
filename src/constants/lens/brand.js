@@ -32,7 +32,7 @@ const decodeRelation = (r) => {
 
     return S[r] || decodeCommonRelation(r);
 };
-const everyOneAbleCategory = [category.check, category.consumables, category.DoneGlasses, category.DISCGlasses, category.SCL, category.makeGlasses];
+const everyOneAbleCategory = [category.check, category.consumables, category.DoneGlasses, category.DISCGlasses, category.SCL, category.makeGlasses, category.classIIIMedicineDevice];
 const allCategory = [category.check, category.consumables, category.DoneGlasses, category.DISCGlasses, category.SCL, category.makeGlasses, category.doctorService, category.visionTraining, category.visionTrainingCheck, category.OKGlasses, category.OkGlassCheck];
 const relationCategory = {
     [relation.owner]: allCategory,
