@@ -1180,6 +1180,16 @@ const AUTH_MATRIX = {
                 },
             ]
         },
+        [CheckInAction.remove]: {
+            auths: [
+                {
+                    "#relation": {
+                        attr: 'organization.brand',
+                        relations: [BrandRelation.owner, BrandRelation.manager, BrandRelation.customerService, BrandRelation.worker, BrandRelation.financialStuff],
+                    },
+                },
+            ]
+        },
     },
     schedule: {
         [ScheduleAction.create]: {
