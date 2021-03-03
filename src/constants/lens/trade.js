@@ -5,8 +5,25 @@ const {
     state: commonState,
     decodeState: decodeCommonState,
     relation,
-    decodeRelation
+    decodeRelation,
+
 } = require('../action');
+
+const billState = {
+    'noBill': 101,
+    'pending': 101,
+    'done': 301,
+};
+
+const decodeBillState = (b) => {
+    const B = {
+        [billState.noBill]: '未开发票',
+        [billState.pending]: '发票请求处理中',
+        [billState.done]: '已完成',
+    };
+    return B[b];
+}
+
 
 const transportState = {
     wdd: 10003,
@@ -51,6 +68,9 @@ const decodeMessageState = (s) => {
 };
 
 const getActionStateAttr = (action) => {
+    if (action > 20000) {
+        return 'billState';
+    }
     if (action > 10000) {
         return 'transportState';
     }
@@ -104,6 +124,8 @@ const action = Object.assign({}, commonAction, {
     completeCheck: 10006,
     cancelCheck: 10007,
     updateFeedback: 9000,
+    issueBill: 20001,
+    completeBill: 20002,
 });
 
 const decodeAction = (a) => {
@@ -131,6 +153,8 @@ const STATE_TRAN_MATRIX =    Object.assign({}, COMMON_STATE_TRAN_MATRIX, {
     [action.send]: [transportState.wdd, transportState.yfh],
     [action.completeCheck]: [transportState.checkInQueue, transportState.checkCompleted],
     [action.cancelCheck]: [transportState.checkInQueue, transportState.checkCanceled],
+    [action.issueBill]: [billState.noBill, billState.pending],
+    [action.completeBill]: [billState.pending, billState.done],
 });
 
 
@@ -248,5 +272,7 @@ module.exports = {
     getCategory,
     checkType,
     decodeCheckType,
+    billState,
+    decodeBillState,
     STATE_TRAN_MATRIX,
 };
