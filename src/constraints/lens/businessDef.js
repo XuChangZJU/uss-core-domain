@@ -52,6 +52,7 @@ const {
     getMethod: TradeGetMethod,
     STATE_TRAN_MATRIX: TRADE_STATE_TRAN_MATRIX,
     transportState: TradeTransportState,
+    billState: tradeBillState,
 } = require('../../constants/lens/trade');
 const {
     action: WorkerOrderAction,
@@ -143,6 +144,40 @@ const AUTH_MATRIX = {
         [qiniuFileAction.remove]: AllowEveryoneAuth,
     },
     trade: {
+        [TradeAction.issueBill]: {
+            auths: [
+                {
+                    '#relation': {
+                        attr: 'organization.brand',
+                        relation: [BrandRelation.owner, BrandRelation.manager, BrandRelation.customerService, BrandRelation.financialStuff],
+                    },
+                    '#data': [                 // 表示对现有对象或者用户的数据有要求，可以有多项，每项之间是AND的关系
+                        {
+                            check: ({user, row}) => {
+                                return [TradeState.legal, TradeState.legal2].includes(row.state) && row.price > 0 && row.billState === tradeBillState.noBill;
+                            },
+                        }
+                    ],
+                }
+            ],
+        },
+        [TradeAction.completeBill]: {
+            auths: [
+                {
+                    '#relation': {
+                        attr: 'organization.brand',
+                        relation: [BrandRelation.owner, BrandRelation.manager, BrandRelation.customerService, BrandRelation.financialStuff],
+                    },
+                    '#data': [                 // 表示对现有对象或者用户的数据有要求，可以有多项，每项之间是AND的关系
+                        {
+                            check: ({user, row}) => {
+                                return row.billState === tradeBillState.pending;
+                            },
+                        }
+                    ],
+                }
+            ],
+        },
         [TradeAction.financialRefund]: {
             auths: [
                 {
