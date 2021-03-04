@@ -138,7 +138,9 @@ const decodeAction = (a) => {
         [action.customConfirm]: '顾客确认',
         [action.confirmPick]: '确认取货',
         [action.completeCheck]: '完成',
-        [action.cancelCheck]: '取消'
+        [action.cancelCheck]: '取消',
+        [action.issueBill]: '申请开票',
+        [action.completeBill]: '完成开票'
     };
 
     return S[a] || decodeCommonAction(a);
