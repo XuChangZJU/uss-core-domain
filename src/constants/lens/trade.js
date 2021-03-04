@@ -11,7 +11,7 @@ const {
 
 const billState = {
     'noBill': 101,
-    'pending': 101,
+    'pending': 201,
     'done': 301,
 };
 
