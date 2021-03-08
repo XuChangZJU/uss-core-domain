@@ -2115,6 +2115,22 @@ const AUTH_MATRIX = {
         },
     },
     checkOut: {
+        [checkOutAction.send]: {
+            auths: [
+                {
+                    "#relation": {
+                        attr: 'paddle.vendue',
+                        relations: [vendueRelation.manager, vendueRelation.owner],
+                    },
+                },
+                {
+                    "#relation": {
+                        attr: 'paddle.vendue.auctionHouse',
+                        relations: [auctionHouseRelation.manager, auctionHouseRelation.settler, auctionHouseRelation.owner],
+                    },
+                }
+            ]
+        },
         [checkOutAction.create]: {
             auths: [
                 {
