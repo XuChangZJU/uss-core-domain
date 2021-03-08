@@ -48,8 +48,22 @@ function destructRequestOptions(req) {
 	return result;
 }
 
+function mappingReqToMetadata(req, params = {}) {
+	const requestOptions = destructRequestOptions(req);
+	const options = assign({}, requestOptions, params);
+    const metadata = {
+		coordinate: options.coordinate,
+		appName: options.appName,
+		systemId: options.systemId,
+		ip: options.ip,
+		roleName: options.roleName,
+	};
+	return metadata;
+}
+
 
 module.exports = {
-	destructRequestOptions
+	destructRequestOptions,
+	mappingReqToMetadata,
 };
 
