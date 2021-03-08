@@ -40,7 +40,18 @@ const STATE_TRAN_MATRIX = Object.assign(
         [action.send]: [transportState.inPreparing, transportState.shipped],
     }
 )
+const getActionStateAttr = (action) => {
+    if (action > 20000) {
+        return 'billState';
+    }
+    if (action > 10000) {
+        return 'transportState';
+    }
+
+    return 'state';
+};
 module.exports = {
+    getActionStateAttr,
     action,
     decodeAction,
     state,

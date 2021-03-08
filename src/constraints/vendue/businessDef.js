@@ -18,6 +18,7 @@ const {
 const {
     action: checkOutAction,
     state: checkOutState,
+    transportState: checkOutTransportState,
     STATE_TRAN_MATRIX: CHECKOUT_STATE_TRAN_MATRIX,
 } = require('../../constants/vendue/checkOut');
 const {
@@ -2122,12 +2123,26 @@ const AUTH_MATRIX = {
                         attr: 'paddle.vendue',
                         relations: [vendueRelation.manager, vendueRelation.owner],
                     },
+                    '#data': [
+                        {
+                            check: ({user, row}) => {
+                                return [checkOutTransportState.inPreparing].includes(row.transportState);
+                            },
+                        }
+                    ],
                 },
                 {
                     "#relation": {
                         attr: 'paddle.vendue.auctionHouse',
                         relations: [auctionHouseRelation.manager, auctionHouseRelation.settler, auctionHouseRelation.owner],
                     },
+                    '#data': [
+                        {
+                            check: ({user, row}) => {
+                                return [checkOutTransportState.inPreparing].includes(row.transportState);
+                            },
+                        }
+                    ],
                 }
             ]
         },
