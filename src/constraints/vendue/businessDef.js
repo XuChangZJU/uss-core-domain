@@ -96,7 +96,9 @@ const {
 const {
     action: paymentRecordAction,
 } = require('../../constants/vendue/paymentRecord');
-
+const {
+    action: expressAction,
+} = require('../../constants/vendue/express');
 const ContractAuctionHouseWorkerExists = [
     {
         relation: 'userAuctionHouse',
@@ -2529,6 +2531,25 @@ const AUTH_MATRIX = {
             ],
         },
     },
+    express: {
+        [expressAction.create]: {
+            auths: [
+                {
+                    '#exists': [
+                        {
+                            relation: 'userAuctionHouse',
+                            condition: ({user}) => {
+                                const query = {
+                                    userId: user.id,
+                                };
+                                return query;
+                            },
+                        },
+                    ],
+                }
+            ]
+        }
+    }
 };
 
 const STATE_TRAN_MATRIX = {
