@@ -25,6 +25,7 @@ const STATE_TRANS_MATRIX = pick(COMMON_STATE_TRAN_MATRIX, Object.values(action))
 
 const origin = {
     'weChatV3Partner': 1,
+    'weChatV3': 2,
     'lianlian': 5,
     'shouQianBa': 10,
 };
@@ -32,6 +33,7 @@ const origin = {
 const decodeOrigin = (o) => {
     const TEXT = {
         [origin.weChatV3Partner]: '微信收付通',
+        [origin.weChatV3]: '微信支付',
         [origin.lianlian]: '连连',
         [origin.shouQianBa]: '收钱吧',
     };
