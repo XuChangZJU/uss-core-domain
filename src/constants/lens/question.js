@@ -3,6 +3,20 @@ const {
     decodeAction,
 } = require('./common');
 
+const category = {
+    recheck: 1,
+    appointment: 2,
+}
+
+
+const decodeCategory = (c) => {
+    const C = {
+        [category.recheck]: '邀请复查',
+        [category.appointment]: '询问预约未到原因',
+    };
+    return C[c];
+};
+
 const type = Object.assign({}, {
     'singleChoice': 1,
     'multipleChoice': 2,
@@ -62,4 +76,6 @@ module.exports = {
     decodeAction,
     ageGroup,
     ageToAgeGroup,
+    category,
+    decodeCategory,
 };

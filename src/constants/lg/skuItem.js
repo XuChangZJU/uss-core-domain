@@ -41,11 +41,14 @@ const STATE_TRANS_MATRIX = {
     [action.offline]: [state.online, state.offline],
 };
 
+const tag = ['离岛免税品', '离岛免税日用品', '非离岛免税品'];
+
 module.exports = {
     state,
     decodeState,
     action,
     decodeAction,
     STATE_TRANS_MATRIX,
+    tag,
 };
 

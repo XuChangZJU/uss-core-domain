@@ -5,8 +5,25 @@ const {
     state: commonState,
     decodeState: decodeCommonState,
     relation,
-    decodeRelation
+    decodeRelation,
+
 } = require('../action');
+
+const billState = {
+    'noBill': 101,
+    'pending': 201,
+    'done': 301,
+};
+
+const decodeBillState = (b) => {
+    const B = {
+        [billState.noBill]: '未开发票',
+        [billState.pending]: '发票请求处理中',
+        [billState.done]: '已完成',
+    };
+    return B[b];
+}
+
 
 const transportState = {
     wdd: 10003,
@@ -51,6 +68,9 @@ const decodeMessageState = (s) => {
 };
 
 const getActionStateAttr = (action) => {
+    if (action > 20000) {
+        return 'billState';
+    }
     if (action > 10000) {
         return 'transportState';
     }
@@ -104,6 +124,8 @@ const action = Object.assign({}, commonAction, {
     completeCheck: 10006,
     cancelCheck: 10007,
     updateFeedback: 9000,
+    issueBill: 20001,
+    completeBill: 20002,
 });
 
 const decodeAction = (a) => {
@@ -116,7 +138,9 @@ const decodeAction = (a) => {
         [action.customConfirm]: '顾客确认',
         [action.confirmPick]: '确认取货',
         [action.completeCheck]: '完成',
-        [action.cancelCheck]: '取消'
+        [action.cancelCheck]: '取消',
+        [action.issueBill]: '申请开票',
+        [action.completeBill]: '完成开票'
     };
 
     return S[a] || decodeCommonAction(a);
@@ -131,6 +155,8 @@ const STATE_TRAN_MATRIX =    Object.assign({}, COMMON_STATE_TRAN_MATRIX, {
     [action.send]: [transportState.wdd, transportState.yfh],
     [action.completeCheck]: [transportState.checkInQueue, transportState.checkCompleted],
     [action.cancelCheck]: [transportState.checkInQueue, transportState.checkCanceled],
+    [action.issueBill]: [billState.noBill, billState.pending],
+    [action.completeBill]: [billState.pending, billState.done],
 });
 
 
@@ -148,6 +174,7 @@ const category = {
     'visionTrainingCheck': 11,
     'service': 12,
     'gift': 13,
+    'classIIIMedicineDevice': 14,
 }
 const decodeCategory = (c) => {
     const C = {
@@ -164,6 +191,7 @@ const decodeCategory = (c) => {
         [category.visionTrainingCheck]: '视训检查',
         [category.service]: '服务/线下宣讲',
         [category.gift]: '赠品',
+        [category.classIIIMedicineDevice]: '三类医疗器械',
     }
     return C[c];
 }
@@ -198,13 +226,14 @@ const getMainCategory = (c) => {
         [category.visionTrainingCheck]: mainCategory.check,
         [category.service]: mainCategory.others,
         [category.gift]: mainCategory.makeBill,
+        [category.classIIIMedicineDevice]: mainCategory.makeBill,
     }
     return C[c];
 }
 
 const getCategory = (mc) => {
     const MC = {
-        [mainCategory.makeBill]: [category.makeGlasses, category.OKGlasses, category.visionTraining, category.DISCGlasses, category.SCL, category.gift, category.DoneGlasses, category.consumables],
+        [mainCategory.makeBill]: [category.makeGlasses, category.OKGlasses, category.visionTraining, category.DISCGlasses, category.SCL, category.gift, category.DoneGlasses, category.consumables, category.classIIIMedicineDevice],
         [mainCategory.check]: [category.OkGlassCheck, category.visionTrainingCheck, category.check, category.doctorService],
         [mainCategory.others]: [category.service],
     }
@@ -245,5 +274,7 @@ module.exports = {
     getCategory,
     checkType,
     decodeCheckType,
+    billState,
+    decodeBillState,
     STATE_TRAN_MATRIX,
 };

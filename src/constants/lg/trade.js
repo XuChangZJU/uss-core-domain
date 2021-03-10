@@ -42,7 +42,19 @@ const STATE_TRANS_MATRIX = {
     [action.confirmArrive]: [transportState.sending, transportState.arrived],
 };
 
+const getMethod = {
+    helpYourself: 1,
+    express: 2,
+};
 
+const decodeGetMethod = (gm) => {
+    const GM = {
+        [getMethod.helpYourself]: '顾客自取',
+        [getMethod.express]: '快递',
+    };
+
+    return GM[gm];
+};
 
 module.exports = {
     transportState,
@@ -52,5 +64,7 @@ module.exports = {
     action,
     decodeAction,
     STATE_TRANS_MATRIX,
+    getMethod,
+    decodeGetMethod,
 };
 

@@ -6,13 +6,17 @@ const {
     decodeAction: decodeCommonAction,
     relation: commonRelation,
     decodeRelation: decodeCommonRelation,
+    state: commonState,
+    decodeState: decodeCommonState,
     } = require('../action');
 
-const state = {
-    fitted: 310,
-    unfitted: 301,
-    expired: 511,
-};
+const state = Object.assign(
+    {}, commonState,{
+        fitted: 310,
+        unfitted: 301,
+        expired: 511,
+    }
+);
 const category = {
     'normal': 1,
     'OKGlasses': 2,
@@ -32,8 +36,7 @@ const decodeState = (s) => {
         [state.fitted]: '价格匹配',
         [state.expired]: '已过期',
     };
-
-    return S[s];
+    return S[s] || decodeCommonState(s);
 };
 
 const action = Object.assign({},commonAction,{

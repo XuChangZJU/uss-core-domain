@@ -18,6 +18,7 @@ const {
 const {
     action: checkOutAction,
     state: checkOutState,
+    transportState: checkOutTransportState,
     STATE_TRAN_MATRIX: CHECKOUT_STATE_TRAN_MATRIX,
 } = require('../../constants/vendue/checkOut');
 const {
@@ -95,7 +96,9 @@ const {
 const {
     action: paymentRecordAction,
 } = require('../../constants/vendue/paymentRecord');
-
+const {
+    action: expressAction,
+} = require('../../constants/vendue/express');
 const ContractAuctionHouseWorkerExists = [
     {
         relation: 'userAuctionHouse',
@@ -2115,6 +2118,36 @@ const AUTH_MATRIX = {
         },
     },
     checkOut: {
+        [checkOutAction.send]: {
+            auths: [
+                {
+                    "#relation": {
+                        attr: 'paddle.vendue',
+                        relations: [vendueRelation.manager, vendueRelation.owner],
+                    },
+                    '#data': [
+                        {
+                            check: ({user, row}) => {
+                                return [checkOutTransportState.inPreparing].includes(row.transportState);
+                            },
+                        }
+                    ],
+                },
+                {
+                    "#relation": {
+                        attr: 'paddle.vendue.auctionHouse',
+                        relations: [auctionHouseRelation.manager, auctionHouseRelation.settler, auctionHouseRelation.owner],
+                    },
+                    '#data': [
+                        {
+                            check: ({user, row}) => {
+                                return [checkOutTransportState.inPreparing].includes(row.transportState);
+                            },
+                        }
+                    ],
+                }
+            ]
+        },
         [checkOutAction.create]: {
             auths: [
                 {
@@ -2498,6 +2531,25 @@ const AUTH_MATRIX = {
             ],
         },
     },
+    express: {
+        [expressAction.create]: {
+            auths: [
+                {
+                    '#exists': [
+                        {
+                            relation: 'userAuctionHouse',
+                            condition: ({user}) => {
+                                const query = {
+                                    userId: user.id,
+                                };
+                                return query;
+                            },
+                        },
+                    ],
+                }
+            ]
+        }
+    }
 };
 
 const STATE_TRAN_MATRIX = {
