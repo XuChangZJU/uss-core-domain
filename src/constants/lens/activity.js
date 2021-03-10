@@ -48,6 +48,7 @@ const decodeType = (t) => {
         [type.offlineExtend]: '线下推广',
         [type.inShop]: '店内活动',
     }
+    return T[t];
 }
 module.exports = {
     action,
