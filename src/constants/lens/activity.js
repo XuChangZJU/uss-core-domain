@@ -38,10 +38,22 @@ const STATE_TRANS_MATRIX = {
     [action.cancel]: [state.ongoing, state.cancelled],
     [action.restart]: [state.cancelled, state.ongoing],
 };
+const type = {
+    offlineExtend: 1,
+    inShop: 2
+}
 
+const decodeType = (t) => {
+    const T = {
+        [type.offlineExtend]: '线下推广',
+        [type.inShop]: '店内活动',
+    }
+}
 module.exports = {
     action,
     category,
+    type,
+    decodeType,
     decodeCategory,
     decodeAction,
     state,
