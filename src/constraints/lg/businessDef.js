@@ -75,6 +75,9 @@ const {
     relation: serviceCompanyRelation
 } = require('../../constants/lg/serviceCompany');
 
+const {
+    action: shoppingCartTermsAction,
+} = require('../../constants/lg/shoppingCartTerms');
 const AUTH_MATRIX = {
     lgSkuValue: {
         [skuValueAction.create]: {
@@ -1045,7 +1048,6 @@ const AUTH_MATRIX = {
         [tradeAction.confirmArrive]: {
             auths: [
                 {
-
                     '#data': [
                         {
                             check: ({user, row}) => {
@@ -1090,7 +1092,37 @@ const AUTH_MATRIX = {
     enterUp: {
         [enterUpAction.create]: AllowEveryoneAuth,
         [enterUpAction.update]: AnyRelationAuth,
-    }
+    },
+    lgShoppingCartTerms: {
+        [shoppingCartTermsAction.create]: AllowEveryoneAuth,
+        [shoppingCartTermsAction.update]: {
+            auths: [
+                {
+                    "#data": [
+                        {
+                            check: ({user, row}) => {
+                                return row.userId === user.id;
+                            },
+                        }
+                    ],
+                },
+            ]
+        },
+        [shoppingCartTermsAction.remove]: {
+            auths: [
+                {
+                    "#data": [
+                        {
+                            check: ({user, row}) => {
+                                return row.userId === user.id;
+                            },
+                        }
+                    ],
+                },
+            ]
+        },
+
+    },
 };
 const STATE_TRAN_MATRIX = {
     lgShop: SHOP_STATE_TRANS_MATRIX,
