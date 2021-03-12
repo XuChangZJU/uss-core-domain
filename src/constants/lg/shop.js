@@ -44,6 +44,18 @@ const decodeType = (t) => {
     return TEXT[t];
 };
 
+const category = {
+    offShoreDutyFree: 1,
+    notOffShoreDutyFree: 2,
+}
+
+const decodeCategory = (t) => {
+    const TEXT = {
+        [category.offShoreDutyFree]: '离岛免税',
+        [category.notOffShoreDutyFree]: '非离岛免税',
+    };
+    return TEXT[t];
+};
 const action = Object.assign({}, commonAction,
     {
         online: 301,
@@ -93,6 +105,8 @@ module.exports = {
     decodeAction,
     relation,
     decodeRelation,
+    category,
+    decodeCategory,
     STATE_TRANS_MATRIX,
 };
 
