@@ -4,7 +4,6 @@
  */
 
 // userOrganization不再用于权限判断，根据人员当日打卡所在门店赋予权限，由于复杂写在definition中，这里只做基础的判断
-
 const {
     action: revisitQuestionAction,
 } = require('../../constants/lens/revisitQuestion')
@@ -96,6 +95,17 @@ const {
     relation: OrganizationRelation,
     STATE_TRANS_MATRIX: ORGANIZATION_STATE_TRANS_MATRIX,
     } = require('../../constants/lens/organization');
+const {
+    action: screeningAction,
+    state: screeningState,
+    STATE_TRANS_MATRIX: SCREENING_STATE_TRANS_MATRIX,
+} = require('../../constants/lens/screening');
+
+const {
+    action: signUpAction,
+    state: signUpState,
+    STATE_TRANS_MATRIX: SIGNUP_STATE_TRANS_MATRIX,
+} = require('../../constants/lens/signUp');
 
 // const {
 //     action: WorkerAction,
@@ -1597,6 +1607,180 @@ const AUTH_MATRIX = {
             ],
         },
     },
+    singUp: {
+        [signUpAction.create]: AllowEveryoneAuth,
+        [signUpAction.update]: AllowEveryoneAuth,
+        [signUpAction.cancel]: {
+            auths: [
+                {
+                    '#exists': [
+                        {
+                            relation: 'userRole',
+                            condition: ({ user, row }) => {
+                                return {
+                                    userId: user.id,
+                                }
+                            }
+                        }
+                    ]
+                },
+                {
+                    "#relation": {
+                        attr: 'patient',
+                    },
+                    '#data': [
+                        {
+                            check: ({ user, row }) => {
+                                return  row.state === signUpState.normal;
+                            },
+                        }
+                    ]
+                },
+            ],
+        },
+        [signUpAction.regist]: {
+            auths: [
+                {
+                    '#exists': [
+                        {
+                            relation: 'userRole',
+                            condition: ({ user, row }) => {
+                                return {
+                                    userId: user.id,
+                                }
+                            }
+                        }
+                    ],
+                    '#data': [
+                        {
+                            check: ({ user, row }) => {
+                                return  row.state === appointmentState.normal && !!row.patientId;
+                            },
+                        }
+                    ]
+                },
+            ],
+        },
+        [signUpAction.allocWeChatQrCode]: {
+            auths: [
+                {
+                    '#exists': [
+                        {
+                            relation: 'userRole',
+                            condition: ({ user, row }) => {
+                                return {
+                                    userId: user.id,
+                                }
+                            }
+                        }
+                    ],
+                }
+            ],
+        },
+    },
+    screening: {
+        [screeningAction.create]: {
+            auths: [
+                {
+                    '#exists': [
+                        {
+                            relation: 'userRole',
+                            condition: ({ user }) => {
+                                return {
+                                    userId: user.id,
+                                }
+                            }
+                        }
+                    ],
+                },
+            ]
+        },
+        [screeningAction.update]: {
+            auths: [
+                {
+                    '#exists': [
+                        {
+                            relation: 'userRole',
+                            condition: ({ user, row }) => {
+                                return {
+                                    userId: user.id,
+                                }
+                            }
+                        }
+                    ],
+                },
+            ],
+        },
+        [screeningAction.cancel]: {
+            auths: [
+                {
+                    '#exists': [
+                        {
+                            relation: 'userRole',
+                            condition: ({ user, row }) => {
+                                return {
+                                    userId: user.id,
+                                }
+                            }
+                        }
+                    ],
+                    '#data': [
+                        {
+                            check: ({ user, row }) => {
+                                return  row.state === screeningState.ongoing;
+                            },
+                        }
+                    ]
+                },
+            ],
+        },
+        [screeningAction.restart]: {
+            auths: [
+                {
+                    '#exists': [
+                        {
+                            relation: 'userRole',
+                            condition: ({ user, row }) => {
+                                return {
+                                    userId: user.id,
+                                }
+                            }
+                        }
+                    ],
+                    '#data': [
+                        {
+                            check: ({ user, row }) => {
+                                return  row.state === screeningState.cancelled;
+                            },
+                        }
+                    ]
+                },
+            ],
+        },
+        [screeningAction.allocWeChatQrCode]: {
+            auths: [
+                {
+                    '#exists': [
+                        {
+                            relation: 'userRole',
+                            condition: ({ user, row }) => {
+                                return {
+                                    userId: user.id,
+                                }
+                            }
+                        }
+                    ],
+                    '#data': [
+                        {
+                            check: ({ user, row }) => {
+                                return  row.state === screeningState.ongoing;
+                            },
+                        }
+                    ]
+                },
+            ],
+        }
+    },
 };
 
 const STATE_TRAN_MATRIX = {
@@ -1610,6 +1794,8 @@ const STATE_TRAN_MATRIX = {
     trade: TRADE_STATE_TRAN_MATRIX,
     activity: ACTIVITY_STATE_TRANS_MATRIX,
     revisit: REVISIT_STATE_TRANS_MATRIX,
+    screening: SCREENING_STATE_TRANS_MATRIX,
+    signUp: SIGNUP_STATE_TRANS_MATRIX,
 };
 
 module.exports = {
