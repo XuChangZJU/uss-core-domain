@@ -37,9 +37,17 @@ const STATE_TRANS_MATRIX = {
     [action.regist]: [state.normal, state.completed],
     [action.cancel]: [state.normal, state.cancelled],
 };
+
+const {
+    category,
+    decodeCategory
+} = require('./trade');
+
 module.exports = {
     action,
     decodeAction,
+    category,
+    decodeCategory,
     state,
     decodeState,
     STATE_TRANS_MATRIX,
