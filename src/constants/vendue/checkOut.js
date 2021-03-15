@@ -73,6 +73,21 @@ const getActionStateAttr = (action) => {
 
     return 'state';
 };
+
+const getMethod = {
+    express: 1,
+    bySelf: 2,
+};
+
+const decodeGetMethod = (gm) => {
+    const S = {
+        [getMethod.express]: '快递',
+        [getMethod.bySelf]: '自提',
+    };
+
+    return S[gm];
+};
+
 module.exports = {
     getActionStateAttr,
     action,
@@ -84,4 +99,7 @@ module.exports = {
     transportState,
     decodeTransportState,
     STATE_TRAN_MATRIX,
+
+    getMethod,
+    decodeGetMethod,
 };
