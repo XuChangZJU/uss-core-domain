@@ -10,36 +10,59 @@ const {
 
 const action = Object.assign(
     {}, commonAction, {
-        send: 10002,
+        // enter: 10002,
+        // show: 10003,
+        prepare: 10005,
+        cancelPrepare: 10105,
+        ship: 10006,
+        cancelShip: 10106,
+        receive: 10007,
     }
-)
+);
 const decodeAction = (a) => {
     const A = {
-        [action.send]: '发货',
+        // [action.enter]: '入库',
+        [action.prepare]: '请求发货',
+        [action.cancelPrepare]: '取消请求',
+        [action.ship]: '发货',
+        [action.cancelShip]: '取消发货',
+        [action.receive]: '收货',
     };
     return A[a] || decodeCommonAction(a);
 };
 
 const transportState = {
-    unsettled: 10001,
-    inPreparing: 10002,
-    shipped: 10003,
+    /* unrecieved: 10001,
+    stored: 10002,
+    inPreview: 10003, */
+    keeping: 10004,
+    preparing: 10005,
+    shipped: 10006,
+    received: 10007,
 };
 
 const decodeTransportState = (s) => {
     const S = {
-        [transportState.unsettled]: '未结算',
-        [transportState.inPreparing]: '未发货',
+        [transportState.unrecieved]: '未到库',
+        [transportState.stored]: '库存',
+        [transportState.inPreview]: '预展中',
+        [transportState.keeping]: '暂存中',
+        [transportState.preparing]: '待发货', 
         [transportState.shipped]: '已发货',
+        [transportState.received]: '已收货',
     };
 
     return S[s];
 };
 const STATE_TRAN_MATRIX = Object.assign(
     {}, COMMON_STATE_TRAN_MATRIX, {
-        [action.send]: [transportState.inPreparing, transportState.shipped],
+        [action.prepare]: [transportState.keeping, transportState.preparing],
+        [action.cancelPrepare]: [transportState.preparing, transportState.keeping],
+        [action.ship]: [transportState.preparing, transportState.shipped],
+        [action.cancelShip]: [transportState.shipped, transportState.preparing],
+        [action.receive]: [transportState.shipped, transportState.received],
     }
-)
+);
 const getActionStateAttr = (action) => {
     if (action > 20000) {
         return 'billState';
