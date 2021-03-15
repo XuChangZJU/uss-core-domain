@@ -78,6 +78,10 @@ const {
 const {
     action: shoppingCartAction,
 } = require('../../constants/lg/shoppingCart');
+
+const {
+    action: skuItemValueAction,
+} = require('../../constants/lg/skuItemValue');
 const AUTH_MATRIX = {
     lgSkuValue: {
         [skuValueAction.create]: {
@@ -1121,8 +1125,138 @@ const AUTH_MATRIX = {
                 },
             ]
         },
-
     },
+    lgSkuItemValue: {
+        [skuItemValueAction.create]: {
+            auths: [
+                {
+                    "#exists": [
+                        {
+                            relation: 'userLgShop',
+                            condition: ({ user }) => {
+                                return {
+                                    userId: user.id,
+                                    relation: {
+                                        $in: [shopRelation.owner, shopRelation.manager],
+                                    },
+                                };
+                            },
+                        },
+                    ]
+                },
+                {
+                    "#exists": [
+                        {
+                            relation: 'userLgMall',
+                            condition: ({ user }) => {
+                                return {
+                                    userId: user.id,
+                                };
+                            },
+                        },
+                    ]
+                },
+                {
+                    "#exists": [
+                        {
+                            relation: 'userLgDistrict',
+                            condition: ({ user }) => {
+                                return {
+                                    userId: user.id,
+                                };
+                            },
+                        },
+                    ]
+                },
+            ]
+        },
+        [skuItemValueAction.update]: {
+            auths: [
+                {
+                    "#exists": [
+                        {
+                            relation: 'userLgShop',
+                            condition: ({ user }) => {
+                                return {
+                                    userId: user.id,
+                                    relation: {
+                                        $in: [shopRelation.owner, shopRelation.manager],
+                                    },
+                                };
+                            },
+                        },
+                    ]
+                },
+                {
+                    "#exists": [
+                        {
+                            relation: 'userLgMall',
+                            condition: ({ user }) => {
+                                return {
+                                    userId: user.id,
+                                };
+                            },
+                        },
+                    ]
+                },
+                {
+                    "#exists": [
+                        {
+                            relation: 'userLgDistrict',
+                            condition: ({ user }) => {
+                                return {
+                                    userId: user.id,
+                                };
+                            },
+                        },
+                    ]
+                },
+            ]
+        },
+        [skuItemValueAction.remove]: {
+            auths: [
+                {
+                    "#exists": [
+                        {
+                            relation: 'userLgShop',
+                            condition: ({ user }) => {
+                                return {
+                                    userId: user.id,
+                                    relation: {
+                                        $in: [shopRelation.owner, shopRelation.manager],
+                                    },
+                                };
+                            },
+                        },
+                    ]
+                },
+                {
+                    "#exists": [
+                        {
+                            relation: 'userLgMall',
+                            condition: ({ user }) => {
+                                return {
+                                    userId: user.id,
+                                };
+                            },
+                        },
+                    ]
+                },
+                {
+                    "#exists": [
+                        {
+                            relation: 'userLgDistrict',
+                            condition: ({ user }) => {
+                                return {
+                                    userId: user.id,
+                                };
+                            },
+                        },
+                    ]
+                },
+            ]
+        },
+    }
 };
 const STATE_TRAN_MATRIX = {
     lgShop: SHOP_STATE_TRANS_MATRIX,
