@@ -17,6 +17,7 @@ const action = Object.assign(
         ship: 10006,
         cancelShip: 10106,
         receive: 10007,
+        takeAway: 100008,
     }
 );
 const decodeAction = (a) => {
@@ -27,6 +28,7 @@ const decodeAction = (a) => {
         [action.ship]: '发货',
         [action.cancelShip]: '取消发货',
         [action.receive]: '收货',
+        [action.takeAway]: '顾客提走',
     };
     return A[a] || decodeCommonAction(a);
 };
@@ -43,9 +45,9 @@ const transportState = {
 
 const decodeTransportState = (s) => {
     const S = {
-        [transportState.unrecieved]: '未到库',
+        /* [transportState.unrecieved]: '未到库',
         [transportState.stored]: '库存',
-        [transportState.inPreview]: '预展中',
+        [transportState.inPreview]: '预展中', */
         [transportState.keeping]: '暂存中',
         [transportState.preparing]: '待发货', 
         [transportState.shipped]: '已发货',
@@ -61,6 +63,7 @@ const STATE_TRAN_MATRIX = Object.assign(
         [action.ship]: [transportState.preparing, transportState.shipped],
         [action.cancelShip]: [transportState.shipped, transportState.preparing],
         [action.receive]: [transportState.shipped, transportState.received],
+        [action.takeAway]: [transportState.keeping, transportState.received],
     }
 );
 const getActionStateAttr = (action) => {
