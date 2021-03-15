@@ -2579,6 +2579,21 @@ const AUTH_MATRIX = {
                                 return query;
                             },
                         },
+                        {
+                            relation: 'auction',
+                            needData: true,
+                            condition: ({ user, actionData }) => {
+                                const { agent } = actionData;
+                                const { auctionId } = agent;
+                                const query = {
+                                    state: {
+                                        $in: [auctionState.ready, auctionState.ongoing],
+                                    },
+                                    id: auctionId,
+                                };
+                                return query;
+                            },
+                        },
                     ],
                 },
             ]
