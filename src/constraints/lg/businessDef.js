@@ -82,6 +82,10 @@ const {
 const {
     action: skuItemValueAction,
 } = require('../../constants/lg/skuItemValue');
+
+const {
+    action: skuItemShopAction,
+} = require('../../constants/lg/skuItemShop');
 const AUTH_MATRIX = {
     lgSkuValue: {
         [skuValueAction.create]: {
@@ -1256,7 +1260,68 @@ const AUTH_MATRIX = {
                 },
             ]
         },
-    }
+    },
+    lgSkuItemShop: {
+        [skuItemShopAction.create]: {
+            auths: [
+                {
+                    "#exists": [
+                        {
+                            relation: 'userLgShop',
+                            condition: ({ user }) => {
+                                return {
+                                    userId: user.id,
+                                    relation: {
+                                        $in: [shopRelation.owner, shopRelation.manager],
+                                    },
+                                };
+                            },
+                        },
+                    ]
+                },
+            ]
+        },
+        [skuItemShopAction.update]: {
+            auths: [
+                {
+                    "#relation": {
+                        attr: 'lgShop',
+                        relations: [shopRelation.owner, shopRelation.manager],
+                    },
+                },
+                {
+                    "#relation": {
+                        attr: 'lgShop.lgMall',
+                    },
+                },
+                {
+                    "#relation": {
+                        attr: 'lgShop.lgMall.lgDistrict',
+                    },
+                },
+            ]
+        },
+        [skuItemShopAction.remove]: {
+            auths: [
+                {
+                    "#relation": {
+                        attr: 'lgShop',
+                        relations: [shopRelation.owner, shopRelation.manager],
+                    },
+                },
+                {
+                    "#relation": {
+                        attr: 'lgShop.lgMall',
+                    },
+                },
+                {
+                    "#relation": {
+                        attr: 'lgShop.lgMall.lgDistrict',
+                    },
+                },
+            ]
+        },
+    },
 };
 const STATE_TRAN_MATRIX = {
     lgShop: SHOP_STATE_TRANS_MATRIX,
