@@ -2,6 +2,7 @@ const {
     AllowEveryoneAuth,
     OwnerRelationAuth,
     AnyRelationAuth,
+    action: CommonAction,
 } = require('../action');
 const {
     action: bannerAction,
@@ -2653,16 +2654,22 @@ const AUTH_MATRIX = {
             ],
         },
     },
-    express: {
-        [expressAction.create]: {
+    checkOutPush: {
+        [CommonAction.create]: {
             auths: [
                 {
                     '#exists': [
                         {
-                            relation: 'userAuctionHouse',
-                            condition: ({user}) => {
+                            relation: 'checkOut',
+                            needData: true,
+                            condition: ({ user, actionData }) => {
+                                const { checkOutPush } = actionData;
+                                const { checkOutId } = checkOutPush;
                                 const query = {
-                                    userId: user.id,
+                                    state: {
+                                        $in: [checkOutState.unpaid, checkOutState.paying],
+                                    },
+                                    id: checkOutId,
                                 };
                                 return query;
                             },
