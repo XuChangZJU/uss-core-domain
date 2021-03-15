@@ -1607,7 +1607,7 @@ const AUTH_MATRIX = {
             ],
         },
     },
-    singUp: {
+    signUp: {
         [signUpAction.create]: AllowEveryoneAuth,
         [signUpAction.update]: AllowEveryoneAuth,
         [signUpAction.cancel]: {
