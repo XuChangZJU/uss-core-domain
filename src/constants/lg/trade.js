@@ -22,14 +22,14 @@ const decodeTransportState = (a) => {
 };
 const action = Object.assign({}, commonAction,
     {
-        send: 10001,
+        sendExpress: 10001,
         confirmArrive: 10002,
     }
 );
 
 const decodeAction = (a) => {
     const TEXT = {
-        [action.send]: '发快递',
+        [action.sendExpress]: '发快递',
         [action.confirmArrive]: '确认收货',
     };
 

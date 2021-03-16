@@ -1040,7 +1040,7 @@ const AUTH_MATRIX = {
                 }
             ]
         },
-        [tradeAction.send]: {
+        [tradeAction.sendExpress]: {
             auths: [
                 {
                     '#data': [
