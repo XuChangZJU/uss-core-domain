@@ -1,6 +1,6 @@
 const pick = require('lodash/pick');
-const { 
-    state: commonState, 
+const {
+    state: commonState,
     action: commonAction,
     decodeState,
     decodeAction,
@@ -19,6 +19,7 @@ const action = pick(commonAction, [
     'startToPay',
     'stopPaying',
     'pay',
+    'create',
 ]);
 
 const STATE_TRANS_MATRIX = pick(COMMON_STATE_TRAN_MATRIX, Object.values(action));

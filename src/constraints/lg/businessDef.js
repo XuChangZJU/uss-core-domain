@@ -1066,6 +1066,38 @@ const AUTH_MATRIX = {
                 }
             ]
         },
+        [tradeAction.cancel]: {
+            auths: [
+                {
+                    "#relation": {
+                        attr: '',
+                    },
+                    '#data': [
+                        {
+                            check: ({user, row}) => {
+                                return [tradeState.unpaid].includes(row.state);
+                            },
+                        }
+                    ],
+                }
+            ]
+        },
+        [tradeAction.stopPaying]: {
+            auths: [
+                {
+                    "#relation": {
+                        attr: '',
+                    },
+                    '#data': [
+                        {
+                            check: ({user, row}) => {
+                                return [tradeState.paying, tradeState.partialPaid].includes(row.state);
+                            },
+                        }
+                    ],
+                }
+            ]
+        },
     },
     lgServiceCompany: {
         [serviceCompanyAction.create]: AllowEveryoneAuth,

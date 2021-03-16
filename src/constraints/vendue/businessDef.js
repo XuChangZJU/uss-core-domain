@@ -2118,17 +2118,25 @@ const AUTH_MATRIX = {
         },
     },
     checkOut: {
-        [checkOutAction.send]: {
+        [checkOutAction.prepare]: {
             auths: [
                 {
-                    "#relation": {
-                        attr: 'paddle.vendue',
-                        relations: [vendueRelation.manager, vendueRelation.owner],
-                    },
+                    '#exists': [
+                        {
+                            relation: 'paddle',
+                            condition: ({ user, row }) => {
+                                const query = {
+                                    userId: user.id,
+                                    id: row.paddleId,
+                                };
+                                return query;
+                            },
+                        },
+                    ],
                     '#data': [
                         {
                             check: ({user, row}) => {
-                                return [checkOutTransportState.inPreparing].includes(row.transportState);
+                                return [checkOutTransportState.keeping].includes(row.transportState);
                             },
                         }
                     ],
@@ -2141,7 +2149,121 @@ const AUTH_MATRIX = {
                     '#data': [
                         {
                             check: ({user, row}) => {
-                                return [checkOutTransportState.inPreparing].includes(row.transportState);
+                                return [checkOutTransportState.keeping].includes(row.transportState);
+                            },
+                        }
+                    ],
+                }
+            ]
+        },
+        [checkOutAction.cancelPrepare]: {
+            auths: [
+                {
+                    '#exists': [
+                        {
+                            relation: 'paddle',
+                            condition: ({ user, row }) => {
+                                const query = {
+                                    userId: user.id,
+                                    id: row.paddleId,
+                                };
+                                return query;
+                            },
+                        },
+                    ],
+                    '#data': [
+                        {
+                            check: ({user, row}) => {
+                                return [checkOutTransportState.preparing].includes(row.transportState);
+                            },
+                        }
+                    ],
+                },
+                {
+                    "#relation": {
+                        attr: 'paddle.vendue.auctionHouse',
+                        relations: [auctionHouseRelation.manager, auctionHouseRelation.settler, auctionHouseRelation.owner],
+                    },
+                    '#data': [
+                        {
+                            check: ({user, row}) => {
+                                return [checkOutTransportState.keeping].includes(row.transportState);
+                            },
+                        }
+                    ],
+                }
+            ]
+        },
+        [checkOutAction.ship]: {
+            auths: [
+                {
+                    "#relation": {
+                        attr: 'paddle.vendue.auctionHouse',
+                        relations: [auctionHouseRelation.stockKeeper, auctionHouseRelation.settler, auctionHouseRelation.owner],
+                    },
+                    '#data': [
+                        {
+                            check: ({user, row}) => {
+                                return [checkOutTransportState.preparing].includes(row.transportState);
+                            },
+                        }
+                    ],
+                }
+            ]
+        },
+        [checkOutAction.cancelShip]: {
+            auths: [
+                {
+                    "#relation": {
+                        attr: 'paddle.vendue.auctionHouse',
+                        relations: [auctionHouseRelation.stockKeeper, auctionHouseRelation.settler, auctionHouseRelation.owner],
+                    },
+                    '#data': [
+                        {
+                            check: ({user, row}) => {
+                                return [checkOutTransportState.shipped].includes(row.transportState);
+                            },
+                        }
+                    ],
+                }
+            ]
+        },
+        [checkOutAction.receive]: {
+            auths: [
+                {
+                    '#exists': [
+                        {
+                            relation: 'paddle',
+                            condition: ({ user, row }) => {
+                                const query = {
+                                    userId: user.id,
+                                    id: row.paddleId,
+                                };
+                                return query;
+                            },
+                        },
+                    ],
+                    '#data': [
+                        {
+                            check: ({user, row}) => {
+                                return [checkOutTransportState.shipped].includes(row.transportState);
+                            },
+                        }
+                    ],
+                }
+            ],
+        },
+        [checkOutAction.takeAway]: {
+            auths: [
+                {
+                    "#relation": {
+                        attr: 'paddle.vendue.auctionHouse',
+                        relations: [auctionHouseRelation.stockKeeper, auctionHouseRelation.settler, auctionHouseRelation.owner],
+                    },
+                    '#data': [
+                        {
+                            check: ({user, row}) => {
+                                return [checkOutTransportState.keeping].includes(row.transportState);
                             },
                         }
                     ],
