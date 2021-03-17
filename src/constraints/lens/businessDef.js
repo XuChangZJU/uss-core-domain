@@ -170,13 +170,13 @@ const AUTH_MATRIX = {
                 },
                 {
                     '#relation': {
-                        attr: 'organization.brand',
+                        attr: 'diagnosis.organization.brand',
                         relation: [BrandRelation.owner, BrandRelation.manager, BrandRelation.customerService, BrandRelation.financialStuff],
                     },
                     '#data': [                 // 表示对现有对象或者用户的数据有要求，可以有多项，每项之间是AND的关系
                         {
                             check: ({user, row}) => {
-                                return [TradeState.legal, TradeState.legal2].includes(row.state) && row.price > 0 && row.billState === tradeBillState.noBill;
+                                return [TradeState.legal, TradeState.legal2].includes(row.state) && row.price > 0 && [tradeBillState.noBill, tradeBillState.pending].includes(row.billState);
                             },
                         }
                     ],
@@ -199,7 +199,7 @@ const AUTH_MATRIX = {
                 },
                 {
                     '#relation': {
-                        attr: 'organization.brand',
+                        attr: 'diagnosis.organization.brand',
                         relation: [BrandRelation.owner, BrandRelation.manager, BrandRelation.customerService, BrandRelation.financialStuff],
                     },
                     '#data': [                 // 表示对现有对象或者用户的数据有要求，可以有多项，每项之间是AND的关系
@@ -228,7 +228,7 @@ const AUTH_MATRIX = {
                 },
                 {
                     '#relation': {
-                        attr: 'organization.brand',
+                        attr: 'diagnosis.organization.brand',
                         relation: [BrandRelation.owner, BrandRelation.manager, BrandRelation.customerService, BrandRelation.financialStuff],
                     },
                     '#data': [                 // 表示对现有对象或者用户的数据有要求，可以有多项，每项之间是AND的关系
@@ -257,7 +257,7 @@ const AUTH_MATRIX = {
                 },
                 {
                     '#relation': {
-                        attr: 'organization.brand',
+                        attr: 'diagnosis.organization.brand',
                     },
                     '#data': [                 // 表示对现有对象或者用户的数据有要求，可以有多项，每项之间是AND的关系
                         {
@@ -269,7 +269,7 @@ const AUTH_MATRIX = {
                 },
                 {
                     '#relation': {
-                        attr: 'organization',
+                        attr: 'diagnosis.organization',
                         relations: [OrganizationRelation.doctor],
                     },
                     '#data': [                 // 表示对现有对象或者用户的数据有要求，可以有多项，每项之间是AND的关系
@@ -298,7 +298,7 @@ const AUTH_MATRIX = {
                 },
                 {
                     '#relation': {
-                        attr: 'organization.brand',
+                        attr: 'diagnosis.organization.brand',
                     },
                     '#data': [                 // 表示对现有对象或者用户的数据有要求，可以有多项，每项之间是AND的关系
                         {
@@ -310,7 +310,7 @@ const AUTH_MATRIX = {
                 },
                 {
                     '#relation': {
-                        attr: 'organization',
+                        attr: 'diagnosis.organization',
                         relations: [OrganizationRelation.doctor],
                     },
                     '#data': [                 // 表示对现有对象或者用户的数据有要求，可以有多项，每项之间是AND的关系
@@ -351,7 +351,7 @@ const AUTH_MATRIX = {
                 },
                 {
                     '#relation': {
-                        attr: 'organization.brand',
+                        attr: 'diagnosis.organization.brand',
                     },
                     '#data': [                 // 表示对现有对象或者用户的数据有要求，可以有多项，每项之间是AND的关系
                         {
@@ -363,7 +363,7 @@ const AUTH_MATRIX = {
                 },
                 {
                     '#relation': {  // 内部人员可以不受流转状态限制退单
-                        attr: 'organization.brand',
+                        attr: 'diagnosis.organization.brand',
                         relations: insideBrandRelation,
                     },
                 }
@@ -385,7 +385,7 @@ const AUTH_MATRIX = {
                 },
                 {
                     "#relation": {
-                        attr: 'organization.brand',
+                        attr: 'diagnosis.organization.brand',
                         relations: [BrandRelation.owner, BrandRelation.manager, BrandRelation.customerService],
                     },
                 }
@@ -1010,12 +1010,12 @@ const AUTH_MATRIX = {
             auths: [
                 {
                     "#relation": {
-                        attr: 'diagnosis.organization.brand',
+                        attr: 'trade.diagnosis.organization.brand',
                     },
                 },
                 {
                     "#relation": {
-                        attr: 'diagnosis.patient',
+                        attr: 'trade.diagnosis.patient',
                         relations: [PatientRelation.owner],
                     },
                 }
@@ -1025,7 +1025,7 @@ const AUTH_MATRIX = {
             auths: [
                 {
                     "#relation": {
-                        attr: 'diagnosis.patient',
+                        attr: 'trade.diagnosis.patient',
                         relations: [PatientRelation.owner],
                     },
                     '#data': [                 // 表示对现有对象或者用户的数据有要求，可以有多项，每项之间是AND的关系
@@ -1042,7 +1042,7 @@ const AUTH_MATRIX = {
             auths: [
                 {
                     '#relation': {
-                        attr: 'diagnosis.organization.brand',
+                        attr: 'trade.diagnosis.organization.brand',
                     },
                     '#data': [                 // 表示对现有对象或者用户的数据有要求，可以有多项，每项之间是AND的关系
                         {
@@ -1054,7 +1054,7 @@ const AUTH_MATRIX = {
                 },
                 {
                     '#relation': {
-                        attr: 'diagnosis.organization.brand',
+                        attr: 'trade.diagnosis.organization.brand',
                     },
                     '#data': [                 // 表示对现有对象或者用户的数据有要求，可以有多项，每项之间是AND的关系
                         {
@@ -1070,7 +1070,7 @@ const AUTH_MATRIX = {
             auths: [
                 {
                     "#relation": {
-                        attr: 'diagnosis.organization.brand',
+                        attr: 'trade.diagnosis.organization.brand',
                     },
                 }
             ],
@@ -1097,7 +1097,7 @@ const AUTH_MATRIX = {
             auths: [
                 {
                     '#relation': {
-                        attr: 'trade.organization.brand',
+                        attr: 'trade.diagnosis.organization.brand',
                     },
                 },
             ],
@@ -1135,7 +1135,7 @@ const AUTH_MATRIX = {
             auths: [
                 {
                     '#relation': {
-                        attr: 'trade.organization.brand',
+                        attr: 'trade.diagnosis.organization.brand',
                     },
                 },
             ],
@@ -1165,7 +1165,7 @@ const AUTH_MATRIX = {
             auths: [
                 {
                     '#relation': {
-                        attr: 'diagnosis.organization.brand',
+                        attr: 'organization.brand',
                         relations: [BrandRelation.owner, BrandRelation.customerService, BrandRelation.manager, BrandRelation.worker],
                     },
                 },
@@ -1175,7 +1175,7 @@ const AUTH_MATRIX = {
             auths: [
                 {
                     '#relation': {
-                        attr: 'diagnosis.organization.brand',
+                        attr: 'organization.brand',
                         relations: [BrandRelation.owner, BrandRelation.customerService, BrandRelation.manager, BrandRelation.worker],
                     },
                     '#data': [{
@@ -1190,7 +1190,7 @@ const AUTH_MATRIX = {
             auths: [
                 {
                     '#relation': {
-                        attr: 'diagnosis.organization.brand',
+                        attr: 'organization.brand',
                         relations: [BrandRelation.owner, BrandRelation.customerService, BrandRelation.manager, BrandRelation.worker],
                     },
                     '#data': [{
@@ -1752,7 +1752,7 @@ const AUTH_MATRIX = {
             auths: [
                 {
                     "#relation": {
-                        attr: 'trade.organization.brand',
+                        attr: 'trade.diagnosis.organization.brand',
                     },
                 },
             ],
@@ -1761,7 +1761,7 @@ const AUTH_MATRIX = {
             auths: [
                 {
                     "#relation": {
-                        attr: 'trade.organization.brand',
+                        attr: 'trade.diagnosis.organization.brand',
                     },
                 },
             ],
