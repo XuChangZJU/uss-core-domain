@@ -91,6 +91,10 @@ const {
     action: plateAction,
 } = require('../../constants/lg/plate');
 
+const {
+    action: tradeSkuItemShopAction
+} = require('../../constants/lg/tradeSkuItemShop');
+
 const AUTH_MATRIX = {
     lgSkuValue: {
         [skuValueAction.create]: {
@@ -1084,6 +1088,18 @@ const AUTH_MATRIX = {
                             },
                         }
                     ],
+                },
+                {
+                    "#relation": {
+                        attr: 'lgShop',
+                    },
+                    '#data': [
+                        {
+                            check: ({user, row}) => {
+                                return [tradeState.unpaid].includes(row.state);
+                            },
+                        }
+                    ],
                 }
             ]
         },
@@ -1097,6 +1113,34 @@ const AUTH_MATRIX = {
                         {
                             check: ({user, row}) => {
                                 return [tradeState.paying, tradeState.partialPaid].includes(row.state);
+                            },
+                        }
+                    ],
+                }
+            ]
+        },
+        [tradeAction.startToPay]: {
+            auths: [
+                {
+                    "#relation": {
+                        attr: '',
+                    },
+                    '#data': [
+                        {
+                            check: ({user, row}) => {
+                                return [tradeState.unpaid, tradeState.partialPaid].includes(row.state);
+                            },
+                        }
+                    ],
+                },
+                {
+                    "#relation": {
+                        attr: 'lgShop',
+                    },
+                    '#data': [
+                        {
+                            check: ({user, row}) => {
+                                return [tradeState.unpaid, tradeState.partialPaid].includes(row.state);
                             },
                         }
                     ],
