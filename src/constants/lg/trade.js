@@ -15,7 +15,7 @@ const transportState = {
 const decodeTransportState = (a) => {
     const TEXT = {
         [transportState.unsend]: '未发货',
-        [transportState.sending]: '待收货',
+        [transportState.sending]: '已发货',
         [transportState.arrived]: '已收货',
     };
 
@@ -31,7 +31,7 @@ const action = Object.assign({}, commonAction,
 const decodeAction = (a) => {
     const TEXT = {
         [action.sendExpress]: '发快递',
-        [action.confirmArrive]: '确认收货',
+        [action.confirmArrive]: '确认提货',
     };
 
     return TEXT[a] || decodeCommonAction(a);
@@ -41,7 +41,7 @@ const decodeAction = (a) => {
 const STATE_TRANS_MATRIX = Object.assign(
     {}, COMMON_STATE_TRAN_MATRIX, {
         [action.send]: [transportState.unsend, transportState.sending],
-        [action.confirmArrive]: [transportState.sending, transportState.arrived],
+        [action.confirmArrive]: [transportState.unsend, transportState.arrived],
     }
 );
 
