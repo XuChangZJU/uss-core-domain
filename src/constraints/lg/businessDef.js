@@ -92,7 +92,8 @@ const {
 } = require('../../constants/lg/plate');
 
 const {
-    action: tradeSkuItemShopAction
+    action: tradeSkuItemShopAction,
+    state: tradeSkuItemShopState,
 } = require('../../constants/lg/tradeSkuItemShop');
 
 const AUTH_MATRIX = {
@@ -1405,6 +1406,9 @@ const AUTH_MATRIX = {
     },
     lgPlate: {
         [plateAction.create]: AllowEveryoneAuth,
+    },
+    lgTradeSkuItemShop: {
+        [tradeSkuItemShopAction.create]: AllowEveryoneAuth,
     },
 };
 const STATE_TRAN_MATRIX = {

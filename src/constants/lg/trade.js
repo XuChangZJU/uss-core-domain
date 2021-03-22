@@ -4,6 +4,7 @@ const {
     decodeAction: decodeCommonAction,
     state,
     decodeState,
+    COMMON_STATE_TRAN_MATRIX,
 } = require('../action');
 
 const transportState = {
@@ -37,10 +38,12 @@ const decodeAction = (a) => {
 };
 
 
-const STATE_TRANS_MATRIX = {
-    [action.send]: [transportState.unsend, transportState.sending],
-    [action.confirmArrive]: [transportState.sending, transportState.arrived],
-};
+const STATE_TRANS_MATRIX = Object.assign(
+    {}, COMMON_STATE_TRAN_MATRIX, {
+        [action.send]: [transportState.unsend, transportState.sending],
+        [action.confirmArrive]: [transportState.sending, transportState.arrived],
+    }
+);
 
 const getMethod = {
     helpYourself: 1,
