@@ -2,8 +2,10 @@ const {
     AllowEveryoneAuth,
     OwnerRelationAuth,
     AnyRelationAuth,
-    action: CommonAction,
 } = require('../action');
+const {
+    action: CommonAction,
+} = require('../../constants/action');
 const {
     action: bannerAction,
 } = require('../../constants/vendue/banner');
