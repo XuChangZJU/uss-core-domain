@@ -217,54 +217,59 @@ const COMMON_STATE_TRAN_MATRIX = {
 };
 
 const transportState = {
-    inPreparing: 1,
-    sending: 11,
-    accepted: 21,
-    rejected: 22,
-    abnormal: 101,
+    tsUnprepared: 30000,
+    tsInPreparing: 30001,
+    tsSending: 30011,
+    tsAccepted: 30021,
+    tsRejected: 30022,
+    tsAbnormal: 30101,
 };
 
 const decodeTransportState = (ts) => {
     const TEXT = {
-        [transportState.inPreparing]: '备货中',
-        [transportState.sending]: '发货中',
-        [transportState.accepted]: '已收货',
-        [transportState.rejected]: '已拒收',
-        [transportState.abnormal]: '异常中止',
+        [transportState.tsUnprepared]: '未备货',
+        [transportState.tsInPreparing]: '备货中',
+        [transportState.tsSending]: '发货中',
+        [transportState.tsAccepted]: '已收货',
+        [transportState.tsRejected]: '已拒收',
+        [transportState.tsAbnormal]: '异常中止',
     };
 
     return TEXT[ts];
 };
 
 const transportAction = {
-    prepare: 1,
-    send: 11,
-    accept: 21,
-    reject: 22,
-    abort: 101,
+    taPrepare: 30001,
+    taSend: 30011,
+    taAccept: 30021,
+    taReject: 30022,
+    taCancel: 30025,
+    taAbort: 30101,
 };
 
 const decodeTransportAction = (ta) => {
     const TEXT = {
-        [transportState.prepare]: '备货',
-        [transportAction.send]: '发货',
-        [transportAction.accept]: '接收',
-        [transportAction.reject]: '拒绝',
-        [transportAction.abort]: '中止',
+        [transportState.taPrepare]: '备货',
+        [transportAction.taSend]: '发货',
+        [transportAction.taAccept]: '接收',
+        [transportAction.taReject]: '拒绝',
+        [transportAction.taAbort]: '中止',
+        [transportState.taCancel]: '取消',
     };
 
     return TEXT[ta];
 };
 
 const TRANSPORT_STATE_TRANS_MATRIX = {
-    [transportState.prepare]: [null, transportState.inPreparing],
-    [transportAction.send]: [transportState.inPreparing, transportState.sending],
-    [transportAction.accept]: [transportState.sending, transportState.accepted],
-    [transportAction.reject]: [transportState.sending, transportState.rejected],
-    [transportAction.abort]: [[transportState.inPreparing,
-        transportState.sending,
-        transportState.accepted,
-        transportState.rejected], transportState.abnormal],
+    [transportAction.taPrepare]: [null, transportState.tsInPreparing],
+    [transportAction.taSend]: [transportState.tsInPreparing, transportState.tsSending],
+    [transportAction.taAccept]: [transportState.tsSending, transportState.tsAccepted],
+    [transportAction.taReject]: [transportState.tsSending, transportState.tsRejected],
+    [transportAction.taAbort]: [[transportState.tsInPreparing,
+        transportState.tsSending,
+        transportState.tsAccepted,
+        transportState.tsRejected], transportState.tsAbnormal],
+    [transportAction.taCancel]: [transportState.tsInPreparing, transportState.tsUnprepared]
 };
 
 module.exports = {
