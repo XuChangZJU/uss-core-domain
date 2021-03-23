@@ -4,28 +4,25 @@ const {
     decodeAction: decodeCommonAction,
     state,
     decodeState,
+    decodeTransportAction,
+    TRANSPORT_STATE_TRANS_MATRIX,
+    transportAction: commonTransportAction,
+    transportState: commonTransportState,
+    decodeTransportState: decodeCommonTransportState,
     COMMON_STATE_TRAN_MATRIX,
 } = require('../action');
 
-const transportState = {
-    unsend: 10001,
-    sending: 10002,
-    arrived: 10003,
-};
-const decodeTransportState = (a) => {
+const transportState = Object.assign(
+    {}, commonTransportState, {
+    }
+);
+const decodeTransportState = (ts) => {
     const TEXT = {
-        [transportState.unsend]: '未发货',
-        [transportState.sending]: '已发货',
-        [transportState.arrived]: '已收货',
     };
-
-    return TEXT[a] || decodeCommonAction(a);
+    return TEXT[ts] || decodeCommonTransportState(ts);
 };
 const action = Object.assign({}, commonAction,
-    {
-        sendExpress: 10001,
-        confirmArrive: 10002,
-    }
+    commonTransportAction,
 );
 
 const decodeAction = (a) => {
@@ -34,14 +31,12 @@ const decodeAction = (a) => {
         [action.confirmArrive]: '确认提货',
     };
 
-    return TEXT[a] || decodeCommonAction(a);
+    return TEXT[a] || decodeCommonAction(a) || decodeTransportAction(a);
 };
 
 
 const STATE_TRANS_MATRIX = Object.assign(
-    {}, COMMON_STATE_TRAN_MATRIX, {
-        [action.send]: [transportState.unsend, transportState.sending],
-        [action.confirmArrive]: [transportState.unsend, transportState.arrived],
+    {}, COMMON_STATE_TRAN_MATRIX, TRANSPORT_STATE_TRANS_MATRIX, {
     }
 );
 
