@@ -60,6 +60,11 @@ const Roles = {
         name: 'cxbWorker',
         logic: true,
     },*/
+    // for listone
+    CUSTOMMANAGER: {
+        name: 'customManager',
+        id: 1201,
+    },
 };
 module.exports = {
     Roles,

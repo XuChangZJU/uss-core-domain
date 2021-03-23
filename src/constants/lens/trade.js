@@ -155,7 +155,7 @@ const STATE_TRAN_MATRIX =    Object.assign({}, COMMON_STATE_TRAN_MATRIX, {
     [action.send]: [transportState.wdd, transportState.yfh],
     [action.completeCheck]: [transportState.checkInQueue, transportState.checkCompleted],
     [action.cancelCheck]: [transportState.checkInQueue, transportState.checkCanceled],
-    [action.issueBill]: [billState.noBill, billState.pending],
+    [action.issueBill]: [[billState.noBill, billState.pending], billState.pending],
     [action.completeBill]: [billState.pending, billState.done],
 });
 

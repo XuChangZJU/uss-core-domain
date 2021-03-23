@@ -86,6 +86,16 @@ const {
 const {
     action: skuItemShopAction,
 } = require('../../constants/lg/skuItemShop');
+
+const {
+    action: plateAction,
+} = require('../../constants/lg/plate');
+
+const {
+    action: tradeSkuItemShopAction,
+    state: tradeSkuItemShopState,
+} = require('../../constants/lg/tradeSkuItemShop');
+
 const AUTH_MATRIX = {
     lgSkuValue: {
         [skuValueAction.create]: {
@@ -1040,7 +1050,7 @@ const AUTH_MATRIX = {
                 }
             ]
         },
-        [tradeAction.send]: {
+        [tradeAction.sendExpress]: {
             auths: [
                 {
                     '#data': [
@@ -1060,6 +1070,78 @@ const AUTH_MATRIX = {
                         {
                             check: ({user, row}) => {
                                 return [tradeTransportState.unsend].includes(row.transportState);
+                            },
+                        }
+                    ],
+                }
+            ]
+        },
+        [tradeAction.cancel]: {
+            auths: [
+                {
+                    "#relation": {
+                        attr: '',
+                    },
+                    '#data': [
+                        {
+                            check: ({user, row}) => {
+                                return [tradeState.unpaid].includes(row.state);
+                            },
+                        }
+                    ],
+                },
+                {
+                    "#relation": {
+                        attr: 'lgShop',
+                    },
+                    '#data': [
+                        {
+                            check: ({user, row}) => {
+                                return [tradeState.unpaid].includes(row.state);
+                            },
+                        }
+                    ],
+                }
+            ]
+        },
+        [tradeAction.stopPaying]: {
+            auths: [
+                {
+                    "#relation": {
+                        attr: '',
+                    },
+                    '#data': [
+                        {
+                            check: ({user, row}) => {
+                                return [tradeState.paying, tradeState.partialPaid].includes(row.state);
+                            },
+                        }
+                    ],
+                }
+            ]
+        },
+        [tradeAction.startToPay]: {
+            auths: [
+                {
+                    "#relation": {
+                        attr: '',
+                    },
+                    '#data': [
+                        {
+                            check: ({user, row}) => {
+                                return [tradeState.unpaid, tradeState.partialPaid].includes(row.state);
+                            },
+                        }
+                    ],
+                },
+                {
+                    "#relation": {
+                        attr: 'lgShop',
+                    },
+                    '#data': [
+                        {
+                            check: ({user, row}) => {
+                                return [tradeState.unpaid, tradeState.partialPaid].includes(row.state);
                             },
                         }
                     ],
@@ -1321,6 +1403,12 @@ const AUTH_MATRIX = {
                 },
             ]
         },
+    },
+    lgPlate: {
+        [plateAction.create]: AllowEveryoneAuth,
+    },
+    lgTradeSkuItemShop: {
+        [tradeSkuItemShopAction.create]: AllowEveryoneAuth,
     },
 };
 const STATE_TRAN_MATRIX = {

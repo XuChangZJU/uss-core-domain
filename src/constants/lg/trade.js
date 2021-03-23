@@ -4,6 +4,7 @@ const {
     decodeAction: decodeCommonAction,
     state,
     decodeState,
+    COMMON_STATE_TRAN_MATRIX,
 } = require('../action');
 
 const transportState = {
@@ -14,7 +15,7 @@ const transportState = {
 const decodeTransportState = (a) => {
     const TEXT = {
         [transportState.unsend]: '未发货',
-        [transportState.sending]: '待收货',
+        [transportState.sending]: '已发货',
         [transportState.arrived]: '已收货',
     };
 
@@ -22,25 +23,27 @@ const decodeTransportState = (a) => {
 };
 const action = Object.assign({}, commonAction,
     {
-        send: 10001,
+        sendExpress: 10001,
         confirmArrive: 10002,
     }
 );
 
 const decodeAction = (a) => {
     const TEXT = {
-        [action.send]: '发快递',
-        [action.confirmArrive]: '确认收货',
+        [action.sendExpress]: '发快递',
+        [action.confirmArrive]: '确认提货',
     };
 
     return TEXT[a] || decodeCommonAction(a);
 };
 
 
-const STATE_TRANS_MATRIX = {
-    [action.send]: [transportState.unsend, transportState.sending],
-    [action.confirmArrive]: [transportState.sending, transportState.arrived],
-};
+const STATE_TRANS_MATRIX = Object.assign(
+    {}, COMMON_STATE_TRAN_MATRIX, {
+        [action.send]: [transportState.unsend, transportState.sending],
+        [action.confirmArrive]: [transportState.unsend, transportState.arrived],
+    }
+);
 
 const getMethod = {
     helpYourself: 1,

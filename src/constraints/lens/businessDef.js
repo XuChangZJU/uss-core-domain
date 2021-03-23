@@ -157,14 +157,26 @@ const AUTH_MATRIX = {
         [TradeAction.issueBill]: {
             auths: [
                 {
+                    '#exists': [
+                        {
+                            relation: 'userRole',
+                            condition: ({ user }) => {
+                                return {
+                                    userId: user.id,
+                                }
+                            }
+                        }
+                    ]
+                },
+                {
                     '#relation': {
-                        attr: 'organization.brand',
+                        attr: 'diagnosis.organization.brand',
                         relation: [BrandRelation.owner, BrandRelation.manager, BrandRelation.customerService, BrandRelation.financialStuff],
                     },
                     '#data': [                 // 表示对现有对象或者用户的数据有要求，可以有多项，每项之间是AND的关系
                         {
                             check: ({user, row}) => {
-                                return [TradeState.legal, TradeState.legal2].includes(row.state) && row.price > 0 && row.billState === tradeBillState.noBill;
+                                return [TradeState.legal, TradeState.legal2].includes(row.state) && row.price > 0 && [tradeBillState.noBill, tradeBillState.pending].includes(row.billState);
                             },
                         }
                     ],
@@ -174,8 +186,20 @@ const AUTH_MATRIX = {
         [TradeAction.completeBill]: {
             auths: [
                 {
+                    '#exists': [
+                        {
+                            relation: 'userRole',
+                            condition: ({ user }) => {
+                                return {
+                                    userId: user.id,
+                                }
+                            }
+                        }
+                    ]
+                },
+                {
                     '#relation': {
-                        attr: 'organization.brand',
+                        attr: 'diagnosis.organization.brand',
                         relation: [BrandRelation.owner, BrandRelation.manager, BrandRelation.customerService, BrandRelation.financialStuff],
                     },
                     '#data': [                 // 表示对现有对象或者用户的数据有要求，可以有多项，每项之间是AND的关系
@@ -185,14 +209,26 @@ const AUTH_MATRIX = {
                             },
                         }
                     ],
-                }
+                },
             ],
         },
         [TradeAction.financialRefund]: {
             auths: [
                 {
+                    '#exists': [
+                        {
+                            relation: 'userRole',
+                            condition: ({ user }) => {
+                                return {
+                                    userId: user.id,
+                                }
+                            }
+                        }
+                    ]
+                },
+                {
                     '#relation': {
-                        attr: 'organization.brand',
+                        attr: 'diagnosis.organization.brand',
                         relation: [BrandRelation.owner, BrandRelation.manager, BrandRelation.customerService, BrandRelation.financialStuff],
                     },
                     '#data': [                 // 表示对现有对象或者用户的数据有要求，可以有多项，每项之间是AND的关系
@@ -208,8 +244,20 @@ const AUTH_MATRIX = {
         [TradeAction.completeCheck]: {
             auths: [
                 {
+                    '#exists': [
+                        {
+                            relation: 'userRole',
+                            condition: ({ user }) => {
+                                return {
+                                    userId: user.id,
+                                }
+                            }
+                        }
+                    ]
+                },
+                {
                     '#relation': {
-                        attr: 'organization.brand',
+                        attr: 'diagnosis.organization.brand',
                     },
                     '#data': [                 // 表示对现有对象或者用户的数据有要求，可以有多项，每项之间是AND的关系
                         {
@@ -221,7 +269,7 @@ const AUTH_MATRIX = {
                 },
                 {
                     '#relation': {
-                        attr: 'organization',
+                        attr: 'diagnosis.organization',
                         relations: [OrganizationRelation.doctor],
                     },
                     '#data': [                 // 表示对现有对象或者用户的数据有要求，可以有多项，每项之间是AND的关系
@@ -237,8 +285,20 @@ const AUTH_MATRIX = {
         [TradeAction.cancelCheck]: {
             auths: [
                 {
+                    '#exists': [
+                        {
+                            relation: 'userRole',
+                            condition: ({ user }) => {
+                                return {
+                                    userId: user.id,
+                                }
+                            }
+                        }
+                    ]
+                },
+                {
                     '#relation': {
-                        attr: 'organization.brand',
+                        attr: 'diagnosis.organization.brand',
                     },
                     '#data': [                 // 表示对现有对象或者用户的数据有要求，可以有多项，每项之间是AND的关系
                         {
@@ -250,7 +310,7 @@ const AUTH_MATRIX = {
                 },
                 {
                     '#relation': {
-                        attr: 'organization',
+                        attr: 'diagnosis.organization',
                         relations: [OrganizationRelation.doctor],
                     },
                     '#data': [                 // 表示对现有对象或者用户的数据有要求，可以有多项，每项之间是AND的关系
@@ -278,8 +338,20 @@ const AUTH_MATRIX = {
         [TradeAction.makeAbandoned]: {
             auths: [
                 {
+                    '#exists': [
+                        {
+                            relation: 'userRole',
+                            condition: ({ user }) => {
+                                return {
+                                    userId: user.id,
+                                }
+                            }
+                        }
+                    ]
+                },
+                {
                     '#relation': {
-                        attr: 'organization.brand',
+                        attr: 'diagnosis.organization.brand',
                     },
                     '#data': [                 // 表示对现有对象或者用户的数据有要求，可以有多项，每项之间是AND的关系
                         {
@@ -291,7 +363,7 @@ const AUTH_MATRIX = {
                 },
                 {
                     '#relation': {  // 内部人员可以不受流转状态限制退单
-                        attr: 'organization.brand',
+                        attr: 'diagnosis.organization.brand',
                         relations: insideBrandRelation,
                     },
                 }
@@ -300,8 +372,20 @@ const AUTH_MATRIX = {
         [TradeAction.allocWeChatQrCode]: {
             auths: [
                 {
+                    '#exists': [
+                        {
+                            relation: 'userRole',
+                            condition: ({ user }) => {
+                                return {
+                                    userId: user.id,
+                                }
+                            }
+                        }
+                    ]
+                },
+                {
                     "#relation": {
-                        attr: 'organization.brand',
+                        attr: 'diagnosis.organization.brand',
                         relations: [BrandRelation.owner, BrandRelation.manager, BrandRelation.customerService],
                     },
                 }
@@ -309,6 +393,18 @@ const AUTH_MATRIX = {
         },
         [TradeAction.create]: {
             auths: [
+                {
+                    '#exists': [
+                        {
+                            relation: 'userRole',
+                            condition: ({ user }) => {
+                                return {
+                                    userId: user.id,
+                                }
+                            }
+                        }
+                    ]
+                },
                 {
                     '#exists': [
                         {
@@ -325,6 +421,18 @@ const AUTH_MATRIX = {
         },
         [TradeAction.update]: {
             auths: [
+                {
+                    '#exists': [
+                        {
+                            relation: 'userRole',
+                            condition: ({ user }) => {
+                                return {
+                                    userId: user.id,
+                                }
+                            }
+                        }
+                    ]
+                },
                 {
                     "#relation": {
                         attr: 'diagnosis.organization.brand',
@@ -354,6 +462,18 @@ const AUTH_MATRIX = {
         [TradeAction.remove]: {
             auths: [
                 {
+                    '#exists': [
+                        {
+                            relation: 'userRole',
+                            condition: ({ user }) => {
+                                return {
+                                    userId: user.id,
+                                }
+                            }
+                        }
+                    ]
+                },
+                {
                     "#relation": {
                         attr: 'diagnosis.organization.brand',
                     },
@@ -370,6 +490,18 @@ const AUTH_MATRIX = {
         [TradeAction.updateFeedback]: {
             auths: [
                 {
+                    '#exists': [
+                        {
+                            relation: 'userRole',
+                            condition: ({ user }) => {
+                                return {
+                                    userId: user.id,
+                                }
+                            }
+                        }
+                    ]
+                },
+                {
                     "#relation": {
                         attr: 'patient',
                     },
@@ -378,6 +510,18 @@ const AUTH_MATRIX = {
         },
         [TradeAction.confirmPick]: {
             auths: [
+                {
+                    '#exists': [
+                        {
+                            relation: 'userRole',
+                            condition: ({ user }) => {
+                                return {
+                                    userId: user.id,
+                                }
+                            }
+                        }
+                    ]
+                },
                 {
                     "#relation": {
                         attr: 'diagnosis.organization.brand',
@@ -395,6 +539,18 @@ const AUTH_MATRIX = {
         [TradeAction.confirmArriveAtShop]: {
             auths: [
                 {
+                    '#exists': [
+                        {
+                            relation: 'userRole',
+                            condition: ({ user }) => {
+                                return {
+                                    userId: user.id,
+                                }
+                            }
+                        }
+                    ]
+                },
+                {
                     "#relation": {
                         attr: 'diagnosis.organization.brand',
                     },
@@ -410,6 +566,18 @@ const AUTH_MATRIX = {
         },
         [TradeAction.send]: {
             auths: [
+                {
+                    '#exists': [
+                        {
+                            relation: 'userRole',
+                            condition: ({ user }) => {
+                                return {
+                                    userId: user.id,
+                                }
+                            }
+                        }
+                    ]
+                },
                 {
                     "#relation": {
                         attr: 'diagnosis.organization.brand',
@@ -427,6 +595,18 @@ const AUTH_MATRIX = {
         [TradeAction.confirmGet]: {
             auths: [
                 {
+                    '#exists': [
+                        {
+                            relation: 'userRole',
+                            condition: ({ user }) => {
+                                return {
+                                    userId: user.id,
+                                }
+                            }
+                        }
+                    ]
+                },
+                {
                     "#relation": {
                         attr: 'patient',
                     },
@@ -442,6 +622,18 @@ const AUTH_MATRIX = {
         },
         [TradeAction.customConfirm]: {
             auths: [
+                {
+                    '#exists': [
+                        {
+                            relation: 'userRole',
+                            condition: ({ user }) => {
+                                return {
+                                    userId: user.id,
+                                }
+                            }
+                        }
+                    ]
+                },
                 {
                     "#relation": {
                         attr: 'patient'
@@ -669,6 +861,18 @@ const AUTH_MATRIX = {
         [DiagnosisAction.allocWeChatQrCode]: {
             auths: [
                 {
+                    '#exists': [
+                        {
+                            relation: 'userRole',
+                            condition: ({ user }) => {
+                                return {
+                                    userId: user.id,
+                                }
+                            }
+                        }
+                    ]
+                },
+                {
                     "#relation": {
                         attr: 'organization.brand',
                         relations: [BrandRelation.owner, BrandRelation.manager, BrandRelation.customerService],
@@ -678,6 +882,18 @@ const AUTH_MATRIX = {
         },
         [DiagnosisAction.create]: {
             auths: [
+                {
+                    '#exists': [
+                        {
+                            relation: 'userRole',
+                            condition: ({ user }) => {
+                                return {
+                                    userId: user.id,
+                                }
+                            }
+                        }
+                    ]
+                },
                 {
                     '#exists': [
                         {
@@ -695,6 +911,18 @@ const AUTH_MATRIX = {
         [DiagnosisAction.update]: {
             auths: [
                 {
+                    '#exists': [
+                        {
+                            relation: 'userRole',
+                            condition: ({ user }) => {
+                                return {
+                                    userId: user.id,
+                                }
+                            }
+                        }
+                    ]
+                },
+                {
                     "#relation": {
                         attr: 'organization.brand',
                     },
@@ -709,6 +937,18 @@ const AUTH_MATRIX = {
         [DiagnosisAction.assign]: {
             auths: [
                 {
+                    '#exists': [
+                        {
+                            relation: 'userRole',
+                            condition: ({ user }) => {
+                                return {
+                                    userId: user.id,
+                                }
+                            }
+                        }
+                    ]
+                },
+                {
                     "#relation": {
                         attr: 'organization.brand'
                     },
@@ -718,6 +958,18 @@ const AUTH_MATRIX = {
         [DiagnosisAction.authRevoke]: {
             auths: [
                 {
+                    '#exists': [
+                        {
+                            relation: 'userRole',
+                            condition: ({ user }) => {
+                                return {
+                                    userId: user.id,
+                                }
+                            }
+                        }
+                    ]
+                },
+                {
                     "#relation": {
                         attr: 'organization.brand'
                     },
@@ -726,6 +978,18 @@ const AUTH_MATRIX = {
         },
         [DiagnosisAction.remove]: {
             auths: [
+                {
+                    '#exists': [
+                        {
+                            relation: 'userRole',
+                            condition: ({ user }) => {
+                                return {
+                                    userId: user.id,
+                                }
+                            }
+                        }
+                    ]
+                },
                 {
                     "#relation": {
                         attr: 'organization.brand'
@@ -746,12 +1010,12 @@ const AUTH_MATRIX = {
             auths: [
                 {
                     "#relation": {
-                        attr: 'diagnosis.organization.brand',
+                        attr: 'trade.diagnosis.organization.brand',
                     },
                 },
                 {
                     "#relation": {
-                        attr: 'diagnosis.patient',
+                        attr: 'trade.diagnosis.patient',
                         relations: [PatientRelation.owner],
                     },
                 }
@@ -761,7 +1025,7 @@ const AUTH_MATRIX = {
             auths: [
                 {
                     "#relation": {
-                        attr: 'diagnosis.patient',
+                        attr: 'trade.diagnosis.patient',
                         relations: [PatientRelation.owner],
                     },
                     '#data': [                 // 表示对现有对象或者用户的数据有要求，可以有多项，每项之间是AND的关系
@@ -778,7 +1042,7 @@ const AUTH_MATRIX = {
             auths: [
                 {
                     '#relation': {
-                        attr: 'diagnosis.organization.brand',
+                        attr: 'trade.diagnosis.organization.brand',
                     },
                     '#data': [                 // 表示对现有对象或者用户的数据有要求，可以有多项，每项之间是AND的关系
                         {
@@ -790,7 +1054,7 @@ const AUTH_MATRIX = {
                 },
                 {
                     '#relation': {
-                        attr: 'diagnosis.organization.brand',
+                        attr: 'trade.diagnosis.organization.brand',
                     },
                     '#data': [                 // 表示对现有对象或者用户的数据有要求，可以有多项，每项之间是AND的关系
                         {
@@ -806,7 +1070,7 @@ const AUTH_MATRIX = {
             auths: [
                 {
                     "#relation": {
-                        attr: 'diagnosis.organization.brand',
+                        attr: 'trade.diagnosis.organization.brand',
                     },
                 }
             ],
@@ -833,7 +1097,7 @@ const AUTH_MATRIX = {
             auths: [
                 {
                     '#relation': {
-                        attr: 'trade.organization.brand',
+                        attr: 'trade.diagnosis.organization.brand',
                     },
                 },
             ],
@@ -871,7 +1135,7 @@ const AUTH_MATRIX = {
             auths: [
                 {
                     '#relation': {
-                        attr: 'trade.organization.brand',
+                        attr: 'trade.diagnosis.organization.brand',
                     },
                 },
             ],
@@ -901,7 +1165,7 @@ const AUTH_MATRIX = {
             auths: [
                 {
                     '#relation': {
-                        attr: 'diagnosis.organization.brand',
+                        attr: 'organization.brand',
                         relations: [BrandRelation.owner, BrandRelation.customerService, BrandRelation.manager, BrandRelation.worker],
                     },
                 },
@@ -911,7 +1175,7 @@ const AUTH_MATRIX = {
             auths: [
                 {
                     '#relation': {
-                        attr: 'diagnosis.organization.brand',
+                        attr: 'organization.brand',
                         relations: [BrandRelation.owner, BrandRelation.customerService, BrandRelation.manager, BrandRelation.worker],
                     },
                     '#data': [{
@@ -926,7 +1190,7 @@ const AUTH_MATRIX = {
             auths: [
                 {
                     '#relation': {
-                        attr: 'diagnosis.organization.brand',
+                        attr: 'organization.brand',
                         relations: [BrandRelation.owner, BrandRelation.customerService, BrandRelation.manager, BrandRelation.worker],
                     },
                     '#data': [{
@@ -1488,7 +1752,7 @@ const AUTH_MATRIX = {
             auths: [
                 {
                     "#relation": {
-                        attr: 'trade.organization.brand',
+                        attr: 'trade.diagnosis.organization.brand',
                     },
                 },
             ],
@@ -1497,7 +1761,7 @@ const AUTH_MATRIX = {
             auths: [
                 {
                     "#relation": {
-                        attr: 'trade.organization.brand',
+                        attr: 'trade.diagnosis.organization.brand',
                     },
                 },
             ],
@@ -1575,6 +1839,15 @@ const AUTH_MATRIX = {
                         {
                             check: ({user, row}) => {
                                 return [revisitState.pending].includes(row.state);
+                            },
+                        }
+                    ],
+                },
+                {
+                    '#data': [                 // 表示对现有对象或者用户的数据有要求，可以有多项，每项之间是AND的关系
+                        {
+                            check: ({user, row}) => {
+                                return [revisitState.processing].includes(row.state) && row.userId === user.id;
                             },
                         }
                     ],
