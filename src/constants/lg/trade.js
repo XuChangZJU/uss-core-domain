@@ -14,20 +14,31 @@ const {
 
 const transportState = Object.assign(
     {}, commonTransportState, {
+        unsend: 10001,
+        arrived: 10003,
     }
 );
 const decodeTransportState = (ts) => {
     const TEXT = {
+        [transportState.unsend]: '待取货',
+        [transportState.arrived]: '已取货',
     };
     return TEXT[ts] || decodeCommonTransportState(ts);
 };
 const action = Object.assign({}, commonAction,
-    commonTransportAction,
+    commonTransportAction, {
+        tradeSend: 10011,
+        tradeAccept: 10021,
+        tradeReject: 10022,
+        tradeAbort: 10101,
+
+
+        confirmArrive: 31000,
+    }
 );
 
 const decodeAction = (a) => {
     const TEXT = {
-        [action.sendExpress]: '发快递',
         [action.confirmArrive]: '确认提货',
     };
 
@@ -37,6 +48,7 @@ const decodeAction = (a) => {
 
 const STATE_TRANS_MATRIX = Object.assign(
     {}, COMMON_STATE_TRAN_MATRIX, TRANSPORT_STATE_TRANS_MATRIX, {
+        [action.confirmArrive]: [transportState.unsend, transportState.arrived],
     }
 );
 

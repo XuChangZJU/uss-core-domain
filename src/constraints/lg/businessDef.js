@@ -96,7 +96,54 @@ const {
     state: tradeSkuItemShopState,
 } = require('../../constants/lg/tradeSkuItemShop');
 
+const {
+    action: expressAction,
+    state: expressState,
+} = require('../../constants/lg/express');
 const AUTH_MATRIX = {
+    express: {
+        [expressAction.create]: AllowEveryoneAuth,
+        [expressAction.remove]: AllowEveryoneAuth,
+        [expressAction.taAccept]: {
+            auths: [
+                {
+                    '#data': [
+                        {
+                            check: ({user, row}) => {
+                                return [expressState.tsSending].includes(row.state);
+                            },
+                        }
+                    ],
+                }
+            ]
+        },
+        [expressAction.taReject]: {
+            auths: [
+                {
+                    '#data': [
+                        {
+                            check: ({user, row}) => {
+                                return [expressState.tsSending].includes(row.state);
+                            },
+                        }
+                    ],
+                }
+            ]
+        },
+        [expressAction.taSend]: {
+            auths: [
+                {
+                    '#data': [
+                        {
+                            check: ({user, row}) => {
+                                return [expressState.tsInPreparing].includes(row.state);
+                            },
+                        }
+                    ],
+                }
+            ]
+        },
+    },
     lgSkuValue: {
         [skuValueAction.create]: {
             auths: [
@@ -1050,19 +1097,19 @@ const AUTH_MATRIX = {
                 }
             ]
         },
-        [tradeAction.sendExpress]: {
-            auths: [
-                {
-                    '#data': [
-                        {
-                            check: ({user, row}) => {
-                                return [tradeTransportState.unsend].includes(row.transportState) && user.id === row.buyerId;
-                            },
-                        }
-                    ],
-                }
-            ]
-        },
+        // [tradeAction.sendExpress]: {
+        //     auths: [
+        //         {
+        //             '#data': [
+        //                 {
+        //                     check: ({user, row}) => {
+        //                         return [tradeTransportState.unsend].includes(row.transportState) && user.id === row.buyerId;
+        //                     },
+        //                 }
+        //             ],
+        //         }
+        //     ]
+        // },
         [tradeAction.confirmArrive]: {
             auths: [
                 {
@@ -1075,6 +1122,48 @@ const AUTH_MATRIX = {
                     ],
                 }
             ]
+        },
+        [tradeAction.tradeSend]: {
+            auths: [
+                {
+                    "#relation": {
+                        attr: 'lgShop',
+                    },
+                    '#data': [
+                        {
+                            check: ({user, row}) => {
+                                return [tradeState.legal, tradeState.legal2].includes(row.state);
+                            },
+                        }
+                    ],
+                },
+            ],
+        },
+        [tradeAction.tradeAccept]: {
+            auths: [
+                {
+                    '#data': [
+                        {
+                            check: ({user, row}) => {
+                                return [tradeState.legal, tradeState.legal2].includes(row.state) && row.buyerId && row.buyerId === user.id;
+                            },
+                        }
+                    ],
+                },
+            ],
+        },
+        [tradeAction.tradeReject]: {
+            auths: [
+                {
+                    '#data': [
+                        {
+                            check: ({user, row}) => {
+                                return [tradeState.legal, tradeState.legal2].includes(row.state) && row.buyerId && row.buyerId === user.id;
+                            },
+                        }
+                    ],
+                },
+            ],
         },
         [tradeAction.cancel]: {
             auths: [
