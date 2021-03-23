@@ -237,6 +237,7 @@ const decodeTransportState = (ts) => {
 };
 
 const transportAction = {
+    prepare: 1,
     send: 11,
     accept: 21,
     reject: 22,
@@ -245,6 +246,7 @@ const transportAction = {
 
 const decodeTransportAction = (ta) => {
     const TEXT = {
+        [transportState.prepare]: '备货',
         [transportAction.send]: '发货',
         [transportAction.accept]: '接收',
         [transportAction.reject]: '拒绝',
@@ -255,6 +257,7 @@ const decodeTransportAction = (ta) => {
 };
 
 const TRANSPORT_STATE_TRANS_MATRIX = {
+    [transportState.prepare]: [null, transportState.inPreparing],
     [transportAction.send]: [transportState.inPreparing, transportState.sending],
     [transportAction.accept]: [transportState.sending, transportState.accepted],
     [transportAction.reject]: [transportState.sending, transportState.rejected],
