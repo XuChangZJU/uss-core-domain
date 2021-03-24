@@ -7,18 +7,14 @@ const {
     decodeState: decodeCommonState,
 } = require('../action');
 const action = Object.assign({}, commonAction, {
-    cancel: 621,
     success: 701,
-    cancelBidding: 801,
-    cancelSuccess: 901,
+    confirm: 702,
 });
 
 const decodeAction = (a) => {
     const S = {
-        [action.cancel]: '撤销',
         [action.success]: '成交',
-        [action.cancelBidding]: '撤销出价',
-        [action.cancelSuccess]: '撤销成交',
+        [action.confirm]: '确认',
     };
 
     return S[a] || decodeCommonAction(a);
@@ -39,23 +35,19 @@ function decodeCategory(o) {
 const state = Object.assign({}, commonState, {
     bidding: 301,
     success: 401,
-    cancelledBidding: 601,
-    cancelledSuccess: 701,
+    confirmed: 702,
 });
 const decodeState = (s) => {
     const S = {
         [state.bidding]: '竞拍',
         [state.success]: '成交',
-        [state.cancelledSuccess]: '已撤销成交',
-        [state.cancelledBidding]: '已撤销出价',
+        [state.confirmed]: '核对',
     };
     return S[s] || decodeCommonState(s);
 };
 const STATE_TRAN_MATRIX = {
-    [action.cancel]: [state.bidding, state.cancelledBidding],
-    [action.cancelBidding]: [state.bidding, state.cancelledBidding],
-    [action.cancelSuccess]: [state.success, state.cancelledSuccess],
     [action.success]: [state.bidding, state.success],
+    [action.confirm]: [state.success, state.confirmed],
 };
 
 
