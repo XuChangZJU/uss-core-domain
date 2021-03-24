@@ -1122,22 +1122,16 @@ const AUTH_MATRIX = {
                 {
                     "#relation": {
                         attr: 'lgShop',
-                        relations: [shopRelation.manager],
+                        relations: [shopRelation.manager, shopRelation.owner],
                     },
                     '#data': [
                         {
                             check: ({user, row}) => {
-                                return [tradeTransportState.unsend].includes(row.transportState);
+                                return [tradeState.unpaid].includes(row.state);
                             },
                         }
                     ],
                 },
-                {
-                    "#relation": {
-                        attr: 'lgShop',
-                        relations: [shopRelation.owner],
-                    },
-                }
             ]
         },
         [tradeAction.pick]: {
@@ -1146,7 +1140,7 @@ const AUTH_MATRIX = {
                     '#data': [
                         {
                             check: ({user, row}) => {
-                                return [tradeTransportState.unsend].includes(row.transportState);
+                                return [tradeTransportState.unpicked].includes(row.state);
                             },
                         }
                     ],
