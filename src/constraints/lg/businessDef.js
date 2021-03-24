@@ -1214,7 +1214,7 @@ const AUTH_MATRIX = {
                     '#data': [
                         {
                             check: ({user, row}) => {
-                                return row.buyerId === user.id;
+                                return row.buyerId === user.id && [tradeState.unpaid].includes(row.state);
                             },
                         }
                     ],
