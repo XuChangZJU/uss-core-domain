@@ -217,7 +217,6 @@ const COMMON_STATE_TRAN_MATRIX = {
 };
 
 const transportState = {
-    tsUnprepared: 30000,
     tsInPreparing: 30001,
     tsSending: 30011,
     tsAccepted: 30021,
@@ -227,7 +226,6 @@ const transportState = {
 
 const decodeTransportState = (ts) => {
     const TEXT = {
-        [transportState.tsUnprepared]: '未备货',
         [transportState.tsInPreparing]: '备货中',
         [transportState.tsSending]: '发货中',
         [transportState.tsAccepted]: '已收货',
@@ -243,18 +241,16 @@ const transportAction = {
     taSend: 30011,
     taAccept: 30021,
     taReject: 30022,
-    taCancel: 30025,
     taAbort: 30101,
 };
 
 const decodeTransportAction = (ta) => {
     const TEXT = {
-        [transportState.taPrepare]: '备货',
+        [transportAction.taPrepare]: '备货',
         [transportAction.taSend]: '发货',
         [transportAction.taAccept]: '接收',
-        [transportAction.taReject]: '拒绝',
+        [transportAction.taReject]: '拒收',
         [transportAction.taAbort]: '中止',
-        [transportState.taCancel]: '取消',
     };
 
     return TEXT[ta];
@@ -269,7 +265,6 @@ const TRANSPORT_STATE_TRANS_MATRIX = {
         transportState.tsSending,
         transportState.tsAccepted,
         transportState.tsRejected], transportState.tsAbnormal],
-    [transportAction.taCancel]: [transportState.tsInPreparing, transportState.tsUnprepared]
 };
 
 module.exports = {

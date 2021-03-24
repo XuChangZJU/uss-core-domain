@@ -3,6 +3,9 @@ const {
     decodeAction: decodeCommonAction,
     COMMON_STATE_TRAN_MATRIX,
     state: commonState,
+    transportState: commonTransportState,
+    TRANSPORT_STATE_TRANS_MATRIX,
+    decodeTransportState: decodeCommonTransportState,
     decodeState: decodeCommonState,
     relation,
     decodeRelation,
@@ -25,7 +28,7 @@ const decodeBillState = (b) => {
 }
 
 
-const transportState = {
+const transportState = Object.assign({}, commonTransportState, {
     wdd: 10003,
     dqj: 10004,
     yqj: 10005,
@@ -34,11 +37,10 @@ const transportState = {
     yth: 10011,
     yzf: 10012,
     dxh: 10013,
-
     checkInQueue: 11001,
     checkCompleted: 11002,
     checkCanceled: 11003,
-};
+});
 
 const messageState = {
     sending: 10001,
@@ -68,13 +70,15 @@ const decodeMessageState = (s) => {
 };
 
 const getActionStateAttr = (action) => {
+    if (action > 30000) {
+        return 'transportState';
+    }
     if (action > 20000) {
         return 'billState';
     }
     if (action > 10000) {
         return 'transportState';
     }
-
     return 'state';
 };
 
@@ -92,7 +96,7 @@ const decodeTransportState = (ts) => {
         [transportState.checkCompleted]: '已完成',
         [transportState.checkCanceled]: '已取消',
     };
-    return TS[ts];
+    return TS[ts] || decodeCommonTransportState(ts);
 };
 
 const getMethod = {
@@ -146,7 +150,7 @@ const decodeAction = (a) => {
     return S[a] || decodeCommonAction(a);
 };
 
-const STATE_TRAN_MATRIX =    Object.assign({}, COMMON_STATE_TRAN_MATRIX, {
+const STATE_TRAN_MATRIX =    Object.assign({},  COMMON_STATE_TRAN_MATRIX, TRANSPORT_STATE_TRANS_MATRIX, {
     [action.financialRefund]: [[state.legal2, state.legal, state.abandoned], state.financialRefunded],
     [action.confirmArriveAtShop]: [transportState.wdd, transportState.dqj],
     [action.confirmGet]: [transportState.yfh, transportState.yqj],

@@ -4,44 +4,49 @@ const {
     decodeAction: decodeCommonAction,
     state,
     decodeState,
+    decodeTransportAction,
+    TRANSPORT_STATE_TRANS_MATRIX,
+    transportAction: commonTransportAction,
+    transportState: commonTransportState,
+    decodeTransportState: decodeCommonTransportState,
     COMMON_STATE_TRAN_MATRIX,
 } = require('../action');
 
-const transportState = {
-    unsend: 10001,
-    sending: 10002,
-    arrived: 10003,
-};
-const decodeTransportState = (a) => {
-    const TEXT = {
-        [transportState.unsend]: '未发货',
-        [transportState.sending]: '已发货',
-        [transportState.arrived]: '已收货',
-    };
+const transportState = Object.assign(
+    {}, commonTransportState, {
+        unsend: 10001,
+        unpicked: 10002,
+        picked: 10003,
 
-    return TEXT[a] || decodeCommonAction(a);
+    }
+);
+const decodeTransportState = (ts) => {
+    const TEXT = {
+        [transportState.unsend]: '快递未支付',
+        [transportState.unpicked]: '待提货',
+        [transportState.picked]: '已提货',
+
+    };
+    return TEXT[ts] || decodeCommonTransportState(ts);
 };
 const action = Object.assign({}, commonAction,
-    {
-        sendExpress: 10001,
-        confirmArrive: 10002,
+    commonTransportAction, {
+        pick: 31000,
     }
 );
 
 const decodeAction = (a) => {
     const TEXT = {
-        [action.sendExpress]: '发快递',
-        [action.confirmArrive]: '确认提货',
+        [action.pick]: '确认提货',
     };
 
-    return TEXT[a] || decodeCommonAction(a);
+    return TEXT[a] || decodeCommonAction(a) || decodeTransportAction(a);
 };
 
 
 const STATE_TRANS_MATRIX = Object.assign(
-    {}, COMMON_STATE_TRAN_MATRIX, {
-        [action.send]: [transportState.unsend, transportState.sending],
-        [action.confirmArrive]: [transportState.unsend, transportState.arrived],
+    {}, COMMON_STATE_TRAN_MATRIX, TRANSPORT_STATE_TRANS_MATRIX, {
+        [action.confirmArrive]: [transportState.unpicked, transportState.picked],
     }
 );
 
