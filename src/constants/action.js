@@ -242,6 +242,7 @@ const transportAction = {
     taAccept: 30021,
     taReject: 30022,
     taAbort: 30101,
+    taCancel: 30102,
 };
 
 const decodeTransportAction = (ta) => {
@@ -251,13 +252,14 @@ const decodeTransportAction = (ta) => {
         [transportAction.taAccept]: '接收',
         [transportAction.taReject]: '拒收',
         [transportAction.taAbort]: '中止',
+        [transportAction.taCancel]: '取消',
     };
 
     return TEXT[ta];
 };
 
 const TRANSPORT_STATE_TRANS_MATRIX = {
-    [transportAction.taPrepare]: [null, transportState.tsInPreparing],
+    // [transportAction.taPrepare]: [null, transportState.tsInPreparing], prepare的前状态由具体应用自己定义
     [transportAction.taSend]: [transportState.tsInPreparing, transportState.tsSending],
     [transportAction.taAccept]: [transportState.tsSending, transportState.tsAccepted],
     [transportAction.taReject]: [transportState.tsSending, transportState.tsRejected],
@@ -265,6 +267,7 @@ const TRANSPORT_STATE_TRANS_MATRIX = {
         transportState.tsSending,
         transportState.tsAccepted,
         transportState.tsRejected], transportState.tsAbnormal],
+    // [transportAction.taCancel]:   cancel的后状态也由应用自己定义
 };
 
 module.exports = {

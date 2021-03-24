@@ -2014,7 +2014,7 @@ const AUTH_MATRIX = {
         },
     },
     checkOut: {
-        [checkOutAction.prepare]: {
+        [checkOutAction.taPrepare]: {
             auths: [
                 {
                     '#exists': [
@@ -2032,7 +2032,7 @@ const AUTH_MATRIX = {
                     '#data': [
                         {
                             check: ({user, row}) => {
-                                return [checkOutTransportState.keeping].includes(row.transportState);
+                                return [checkOutTransportState.shipping].includes(row.transportState);
                             },
                         }
                     ],
@@ -2045,14 +2045,14 @@ const AUTH_MATRIX = {
                     '#data': [
                         {
                             check: ({user, row}) => {
-                                return [checkOutTransportState.keeping].includes(row.transportState);
+                                return [checkOutTransportState.shipping].includes(row.transportState);
                             },
                         }
                     ],
                 }
             ]
         },
-        [checkOutAction.cancelPrepare]: {
+        [checkOutAction.taCancel]: {
             auths: [
                 {
                     '#exists': [
@@ -2070,7 +2070,7 @@ const AUTH_MATRIX = {
                     '#data': [
                         {
                             check: ({user, row}) => {
-                                return [checkOutTransportState.preparing].includes(row.transportState);
+                                return [checkOutTransportState.tsInPreparing].includes(row.transportState);
                             },
                         }
                     ],
@@ -2083,14 +2083,14 @@ const AUTH_MATRIX = {
                     '#data': [
                         {
                             check: ({user, row}) => {
-                                return [checkOutTransportState.keeping].includes(row.transportState);
+                                return [checkOutTransportState.tsInPreparing].includes(row.transportState);
                             },
                         }
                     ],
                 }
             ]
         },
-        [checkOutAction.ship]: {
+        [checkOutAction.taSend]: {
             auths: [
                 {
                     "#relation": {
@@ -2100,31 +2100,14 @@ const AUTH_MATRIX = {
                     '#data': [
                         {
                             check: ({user, row}) => {
-                                return [checkOutTransportState.preparing].includes(row.transportState);
+                                return [checkOutTransportState.tsInPreparing].includes(row.transportState);
                             },
                         }
                     ],
                 }
             ]
         },
-        [checkOutAction.cancelShip]: {
-            auths: [
-                {
-                    "#relation": {
-                        attr: 'paddle.vendue.auctionHouse',
-                        relations: [auctionHouseRelation.stockKeeper, auctionHouseRelation.settler, auctionHouseRelation.owner],
-                    },
-                    '#data': [
-                        {
-                            check: ({user, row}) => {
-                                return [checkOutTransportState.shipped].includes(row.transportState);
-                            },
-                        }
-                    ],
-                }
-            ]
-        },
-        [checkOutAction.receive]: {
+        [checkOutAction.taAccept]: {
             auths: [
                 {
                     '#exists': [
@@ -2142,7 +2125,7 @@ const AUTH_MATRIX = {
                     '#data': [
                         {
                             check: ({user, row}) => {
-                                return [checkOutTransportState.shipped].includes(row.transportState);
+                                return [checkOutTransportState.tsSending].includes(row.transportState);
                             },
                         }
                     ],
@@ -2159,7 +2142,7 @@ const AUTH_MATRIX = {
                     '#data': [
                         {
                             check: ({user, row}) => {
-                                return [checkOutTransportState.keeping].includes(row.transportState);
+                                return [checkOutTransportState.shipping].includes(row.transportState);
                             },
                         }
                     ],
@@ -2187,7 +2170,7 @@ const AUTH_MATRIX = {
                 }
             ],
         },
-        [checkOutAction.makePaid]: {
+        /* [checkOutAction.makePaid]: {
             auths: [
                 {
                     "#relation": {
@@ -2202,58 +2185,7 @@ const AUTH_MATRIX = {
                     },
                 }
             ]
-        },
-        [checkOutAction.remove]: {
-            auths: [
-                {
-                    '#exists': [
-                        {
-                            relation: 'paddle',
-                            condition: ({ user, row }) => {
-                                const query = {
-                                    userId: user.id,
-                                    id: row.paddleId,
-                                };
-                                return query;
-                            },
-                        },
-                    ],
-                    '#data': [
-                        {
-                            check: ({user, row}) => {
-                                return [checkOutState.init, checkOutState.unpaid].includes(row.state);
-                            },
-                        }
-                    ],
-                },
-                {
-                    "#relation": {
-                        attr: 'paddle.vendue',
-                        relations: [vendueRelation.manager, vendueRelation.owner],
-                    },
-                    '#data': [
-                        {
-                            check: ({user, row}) => {
-                                return [checkOutState.init, checkOutState.unpaid].includes(row.state);
-                            },
-                        }
-                    ],
-                },
-                {
-                    "#relation": {
-                        attr: 'paddle.vendue.auctionHouse',
-                        relations: [auctionHouseRelation.manager, auctionHouseRelation.settler, auctionHouseRelation.owner],
-                    },
-                    '#data': [
-                        {
-                            check: ({user, row}) => {
-                                return [checkOutState.init, checkOutState.unpaid].includes(row.state);
-                            },
-                        }
-                    ],
-                }
-            ]
-        },
+        }, */
         [checkOutAction.cancel]: {
             auths: [
                 {
@@ -2272,7 +2204,7 @@ const AUTH_MATRIX = {
                     '#data': [
                         {
                             check: ({user, row}) => {
-                                return [checkOutState.init, checkOutState.unpaid].includes(row.state);
+                                return [checkOutState.init, checkOutState.unpaid, checkOutState.paying].includes(row.state);
                             },
                         }
                     ],
@@ -2286,7 +2218,7 @@ const AUTH_MATRIX = {
                     '#data': [
                         {
                             check: ({user, row}) => {
-                                return [checkOutState.init, checkOutState.unpaid].includes(row.state);
+                                return [checkOutState.init, checkOutState.unpaid, checkOutState.paying].includes(row.state);
                             },
                         }
                     ],
@@ -2299,7 +2231,7 @@ const AUTH_MATRIX = {
                     '#data': [
                         {
                             check: ({user, row}) => {
-                                return [checkOutState.init, checkOutState.unpaid].includes(row.state);
+                                return [checkOutState.init, checkOutState.unpaid, checkOutState.paying].includes(row.state);
                             },
                         }
                     ],
