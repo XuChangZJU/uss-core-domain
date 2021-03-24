@@ -1123,7 +1123,20 @@ const AUTH_MATRIX = {
                 }
             ]
         },
-        [tradeAction.tradeSend]: {
+        [tradeAction.taPrepare]: {
+            auths: [
+                {
+                    '#data': [
+                        {
+                            check: ({user, row}) => {
+                                return [tradeState.legal, tradeState.legal2].includes(row.state) && [tradeTransportState.unsend].includes(row.transportState);
+                            },
+                        }
+                    ],
+                },
+            ],
+        },
+        [tradeAction.taSend]: {
             auths: [
                 {
                     "#relation": {
@@ -1132,33 +1145,33 @@ const AUTH_MATRIX = {
                     '#data': [
                         {
                             check: ({user, row}) => {
-                                return [tradeState.legal, tradeState.legal2].includes(row.state);
+                                return [tradeState.legal, tradeState.legal2].includes(row.state) && [tradeTransportState.tsInPreparing].includes(row.transportState);
                             },
                         }
                     ],
                 },
             ],
         },
-        [tradeAction.tradeAccept]: {
+        [tradeAction.taAccept]: {
             auths: [
                 {
                     '#data': [
                         {
                             check: ({user, row}) => {
-                                return [tradeState.legal, tradeState.legal2].includes(row.state) && row.buyerId && row.buyerId === user.id;
+                                return [tradeState.legal, tradeState.legal2].includes(row.state) && row.buyerId && row.buyerId === user.id && [tradeTransportState.tsSending].includes(row.transportState);
                             },
                         }
                     ],
                 },
             ],
         },
-        [tradeAction.tradeReject]: {
+        [tradeAction.taReject]: {
             auths: [
                 {
                     '#data': [
                         {
                             check: ({user, row}) => {
-                                return [tradeState.legal, tradeState.legal2].includes(row.state) && row.buyerId && row.buyerId === user.id;
+                                return [tradeState.legal, tradeState.legal2].includes(row.state) && row.buyerId && row.buyerId === user.id && [tradeTransportState.tsSending].includes(row.transportState);
                             },
                         }
                     ],
@@ -1168,13 +1181,10 @@ const AUTH_MATRIX = {
         [tradeAction.cancel]: {
             auths: [
                 {
-                    "#relation": {
-                        attr: '',
-                    },
                     '#data': [
                         {
                             check: ({user, row}) => {
-                                return [tradeState.unpaid].includes(row.state);
+                                return row.buyerId === user.id;
                             },
                         }
                     ],
