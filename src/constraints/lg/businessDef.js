@@ -4,6 +4,9 @@ const {
     AnyRelationAuth,
 } = require('../action');
 const {
+    action: shopSpeciesAction,
+} = require('../../constants/lg/shopSpecies');
+const {
     action: enterUpAction,
 } = require('../../constants/lg/enterUp');
 const {
@@ -101,6 +104,45 @@ const {
     state: expressState,
 } = require('../../constants/lg/express');
 const AUTH_MATRIX = {
+    lgShopSpecies: {
+        [shopSpeciesAction.create]: {
+            auths: [
+                {
+                    "#exists": [
+                        {
+                            relation: 'userLgShop',
+                            needData: true,
+                            condition: ({ user, actionData }) => {
+                                const { lgShopSpecies } = actionData;
+                                if(lgShopSpecies.lgShopId){
+                                    return {
+                                        userId: user.id,
+                                        lgShopId: lgShopSpecies.lgShopId,
+                                        relation: {
+                                            $in: [shopRelation.owner, shopRelation.manager]
+                                        }
+                                    }
+                                }
+                                return {
+                                    userId: -1,
+                                };
+                            },
+                        },
+                    ]
+                },
+            ]
+        },
+        [shopSpeciesAction.remove]: {
+            auths: [
+                {
+                    "#relation": {
+                        attr: 'lgShop',
+                        relations: [shopRelation.owner, shopRelation.manager],
+                    },
+                },
+            ]
+        },
+    },
     express: {
         [expressAction.create]: AllowEveryoneAuth,
         [expressAction.remove]: AllowEveryoneAuth,
