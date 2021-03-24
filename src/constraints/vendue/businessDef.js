@@ -1611,136 +1611,29 @@ const AUTH_MATRIX = {
                 }
             ]
         },
-        [bidAction.cancel]: {
-            auths: [
-                {
-                    "#relation": {
-                        attr: 'auction.session',
-                        relations: [sessionRelation.manager, sessionRelation.auctioneer, sessionRelation.owner],
-                    },
-                    '#data': [
-                        {
-                            check: ({ row }) => {
-                                return row.state === bidState.bidding;
-                            },
-                        },
-                    ],
-                },
-                {
-                    "#relation": {
-                        attr: 'auction.session.vendue',
-                        relations: [vendueRelation.manager, vendueRelation.owner],
-                    },
-                    '#data': [
-                        {
-                            check: ({ row }) => {
-                                return row.state === bidState.bidding;
-                            },
-                        },
-                    ],
-                },
-                {
-                    "#relation": {
-                        attr: 'auction.session.vendue.auctionHouse',
-                        relations: [auctionHouseRelation.manager, auctionHouseRelation.owner],
-                    },
-                    '#data': [
-                        {
-                            check: ({ row }) => {
-                                return row.state === bidState.bidding;
-                            },
-                        },
-                    ],
-                }
-            ]
-        },
-        [bidAction.cancelBidding]: {
-            auths: [
-                {
-                    "#relation": {
-                        attr: 'auction.session',
-                        relations: [sessionRelation.manager, sessionRelation.auctioneer, sessionRelation.owner],
-                    },
-                    '#data': [
-                        {
-                            check: ({ row }) => {
-                                return row.state === bidState.bidding;
-                            },
-                        },
-                    ],
-                },
-                {
-                    "#relation": {
-                        attr: 'auction.session.vendue',
-                        relations: [vendueRelation.manager, vendueRelation.owner],
-                    },
-                    '#data': [
-                        {
-                            check: ({ row }) => {
-                                return row.state === bidState.bidding;
-                            },
-                        },
-                    ],
-                },
-                {
-                    "#relation": {
-                        attr: 'auction.session.vendue.auctionHouse',
-                        relations: [auctionHouseRelation.manager, auctionHouseRelation.owner],
-                    },
-                    '#data': [
-                        {
-                            check: ({ row }) => {
-                                return row.state === bidState.bidding;
-                            },
-                        },
-                    ],
-                }
-            ]
-        },
-        [bidAction.cancelSuccess]: {
-            auths: [
-                {
-                    "#relation": {
-                        attr: 'auction.session',
-                        relations: [sessionRelation.manager, sessionRelation.auctioneer, sessionRelation.owner],
-                    },
-                    '#data': [
-                        {
-                            check: ({ row }) => {
-                                return row.state === bidState.success;
-                            },
-                        },
-                    ],
-                },
-                {
-                    "#relation": {
-                        attr: 'auction.session.vendue',
-                        relations: [vendueRelation.manager, vendueRelation.owner],
-                    },
-                    '#data': [
-                        {
-                            check: ({ row }) => {
-                                return row.state === bidState.success;
-                            },
-                        },
-                    ],
-                },
-                {
-                    "#relation": {
-                        attr: 'auction.session.vendue.auctionHouse',
-                        relations: [auctionHouseRelation.manager, auctionHouseRelation.owner],
-                    },
-                    '#data': [
-                        {
-                            check: ({ row }) => {
-                                return row.state === bidState.success;
-                            },
-                        },
-                    ],
-                }
-            ]
-        },
         [bidAction.update]: {
+            auths: [
+                {
+                    "#relation": {
+                        attr: 'auction.session',
+                        relations: [sessionRelation.manager, sessionRelation.auctioneer, sessionRelation.owner],
+                    },
+                },
+                {
+                    "#relation": {
+                        attr: 'auction.session.vendue',
+                        relations: [vendueRelation.manager, vendueRelation.owner],
+                    },
+                },
+                {
+                    "#relation": {
+                        attr: 'auction.session.vendue.auctionHouse',
+                        relations: [auctionHouseRelation.manager, auctionHouseRelation.owner],
+                    },
+                }
+            ]
+        },
+        [bidAction.confirm]: {
             auths: [
                 {
                     "#relation": {
