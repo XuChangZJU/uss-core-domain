@@ -1110,7 +1110,7 @@ const AUTH_MATRIX = {
         //         }
         //     ]
         // },
-        [tradeAction.confirmArrive]: {
+        [tradeAction.pick]: {
             auths: [
                 {
                     '#data': [
