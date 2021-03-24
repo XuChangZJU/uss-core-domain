@@ -146,6 +146,7 @@ const AUTH_MATRIX = {
     express: {
         [expressAction.create]: AllowEveryoneAuth,
         [expressAction.remove]: AllowEveryoneAuth,
+        [expressAction.taPrepare]: AllowEveryoneAuth,
         [expressAction.taAccept]: {
             auths: [
                 {
@@ -1139,19 +1140,6 @@ const AUTH_MATRIX = {
                 }
             ]
         },
-        // [tradeAction.sendExpress]: {
-        //     auths: [
-        //         {
-        //             '#data': [
-        //                 {
-        //                     check: ({user, row}) => {
-        //                         return [tradeTransportState.unsend].includes(row.transportState) && user.id === row.buyerId;
-        //                     },
-        //                 }
-        //             ],
-        //         }
-        //     ]
-        // },
         [tradeAction.pick]: {
             auths: [
                 {
