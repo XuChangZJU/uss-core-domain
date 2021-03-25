@@ -1640,18 +1640,82 @@ const AUTH_MATRIX = {
                         attr: 'auction.session',
                         relations: [sessionRelation.manager, sessionRelation.auctioneer, sessionRelation.owner],
                     },
+                    '#data': [
+                        {
+                            check: ({ row }) => {
+                                return row.state === bidState.success;
+                            },
+                        },
+                    ],
                 },
                 {
                     "#relation": {
                         attr: 'auction.session.vendue',
                         relations: [vendueRelation.manager, vendueRelation.owner],
                     },
+                    '#data': [
+                        {
+                            check: ({ row }) => {
+                                return row.state === bidState.success;
+                            },
+                        },
+                    ],
                 },
                 {
                     "#relation": {
                         attr: 'auction.session.vendue.auctionHouse',
                         relations: [auctionHouseRelation.manager, auctionHouseRelation.owner],
                     },
+                    '#data': [
+                        {
+                            check: ({ row }) => {
+                                return row.state === bidState.success;
+                            },
+                        },
+                    ],
+                }
+            ]
+        },
+        [bidAction.violate]: {
+            auths: [
+                {
+                    "#relation": {
+                        attr: 'auction.session',
+                        relations: [sessionRelation.manager, sessionRelation.auctioneer, sessionRelation.owner],
+                    },
+                    '#data': [
+                        {
+                            check: ({ row }) => {
+                                return [bidState.success, bidState.confirmed].includes(row.state);
+                            },
+                        },
+                    ],
+                },
+                {
+                    "#relation": {
+                        attr: 'auction.session.vendue',
+                        relations: [vendueRelation.manager, vendueRelation.owner],
+                    },
+                    '#data': [
+                        {
+                            check: ({ row }) => {
+                                return [bidState.success, bidState.confirmed].includes(row.state);
+                            },
+                        },
+                    ],
+                },
+                {
+                    "#relation": {
+                        attr: 'auction.session.vendue.auctionHouse',
+                        relations: [auctionHouseRelation.manager, auctionHouseRelation.owner],
+                    },
+                    '#data': [
+                        {
+                            check: ({ row }) => {
+                                return [bidState.success, bidState.confirmed].includes(row.state);
+                            },
+                        },
+                    ],
                 }
             ]
         }
