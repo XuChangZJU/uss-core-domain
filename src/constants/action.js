@@ -54,6 +54,8 @@ const action = {
     count: 62,
     stat: 63,
     download: 64,
+
+    changePrice: 71,
 };
 
 // 全局抽象的关系 0-1000
@@ -174,6 +176,8 @@ const decodeAction = (a) => {
         [action.count]: '计数',
         [action.stat]: '统计',
         [action.download]: '下载',
+
+        [action.changePrice]: '改价',
     };
 
     return STRINGS[a];

@@ -1633,6 +1633,28 @@ const AUTH_MATRIX = {
                 }
             ]
         },
+        [bidAction.changePrice]: {
+            auths: [
+                {
+                    "#relation": {
+                        attr: 'auction.session',
+                        relations: [sessionRelation.manager, sessionRelation.auctioneer, sessionRelation.owner],
+                    },
+                },
+                {
+                    "#relation": {
+                        attr: 'auction.session.vendue',
+                        relations: [vendueRelation.manager, vendueRelation.owner],
+                    },
+                },
+                {
+                    "#relation": {
+                        attr: 'auction.session.vendue.auctionHouse',
+                        relations: [auctionHouseRelation.manager, auctionHouseRelation.owner],
+                    },
+                }
+            ]
+        },
         [bidAction.confirm]: {
             auths: [
                 {
@@ -1754,6 +1776,22 @@ const AUTH_MATRIX = {
             ]
         },
         [paddleAction.update]: {
+            auths: [
+                {
+                    "#relation": {
+                        attr: 'vendue',
+                        relations: [vendueRelation.worker, vendueRelation.manager, vendueRelation.owner],
+                    },
+                },
+                {
+                    "#relation": {
+                        attr: 'vendue.auctionHouse',
+                        relations: [auctionHouseRelation.manager, auctionHouseRelation.owner],
+                    },
+                },
+            ]
+        },
+        [paddleAction.changePrice]: {
             auths: [
                 {
                     "#relation": {
@@ -2233,6 +2271,16 @@ const AUTH_MATRIX = {
                     ],
                 }
             ],
+        },
+        [checkOutAction.changePrice]: {
+            auths: [
+                {
+                    "#relation": {
+                        attr: 'paddle.vendue.auctionHouse',
+                        relations: [auctionHouseRelation.manager, auctionHouseRelation.settler, auctionHouseRelation.owner],
+                    },
+                }
+            ]
         },
         /* [checkOutAction.makePaid]: {
             auths: [
