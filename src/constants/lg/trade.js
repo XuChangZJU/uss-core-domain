@@ -22,7 +22,7 @@ const transportState = Object.assign(
 );
 const decodeTransportState = (ts) => {
     const TEXT = {
-        [transportState.unsend]: '快递未支付',
+        [transportState.unsend]: '未发货',
         [transportState.unpicked]: '待提货',
         [transportState.picked]: '已提货',
 
@@ -46,7 +46,9 @@ const decodeAction = (a) => {
 
 const STATE_TRANS_MATRIX = Object.assign(
     {}, COMMON_STATE_TRAN_MATRIX, TRANSPORT_STATE_TRANS_MATRIX, {
-        [action.confirmArrive]: [transportState.unpicked, transportState.picked],
+        [action.pick]: [transportState.unpicked, transportState.picked],
+        [action.taPrepare]: [transportState.unsend, transportState.tsInPreparing],
+        [action.taCancel]: [transportState.tsInPreparing, transportState.unsend],
     }
 );
 
