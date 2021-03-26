@@ -1,71 +1,45 @@
 const {
     action: commonAction,
     decodeAction: decodeCommonAction,
+    transportAction,
+    decodeTransportAction,
+    decodeTransportState: decodeCommonTransportState,
+    transportState: commonTransportState,
     state,
     decodeState,
     relation,
     decodeRelation,
     COMMON_STATE_TRAN_MATRIX,
+    TRANSPORT_STATE_TRANS_MATRIX,
 } = require('../action');
 
-const action = Object.assign(
-    {}, commonAction, {
-        // enter: 10002,
-        // show: 10003,
-        prepare: 10005,
-        cancelPrepare: 10105,
-        ship: 10006,
-        cancelShip: 10106,
-        receive: 10007,
-        takeAway: 100008,
-    }
-);
+const action = Object.assign({
+    takeAway: 20002,
+}, commonAction, transportAction);
 const decodeAction = (a) => {
-    const A = {
-        // [action.enter]: '入库',
-        [action.prepare]: '请求发货',
-        [action.cancelPrepare]: '取消请求',
-        [action.ship]: '发货',
-        [action.cancelShip]: '取消发货',
-        [action.receive]: '收货',
-        [action.takeAway]: '顾客提走',
+    const DICT = {
+        [action.takeAway]: '顾客自提',
     };
-    return A[a] || decodeCommonAction(a);
+    return DICT[a] || decodeCommonAction(a) || decodeTransportAction(a);
 };
 
-const transportState = {
-    /* unrecieved: 10001,
-    stored: 10002,
-    inPreview: 10003, */
-    keeping: 10004,
-    preparing: 10005,
-    shipped: 10006,
-    received: 10007,
-};
+const transportState = Object.assign({}, commonTransportState, {
+    shipping: 20001,
+});
 
-const decodeTransportState = (s) => {
-    const S = {
-        /* [transportState.unrecieved]: '未到库',
-        [transportState.stored]: '库存',
-        [transportState.inPreview]: '预展中', */
-        [transportState.keeping]: '暂存中',
-        [transportState.preparing]: '待发货', 
-        [transportState.shipped]: '已发货',
-        [transportState.received]: '已收货',
+const decodeTransportState = (ts) => {
+    const DICT = {
+        [transportState.shipping]: '暂存中',
     };
-
-    return S[s];
+    return DICT[ts] || decodeCommonTransportState(ts);
 };
+
 const STATE_TRAN_MATRIX = Object.assign(
-    {}, COMMON_STATE_TRAN_MATRIX, {
-        [action.prepare]: [transportState.keeping, transportState.preparing],
-        [action.cancelPrepare]: [transportState.preparing, transportState.keeping],
-        [action.ship]: [transportState.preparing, transportState.shipped],
-        [action.cancelShip]: [transportState.shipped, transportState.preparing],
-        [action.receive]: [transportState.shipped, transportState.received],
-        [action.takeAway]: [transportState.keeping, transportState.received],
-    }
-);
+    {
+        [transportAction.taPrepare]: [transportState.shipping, transportState.tsInPreparing],
+        [transportAction.taCancel]: [transportState.tsInPreparing, transportState.shipping],
+    }, COMMON_STATE_TRAN_MATRIX, TRANSPORT_STATE_TRANS_MATRIX);
+
 const getActionStateAttr = (action) => {
     if (action > 20000) {
         return 'billState';
