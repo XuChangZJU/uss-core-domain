@@ -247,42 +247,40 @@ const paddleRefundDataAuth = [
     },
 ];
 
-const paddleRefundUnexistsAuth = [{
-    '#unexists': [
-        {
-            relation: 'bid',
-            condition: ({ row }) => {
-                return {
-                    paddleId: row.id,
-                    state: {
-                        $in: [bidState.success, bidState.confirmed],
-                    },
-                    checkOutId: {
-                        $exists: false,
-                    },
-                };
-            },
-            message: '该号牌上有待进行结算的拍卖',
+const paddleRefundUnexistsAuth = [
+    {
+        relation: 'bid',
+        condition: ({ row }) => {
+            return {
+                paddleId: row.id,
+                state: {
+                    $in: [bidState.success, bidState.confirmed],
+                },
+                checkOutId: {
+                    $exists: false,
+                },
+            };
         },
-        {
-            relation: 'bid',
-            condition: ({ row }) => {
-                return {
-                    paddleId: row.id,
+        message: '该号牌上有待进行结算的拍卖',
+    },
+    {
+        relation: 'bid',
+        condition: ({ row }) => {
+            return {
+                paddleId: row.id,
+                state: {
+                    $in: [bidState.success, bidState.confirmed],
+                },
+                checkOut: {
                     state: {
-                        $in: [bidState.success, bidState.confirmed],
+                        $in: [checkOutState.unpaid, checkOutState.paying],
                     },
-                    checkOut: {
-                        state: {
-                            $in: [checkOutState.unpaid, checkOutState.paying],
-                        },
-                    },
-                };
-            },
-            message: '该号牌上有待进行结算的拍卖',
+                },
+            };
         },
-    ],
-}]
+        message: '该号牌上有待进行结算的拍卖',
+    },
+];
 
 const AUTH_MATRIX = {
     vendue: {
