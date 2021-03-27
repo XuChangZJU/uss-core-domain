@@ -1,12 +1,23 @@
 const {
-    action,
-    decodeAction,
+    action: commonAction,
+    decodeAction: decodeCommonAction,
     // state: commonState,
     // decodeState: decodeCommonState,
     relation,
     decodeRelation,
 } = require('../action');
 
+const action = Object.assign({}, commonAction, {
+    refund: 1001,
+});
+
+const decodeAction = (a) => {
+    const Dict = {
+        [action.refund]: '退款',
+    };
+
+    return Dict[a] || decodeCommonAction(a);
+};
 
 // const state = Object.assign({}, commonState, {
 //     unsettled: 501,

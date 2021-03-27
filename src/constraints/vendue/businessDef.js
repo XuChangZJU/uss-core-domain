@@ -137,7 +137,7 @@ const AuctionHouseOwnerAndmanagerExists = [
     {
         relation: 'userAuctionHouse',
         condition: ({ user, row }) => {
-            const { id:auctionHouseId } = row;
+            const { id: auctionHouseId } = row;
             const query = {
                 userId: user.id,
                 auctionHouseId,
@@ -247,9 +247,9 @@ const AUTH_MATRIX = {
                         {
                             relation: 'userAuctionHouse',
                             needData: true,
-                            condition: ({user,actionData}) => {
-                                const {auctionHouse} = actionData;
-                                return{
+                            condition: ({ user, actionData }) => {
+                                const { auctionHouse } = actionData;
+                                return {
                                     userId: user.id,
                                     relation: {
                                         $in: [auctionHouseRelation.owner, auctionHouseRelation.manager],
@@ -294,7 +294,7 @@ const AUTH_MATRIX = {
                     },
                     '#data': [
                         {
-                            check: ({user, row}) => {
+                            check: ({ user, row }) => {
                                 return [vendueState.ready].includes(row.state);
                             },
                         }
@@ -318,7 +318,7 @@ const AUTH_MATRIX = {
                     ],
                     '#data': [
                         {
-                            check: ({user, row}) => {
+                            check: ({ user, row }) => {
                                 return [vendueState.ready].includes(row.state);
                             },
                         }
@@ -333,7 +333,7 @@ const AUTH_MATRIX = {
                     },
                     '#data': [
                         {
-                            check: ({user, row}) => {
+                            check: ({ user, row }) => {
                                 return [vendueState.preparing].includes(row.state);
                             },
                         }
@@ -357,7 +357,7 @@ const AUTH_MATRIX = {
                     ],
                     '#data': [
                         {
-                            check: ({user, row}) => {
+                            check: ({ user, row }) => {
                                 return [vendueState.preparing].includes(row.state);
                             },
                         }
@@ -372,7 +372,7 @@ const AUTH_MATRIX = {
                     },
                     '#data': [
                         {
-                            check: ({user, row}) => {
+                            check: ({ user, row }) => {
                                 return [vendueState.ongoing].includes(row.state);
                             },
                         }
@@ -396,7 +396,7 @@ const AUTH_MATRIX = {
                     ],
                     '#data': [
                         {
-                            check: ({user, row}) => {
+                            check: ({ user, row }) => {
                                 return [vendueState.ongoing].includes(row.state);
                             },
                         }
@@ -410,7 +410,7 @@ const AUTH_MATRIX = {
                     '#exists': [
                         {
                             relation: 'userVendue',
-                            condition: ({user, row}) => {
+                            condition: ({ user, row }) => {
                                 const query = {
                                     userId: user.id,
                                     vendueId: row.id,
@@ -421,7 +421,7 @@ const AUTH_MATRIX = {
                         },
                         {
                             relation: 'userAuctionHouse',
-                            condition: ({user, row}) => {
+                            condition: ({ user, row }) => {
                                 const query = {
                                     userId: user.id,
                                     auctionHouseId: row.auctionHouseId,
@@ -442,7 +442,7 @@ const AUTH_MATRIX = {
                     '#exists': [
                         {
                             relation: 'userVendue',
-                            condition: ({user, row}) => {
+                            condition: ({ user, row }) => {
                                 const query = {
                                     userId: user.id,
                                     vendueId: row.id,
@@ -459,7 +459,7 @@ const AUTH_MATRIX = {
                     '#exists': [
                         {
                             relation: 'userAuctionHouse',
-                            condition: ({user, row}) => {
+                            condition: ({ user, row }) => {
                                 const query = {
                                     userId: user.id,
                                     auctionHouseId: row.auctionHouseId,
@@ -482,7 +482,7 @@ const AUTH_MATRIX = {
                     },
                     "#data": [
                         {
-                            check: ({user, row}) => {
+                            check: ({ user, row }) => {
                                 return [vendueState.preparing, vendueState.ready].includes(row.state);
                             },
                         }
@@ -492,7 +492,7 @@ const AUTH_MATRIX = {
                     '#exists': [
                         {
                             relation: 'userAuctionHouse',
-                            condition: ({user, row}) => {
+                            condition: ({ user, row }) => {
                                 const query = {
                                     userId: user.id,
                                     auctionHouseId: row.auctionHouseId,
@@ -506,7 +506,7 @@ const AUTH_MATRIX = {
                     ],
                     "#data": [
                         {
-                            check: ({user, row}) => {
+                            check: ({ user, row }) => {
                                 return [vendueState.preparing, vendueState.ready].includes(row.state);
                             },
                         }
@@ -559,9 +559,9 @@ const AUTH_MATRIX = {
                         {
                             needData: true,
                             relation: 'userVendue',
-                            condition: ({user, row, actionData}) => {
+                            condition: ({ user, row, actionData }) => {
                                 const { userVendue } = actionData;
-                                if(!userVendue.relation){
+                                if (!userVendue.relation) {
                                     return {
                                         userId: user.id,
                                         vendueId: row.id,
@@ -570,13 +570,13 @@ const AUTH_MATRIX = {
                                         },
                                     }
                                 }
-                                if(userVendue.relation === vendueRelation.owner){
+                                if (userVendue.relation === vendueRelation.owner) {
                                     return {
                                         relation: -1,
                                     }
                                 }
-                                if(userVendue.relation === vendueRelation.manager){
-                                    return{
+                                if (userVendue.relation === vendueRelation.manager) {
+                                    return {
                                         userId: user.id,
                                         vendueId: row.id,
                                         relation: {
@@ -584,7 +584,7 @@ const AUTH_MATRIX = {
                                         },
                                     }
                                 }
-                                if(userVendue.relation === vendueRelation.worker){
+                                if (userVendue.relation === vendueRelation.worker) {
                                     return {
                                         userId: user.id,
                                         vendueId: row.id,
@@ -601,7 +601,7 @@ const AUTH_MATRIX = {
                     '#exists': [
                         {
                             relation: 'userAuctionHouse',
-                            condition: ({user, row}) => {
+                            condition: ({ user, row }) => {
                                 const query = {
                                     userId: user.id,
                                     auctionHouseId: row.auctionHouseId,
@@ -646,23 +646,23 @@ const AUTH_MATRIX = {
                         {
                             relation: 'userVendue',
                             needData: true,
-                            condition: ({user,actionData}) => {
-                                const {session} = actionData;
-                                if(session.biddingSchema){
+                            condition: ({ user, actionData }) => {
+                                const { session } = actionData;
+                                if (session.biddingSchema) {
                                     session.biddingSchema.forEach(
                                         (ele, index) => {
                                             assert(ele.type < 3, '目前仅支持顺序递增和258拍');
-                                            if(ele.type ===1 && ele.step)
-                                            assert((ele.max-ele.min)> ele.step, '设置的步长过大');
-                                            if(index > 0){
-                                                if(ele.min !== session.biddingSchema[index-1].max){
+                                            if (ele.type === 1 && ele.step)
+                                                assert((ele.max - ele.min) > ele.step, '设置的步长过大');
+                                            if (index > 0) {
+                                                if (ele.min !== session.biddingSchema[index - 1].max) {
                                                     throw ErrorCode.createErrorByCode(ErrorCode.errorLegalParamError, `第${index}条的最小值与上一条最大值不同`);
                                                 }
                                             }
                                         }
                                     );
                                 }
-                                return{
+                                return {
                                     userId: user.id,
                                     vendueId: session.vendueId,
                                     relation: {
@@ -703,7 +703,7 @@ const AUTH_MATRIX = {
                     },
                     '#data': [
                         {
-                            check: ({user, row}) => {
+                            check: ({ user, row }) => {
                                 return [sessionState.ready, sessionState.pausing].includes(row.state);
                             },
                         }
@@ -716,7 +716,7 @@ const AUTH_MATRIX = {
                     },
                     '#data': [
                         {
-                            check: ({user, row}) => {
+                            check: ({ user, row }) => {
                                 return [sessionState.ready, sessionState.pausing].includes(row.state);
                             },
                         }
@@ -729,7 +729,7 @@ const AUTH_MATRIX = {
                     },
                     '#data': [
                         {
-                            check: ({user, row}) => {
+                            check: ({ user, row }) => {
                                 return [sessionState.ready, sessionState.pausing].includes(row.state);
                             },
                         }
@@ -744,7 +744,7 @@ const AUTH_MATRIX = {
                     },
                     '#data': [
                         {
-                            check: ({user, row}) => {
+                            check: ({ user, row }) => {
                                 return [sessionState.preparing].includes(row.state);
                             },
                         }
@@ -757,7 +757,7 @@ const AUTH_MATRIX = {
                     },
                     '#data': [
                         {
-                            check: ({user, row}) => {
+                            check: ({ user, row }) => {
                                 return [sessionState.preparing].includes(row.state);
                             },
                         }
@@ -770,7 +770,7 @@ const AUTH_MATRIX = {
                     },
                     '#data': [
                         {
-                            check: ({user, row}) => {
+                            check: ({ user, row }) => {
                                 return [sessionState.preparing].includes(row.state);
                             },
                         }
@@ -786,7 +786,7 @@ const AUTH_MATRIX = {
                     },
                     '#data': [
                         {
-                            check: ({user, row}) => {
+                            check: ({ user, row }) => {
                                 return [sessionState.ongoing, sessionState.pausing].includes(row.state);
                             },
                         }
@@ -799,7 +799,7 @@ const AUTH_MATRIX = {
                     },
                     '#data': [
                         {
-                            check: ({user, row}) => {
+                            check: ({ user, row }) => {
                                 return [sessionState.ongoing, sessionState.pausing].includes(row.state);
                             },
                         }
@@ -812,7 +812,7 @@ const AUTH_MATRIX = {
                     },
                     '#data': [
                         {
-                            check: ({user, row}) => {
+                            check: ({ user, row }) => {
                                 return [sessionState.ongoing, sessionState.pausing].includes(row.state);
                             },
                         }
@@ -827,7 +827,7 @@ const AUTH_MATRIX = {
                     },
                     '#data': [                 // 表示对现有对象或者用户的数据有要求，可以有多项，每项之前是AND的关系
                         {
-                            check: ({user, row}) => {
+                            check: ({ user, row }) => {
                                 return row.state === sessionState.ongoing;
                             },
                         }
@@ -840,7 +840,7 @@ const AUTH_MATRIX = {
                     },
                     '#data': [
                         {
-                            check: ({user, row}) => {
+                            check: ({ user, row }) => {
                                 return row.state === sessionState.ongoing;
                             },
                         }
@@ -853,7 +853,7 @@ const AUTH_MATRIX = {
                     },
                     '#data': [
                         {
-                            check: ({user, row}) => {
+                            check: ({ user, row }) => {
                                 return row.state === sessionState.ongoing;
                             },
                         }
@@ -867,7 +867,7 @@ const AUTH_MATRIX = {
                     '#exists': [
                         {
                             relation: 'userSession',
-                            condition: ({user, row}) => {
+                            condition: ({ user, row }) => {
                                 const query = {
                                     userId: user.id,
                                     sessionId: row.id,
@@ -882,7 +882,7 @@ const AUTH_MATRIX = {
                     '#exists': [
                         {
                             relation: 'userVendue',
-                            condition: ({user, row}) => {
+                            condition: ({ user, row }) => {
                                 const query = {
                                     userId: user.id,
                                     vendueId: row.vendueId,
@@ -899,7 +899,7 @@ const AUTH_MATRIX = {
                     '#exists': [
                         {
                             relation: 'userAuctionHouse',
-                            condition: ({user, row}) => {
+                            condition: ({ user, row }) => {
                                 const query = {
                                     userId: user.id,
                                     auctionHouseId: row.vendue.auctionHouseId,
@@ -920,7 +920,7 @@ const AUTH_MATRIX = {
                     '#exists': [
                         {
                             relation: 'userSession',
-                            condition: ({user, row}) => {
+                            condition: ({ user, row }) => {
                                 const query = {
                                     userId: user.id,
                                     sessionId: row.id,
@@ -937,7 +937,7 @@ const AUTH_MATRIX = {
                     '#exists': [
                         {
                             relation: 'userVendue',
-                            condition: ({user, row}) => {
+                            condition: ({ user, row }) => {
                                 const query = {
                                     userId: user.id,
                                     vendueId: row.vendueId,
@@ -954,7 +954,7 @@ const AUTH_MATRIX = {
                     '#exists': [
                         {
                             relation: 'userAuctionHouse',
-                            condition: ({user, row}) => {
+                            condition: ({ user, row }) => {
                                 const query = {
                                     userId: user.id,
                                     auctionHouseId: row.vendue.auctionHouseId,
@@ -1031,9 +1031,9 @@ const AUTH_MATRIX = {
                         {
                             needData: 'true',
                             relation: 'userSession',
-                            condition: ({user, row, actionData}) => {
+                            condition: ({ user, row, actionData }) => {
                                 const { userSession } = actionData;
-                                if(!userSession.relation){
+                                if (!userSession.relation) {
                                     return {
                                         userId: user.id,
                                         sessionId: row.id,
@@ -1042,14 +1042,14 @@ const AUTH_MATRIX = {
                                         },
                                     }
                                 }
-                                if(userSession.relation === sessionRelation.owner){
+                                if (userSession.relation === sessionRelation.owner) {
                                     return {
                                         userId: user.id,
                                         sessionId: row.id,
                                         relation: -1,
                                     }
                                 }
-                                if(userSession.relation === sessionRelation.manager){
+                                if (userSession.relation === sessionRelation.manager) {
                                     return {
                                         userId: user.id,
                                         sessionId: row.id,
@@ -1058,7 +1058,7 @@ const AUTH_MATRIX = {
                                         },
                                     }
                                 }
-                                if(userSession.relation === sessionRelation.worker){
+                                if (userSession.relation === sessionRelation.worker) {
                                     return {
                                         userId: user.id,
                                         sessionId: row.id,
@@ -1075,7 +1075,7 @@ const AUTH_MATRIX = {
                     '#exists': [
                         {
                             relation: 'userVendue',
-                            condition: ({user, row}) => {
+                            condition: ({ user, row }) => {
                                 const query = {
                                     userId: user.id,
                                     vendueId: row.vendueId,
@@ -1092,7 +1092,7 @@ const AUTH_MATRIX = {
                     '#exists': [
                         {
                             relation: 'userAuctionHouse',
-                            condition: ({user, row}) => {
+                            condition: ({ user, row }) => {
                                 const query = {
                                     userId: user.id,
                                     auctionHouseId: row.vendue.auctionHouseId,
@@ -1137,23 +1137,23 @@ const AUTH_MATRIX = {
                         {
                             relation: 'userSession',
                             needData: true,
-                            condition: ({user,actionData}) => {
-                                const {auction} = actionData
-                                if(auction.biddingSchema){
+                            condition: ({ user, actionData }) => {
+                                const { auction } = actionData
+                                if (auction.biddingSchema) {
                                     auction.biddingSchema.forEach(
                                         (ele, index) => {
                                             assert(ele.type < 3, '目前仅支持顺序递增和258拍');
-                                            if(ele.type ===1 && ele.step)
-                                                assert((ele.max-ele.min)> ele.step, '设置的步长过大');
-                                            if(index > 0){
-                                                if(ele.min !== auction.biddingSchema[index-1].max){
+                                            if (ele.type === 1 && ele.step)
+                                                assert((ele.max - ele.min) > ele.step, '设置的步长过大');
+                                            if (index > 0) {
+                                                if (ele.min !== auction.biddingSchema[index - 1].max) {
                                                     throw ErrorCode.createErrorByCode(ErrorCode.errorLegalParamError, `第${index}条的最小值与上一条最大值不同`);
                                                 }
                                             }
                                         }
                                     );
                                 }
-                                return{
+                                return {
                                     userId: user.id,
                                     sessionId: auction.sessionId,
                                     relation: {
@@ -1169,9 +1169,9 @@ const AUTH_MATRIX = {
                         {
                             relation: 'userVendue',
                             needData: true,
-                            condition: ({user,actionData}) => {
-                                const {auction} = actionData;
-                                return{
+                            condition: ({ user, actionData }) => {
+                                const { auction } = actionData;
+                                return {
                                     userId: user.id,
                                     vendueId: auction.session.vendueId,
                                     relation: {
@@ -1187,9 +1187,9 @@ const AUTH_MATRIX = {
                         {
                             relation: 'userAuctionHouse',
                             needData: true,
-                            condition: ({user,actionData}) => {
-                                const {auction} = actionData;
-                                return{
+                            condition: ({ user, actionData }) => {
+                                const { auction } = actionData;
+                                return {
                                     userId: user.id,
                                     auctionHouseId: auction.session.vendue.auctionHouseId,
                                     relation: {
@@ -1289,7 +1289,7 @@ const AUTH_MATRIX = {
                     },
                     '#data': [
                         {
-                            check: ({user, row}) => {
+                            check: ({ user, row }) => {
                                 return row.state === auctionState.preparing;
                             },
                         }
@@ -1302,7 +1302,7 @@ const AUTH_MATRIX = {
                     },
                     '#data': [
                         {
-                            check: ({user, row}) => {
+                            check: ({ user, row }) => {
                                 return row.state === auctionState.preparing;
                             },
                         }
@@ -1315,7 +1315,7 @@ const AUTH_MATRIX = {
                     },
                     '#data': [
                         {
-                            check: ({user, row}) => {
+                            check: ({ user, row }) => {
                                 return row.state === auctionState.preparing;
                             },
                         }
@@ -1328,7 +1328,7 @@ const AUTH_MATRIX = {
                     },
                     '#data': [
                         {
-                            check: ({user, row}) => {
+                            check: ({ user, row }) => {
                                 return row.state === auctionState.preparing;
                             },
                         }
@@ -1381,7 +1381,7 @@ const AUTH_MATRIX = {
                     },
                     '#data': [
                         {
-                            check: ({user, row}) => {
+                            check: ({ user, row }) => {
                                 return row.state === auctionState.ongoing;
                             },
                         }
@@ -1394,7 +1394,7 @@ const AUTH_MATRIX = {
                     },
                     '#data': [
                         {
-                            check: ({user, row}) => {
+                            check: ({ user, row }) => {
                                 return row.state === auctionState.ongoing;
                             },
                         }
@@ -1407,7 +1407,7 @@ const AUTH_MATRIX = {
                     },
                     '#data': [
                         {
-                            check: ({user, row}) => {
+                            check: ({ user, row }) => {
                                 return row.state === auctionState.ongoing;
                             },
                         }
@@ -1424,7 +1424,7 @@ const AUTH_MATRIX = {
                     },
                     '#data': [
                         {
-                            check: ({user, row}) => {
+                            check: ({ user, row }) => {
                                 return row.state === auctionState.ongoing;
                             },
                         }
@@ -1437,7 +1437,7 @@ const AUTH_MATRIX = {
                     },
                     '#data': [
                         {
-                            check: ({user, row}) => {
+                            check: ({ user, row }) => {
                                 return row.state === auctionState.ongoing;
                             },
                         }
@@ -1450,7 +1450,7 @@ const AUTH_MATRIX = {
                     },
                     '#data': [
                         {
-                            check: ({user, row}) => {
+                            check: ({ user, row }) => {
                                 return row.state === auctionState.ongoing;
                             },
                         }
@@ -1535,11 +1535,22 @@ const AUTH_MATRIX = {
                             relation: 'auction',
                             needData: true,
                             condition: ({ user, actionData }) => {
-                                const {bid} = actionData;
-                                    return {
-                                        id: bid.auctionId,
-                                        state: auctionState.ongoing,
-                                    };
+                                const { bid } = actionData;
+                                return {
+                                    id: bid.auctionId,
+                                    state: auctionState.ongoing,
+                                };
+                            },
+                        },
+                        {
+                            relation: 'paddle',
+                            needData: true,
+                            condition: ({ user, actionData }) => {
+                                const { bid } = actionData;
+                                return {
+                                    id: bid.paddleId,
+                                    userId: user.id,
+                                };
                             },
                         },
                     ],
@@ -1806,7 +1817,38 @@ const AUTH_MATRIX = {
                     },
                 },
             ]
-        }
+        },
+        [paddleAction.refund]: {
+            auths: [
+                {
+                    "#relation": {
+                        attr: 'vendue',
+                        relations: [vendueRelation.worker, vendueRelation.manager, vendueRelation.owner],
+                    },
+                },
+                {
+                    "#relation": {
+                        attr: 'vendue.auctionHouse',
+                        relations: [auctionHouseRelation.manager, auctionHouseRelation.owner],
+                    },
+                },
+                {
+                    '#exists': [
+                        {
+                            relation: 'paddle',
+                            needData: true,
+                            condition: ({ user, actionData }) => {
+                                const { paddle } = actionData;
+                                return {
+                                    id: paddle.id,
+                                    userId: user.id,
+                                };
+                            },
+                        },
+                    ],
+                }
+            ]
+        },
     },
     auctionHouse: {
         [auctionHouseAction.assign]: {
@@ -1933,7 +1975,7 @@ const AUTH_MATRIX = {
                             needData: true,
                             condition: ({ user, row, actionData }) => {
                                 const { userAuctionHouse } = actionData;
-                                if(!userAuctionHouse.relation){
+                                if (!userAuctionHouse.relation) {
                                     return {
                                         userId: user.id,
                                         auctionHouseId: row.id,
@@ -1942,12 +1984,12 @@ const AUTH_MATRIX = {
                                         },
                                     }
                                 }
-                                if(userAuctionHouse.relation === auctionHouseRelation.owner){
+                                if (userAuctionHouse.relation === auctionHouseRelation.owner) {
                                     return {
                                         relation: -1,
                                     }
                                 }
-                                if(userAuctionHouse.relation === auctionHouseRelation.manager){
+                                if (userAuctionHouse.relation === auctionHouseRelation.manager) {
                                     return {
                                         userId: user.id,
                                         auctionHouseId: row.id,
@@ -1957,7 +1999,7 @@ const AUTH_MATRIX = {
                                     }
                                 }
 
-                                if([auctionHouseRelation.worker, auctionHouseRelation.auctioneer, auctionHouseRelation.settler, auctionHouseRelation.stockKeeper].includes(userAuctionHouse.relation)){
+                                if ([auctionHouseRelation.worker, auctionHouseRelation.auctioneer, auctionHouseRelation.settler, auctionHouseRelation.stockKeeper].includes(userAuctionHouse.relation)) {
                                     return {
                                         userId: user.id,
                                         auctionHouseId: row.id,
@@ -1994,7 +2036,7 @@ const AUTH_MATRIX = {
                 },
             ],
         },
-        [contractAction.complete]:{
+        [contractAction.complete]: {
             auths: [
                 {
                     '#exists': ContractAuctionHouseWorkerExists,
@@ -2133,7 +2175,7 @@ const AUTH_MATRIX = {
                     ],
                     '#data': [
                         {
-                            check: ({user, row}) => {
+                            check: ({ user, row }) => {
                                 return [checkOutTransportState.shipping].includes(row.transportState);
                             },
                         }
@@ -2146,7 +2188,7 @@ const AUTH_MATRIX = {
                     },
                     '#data': [
                         {
-                            check: ({user, row}) => {
+                            check: ({ user, row }) => {
                                 return [checkOutTransportState.shipping].includes(row.transportState);
                             },
                         }
@@ -2171,7 +2213,7 @@ const AUTH_MATRIX = {
                     ],
                     '#data': [
                         {
-                            check: ({user, row}) => {
+                            check: ({ user, row }) => {
                                 return [checkOutTransportState.tsInPreparing].includes(row.transportState);
                             },
                         }
@@ -2184,7 +2226,7 @@ const AUTH_MATRIX = {
                     },
                     '#data': [
                         {
-                            check: ({user, row}) => {
+                            check: ({ user, row }) => {
                                 return [checkOutTransportState.tsInPreparing].includes(row.transportState);
                             },
                         }
@@ -2201,7 +2243,7 @@ const AUTH_MATRIX = {
                     },
                     '#data': [
                         {
-                            check: ({user, row}) => {
+                            check: ({ user, row }) => {
                                 return [checkOutTransportState.tsInPreparing].includes(row.transportState);
                             },
                         }
@@ -2226,7 +2268,7 @@ const AUTH_MATRIX = {
                     ],
                     '#data': [
                         {
-                            check: ({user, row}) => {
+                            check: ({ user, row }) => {
                                 return [checkOutTransportState.tsSending].includes(row.transportState);
                             },
                         }
@@ -2243,7 +2285,7 @@ const AUTH_MATRIX = {
                     },
                     '#data': [
                         {
-                            check: ({user, row}) => {
+                            check: ({ user, row }) => {
                                 return [checkOutTransportState.shipping].includes(row.transportState);
                             },
                         }
@@ -2258,8 +2300,8 @@ const AUTH_MATRIX = {
                         {
                             relation: 'checkOut',
                             needData: true,
-                            condition: ({user, actionData}) => {
-                                const {checkOut} = actionData;
+                            condition: ({ user, actionData }) => {
+                                const { checkOut } = actionData;
                                 return {
                                     paddleId: checkOut.paddleId,
                                     state: {
@@ -2315,7 +2357,7 @@ const AUTH_MATRIX = {
                     ],
                     '#data': [
                         {
-                            check: ({user, row}) => {
+                            check: ({ user, row }) => {
                                 return [checkOutState.init, checkOutState.unpaid, checkOutState.paying].includes(row.state);
                             },
                         }
@@ -2329,7 +2371,7 @@ const AUTH_MATRIX = {
                     },
                     '#data': [
                         {
-                            check: ({user, row}) => {
+                            check: ({ user, row }) => {
                                 return [checkOutState.init, checkOutState.unpaid, checkOutState.paying].includes(row.state);
                             },
                         }
@@ -2342,7 +2384,7 @@ const AUTH_MATRIX = {
                     },
                     '#data': [
                         {
-                            check: ({user, row}) => {
+                            check: ({ user, row }) => {
                                 return [checkOutState.init, checkOutState.unpaid, checkOutState.paying].includes(row.state);
                             },
                         }
@@ -2359,7 +2401,7 @@ const AUTH_MATRIX = {
                     '#exists': [
                         {
                             relation: 'userAuctionHouse',
-                            condition: ({user, row}) => {
+                            condition: ({ user, row }) => {
                                 return {
                                     userId: user.id,
                                     auctionHouseId: row.auctionHouseId,
@@ -2382,7 +2424,7 @@ const AUTH_MATRIX = {
                         {
                             relation: 'userSession',
                             needData: true,
-                            condition: ({user, actionData}) => {
+                            condition: ({ user, actionData }) => {
                                 return {
                                     userId: user.id,
                                     sessionId: actionData.license.sessionId,
@@ -2395,7 +2437,7 @@ const AUTH_MATRIX = {
                     '#exists': [
                         {
                             relation: 'userVendue',
-                            condition: ({user}) => {
+                            condition: ({ user }) => {
                                 return {
                                     userId: user.id,
                                 }
@@ -2469,7 +2511,7 @@ const AUTH_MATRIX = {
                     '#exists': [
                         {
                             relation: 'userAuctionHouse',
-                            condition: ({user}) => {
+                            condition: ({ user }) => {
                                 const query = {
                                     userId: user.id,
                                 };
@@ -2478,7 +2520,7 @@ const AUTH_MATRIX = {
                         },
                     ],
                 }
-             ],
+            ],
         },
         [contractTermsAction.update]: {
             auths: [
@@ -2554,8 +2596,8 @@ const AUTH_MATRIX = {
                     ],
                     '#data': [
                         {
-                            check: ({user, row}) => {
-                                return [agentState.failed].includes(row.state) || (row.state === agentState.normal && row.auction.state!== auctionState.ongoing);
+                            check: ({ user, row }) => {
+                                return [agentState.failed].includes(row.state) || (row.state === agentState.normal && row.auction.state !== auctionState.ongoing);
                             },
                         }
                     ],
@@ -2578,7 +2620,7 @@ const AUTH_MATRIX = {
                     '#exists': [
                         {
                             relation: 'userAuctionHouse',
-                            condition: ({user}) => {
+                            condition: ({ user }) => {
                                 const query = {
                                     userId: user.id,
                                 };
