@@ -229,17 +229,17 @@ const paddleRefundDataAuth = [
     {
         check: ({ row, actionData, user }) => {
             const { paddle, paymentMethod } = actionData;
-            const { refundingPrice, onlineDeposit } = paddle;
-            if (row.totalDeposit <= 0.01) {
+            const { refundingDeposit, onlineDeposit } = paddle;
+            if (row.availableDeposit <= 0.01) {
                 return ErrorCode.createErrorByCode(ErrorCode.errorLegalBodyError, '没有可退的余额');
             }
-            if (row.refundingPrice > 0) {
+            if (row.refundingDeposit > 0) {
                 return ErrorCode.createErrorByCode(ErrorCode.errorLegalBodyError, '当前有其它正在进行中的退款');
             }
-            if (row.totalDeposit < refundingPrice) {
+            if (row.availableDeposit < refundingDeposit) {
                 return ErrorCode.createErrorByCode(ErrorCode.errorLegalBodyError, '退款余额过多');
             }
-            if (!paymentMethod && refundingPrice > onlineDeposit) {
+            if (!paymentMethod && refundingDeposit > onlineDeposit) {
                 // 自主退款申请金额不能大于onlineDeposit
                 return ErrorCode.createErrorByCode(ErrorCode.errorLegalBodyError, '线上支付的金额不足以支付本次退款，请联系拍卖行申请线下退款');
             }
