@@ -229,7 +229,8 @@ const paddleRefundDataAuthFn = (isSuperUser) => [
     {
         check: ({ row, actionData, user }) => {
             const { paddle, paymentMethod } = actionData;
-            const { refundingDeposit, onlineDeposit } = paddle;
+            const { refundingDeposit } = paddle;
+            const { onlineDeposit } = row;
             if (row.availableDeposit <= 0.01) {
                 return ErrorCode.createErrorByCode(ErrorCode.errorLegalBodyError, '没有可退的余额');
             }
@@ -240,7 +241,7 @@ const paddleRefundDataAuthFn = (isSuperUser) => [
                 return ErrorCode.createErrorByCode(ErrorCode.errorLegalBodyError, '退款余额过多');
             }
             if (!isSuperUser) {
-                // 非超级用户只能申请线下退款
+                // 非超级用户只能申请线上退款
                 if (paymentMethod) {
                     return new Error('普遍用户不能定义退款方式');
                 }
