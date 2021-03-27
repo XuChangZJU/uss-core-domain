@@ -875,6 +875,12 @@ const AUTH_MATRIX = {
             auths: [
                 {
                     "#relation": {
+                        attr: '',
+                        relations: [shopRelation.owner, shopRelation.manager],
+                    },
+                },
+                {
+                    "#relation": {
                         attr: 'lgMall',
                         relations: [mallRelation.owner, mallRelation.manager],
                     },
