@@ -330,21 +330,9 @@ const AUTH_MATRIX = {
                     },
                 },
                 {
-                    '#exists': [
-                        {
-                            relation: 'userAuctionHouse',
-                            condition: ({ user, row }) => {
-                                const query = {
-                                    userId: user.id,
-                                    auctionHouseId: row.auctionHouseId,
-                                    relation: {
-                                        $in: [auctionHouseRelation.owner, auctionHouseRelation.manager],
-                                    },
-                                };
-                                return query;
-                            },
-                        },
-                    ],
+                    "#relation": {
+                        attr: 'auctionHouse',
+                    },
                 }
             ],
         },
@@ -362,21 +350,9 @@ const AUTH_MATRIX = {
                     ],
                 },
                 {
-                    '#exists': [
-                        {
-                            relation: 'userAuctionHouse',
-                            condition: ({ user, row }) => {
-                                const query = {
-                                    userId: user.id,
-                                    auctionHouseId: row.auctionHouseId,
-                                    relation: {
-                                        $in: [auctionHouseRelation.owner, auctionHouseRelation.manager],
-                                    },
-                                };
-                                return query;
-                            },
-                        },
-                    ],
+                    "#relation": {
+                        attr: 'auctionHouse',
+                    },
                     '#data': [
                         {
                             check: ({ user, row }) => {
@@ -384,11 +360,23 @@ const AUTH_MATRIX = {
                             },
                         }
                     ],
-                }
+                },
             ]
         },
         [vendueAction.ready]: {
             auths: [
+                {
+                    "#relation": {
+                        attr: 'auctionHouse',
+                    },
+                    '#data': [
+                        {
+                            check: ({ user, row }) => {
+                                return [vendueState.preparing].includes(row.state);
+                            },
+                        }
+                    ]
+                },
                 {
                     "#relation": {
                     },
@@ -400,30 +388,6 @@ const AUTH_MATRIX = {
                         }
                     ]
                 },
-                {
-                    '#exists': [
-                        {
-                            relation: 'userAuctionHouse',
-                            condition: ({ user, row }) => {
-                                const query = {
-                                    userId: user.id,
-                                    auctionHouseId: row.auctionHouseId,
-                                    relation: {
-                                        $in: [auctionHouseRelation.owner, auctionHouseRelation.manager],
-                                    },
-                                };
-                                return query;
-                            },
-                        },
-                    ],
-                    '#data': [
-                        {
-                            check: ({ user, row }) => {
-                                return [vendueState.preparing].includes(row.state);
-                            },
-                        }
-                    ],
-                }
             ]
         },
         [vendueAction.finish]: {
@@ -440,21 +404,9 @@ const AUTH_MATRIX = {
                     ],
                 },
                 {
-                    '#exists': [
-                        {
-                            relation: 'userAuctionHouse',
-                            condition: ({ user, row }) => {
-                                const query = {
-                                    userId: user.id,
-                                    auctionHouseId: row.auctionHouseId,
-                                    relation: {
-                                        $in: [auctionHouseRelation.owner, auctionHouseRelation.manager],
-                                    },
-                                };
-                                return query;
-                            },
-                        },
-                    ],
+                    "#relation": {
+                        attr: 'auctionHouse',
+                    },
                     '#data': [
                         {
                             check: ({ user, row }) => {
@@ -462,76 +414,32 @@ const AUTH_MATRIX = {
                             },
                         }
                     ],
-                }
+                },
             ]
         },
         [vendueAction.transfer]: {
             auths: [
                 {
-                    '#exists': [
-                        {
-                            relation: 'userVendue',
-                            condition: ({ user, row }) => {
-                                const query = {
-                                    userId: user.id,
-                                    vendueId: row.id,
-                                    relation: vendueRelation.owner,
-                                };
-                                return query;
-                            },
-                        },
-                        {
-                            relation: 'userAuctionHouse',
-                            condition: ({ user, row }) => {
-                                const query = {
-                                    userId: user.id,
-                                    auctionHouseId: row.auctionHouseId,
-                                    relation: {
-                                        $in: [auctionHouseRelation.owner, auctionHouseRelation.manager],
-                                    },
-                                };
-                                return query;
-                            },
-                        },
-                    ],
+                    "#relation": {
+                    },
+                },
+                {
+                    "#relation": {
+                        attr: 'auctionHouse',
+                    },
                 },
             ]
         },
         [vendueAction.authGrantMulti2]: {
             auths: [
                 {
-                    '#exists': [
-                        {
-                            relation: 'userVendue',
-                            condition: ({ user, row }) => {
-                                const query = {
-                                    userId: user.id,
-                                    vendueId: row.id,
-                                    relation: {
-                                        $in: [vendueRelation.manager, vendueRelation.owner],
-                                    },
-                                };
-                                return query;
-                            },
-                        },
-                    ],
+                    "#relation": {
+                    },
                 },
                 {
-                    '#exists': [
-                        {
-                            relation: 'userAuctionHouse',
-                            condition: ({ user, row }) => {
-                                const query = {
-                                    userId: user.id,
-                                    auctionHouseId: row.auctionHouseId,
-                                    relation: {
-                                        $in: [auctionHouseRelation.owner, auctionHouseRelation.manager],
-                                    },
-                                };
-                                return query;
-                            },
-                        },
-                    ],
+                    "#relation": {
+                        attr: 'auctionHouse',
+                    },
                 },
             ]
         },
@@ -539,7 +447,7 @@ const AUTH_MATRIX = {
             auths: [
                 {
                     "#relation": {
-                        relations: [vendueRelation.manager, vendueRelation.owner],
+                        attr: 'auctionHouse',
                     },
                     "#data": [
                         {
@@ -550,21 +458,8 @@ const AUTH_MATRIX = {
                     ],
                 },
                 {
-                    '#exists': [
-                        {
-                            relation: 'userAuctionHouse',
-                            condition: ({ user, row }) => {
-                                const query = {
-                                    userId: user.id,
-                                    auctionHouseId: row.auctionHouseId,
-                                    relation: {
-                                        $in: [auctionHouseRelation.owner, auctionHouseRelation.manager],
-                                    },
-                                };
-                                return query;
-                            },
-                        },
-                    ],
+                    "#relation": {
+                    },
                     "#data": [
                         {
                             check: ({ user, row }) => {
@@ -572,7 +467,7 @@ const AUTH_MATRIX = {
                             },
                         }
                     ],
-                }
+                },
             ]
         },
         // [vendueAction.authGrant]: {
