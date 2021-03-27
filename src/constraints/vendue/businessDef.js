@@ -241,7 +241,9 @@ const paddleRefundDataAuthFn = (isSuperUser) => [
             }
             if (!isSuperUser) {
                 // 非超级用户只能申请线下退款
-                assert (!paymentMethod);
+                if (paymentMethod) {
+                    return new Error('普遍用户不能定义退款方式');
+                }
                 if (refundingDeposit > onlineDeposit) {
                     // 自主退款申请金额不能大于onlineDeposit
                     return ErrorCode.createErrorByCode(ErrorCode.errorLegalBodyError, '线上支付的金额不足以支付本次退款，请联系拍卖行申请线下退款');
