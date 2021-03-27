@@ -1888,7 +1888,7 @@ const AUTH_MATRIX = {
                         relations: [vendueRelation.worker, vendueRelation.manager, vendueRelation.owner],
                     },
                     '#data': paddleRefundDataAuth,
-                    'unexists': paddleRefundUnexistsAuth,
+                    '#unexists': paddleRefundUnexistsAuth,
                 },
                 {
                     "#relation": {
@@ -1896,7 +1896,7 @@ const AUTH_MATRIX = {
                         relations: [auctionHouseRelation.manager, auctionHouseRelation.owner],
                     },
                     '#data': paddleRefundDataAuth,
-                    'unexists': paddleRefundUnexistsAuth,
+                    '#unexists': paddleRefundUnexistsAuth,
                 },
                 {
                     '#exists': [
@@ -1913,7 +1913,7 @@ const AUTH_MATRIX = {
                         },
                     ],
                     '#data': paddleRefundDataAuth,
-                    'unexists': paddleRefundUnexistsAuth,
+                    '#unexists': paddleRefundUnexistsAuth,
                 }
             ]
         },
