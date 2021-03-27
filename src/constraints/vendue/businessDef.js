@@ -102,6 +102,8 @@ const {
 const {
     action: expressAction,
 } = require('../../constants/vendue/express');
+const ErrorCode = require('../../constants/errorCode');
+
 const ContractAuctionHouseWorkerExists = [
     {
         relation: 'userAuctionHouse',
@@ -222,6 +224,65 @@ const CollectionOwnerOrAuctionHouseWorker = {
         },
     ],
 };
+
+const paddleRefundDataAuth = [
+    {
+        check: ({ row, actionData, user }) => {
+            const { paddle, paymentMethod } = actionData;
+            const { refundingPrice, onlineDeposit } = paddle;
+            if (row.totalDeposit <= 0.01) {
+                return ErrorCode.createErrorByCode(ErrorCode.errorLegalBodyError, '没有可退的余额');
+            }
+            if (row.refundingPrice > 0) {
+                return ErrorCode.createErrorByCode(ErrorCode.errorLegalBodyError, '当前有其它正在进行中的退款');
+            }
+            if (row.totalDeposit < refundingPrice) {
+                return ErrorCode.createErrorByCode(ErrorCode.errorLegalBodyError, '退款余额过多');
+            }
+            if (!paymentMethod && refundingPrice > onlineDeposit) {
+                // 自主退款申请金额不能大于onlineDeposit
+                return ErrorCode.createErrorByCode(ErrorCode.errorLegalBodyError, '线上支付的金额不足以支付本次退款，请联系拍卖行申请线下退款');
+            }
+        },
+    },
+];
+
+const paddleRefundUnexistsAuth = [{
+    '#unexists': [
+        {
+            relation: 'bid',
+            condition: ({ row }) => {
+                return {
+                    paddleId: row.paddleId,
+                    state: {
+                        $in: [bidState.success, bidState.confirmed],
+                    },
+                    checkOutId: {
+                        $exists: false,
+                    },
+                };
+            },
+            message: '该号牌上有待进行结算的拍卖',
+        },
+        {
+            relation: 'bid',
+            condition: ({ row }) => {
+                return {
+                    paddleId: row.paddleId,
+                    state: {
+                        $in: [bidState.success, bidState.confirmed],
+                    },
+                    checkOut: {
+                        state: {
+                            $in: [checkOutState.unpaid, checkOutState.paying],
+                        },
+                    },
+                };
+            },
+            message: '该号牌上有待进行结算的拍卖',
+        },
+    ],
+}]
 
 const AUTH_MATRIX = {
     vendue: {
@@ -1778,9 +1839,10 @@ const AUTH_MATRIX = {
                             condition: ({ user, actionData }) => {
                                 return {
                                     userId: user.id,
-                                    vendueId: actionData.paddle.vendueId,
+                                    vendueId: actionData.paddle.vendueId,                                    
                                 }
                             },
+                            message: '用户已经申领过一个号牌',
                         },
                     ],
                 }
@@ -1825,12 +1887,16 @@ const AUTH_MATRIX = {
                         attr: 'vendue',
                         relations: [vendueRelation.worker, vendueRelation.manager, vendueRelation.owner],
                     },
+                    '#data': paddleRefundDataAuth,
+                    'unexists': paddleRefundUnexistsAuth,
                 },
                 {
                     "#relation": {
                         attr: 'vendue.auctionHouse',
                         relations: [auctionHouseRelation.manager, auctionHouseRelation.owner],
                     },
+                    '#data': paddleRefundDataAuth,
+                    'unexists': paddleRefundUnexistsAuth,
                 },
                 {
                     '#exists': [
@@ -1846,6 +1912,8 @@ const AUTH_MATRIX = {
                             },
                         },
                     ],
+                    '#data': paddleRefundDataAuth,
+                    'unexists': paddleRefundUnexistsAuth,
                 }
             ]
         },
@@ -2305,10 +2373,11 @@ const AUTH_MATRIX = {
                                 return {
                                     paddleId: checkOut.paddleId,
                                     state: {
-                                        $lt: checkOutState.legal,
+                                        $in: [checkOutState.unpaid, checkOutState.paying],
                                     },
                                 };
                             },
+                            message: '存在尚未完成的结算，请先完成或撤销',
                         },
                     ],
                 }
