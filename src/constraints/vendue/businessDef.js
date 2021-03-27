@@ -225,7 +225,7 @@ const CollectionOwnerOrAuctionHouseWorker = {
     ],
 };
 
-const paddleRefundDataAuth = [
+const paddleRefundDataAuthFn = (isSuperUser) => [
     {
         check: ({ row, actionData, user }) => {
             const { paddle, paymentMethod } = actionData;
@@ -239,9 +239,13 @@ const paddleRefundDataAuth = [
             if (row.availableDeposit < refundingDeposit) {
                 return ErrorCode.createErrorByCode(ErrorCode.errorLegalBodyError, '退款余额过多');
             }
-            if (!paymentMethod && refundingDeposit > onlineDeposit) {
-                // 自主退款申请金额不能大于onlineDeposit
-                return ErrorCode.createErrorByCode(ErrorCode.errorLegalBodyError, '线上支付的金额不足以支付本次退款，请联系拍卖行申请线下退款');
+            if (!isSuperUser) {
+                // 非超级用户只能申请线下退款
+                assert (!paymentMethod);
+                if (refundingDeposit > onlineDeposit) {
+                    // 自主退款申请金额不能大于onlineDeposit
+                    return ErrorCode.createErrorByCode(ErrorCode.errorLegalBodyError, '线上支付的金额不足以支付本次退款，请联系拍卖行申请线下退款');
+                }
             }
         },
     },
@@ -1780,7 +1784,7 @@ const AUTH_MATRIX = {
                         attr: 'vendue',
                         relations: [vendueRelation.worker, vendueRelation.manager, vendueRelation.owner],
                     },
-                    '#data': paddleRefundDataAuth,
+                    '#data': paddleRefundDataAuthFn(true),
                     '#unexists': paddleRefundUnexistsAuth,
                 },
                 {
@@ -1788,7 +1792,7 @@ const AUTH_MATRIX = {
                         attr: 'vendue.auctionHouse',
                         relations: [auctionHouseRelation.manager, auctionHouseRelation.owner],
                     },
-                    '#data': paddleRefundDataAuth,
+                    '#data': paddleRefundDataAuthFn(true),
                     '#unexists': paddleRefundUnexistsAuth,
                 },
                 {
@@ -1805,7 +1809,7 @@ const AUTH_MATRIX = {
                             },
                         },
                     ],
-                    '#data': paddleRefundDataAuth,
+                    '#data': paddleRefundDataAuthFn(false),
                     '#unexists': paddleRefundUnexistsAuth,
                 }
             ]
