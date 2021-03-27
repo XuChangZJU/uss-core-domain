@@ -253,7 +253,7 @@ const paddleRefundUnexistsAuth = [{
             relation: 'bid',
             condition: ({ row }) => {
                 return {
-                    paddleId: row.paddleId,
+                    paddleId: row.id,
                     state: {
                         $in: [bidState.success, bidState.confirmed],
                     },
@@ -268,7 +268,7 @@ const paddleRefundUnexistsAuth = [{
             relation: 'bid',
             condition: ({ row }) => {
                 return {
-                    paddleId: row.paddleId,
+                    paddleId: row.id,
                     state: {
                         $in: [bidState.success, bidState.confirmed],
                     },
