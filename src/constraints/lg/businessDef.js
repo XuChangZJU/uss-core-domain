@@ -20,6 +20,7 @@ const {
 
 const {
     action: shopAction,
+    state: shopState,
     relation: shopRelation,
     STATE_TRANS_MATRIX: SHOP_STATE_TRANS_MATRIX,
 } = require('../../constants/lg/shop');
@@ -920,12 +921,26 @@ const AUTH_MATRIX = {
                         attr: 'lgMall',
                         relations: [mallRelation.owner, mallRelation.manager],
                     },
+                    '#data': [
+                        {
+                            check: ({user, row}) => {
+                                return [shopState.offline].includes(row.state);
+                            },
+                        }
+                    ],
                 },
                 {
                     "#relation": {
                         attr: 'lgMall.lgDistrict',
                         relations: [districtRelation.owner, districtRelation.manager],
                     },
+                    '#data': [
+                        {
+                            check: ({user, row}) => {
+                                return [shopState.offline].includes(row.state);
+                            },
+                        }
+                    ],
                 },
             ],
         },
@@ -936,12 +951,26 @@ const AUTH_MATRIX = {
                         attr: 'lgMall',
                         relations: [mallRelation.owner, mallRelation.manager],
                     },
+                    '#data': [
+                        {
+                            check: ({user, row}) => {
+                                return [shopState.online].includes(row.state);
+                            },
+                        }
+                    ],
                 },
                 {
                     "#relation": {
                         attr: 'lgMall.lgDistrict',
                         relations: [districtRelation.owner, districtRelation.manager],
                     },
+                    '#data': [
+                        {
+                            check: ({user, row}) => {
+                                return [shopState.online].includes(row.state);
+                            },
+                        }
+                    ],
                 },
             ],
         },
