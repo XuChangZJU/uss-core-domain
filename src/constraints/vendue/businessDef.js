@@ -103,6 +103,7 @@ const {
     action: expressAction,
 } = require('../../constants/vendue/express');
 const ErrorCode = require('../../constants/errorCode');
+const { Roles } = require('../../constants/roleConstant2');
 
 const ContractAuctionHouseWorkerExists = [
     {
@@ -169,6 +170,36 @@ const AnyAuctionHouseWorker = {
         },
     ],
 };
+
+const CheckContractDataState = (states, msg) =>  [
+    {
+        check: ({ row }) => {
+            if (!states.includes(row.data)) {
+                return ErrorCode.createErrorByCode(ErrorCode.errorDataInconsistency, msg, {
+                    name: relation,
+                    operation: 'update',
+                    data: row,
+                })
+            }
+        },
+    },
+];
+
+const CheckContractAuctionInactive = (message) => [
+    {
+        relation: 'auction',
+        condition: ({ row, actionData }) => {
+            const { id } = row;
+            return {
+                contractId: id,
+                state: {
+                    $gt: auctionState.ongoing,
+                },
+            };
+        },
+        message,
+    },
+];
 
 const CollectionOwnerOrAuctionHouseWorker = {
     auths: [
@@ -1465,23 +1496,8 @@ const AUTH_MATRIX = {
         [auctionAction.remove]: {
             auths: [
                 {
-                    "#relation": {
-                        attr: 'session',
-                        relations: [sessionRelation.manager, sessionRelation.auctioneer, sessionRelation.owner],
-                    },
+                    "#roles": [Roles.ROOT.name],        // auction的remove必须从删除合同触发
                 },
-                {
-                    "#relation": {
-                        attr: 'session.vendue',
-                        relations: [vendueRelation.manager, vendueRelation.owner],
-                    },
-                },
-                {
-                    "#relation": {
-                        attr: 'session.vendue.auctionHouse',
-                        relations: [auctionHouseRelation.manager, auctionHouseRelation.owner],
-                    },
-                }
             ]
         },
         [auctionAction.assign]: AllowEveryoneAuth,
@@ -1991,44 +2007,76 @@ const AUTH_MATRIX = {
     contract: {
         [contractAction.create]: AnyAuctionHouseWorker,
         [contractAction.update]: {
+            auths: [                
+                {
+                    "#relation": {
+                    },
+                    '#data': CheckContractDataState([contractState.convertible, contractState.contracted], '合同当前状态不允许更新'),
+                },
+                {
+                    "#relation": {
+                        attr: 'actionHouse',
+                    },
+                    '#data': CheckContractDataState([contractState.convertible, contractState.contracted], '合同当前状态不允许更新'),
+                },
+            ],
+        },
+        [contractAction.changePrice]: {
             auths: [
                 {
-                    '#exists': ContractAuctionHouseWorkerExists,
+                    "#relation": {
+                        attr: 'actionHouse',
+                    },
+                    '#data': CheckContractDataState([contractState.convertible, contractState.contracted], '合同当前状态不允许改价'),
                 },
             ],
         },
         [contractAction.remove]: {
             auths: [
                 {
-                    '#exists': ContractAuctionHouseWorkerExists,
+                    "#relation": {
+                        attr: 'actionHouse',
+                    },
+                    '#data': CheckContractDataState([contractState.contracted], '合同当前状态不允许删除'),
+                    '#unexisted': CheckContractAuctionInactive('拍卖已经开始，无法删除'),
+                },
+            ],
+        },
+        [contractAction.pay]: {
+            auths: [
+                {
+                    '#data': CheckContractDataState([contractState.contracted], '当前状态无法支付成功'),
                 },
             ],
         },
         [contractAction.complete]: {
             auths: [
                 {
-                    '#exists': ContractAuctionHouseWorkerExists,
-                    '#data': [
-                        {
-                            check: ({ row }) => {
-                                return row.state === contractState.legal;
-                            },
-                        },
-                    ],
+                    "#relation": {
+                        attr: 'actionHouse',
+                    },
+                    '#data': CheckContractDataState([contractState.convertible], '当前状态无法结算'),
+                },
+            ],
+        },
+        [contractAction.cancel]: {
+            auths: [
+                {
+                    "#relation": {
+                        attr: 'actionHouse',
+                    },
+                    '#data': CheckContractDataState([contractState.contracted], '当前状态无法取消'),
+                    '#unexisted': CheckContractAuctionInactive('拍卖已经开始，无法取消'),
                 },
             ],
         },
         [contractAction.abort]: {
             auths: [
                 {
-                    '#exists': ContractAuctionHouseWorkerExists,
-                    '#data': [
-                        {
-                            check: ({ row }) => {
-                                return row.state === contractState.legal;
-                            },
-                        },
-                    ],
+                    "#relation": {
+                    },
+                    '#data': CheckContractDataState([contractState.contracted], '当前状态无法中止'),
+                    '#unexisted': CheckContractAuctionInactive('拍卖已经开始，无法中止'),
                 },
             ],
         },
