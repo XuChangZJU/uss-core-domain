@@ -104,7 +104,13 @@ const {
     action: expressAction,
     state: expressState,
 } = require('../../constants/lg/express');
+const {
+    action: serviceAction,
+} = require('../../constants/lg/service');
 const AUTH_MATRIX = {
+    lgService: {
+        [serviceAction.create]: AllowEveryoneAuth,
+    },
     lgShopSpecies: {
         [shopSpeciesAction.create]: {
             auths: [
