@@ -166,7 +166,14 @@ const AUTH_MATRIX = {
                                 }
                             }
                         }
-                    ]
+                    ],
+                    '#data': [                 // 表示对现有对象或者用户的数据有要求，可以有多项，每项之间是AND的关系
+                        {
+                            check: ({user, row}) => {
+                                return [TradeState.legal, TradeState.legal2].includes(row.state) && row.price > 0 && [tradeBillState.noBill, tradeBillState.pending].includes(row.billState);
+                            },
+                        }
+                    ],
                 },
                 {
                     '#relation': {
@@ -195,7 +202,14 @@ const AUTH_MATRIX = {
                                 }
                             }
                         }
-                    ]
+                    ],
+                    '#data': [                 // 表示对现有对象或者用户的数据有要求，可以有多项，每项之间是AND的关系
+                        {
+                            check: ({user, row}) => {
+                                return row.billState === tradeBillState.pending;
+                            },
+                        }
+                    ],
                 },
                 {
                     '#relation': {
@@ -224,7 +238,14 @@ const AUTH_MATRIX = {
                                 }
                             }
                         }
-                    ]
+                    ],
+                    '#data': [                 // 表示对现有对象或者用户的数据有要求，可以有多项，每项之间是AND的关系
+                        {
+                            check: ({user, row}) => {
+                                return [TradeState.legal, TradeState.legal2, TradeState.refunded, TradeState.abandoned].includes(row.state);
+                            },
+                        }
+                    ],
                 },
                 {
                     '#relation': {
@@ -253,7 +274,14 @@ const AUTH_MATRIX = {
                                 }
                             }
                         }
-                    ]
+                    ],
+                    '#data': [                 // 表示对现有对象或者用户的数据有要求，可以有多项，每项之间是AND的关系
+                        {
+                            check: ({user, row}) => {
+                                return [TradeTransportState.checkInQueue].includes(row.transportState);
+                            },
+                        }
+                    ],
                 },
                 {
                     '#relation': {
@@ -294,7 +322,14 @@ const AUTH_MATRIX = {
                                 }
                             }
                         }
-                    ]
+                    ],
+                    '#data': [                 // 表示对现有对象或者用户的数据有要求，可以有多项，每项之间是AND的关系
+                        {
+                            check: ({user, row}) => {
+                                return [TradeTransportState.checkInQueue].includes(row.transportState);
+                            },
+                        }
+                    ],
                 },
                 {
                     '#relation': {
@@ -347,7 +382,14 @@ const AUTH_MATRIX = {
                                 }
                             }
                         }
-                    ]
+                    ],
+                    '#data': [                 // 表示对现有对象或者用户的数据有要求，可以有多项，每项之间是AND的关系
+                        {
+                            check: ({user, row}) => {
+                                return [TradeTransportState.wdd, TradeTransportState.yqj].includes(row.transportState) && TradeState.legal2 === row.state;
+                            },
+                        }
+                    ],
                 },
                 {
                     '#relation': {
@@ -431,7 +473,14 @@ const AUTH_MATRIX = {
                                 }
                             }
                         }
-                    ]
+                    ],
+                    '#data': [                 // 表示对现有对象或者用户的数据有要求，可以有多项，每项之间是AND的关系
+                        {
+                            check: ({user, row}) => {
+                                return [TradeTransportState.wdd, TradeTransportState.dqj, TradeTransportState.yqj].includes(row.transportState);
+                            },
+                        }
+                    ],
                 },
                 {
                     "#relation": {
@@ -520,7 +569,14 @@ const AUTH_MATRIX = {
                                 }
                             }
                         }
-                    ]
+                    ],
+                    '#data': [                 // 表示对现有对象或者用户的数据有要求，可以有多项，每项之间是AND的关系
+                        {
+                            check: ({user, row}) => {
+                                return [TradeTransportState.dqj].includes(row.transportState) && row.getMethod === TradeGetMethod.helpYourself && [TradeState.legal, TradeState.legal2].includes(row.state);
+                            },
+                        }
+                    ],
                 },
                 {
                     "#relation": {
@@ -548,7 +604,14 @@ const AUTH_MATRIX = {
                                 }
                             }
                         }
-                    ]
+                    ],
+                    '#data': [                 // 表示对现有对象或者用户的数据有要求，可以有多项，每项之间是AND的关系
+                        {
+                            check: ({user, row}) => {
+                                return [TradeTransportState.wdd].includes(row.transportState) && row.getMethod === TradeGetMethod.helpYourself && [TradeState.legal, TradeState.legal2].includes(row.state);
+                            },
+                        }
+                    ],
                 },
                 {
                     "#relation": {
@@ -576,7 +639,14 @@ const AUTH_MATRIX = {
                                 }
                             }
                         }
-                    ]
+                    ],
+                    '#data': [                 // 表示对现有对象或者用户的数据有要求，可以有多项，每项之间是AND的关系
+                        {
+                            check: ({user, row}) => {
+                                return [TradeTransportState.wdd, TradeTransportState.dqj].includes(row.transportState) && row.getMethod === TradeGetMethod.express && [TradeState.legal, TradeState.legal2].includes(row.state);
+                            },
+                        }
+                    ],
                 },
                 {
                     "#relation": {
@@ -604,7 +674,14 @@ const AUTH_MATRIX = {
                                 }
                             }
                         }
-                    ]
+                    ],
+                    '#data': [                 // 表示对现有对象或者用户的数据有要求，可以有多项，每项之间是AND的关系
+                        {
+                            check: ({user, row}) => {
+                                return [TradeTransportState.yfh].includes(row.transportState) && row.getMethod === TradeGetMethod.express && [TradeState.legal, TradeState.legal2].includes(row.state);
+                            },
+                        }
+                    ],
                 },
                 {
                     "#relation": {
@@ -632,7 +709,14 @@ const AUTH_MATRIX = {
                                 }
                             }
                         }
-                    ]
+                    ],
+                    '#data': [                 // 表示对现有对象或者用户的数据有要求，可以有多项，每项之间是AND的关系
+                        {
+                            check: ({user, row}) => {
+                                return [TradeTransportState.dgkqr].includes(row.transportState) && row.getMethod === TradeGetMethod.helpYourself && [TradeState.legal, TradeState.legal2].includes(row.state);
+                            },
+                        }
+                    ],
                 },
                 {
                     "#relation": {
