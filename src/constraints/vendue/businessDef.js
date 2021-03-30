@@ -23,6 +23,7 @@ const {
     state: checkOutState,
     transportState: checkOutTransportState,
     STATE_TRAN_MATRIX: CHECKOUT_STATE_TRAN_MATRIX,
+    decodeAction: decodeCheckOutAction,
 } = require('../../constants/vendue/checkOut');
 const {
     action: cashInAction,
@@ -136,6 +137,146 @@ const StockAuctionHouseWorkerExists = [
     },
 ];
 
+const AuctionDataCheck = (states, msg) => [
+    {
+        check: ({ actionData, row }) => {
+            const { auction } = actionData;
+            if (auction.biddingSchema) {
+                auction.biddingSchema.forEach(
+                    (ele, index) => {
+                        if (ele.type >= 3) {
+                            return ErrorCode.createErrorByCode(ErrorCode.errorLegalParamError, '目前仅支持顺序递增和258拍');
+                        }
+                        if (ele.type === 1 && ele.step && !((ele.max - ele.min) > ele.step)) {
+                            return ErrorCode.createErrorByCode(ErrorCode.errorLegalParamError, '设置的步长过大');
+                        }
+                        if (index > 0) {
+                            if (ele.min !== auction.biddingSchema[index - 1].max) {
+                                return ErrorCode.createErrorByCode(ErrorCode.errorLegalParamError, `第${index}条的最小值与上一条最大值不同`);
+                            }
+                        }
+                    }
+                );
+            }
+            if (states) {
+                assert(row);
+
+                if (states.includes(row.state)) {
+                    return ErrorCode.createErrorByCode(ErrorCode.errorDataInconsistency, msg, {
+                        name: 'auction',
+                        operation: 'update',
+                        data: row,
+                    });
+                }
+            }
+        },
+    }
+];
+
+const AuctionGeneralChangeStateControl = (state, msg) => ({
+    auths: [
+        {
+            '#relation': {
+                attr: 'session',
+                relation: [sessionRelation.owner],
+            },
+            '#data': AuctionDataCheck(state, msg),
+        },
+        {
+            '#relation': {
+                attr: 'session.vendue',
+            },
+            '#data': AuctionDataCheck(state, msg),
+        },
+        {
+            '#relation': {
+                attr: 'session.vendue.auctionHouse',
+            },
+            '#data': AuctionDataCheck(state, msg),
+        },
+    ],
+});
+
+const AuctionExistsSession = [
+    {
+        relation: 'session',
+        condition: ({ actionData }) => {
+            const { auction } = actionData;
+            const query = {
+                id: auction.sessionId,
+                state: {
+                    $in: [
+                        sessionState.preparing,
+                        sessionState.ready,
+                        sessionState.ongoing,
+                    ],
+                },
+            };
+            return query;
+        },
+    },
+];
+
+const AuctionCreateControl = {
+    auths: [
+        {
+            '#relation': {
+                attr: 'session',
+                relation: [sessionRelation.owner],
+            },
+            '#exists': AuctionExistsSession,
+        },
+        {
+            '#relation': {
+                attr: 'session.vendue',
+            },
+            '#exists': AuctionExistsSession,
+        },
+        {
+            '#relation': {
+                attr: 'session.vendue.auctionHouse',
+            },
+            '#exists': AuctionExistsSession,
+        },
+    ],
+};
+
+const AuctionUnexistsBid = [
+    {
+        relation: 'bid',
+        condition: ({ row }) => {
+            return {
+                auctionId: row.id,
+            };
+        },
+        message: '该拍品上已经有人出价',
+    },
+];
+
+const AuctionCheckBidUnexistedControl = {
+    auths: [
+        {
+            '#relation': {
+                attr: 'session',
+                relation: [sessionRelation.owner],
+            },
+            '#unexists': AuctionUnexistsBid,
+        },
+        {
+            '#relation': {
+                attr: 'session.vendue',
+            },
+            '#unexists': AuctionUnexistsBid,
+        },
+        {
+            '#relation': {
+                attr: 'session.vendue.auctionHouse',
+            },
+            '#unexists': AuctionUnexistsBid,
+        },
+    ],
+}
+
 const AuctionHouseOwnerAndmanagerExists = [
     {
         relation: 'userAuctionHouse',
@@ -171,15 +312,15 @@ const AnyAuctionHouseWorker = {
     ],
 };
 
-const CheckContractDataState = (states, msg) =>  [
+const CheckContractDataState = (states, msg) => [
     {
         check: ({ row }) => {
             if (!states.includes(row.data)) {
                 return ErrorCode.createErrorByCode(ErrorCode.errorDataInconsistency, msg, {
-                    name: relation,
+                    name: 'contract',
                     operation: 'update',
                     data: row,
-                })
+                });
             }
         },
     },
@@ -200,6 +341,67 @@ const CheckContractAuctionInactive = (message) => [
         message,
     },
 ];
+
+const BidGeneralUpdateControl = (states) => ({
+    auths: [
+        {
+            "#relation": {
+                attr: 'auction.session',
+                relations: [sessionRelation.manager, sessionRelation.auctioneer, sessionRelation.owner],
+            },
+            '#data': [
+                {
+                    check: ({ row }) => {
+                        return states.includes(row.state);
+                    },
+                },
+            ],
+        },
+        {
+            "#relation": {
+                attr: 'auction.session.vendue',
+                relations: [vendueRelation.manager, vendueRelation.owner],
+            },
+            '#data': [
+                {
+                    check: ({ row }) => {
+                        return states.includes(row.state);
+                    },
+                },
+            ],
+        },
+        {
+            "#relation": {
+                attr: 'auction.session.vendue.auctionHouse',
+                relations: [auctionHouseRelation.manager, auctionHouseRelation.owner],
+            },
+            '#data': [
+                {
+                    check: ({ row }) => {
+                        return states.includes(row.state);
+                    },
+                },
+            ],
+        }
+    ]
+});
+
+const DepositExistsPaddleVendue = {
+    relation: 'paddle',
+    needData: true,
+    condition: ({ actionData }) => {
+        const { deposit } = actionData;
+        const { paddleId } = deposit;
+        return {
+            id: paddleId,
+            vendue: {
+                state: {
+                    $in: [vendueState.ready, vendueState.ongoing],
+                },
+            },
+        };
+    },
+};
 
 const CollectionOwnerOrAuctionHouseWorker = {
     auths: [
@@ -256,7 +458,7 @@ const CollectionOwnerOrAuctionHouseWorker = {
     ],
 };
 
-const paddleRefundDataAuthFn = (isSuperUser) => [
+const paddleRefundDataCheck = (isSuperUser) => [
     {
         check: ({ row, actionData, user }) => {
             const { paddle, paymentMethod } = actionData;
@@ -319,6 +521,94 @@ const paddleRefundUnexistsAuth = [
         message: '该号牌上有待进行结算的拍卖',
     },
 ];
+
+const CheckOutCheckDataFn = (action, states, transportStates) => ({
+    check: ({ row }) => {
+        if (transportStates && transportStates.includes(row.transportState)) {
+            return ErrorCode.createErrorByCode(ErrorCode.errorDataInconsistency,
+                `当前物流状态不支持${decodeCheckOutAction(action)}操作`, {
+                name: 'checkOut',
+                operation: 'update',
+                data: row,
+            });
+        };
+        if (states && states.includes(row.state)) {
+            return ErrorCode.createErrorByCode(ErrorCode.errorDataInconsistency,
+                `当前状态不支持${decodeCheckOutAction(action)}操作`, {
+                name: 'checkOut',
+                operation: 'update',
+                data: row,
+            });
+        };
+
+        return true;
+    },
+});
+
+const CheckOutGuestCheckFn = (action, states, transportStates) => ({
+    '#exists': [
+        {
+            relation: 'paddle',
+            condition: ({ user, row, roleName }) => {
+                const query = {
+                    id: row.paddleId,
+                };
+                if (roleName !== Roles.ROOT.name) {
+                    assign(query, {
+                        userId: user.id,
+                    });
+                }
+                return query;
+            },
+        },
+    ],
+    '#data': [
+        CheckOutCheckDataFn(action, states, transportStates),
+    ],
+});
+
+const CheckOutVendueWorkerCheckFn = (action, states, transportStates) => ({
+    "#relation": {
+        attr: 'paddle.vendue.auctionHouse',
+        relations: [auctionHouseRelation.manager, auctionHouseRelation.settler, auctionHouseRelation.owner],
+    },
+    '#data': [
+        CheckOutCheckDataFn(action, states, transportStates),
+    ],
+});
+
+const CheckOutVendueAuctionHouseWorkerCheckFn = (action, states, transportStates) => ({
+    "#relation": {
+        attr: 'paddle.vendue.auctionHouse',
+        relations: [auctionHouseRelation.manager, auctionHouseRelation.settler, auctionHouseRelation.owner],
+    },
+    '#data': [
+        CheckOutCheckDataFn(action, states, transportStates),
+    ],
+});
+
+const LicenseOperationControl = {
+    auths: [
+        {
+            "#relation": {
+                attr: 'session',
+                relations: [sessionRelation.owner, sessionRelation.manager],
+            },
+        },
+        {
+            "#relation": {
+                attr: 'session.vendue',
+                relations: [vendueRelation.owner, vendueRelation.manager],
+            },
+        },
+        {
+            "#relation": {
+                attr: 'session.vendue.auctionHouse',
+                relations: [auctionHouseRelation.owner, auctionHouseRelation.manager, auctionHouseRelation.settler],
+            },
+        }
+    ]
+};
 
 const AUTH_MATRIX = {
     vendue: {
@@ -1122,384 +1412,13 @@ const AUTH_MATRIX = {
         }
     },
     auction: {
-        [auctionAction.create]: {
-            auths: [
-                {
-                    "exists": [
-                        {
-                            relation: 'userSession',
-                            needData: true,
-                            condition: ({ user, actionData }) => {
-                                const { auction } = actionData
-                                if (auction.biddingSchema) {
-                                    auction.biddingSchema.forEach(
-                                        (ele, index) => {
-                                            assert(ele.type < 3, '目前仅支持顺序递增和258拍');
-                                            if (ele.type === 1 && ele.step)
-                                                assert((ele.max - ele.min) > ele.step, '设置的步长过大');
-                                            if (index > 0) {
-                                                if (ele.min !== auction.biddingSchema[index - 1].max) {
-                                                    throw ErrorCode.createErrorByCode(ErrorCode.errorLegalParamError, `第${index}条的最小值与上一条最大值不同`);
-                                                }
-                                            }
-                                        }
-                                    );
-                                }
-                                return {
-                                    userId: user.id,
-                                    sessionId: auction.sessionId,
-                                    relation: {
-                                        $exists: true,
-                                    },
-                                };
-                            }
-                        },
-                    ]
-                },
-                {
-                    "exists": [
-                        {
-                            relation: 'userVendue',
-                            needData: true,
-                            condition: ({ user, actionData }) => {
-                                const { auction } = actionData;
-                                return {
-                                    userId: user.id,
-                                    vendueId: auction.session.vendueId,
-                                    relation: {
-                                        $in: [vendueRelation.manager, vendueRelation.owner],
-                                    },
-                                };
-                            }
-                        },
-                    ]
-                },
-                {
-                    "exists": [
-                        {
-                            relation: 'userAuctionHouse',
-                            needData: true,
-                            condition: ({ user, actionData }) => {
-                                const { auction } = actionData;
-                                return {
-                                    userId: user.id,
-                                    auctionHouseId: auction.session.vendue.auctionHouseId,
-                                    relation: {
-                                        $in: [auctionHouseRelation.manager, auctionHouseRelation.owner],
-                                    },
-                                };
-                            }
-                        },
-                    ]
-                },
-            ]
-        },
-        // [auctionAction.cancel]: {
-        //     auths: [
-        //         {
-        //             "#relation": {
-        //             },
-        //             '#data': [
-        //                 {
-        //                     check: ({user, row}) => {
-        //                         return [auctionState.preparing, auctionState.ready, auctionState.ongoing, auctionState.pausing].includes(row.state);
-        //                     },
-        //                 }
-        //             ],
-        //         },
-        //         {
-        //             "#relation": {
-        //                 attr: 'session',
-        //                 relations: [sessionRelation.manager],
-        //             },
-        //             '#data': [
-        //                 {
-        //                     check: ({user, row}) => {
-        //                         return [auctionState.preparing, auctionState.ready, auctionState.ongoing, auctionState.pausing].includes(row.state);
-        //                     },
-        //                 }
-        //             ],
-        //         },
-        //         {
-        //             "#relation": {
-        //                 attr: 'session.vendue',
-        //                 relations: [vendueRelation.manager],
-        //             },
-        //             '#data': [
-        //                 {
-        //                     check: ({user, row}) => {
-        //                         return [auctionState.preparing, auctionState.ready, auctionState.ongoing, auctionState.pausing].includes(row.state);
-        //                     },
-        //                 }
-        //             ],
-        //         },
-        //         {
-        //             "#relation": {
-        //                 attr: 'session.vendue.auctionHouse',
-        //                 relations: [auctionHouseRelation.manager],
-        //             },
-        //             '#data': [
-        //                 {
-        //                     check: ({user, row}) => {
-        //                         return [auctionState.preparing, auctionState.ready, auctionState.ongoing, auctionState.pausing].includes(row.state);
-        //                     },
-        //                 }
-        //             ],
-        //         }
-        //     ]
-        // },
-        [auctionAction.update]: {
-            auths: [
-                {
-                    "#relation": {
-                    }
-                },
-                {
-                    "#relation": {
-                        attr: 'session',
-                        relations: [sessionRelation.manager, sessionRelation.auctioneer],
-                    },
-                },
-                {
-                    "#relation": {
-                        attr: 'session.vendue',
-                        relations: [vendueRelation.manager, vendueRelation.owner],
-                    },
-                },
-                {
-                    "#relation": {
-                        attr: 'session.vendue.auctionHouse',
-                        relations: [auctionHouseRelation.manager, auctionHouseRelation.owner],
-                    },
-                }
-            ]
-        },
-        [auctionAction.ready]: {
-            auths: [
-                {
-                    "#relation": {
-                    },
-                    '#data': [
-                        {
-                            check: ({ user, row }) => {
-                                return row.state === auctionState.preparing;
-                            },
-                        }
-                    ],
-                },
-                {
-                    "#relation": {
-                        attr: 'session',
-                        relations: [sessionRelation.manager, sessionRelation.owner],
-                    },
-                    '#data': [
-                        {
-                            check: ({ user, row }) => {
-                                return row.state === auctionState.preparing;
-                            },
-                        }
-                    ],
-                },
-                {
-                    "#relation": {
-                        attr: 'session.vendue',
-                        relations: [vendueRelation.manager, vendueRelation.owner],
-                    },
-                    '#data': [
-                        {
-                            check: ({ user, row }) => {
-                                return row.state === auctionState.preparing;
-                            },
-                        }
-                    ],
-                },
-                {
-                    "#relation": {
-                        attr: 'session.vendue.auctionHouse',
-                        relations: [auctionHouseRelation.manager, auctionHouseRelation.owner],
-                    },
-                    '#data': [
-                        {
-                            check: ({ user, row }) => {
-                                return row.state === auctionState.preparing;
-                            },
-                        }
-                    ],
-                }
-            ]
-        },
-        [auctionAction.start]: {
-            auths: [
-                {
-                    "#relation": {
-                        attr: 'session',
-                        relations: [sessionRelation.manager, sessionRelation.auctioneer, sessionRelation.owner],
-                    },
-                },
-                {
-                    "#relation": {
-                        attr: 'session.vendue',
-                        relations: [vendueRelation.manager, vendueRelation.owner],
-                    },
-                    // '#data': [
-                    //     {
-                    //         check: ({user, row}) => {
-                    //             return [auctionState.ready, auctionState.pausing, auctionState.unsold].includes(row.state);
-                    //         },
-                    //     }
-                    // ],
-                },
-                {
-                    "#relation": {
-                        attr: 'session.vendue.auctionHouse',
-                        relations: [auctionHouseRelation.manager, auctionHouseRelation.owner],
-                    },
-                    // '#data': [
-                    //     {
-                    //         check: ({user, row}) => {
-                    //             return [auctionState.ready, auctionState.pausing, auctionState.unsold].includes(row.state);
-                    //         },
-                    //     }
-                    // ],
-                }
-            ]
-        },
-        [auctionAction.sold]: {
-            auths: [
-                {
-                    "#relation": {
-                        attr: 'session',
-                        relations: [sessionRelation.manager, sessionRelation.auctioneer, sessionRelation.owner],
-                    },
-                    '#data': [
-                        {
-                            check: ({ user, row }) => {
-                                return row.state === auctionState.ongoing;
-                            },
-                        }
-                    ],
-                },
-                {
-                    "#relation": {
-                        attr: 'session.vendue',
-                        relations: [vendueRelation.manager, vendueRelation.owner],
-                    },
-                    '#data': [
-                        {
-                            check: ({ user, row }) => {
-                                return row.state === auctionState.ongoing;
-                            },
-                        }
-                    ],
-                },
-                {
-                    "#relation": {
-                        attr: 'session.vendue.auctionHouse',
-                        relations: [auctionHouseRelation.manager, auctionHouseRelation.owner],
-                    },
-                    '#data': [
-                        {
-                            check: ({ user, row }) => {
-                                return row.state === auctionState.ongoing;
-                            },
-                        }
-                    ],
-                }
-            ]
-        },
-        [auctionAction.unsold]: {
-            auths: [
-                {
-                    "#relation": {
-                        attr: 'session',
-                        relations: [sessionRelation.manager, sessionRelation.auctioneer, sessionRelation.owner],
-                    },
-                    '#data': [
-                        {
-                            check: ({ user, row }) => {
-                                return row.state === auctionState.ongoing;
-                            },
-                        }
-                    ],
-                },
-                {
-                    "#relation": {
-                        attr: 'session.vendue',
-                        relations: [vendueRelation.manager, vendueRelation.owner],
-                    },
-                    '#data': [
-                        {
-                            check: ({ user, row }) => {
-                                return row.state === auctionState.ongoing;
-                            },
-                        }
-                    ],
-                },
-                {
-                    "#relation": {
-                        attr: 'session.vendue.auctionHouse',
-                        relations: [auctionHouseRelation.manager, auctionHouseRelation.owner],
-                    },
-                    '#data': [
-                        {
-                            check: ({ user, row }) => {
-                                return row.state === auctionState.ongoing;
-                            },
-                        }
-                    ],
-                }
-            ]
-        },
-        // [auctionAction.pause]: {
-        //     auths: [
-        //         {
-        //             "#relation": {
-        //                 attr: 'session',
-        //                 relations: [sessionRelation.manager, sessionRelation.auctioneer],
-        //             },
-        //             '#data': [
-        //                 {
-        //                     check: ({user, row}) => {
-        //                         return row.state === auctionState.ongoing;
-        //                     },
-        //                 }
-        //             ],
-        //         },
-        //         {
-        //             "#relation": {
-        //                 attr: 'session.vendue',
-        //                 relations: [vendueRelation.manager],
-        //             },
-        //             '#data': [
-        //                 {
-        //                     check: ({user, row}) => {
-        //                         return row.state === auctionState.ongoing;
-        //                     },
-        //                 }
-        //             ],
-        //         },
-        //         {
-        //             "#relation": {
-        //                 attr: 'session.vendue.auctionHouse',
-        //                 relations: [auctionHouseRelation.manager],
-        //             },
-        //             '#data': [
-        //                 {
-        //                     check: ({user, row}) => {
-        //                         return row.state === auctionState.ongoing;
-        //                     },
-        //                 }
-        //             ],
-        //         }
-        //     ]
-        // },
-        [auctionAction.remove]: {
-            auths: [
-                {
-                    "#roles": [Roles.ROOT.name],        // auction的remove必须从删除合同触发
-                },
-            ]
-        },
+        [auctionAction.create]: AuctionCreateControl,
+        [auctionAction.update]: AuctionCheckBidUnexistedControl,
+        [auctionAction.ready]: AuctionGeneralChangeStateControl([auctionState.preparing], '非准备状态的展品不能就绪'),
+        [auctionAction.start]: AuctionGeneralChangeStateControl([auctionState.ready, auctionState.unsold], '非就绪和未成交状态的展品不能进入拍卖'),
+        [auctionAction.sold]: AuctionGeneralChangeStateControl([auctionState.ongoing], '非拍卖状态的展品不能成交'),
+        [auctionAction.unsold]: AuctionGeneralChangeStateControl([auctionState.ongoing], '非拍卖状态的展品不能流拍'),
+        [auctionAction.remove]: AuctionCheckBidUnexistedControl,
         [auctionAction.assign]: AllowEveryoneAuth,
         [auctionAction.authRevoke]: AllowEveryoneAuth,
     },
@@ -1531,20 +1450,22 @@ const AUTH_MATRIX = {
                             },
                         },
                     ],
-                }
-            ]
-        },
-        [bidAction.success]: {
-            auths: [
+                },
                 {
                     "#relation": {
                         attr: 'auction.session',
                         relations: [sessionRelation.manager, sessionRelation.auctioneer, sessionRelation.owner],
                     },
-                    '#data': [
+                    '#exists': [
                         {
-                            check: ({ row }) => {
-                                return row.state === bidState.bidding;
+                            relation: 'auction',
+                            needData: true,
+                            condition: ({ user, actionData }) => {
+                                const { bid } = actionData;
+                                return {
+                                    id: bid.auctionId,
+                                    state: auctionState.ongoing,
+                                };
                             },
                         },
                     ],
@@ -1554,10 +1475,16 @@ const AUTH_MATRIX = {
                         attr: 'auction.session.vendue',
                         relations: [vendueRelation.manager, vendueRelation.owner],
                     },
-                    '#data': [
+                    '#exists': [
                         {
-                            check: ({ row }) => {
-                                return row.state === bidState.bidding;
+                            relation: 'auction',
+                            needData: true,
+                            condition: ({ actionData }) => {
+                                const { bid } = actionData;
+                                return {
+                                    id: bid.auctionId,
+                                    state: auctionState.ongoing,
+                                };
                             },
                         },
                     ],
@@ -1567,168 +1494,28 @@ const AUTH_MATRIX = {
                         attr: 'auction.session.vendue.auctionHouse',
                         relations: [auctionHouseRelation.manager, auctionHouseRelation.owner],
                     },
-                    '#data': [
+                    '#exists': [
                         {
-                            check: ({ row }) => {
-                                return row.state === bidState.bidding;
+                            relation: 'auction',
+                            needData: true,
+                            condition: ({ actionData }) => {
+                                const { bid } = actionData;
+                                return {
+                                    id: bid.auctionId,
+                                    state: auctionState.ongoing,
+                                };
                             },
                         },
                     ],
                 }
-            ]
+            ],
         },
-        [bidAction.remove]: {
-            auths: [
-                {
-                    "#relation": {
-                        attr: 'auction.session',
-                        relations: [sessionRelation.manager, sessionRelation.auctioneer, sessionRelation.owner],
-                    },
-                },
-                {
-                    "#relation": {
-                        attr: 'auction.session.vendue',
-                        relations: [vendueRelation.manager, vendueRelation.owner],
-                    },
-                },
-                {
-                    "#relation": {
-                        attr: 'auction.session.vendue.auctionHouse',
-                        relations: [auctionHouseRelation.manager, auctionHouseRelation.owner],
-                    },
-                }
-            ]
-        },
-        [bidAction.update]: {
-            auths: [
-                {
-                    "#relation": {
-                        attr: 'auction.session',
-                        relations: [sessionRelation.manager, sessionRelation.auctioneer, sessionRelation.owner],
-                    },
-                },
-                {
-                    "#relation": {
-                        attr: 'auction.session.vendue',
-                        relations: [vendueRelation.manager, vendueRelation.owner],
-                    },
-                },
-                {
-                    "#relation": {
-                        attr: 'auction.session.vendue.auctionHouse',
-                        relations: [auctionHouseRelation.manager, auctionHouseRelation.owner],
-                    },
-                }
-            ]
-        },
-        [bidAction.changePrice]: {
-            auths: [
-                {
-                    "#relation": {
-                        attr: 'auction.session',
-                        relations: [sessionRelation.manager, sessionRelation.auctioneer, sessionRelation.owner],
-                    },
-                },
-                {
-                    "#relation": {
-                        attr: 'auction.session.vendue',
-                        relations: [vendueRelation.manager, vendueRelation.owner],
-                    },
-                },
-                {
-                    "#relation": {
-                        attr: 'auction.session.vendue.auctionHouse',
-                        relations: [auctionHouseRelation.manager, auctionHouseRelation.owner],
-                    },
-                }
-            ]
-        },
-        [bidAction.confirm]: {
-            auths: [
-                {
-                    "#relation": {
-                        attr: 'auction.session',
-                        relations: [sessionRelation.manager, sessionRelation.auctioneer, sessionRelation.owner],
-                    },
-                    '#data': [
-                        {
-                            check: ({ row }) => {
-                                return row.state === bidState.success;
-                            },
-                        },
-                    ],
-                },
-                {
-                    "#relation": {
-                        attr: 'auction.session.vendue',
-                        relations: [vendueRelation.manager, vendueRelation.owner],
-                    },
-                    '#data': [
-                        {
-                            check: ({ row }) => {
-                                return row.state === bidState.success;
-                            },
-                        },
-                    ],
-                },
-                {
-                    "#relation": {
-                        attr: 'auction.session.vendue.auctionHouse',
-                        relations: [auctionHouseRelation.manager, auctionHouseRelation.owner],
-                    },
-                    '#data': [
-                        {
-                            check: ({ row }) => {
-                                return row.state === bidState.success;
-                            },
-                        },
-                    ],
-                }
-            ]
-        },
-        [bidAction.violate]: {
-            auths: [
-                {
-                    "#relation": {
-                        attr: 'auction.session',
-                        relations: [sessionRelation.manager, sessionRelation.auctioneer, sessionRelation.owner],
-                    },
-                    '#data': [
-                        {
-                            check: ({ row }) => {
-                                return [bidState.success, bidState.confirmed].includes(row.state);
-                            },
-                        },
-                    ],
-                },
-                {
-                    "#relation": {
-                        attr: 'auction.session.vendue',
-                        relations: [vendueRelation.manager, vendueRelation.owner],
-                    },
-                    '#data': [
-                        {
-                            check: ({ row }) => {
-                                return [bidState.success, bidState.confirmed].includes(row.state);
-                            },
-                        },
-                    ],
-                },
-                {
-                    "#relation": {
-                        attr: 'auction.session.vendue.auctionHouse',
-                        relations: [auctionHouseRelation.manager, auctionHouseRelation.owner],
-                    },
-                    '#data': [
-                        {
-                            check: ({ row }) => {
-                                return [bidState.success, bidState.confirmed].includes(row.state);
-                            },
-                        },
-                    ],
-                }
-            ]
-        }
+        [bidAction.success]: BidGeneralUpdateControl([bidState.bidding]),
+        [bidAction.remove]: BidGeneralUpdateControl([bidState.bidding]),
+        [bidAction.update]: BidGeneralUpdateControl([bidState.bidding]),
+        [bidAction.changePrice]: BidGeneralUpdateControl([bidState.success]),
+        [bidAction.confirm]: BidGeneralUpdateControl([bidState.success]),
+        [bidAction.violate]: BidGeneralUpdateControl([bidState.success, bidState.confirmed]),
     },
     paddle: {
         [paddleAction.create]: {
@@ -1755,7 +1542,7 @@ const AUTH_MATRIX = {
                             condition: ({ user, actionData }) => {
                                 return {
                                     userId: user.id,
-                                    vendueId: actionData.paddle.vendueId,                                    
+                                    vendueId: actionData.paddle.vendueId,
                                 }
                             },
                             message: '用户已经申领过一个号牌',
@@ -1803,7 +1590,7 @@ const AUTH_MATRIX = {
                         attr: 'vendue',
                         relations: [vendueRelation.worker, vendueRelation.manager, vendueRelation.owner],
                     },
-                    '#data': paddleRefundDataAuthFn(true),
+                    '#data': paddleRefundDataCheck(true),
                     '#unexists': paddleRefundUnexistsAuth,
                 },
                 {
@@ -1811,7 +1598,7 @@ const AUTH_MATRIX = {
                         attr: 'vendue.auctionHouse',
                         relations: [auctionHouseRelation.manager, auctionHouseRelation.owner],
                     },
-                    '#data': paddleRefundDataAuthFn(true),
+                    '#data': paddleRefundDataCheck(true),
                     '#unexists': paddleRefundUnexistsAuth,
                 },
                 {
@@ -1828,7 +1615,7 @@ const AUTH_MATRIX = {
                             },
                         },
                     ],
-                    '#data': paddleRefundDataAuthFn(false),
+                    '#data': paddleRefundDataCheck(false),
                     '#unexists': paddleRefundUnexistsAuth,
                 }
             ]
@@ -2007,7 +1794,7 @@ const AUTH_MATRIX = {
     contract: {
         [contractAction.create]: AnyAuctionHouseWorker,
         [contractAction.update]: {
-            auths: [                
+            auths: [
                 {
                     "#relation": {
                     },
@@ -2155,7 +1942,30 @@ const AUTH_MATRIX = {
         },
     },
     deposit: {
-        [depositAction.create]: AllowEveryoneAuth,
+        [depositAction.create]: {
+            auths: [
+                {
+                    '#exists': [DepositExistsPaddleVendue],
+                    "#relation": {
+                        attr: 'paddle.vendue',
+                    },
+                },
+                {
+                    '#exists': [DepositExistsPaddleVendue, {
+                        relation: 'paddle',
+                        needData: true,
+                        condition: ({ user, actionData }) => {
+                            const { deposit } = actionData;
+                            const { paddleId } = deposit;
+                            return {
+                                id: paddleId,
+                                userId: user.id,
+                            };
+                        },
+                    }],
+                }
+            ]
+        },
         [depositAction.makePaid]: {
             auths: [
                 {
@@ -2176,137 +1986,33 @@ const AUTH_MATRIX = {
     checkOut: {
         [checkOutAction.taPrepare]: {
             auths: [
-                {
-                    '#exists': [
-                        {
-                            relation: 'paddle',
-                            condition: ({ user, row }) => {
-                                const query = {
-                                    userId: user.id,
-                                    id: row.paddleId,
-                                };
-                                return query;
-                            },
-                        },
-                    ],
-                    '#data': [
-                        {
-                            check: ({ user, row }) => {
-                                return [checkOutTransportState.shipping].includes(row.transportState);
-                            },
-                        }
-                    ],
-                },
-                {
-                    "#relation": {
-                        attr: 'paddle.vendue.auctionHouse',
-                        relations: [auctionHouseRelation.manager, auctionHouseRelation.settler, auctionHouseRelation.owner],
-                    },
-                    '#data': [
-                        {
-                            check: ({ user, row }) => {
-                                return [checkOutTransportState.shipping].includes(row.transportState);
-                            },
-                        }
-                    ],
-                }
+                CheckOutGuestCheckFn(checkOutAction.taPrepare, null, [checkOutTransportState.shipping]),
+                CheckOutVendueWorkerCheckFn(checkOutAction.taPrepare, null, [checkOutTransportState.shipping]),
+                CheckOutVendueAuctionHouseWorkerCheckFn(checkOutAction.taPrepare, null, [checkOutTransportState.shipping])
             ]
         },
         [checkOutAction.taCancel]: {
             auths: [
-                {
-                    '#exists': [
-                        {
-                            relation: 'paddle',
-                            condition: ({ user, row }) => {
-                                const query = {
-                                    userId: user.id,
-                                    id: row.paddleId,
-                                };
-                                return query;
-                            },
-                        },
-                    ],
-                    '#data': [
-                        {
-                            check: ({ user, row }) => {
-                                return [checkOutTransportState.tsInPreparing].includes(row.transportState);
-                            },
-                        }
-                    ],
-                },
-                {
-                    "#relation": {
-                        attr: 'paddle.vendue.auctionHouse',
-                        relations: [auctionHouseRelation.manager, auctionHouseRelation.settler, auctionHouseRelation.owner],
-                    },
-                    '#data': [
-                        {
-                            check: ({ user, row }) => {
-                                return [checkOutTransportState.tsInPreparing].includes(row.transportState);
-                            },
-                        }
-                    ],
-                }
+                CheckOutGuestCheckFn(checkOutAction.taPrepare, null, [checkOutTransportState.shipping]),
+                CheckOutVendueWorkerCheckFn(checkOutAction.taPrepare, null, [checkOutTransportState.shipping]),
+                CheckOutVendueAuctionHouseWorkerCheckFn(checkOutAction.taPrepare, null, [checkOutTransportState.shipping]),
             ]
         },
         [checkOutAction.taSend]: {
             auths: [
-                {
-                    "#relation": {
-                        attr: 'paddle.vendue.auctionHouse',
-                        relations: [auctionHouseRelation.stockKeeper, auctionHouseRelation.settler, auctionHouseRelation.owner],
-                    },
-                    '#data': [
-                        {
-                            check: ({ user, row }) => {
-                                return [checkOutTransportState.tsInPreparing].includes(row.transportState);
-                            },
-                        }
-                    ],
-                }
+                CheckOutVendueWorkerCheckFn(checkOutAction.taPrepare, null, [checkOutTransportState.tsInPreparing]),
+                CheckOutVendueAuctionHouseWorkerCheckFn(checkOutAction.taPrepare, null, [checkOutTransportState.tsInPreparing]),
             ]
         },
         [checkOutAction.taAccept]: {
             auths: [
-                {
-                    '#exists': [
-                        {
-                            relation: 'paddle',
-                            condition: ({ user, row }) => {
-                                const query = {
-                                    userId: user.id,
-                                    id: row.paddleId,
-                                };
-                                return query;
-                            },
-                        },
-                    ],
-                    '#data': [
-                        {
-                            check: ({ user, row }) => {
-                                return [checkOutTransportState.tsSending].includes(row.transportState);
-                            },
-                        }
-                    ],
-                }
-            ],
+                CheckOutGuestCheckFn(checkOutAction.taPrepare, null, [checkOutTransportState.tsSending]),
+            ]
         },
         [checkOutAction.takeAway]: {
             auths: [
-                {
-                    "#relation": {
-                        attr: 'paddle.vendue.auctionHouse',
-                        relations: [auctionHouseRelation.stockKeeper, auctionHouseRelation.settler, auctionHouseRelation.owner],
-                    },
-                    '#data': [
-                        {
-                            check: ({ user, row }) => {
-                                return [checkOutTransportState.shipping].includes(row.transportState);
-                            },
-                        }
-                    ],
-                }
+                CheckOutVendueWorkerCheckFn(checkOutAction.taPrepare, null, [checkOutTransportState.tsInPreparing, checkOutTransportState.shipping]),
+                CheckOutVendueAuctionHouseWorkerCheckFn(checkOutAction.taPrepare, null, [checkOutTransportState.tsInPreparing, checkOutTransportState.shipping]),
             ]
         },
         [checkOutAction.create]: {
@@ -2328,85 +2034,35 @@ const AUTH_MATRIX = {
                             message: '存在尚未完成的结算，请先完成或撤销',
                         },
                     ],
+                    // todo 检查bid是否都是success状态且未结算，这个似乎不太好写，目前是写在service/checkOut.js的trigger里
                 }
             ],
         },
         [checkOutAction.changePrice]: {
             auths: [
+                CheckOutVendueWorkerCheckFn(checkOutAction.changePrice, [checkOutState.init, checkOutState.unpaid], null),
+                CheckOutVendueAuctionHouseWorkerCheckFn(checkOutAction.changePrice, [checkOutState.init, checkOutState.unpaid], null),
+            ]
+        },
+        [checkOutAction.makePaid]: {
+            auths: [
                 {
-                    "#relation": {
-                        attr: 'paddle.vendue.auctionHouse',
-                        relations: [auctionHouseRelation.manager, auctionHouseRelation.settler, auctionHouseRelation.owner],
-                    },
+                    '#roles': [Roles.ROOT.name],
                 }
             ]
         },
-        /* [checkOutAction.makePaid]: {
+        [checkOutAction.finish]: {
             auths: [
                 {
-                    "#relation": {
-                        attr: 'paddle.vendue',
-                        relations: [vendueRelation.manager, vendueRelation.owner],
-                    },
-                },
-                {
-                    "#relation": {
-                        attr: 'paddle.vendue.auctionHouse',
-                        relations: [auctionHouseRelation.manager, auctionHouseRelation.settler, auctionHouseRelation.owner],
-                    },
+                    '#roles': [Roles.ROOT.name],
                 }
             ]
-        }, */
+        },
         [checkOutAction.cancel]: {
             auths: [
-                {
-                    '#exists': [
-                        {
-                            relation: 'paddle',
-                            condition: ({ user, row }) => {
-                                const query = {
-                                    userId: user.id,
-                                    id: row.paddleId,
-                                };
-                                return query;
-                            },
-                        },
-                    ],
-                    '#data': [
-                        {
-                            check: ({ user, row }) => {
-                                return [checkOutState.init, checkOutState.unpaid, checkOutState.paying].includes(row.state);
-                            },
-                        }
-                    ],
-                },
-                {
-
-                    "#relation": {
-                        attr: 'paddle.vendue',
-                        relations: [vendueRelation.manager, vendueRelation.owner],
-                    },
-                    '#data': [
-                        {
-                            check: ({ user, row }) => {
-                                return [checkOutState.init, checkOutState.unpaid, checkOutState.paying].includes(row.state);
-                            },
-                        }
-                    ],
-                },
-                {
-                    "#relation": {
-                        attr: 'paddle.vendue.auctionHouse',
-                        relations: [auctionHouseRelation.manager, auctionHouseRelation.settler, auctionHouseRelation.owner],
-                    },
-                    '#data': [
-                        {
-                            check: ({ user, row }) => {
-                                return [checkOutState.init, checkOutState.unpaid, checkOutState.paying].includes(row.state);
-                            },
-                        }
-                    ],
-                }
+                CheckOutGuestCheckFn(checkOutAction.cancel, [checkOutState.init, checkOutState.unpaid, checkOutState.paying], null),
+                CheckOutVendueWorkerCheckFn(checkOutAction.cancel, [checkOutState.init, checkOutState.unpaid, checkOutState.paying], null),
+                CheckOutVendueAuctionHouseWorkerCheckFn(checkOutAction.cancel, [checkOutState.init, checkOutState.unpaid, checkOutState.paying], null),
             ]
         },
     },
@@ -2434,131 +2090,9 @@ const AUTH_MATRIX = {
         },
     },
     license: {
-        [licenseAction.create]: {
-            auths: [
-                {
-                    '#exists': [
-                        {
-                            relation: 'userSession',
-                            needData: true,
-                            condition: ({ user, actionData }) => {
-                                return {
-                                    userId: user.id,
-                                    sessionId: actionData.license.sessionId,
-                                }
-                            },
-                        },
-                    ],
-                },
-                {
-                    '#exists': [
-                        {
-                            relation: 'userVendue',
-                            condition: ({ user }) => {
-                                return {
-                                    userId: user.id,
-                                }
-                            },
-                        },
-                    ],
-                },
-                {
-                    '#exists': [
-                        {
-                            relation: 'userAuctionHouse',
-                            condition: ({ user }) => {
-                                return {
-                                    userId: user.id,
-                                }
-                            },
-                        },
-                    ],
-                },
-            ]
-        },
-        [licenseAction.update]: {
-            auths: [
-                {
-                    "#relation": {
-                        attr: 'session',
-                        relations: [sessionRelation.owner, sessionRelation.manager],
-                    },
-                },
-                {
-                    "#relation": {
-                        attr: 'session.vendue',
-                        relations: [vendueRelation.owner, vendueRelation.manager],
-                    },
-                },
-                {
-                    "#relation": {
-                        attr: 'session.vendue.auctionHouse',
-                        relations: [auctionHouseRelation.owner, auctionHouseRelation.manager, auctionHouseRelation.settler],
-                    },
-                }
-            ]
-        },
-        [licenseAction.remove]: {
-            auths: [
-                {
-                    "#relation": {
-                        attr: 'session',
-                        relations: [sessionRelation.owner, sessionRelation.manager],
-                    },
-                },
-                {
-                    "#relation": {
-                        attr: 'session.vendue',
-                        relations: [vendueRelation.owner, vendueRelation.manager],
-                    },
-                },
-                {
-                    "#relation": {
-                        attr: 'session.vendue.auctionHouse',
-                        relations: [auctionHouseRelation.owner, auctionHouseRelation.manager, auctionHouseRelation.settler],
-                    },
-                }
-            ]
-        },
-    },
-    contractTerms: {
-        [contractTermsAction.create]: {
-            auths: [
-                {
-                    '#exists': [
-                        {
-                            relation: 'userAuctionHouse',
-                            condition: ({ user }) => {
-                                const query = {
-                                    userId: user.id,
-                                };
-                                return query;
-                            },
-                        },
-                    ],
-                }
-            ],
-        },
-        [contractTermsAction.update]: {
-            auths: [
-                {
-                    "#relation": {
-                        attr: 'contract.auctionHouse',
-                        relations: [auctionHouseRelation.owner, auctionHouseRelation.manager, auctionHouseRelation.worker],
-                    },
-                },
-            ]
-        },
-        [contractTermsAction.remove]: {
-            auths: [
-                {
-                    "#relation": {
-                        attr: 'contract.auctionHouse',
-                        relations: [auctionHouseRelation.owner, auctionHouseRelation.manager, auctionHouseRelation.worker],
-                    },
-                },
-            ]
-        }
+        [licenseAction.create]: LicenseOperationControl,
+        [licenseAction.update]: LicenseOperationControl,
+        [licenseAction.remove]: LicenseOperationControl,
     },
     agent: {
         [agentAction.create]: {
@@ -2568,12 +2102,16 @@ const AUTH_MATRIX = {
                         {
                             relation: 'paddle',
                             needData: true,
-                            condition: ({ user, actionData }) => {
+                            condition: ({ user, actionData, roleName }) => {
                                 const { agent } = actionData;
                                 const query = {
-                                    userId: user.id,
                                     id: agent.paddleId,
                                 };
+                                if (roleName !== Roles.ROOT.name) {
+                                    assign(query, {
+                                        userId: user.id,
+                                    });
+                                }
                                 return query;
                             },
                         },
@@ -2602,19 +2140,52 @@ const AUTH_MATRIX = {
                     '#exists': [
                         {
                             relation: 'paddle',
-                            condition: ({ user, row }) => {
+                            condition: ({ user, actionData, roleName }) => {
+                                const { agent } = actionData;
                                 const query = {
-                                    userId: user.id,
-                                    id: row.paddleId,
+                                    id: agent.paddleId,
+                                };
+                                if (roleName !== Roles.ROOT.name) {
+                                    assign(query, {
+                                        userId: user.id,
+                                    });
+                                }
+                                return query;
+                            },
+                        },
+                        {
+                            relation: 'auction',
+                            condition: ({ user, row }) => {
+                                const { auctionId } = row;
+                                const query = {
+                                    id: auctionId,
+                                    state: auctionState.ready,
                                 };
                                 return query;
                             },
                         },
                     ],
+                    '#unexists': [
+                        {
+                            relation: 'agent',
+                            condition: ({ user }) => {
+                                const { auctionId } = row;
+                                const query = {
+                                    paddle: {
+                                        userId: user.id,
+                                    },
+                                    state: agentState.normal,
+                                    auctionId,
+                                };
+                                return query;
+                            },
+                            message: '您在此拍品上已有一个委托，不可重复委托',
+                        }
+                    ],
                     '#data': [
                         {
-                            check: ({ user, row }) => {
-                                return [agentState.failed].includes(row.state) || (row.state === agentState.normal && row.auction.state !== auctionState.ongoing);
+                            check: ({ row }) => {
+                                return [agentState.normal].includes(row.state);
                             },
                         }
                     ],
