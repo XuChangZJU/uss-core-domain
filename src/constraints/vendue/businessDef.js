@@ -173,8 +173,8 @@ const AuctionDataCheck = (states, msg) => [
     }
 ];
 
-const AuctionGeneralChangeStateControl = (state, msg) => ({
-    auths: [
+const AuctionGeneralStateChangeFn = (state, msg, extraConstraint) => {
+    const control = [
         {
             '#relation': {
                 attr: 'session',
@@ -194,8 +194,15 @@ const AuctionGeneralChangeStateControl = (state, msg) => ({
             },
             '#data': AuctionDataCheck(state, msg),
         },
-    ],
-});
+    ];
+    if (extraConstraint) {
+        control.forEach(
+            (con) => assign(con, extraConstraint)
+        );
+    }
+
+    return control;
+}
 
 const AuctionExistsSession = [
     {
@@ -1414,10 +1421,34 @@ const AUTH_MATRIX = {
     auction: {
         [auctionAction.create]: AuctionCreateControl,
         [auctionAction.update]: AuctionCheckBidUnexistedControl,
-        [auctionAction.ready]: AuctionGeneralChangeStateControl([auctionState.preparing], '非准备状态的展品不能就绪'),
-        [auctionAction.start]: AuctionGeneralChangeStateControl([auctionState.ready, auctionState.unsold], '非就绪和未成交状态的展品不能进入拍卖'),
-        [auctionAction.sold]: AuctionGeneralChangeStateControl([auctionState.ongoing], '非拍卖状态的展品不能成交'),
-        [auctionAction.unsold]: AuctionGeneralChangeStateControl([auctionState.ongoing], '非拍卖状态的展品不能流拍'),
+        [auctionAction.ready]: {
+            auths: AuctionGeneralStateChangeFn([auctionState.preparing], '非准备状态的展品不能就绪'),
+        },
+        [auctionAction.start]: {
+            auths: AuctionGeneralStateChangeFn([auctionState.ready, auctionState.unsold], '非就绪和未成交状态的展品不能进入拍卖'),
+        },
+        [auctionAction.sold]: {
+            auths: [
+                {
+                    '#role': [Roles.ROOT.name],
+                }
+            ],
+        },
+        [auctionAction.unsold]: {
+            auths: AuctionGeneralStateChangeFn([auctionState.ongoing], '非拍卖状态的展品不能流拍', {
+                '#unexists': [
+                    {
+                        relation: 'bid',
+                        condition: ({ row }) => {
+                            return {
+                                auctionId: row.id,
+                            }
+                        },
+                        message: '拍品上已有出价，无法流拍',
+                    },
+                ],
+            }),
+        },
         [auctionAction.remove]: AuctionCheckBidUnexistedControl,
         [auctionAction.assign]: AllowEveryoneAuth,
         [auctionAction.authRevoke]: AllowEveryoneAuth,
@@ -2047,14 +2078,14 @@ const AUTH_MATRIX = {
         [checkOutAction.makePaid]: {
             auths: [
                 {
-                    '#roles': [Roles.ROOT.name],
+                    '#role': [Roles.ROOT.name],
                 }
             ]
         },
         [checkOutAction.finish]: {
             auths: [
                 {
-                    '#roles': [Roles.ROOT.name],
+                    '#role': [Roles.ROOT.name],
                 }
             ]
         },
