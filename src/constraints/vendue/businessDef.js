@@ -1450,7 +1450,10 @@ const AUTH_MATRIX = {
             auths: AuctionGeneralStateChangeFn([auctionState.preparing], '非准备状态的展品不能就绪'),
         },
         [auctionAction.start]: {
-            auths: AuctionGeneralStateChangeFn([auctionState.ready, auctionState.unsold, state.pausing], '该状态的展品不能进入拍卖'),
+            auths: AuctionGeneralStateChangeFn([auctionState.ready, state.pausing], '非预展和暂停的展品不能进入拍卖'),
+        },
+        [auctionAction.restart]: {
+            auths: AuctionGeneralStateChangeFn([auctionState.unsold], '非流拍的展品不能进入拍卖'),
         },
         [auctionAction.pause]: {
             auths: AuctionGeneralStateChangeFn([auctionState.ongoing], '非拍卖状态的展品不能暂停'),

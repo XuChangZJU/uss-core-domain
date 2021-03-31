@@ -45,6 +45,7 @@ const decodeState = (s) => {
 const action = Object.assign({}, commonAction, {
     ready: 501,
     start: 511,
+    restart: 512,
     sold: 601,
     unsold: 610,
     // resold: 611,
@@ -56,6 +57,7 @@ const decodeAction = (a) => {
     const S = {
         [action.ready]: '就绪',
         [action.start]: '开拍',
+        [action.restart]: '重拍',
         [action.sold]: '成交',
         [action.unsold]: '流拍',
         [action.pause]: '暂停',
@@ -80,7 +82,7 @@ function decodeMode(m) {
 
 const STATE_TRAN_MATRIX = {
     [action.ready]: [state.preparing, state.ready],
-    [action.start]: [[state.ready, state.unsold, state.pausing], state.ongoing],
+    [action.start]: [[state.ready, state.pausing], state.ongoing],
     [action.sold]: [state.ongoing, state.sold],
     [action.unsold]: [[state.ongoing, state.sold], state.unsold],
     [action.pause]: [state.ongoing, state.pausing],
