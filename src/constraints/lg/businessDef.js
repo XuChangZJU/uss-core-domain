@@ -1342,6 +1342,15 @@ const AUTH_MATRIX = {
                 }
             ]
         },
+        [serviceCompanyAction.assign]: {
+            auths: [
+                {
+                    "#relation": {
+                        relations: [serviceCompanyRelation.owner, serviceCompanyRelation.manager],
+                    },
+                }
+            ]
+        },
     },
     enterUp: {
         [enterUpAction.create]: AllowEveryoneAuth,
