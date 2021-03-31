@@ -107,6 +107,11 @@ const {
 const {
     action: serviceAction,
 } = require('../../constants/lg/service');
+
+const {
+    action: ReckonerAction,
+    relation: ReckonerRelation,
+} = require('../../constants/lg/reckoner');
 const AUTH_MATRIX = {
     lgService: {
         [serviceAction.create]: AllowEveryoneAuth,
@@ -1342,6 +1347,15 @@ const AUTH_MATRIX = {
                 }
             ]
         },
+        [serviceCompanyAction.assign]: {
+            auths: [
+                {
+                    "#relation": {
+                        relations: [serviceCompanyRelation.owner, serviceCompanyRelation.manager],
+                    },
+                }
+            ]
+        },
     },
     enterUp: {
         [enterUpAction.create]: AllowEveryoneAuth,
@@ -1531,18 +1545,18 @@ const AUTH_MATRIX = {
             auths: [
                 {
                     "#relation": {
-                        attr: 'lgShop',
+                        attr: 'lgSku.lgShop',
                         relations: [shopRelation.owner, shopRelation.manager],
                     },
                 },
                 {
                     "#relation": {
-                        attr: 'lgShop.lgMall',
+                        attr: 'lgSku.lgShop.lgMall',
                     },
                 },
                 {
                     "#relation": {
-                        attr: 'lgShop.lgMall.lgDistrict',
+                        attr: 'lgSku.lgShop.lgMall.lgDistrict',
                     },
                 },
             ]
@@ -1551,18 +1565,18 @@ const AUTH_MATRIX = {
             auths: [
                 {
                     "#relation": {
-                        attr: 'lgShop',
+                        attr: 'lgSku.lgShop',
                         relations: [shopRelation.owner, shopRelation.manager],
                     },
                 },
                 {
                     "#relation": {
-                        attr: 'lgShop.lgMall',
+                        attr: 'lgSku.lgShop.lgMall',
                     },
                 },
                 {
                     "#relation": {
-                        attr: 'lgShop.lgMall.lgDistrict',
+                        attr: 'lgSku.lgShop.lgMall.lgDistrict',
                     },
                 },
             ]
@@ -1574,6 +1588,28 @@ const AUTH_MATRIX = {
     lgTradeSkuItemShop: {
         [tradeSkuItemShopAction.create]: AllowEveryoneAuth,
     },
+    lgReckoner: {
+        [ReckonerAction.create]: AllowEveryoneAuth,
+        [ReckonerAction.update]: {
+            auths: [
+                {
+                    "#relation": {
+                        attr: '',
+                    },
+                },
+            ]
+        },
+        [ReckonerAction.remove]: {
+            auths: [
+                {
+                    "#relation": {
+                        attr: '',
+                        relation: [ReckonerRelation.owner],
+                    },
+                },
+            ]
+        },
+    }
 };
 const STATE_TRAN_MATRIX = {
     lgShop: SHOP_STATE_TRANS_MATRIX,
