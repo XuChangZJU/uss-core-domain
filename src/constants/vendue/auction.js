@@ -80,11 +80,10 @@ function decodeMode(m) {
 
 const STATE_TRAN_MATRIX = {
     [action.ready]: [state.preparing, state.ready],
-    [action.start]: [[state.ready, state.unsold, state.pausing, state.sold], state.ongoing],
+    [action.start]: [[state.ready, state.unsold, state.pausing], state.ongoing],
     [action.sold]: [state.ongoing, state.sold],
     [action.unsold]: [[state.ongoing, state.sold], state.unsold],
     [action.pause]: [state.ongoing, state.pausing],
-    // [action.cancel]: [[state.preparing, state.ready, state.ongoing, state.pausing], state.cancelled],
 };
 
 const category = {

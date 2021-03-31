@@ -178,7 +178,6 @@ const AuctionGeneralStateChangeFn = (state, msg, extraConstraint) => {
         {
             '#relation': {
                 attr: 'session',
-                relation: [sessionRelation.owner],
             },
             '#data': AuctionDataCheck(state, msg),
         },
@@ -1425,7 +1424,10 @@ const AUTH_MATRIX = {
             auths: AuctionGeneralStateChangeFn([auctionState.preparing], '非准备状态的展品不能就绪'),
         },
         [auctionAction.start]: {
-            auths: AuctionGeneralStateChangeFn([auctionState.ready, auctionState.unsold], '非就绪和未成交状态的展品不能进入拍卖'),
+            auths: AuctionGeneralStateChangeFn([auctionState.ready, auctionState.unsold, state.pausing], '该状态的展品不能进入拍卖'),
+        },
+        [auctionAction.pause]: {
+            auths: AuctionGeneralStateChangeFn([auctionState.ongoing], '非拍卖状态的展品不能暂停'),
         },
         [auctionAction.sold]: {
             auths: [
