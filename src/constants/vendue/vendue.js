@@ -23,7 +23,7 @@ const category = Object.assign({}, {
 
 const STRINGS_OF_ORIGINS = {
     [category.synchronous]: "同步拍",
-    [category.delayed]: "延时拍",
+    [category.delayed]: "限时拍",
 };
 
 function decodeCategory(o) {

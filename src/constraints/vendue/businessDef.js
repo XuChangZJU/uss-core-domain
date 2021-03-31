@@ -197,14 +197,14 @@ const AuctionGeneralStateChangeFn = (state, msg, extraConstraint) => {
     ];
     if (extraConstraint) {
         control.forEach(
-            (con) => assign(con, extraConstraint)
+            (con) => Object.assign(con, extraConstraint)
         );
     }
 
     return control;
 }
 
-const AuctionExistsSession = [
+const AuctionCanCreate = [
     {
         relation: 'session',
         condition: ({ actionData }) => {
@@ -218,6 +218,17 @@ const AuctionExistsSession = [
                         sessionState.ongoing,
                     ],
                 },
+            };
+            return query;
+        },
+    },
+    {
+        relation: 'contract',
+        condition: ({ actionData }) => {
+            const { auction } = actionData;
+            const query = {
+                id: auction.contractId,
+                state: contractState.contracted,
             };
             return query;
         },
@@ -242,10 +253,22 @@ const AuctionNoOtherAuctionOnSameContract = [
             };
             return query;
         },
-        message: '该合同已经在另一个有效的拍卖当中',
+        message: '该拍品已经在另一个有效的拍卖当中',
+    },
+    {
+        relation: 'auction',
+        condition: ({ actionData }) => {
+            const { auction } = actionData;
+            const { contractId, sessionId } = auction;
+            const query = {
+                contractId,
+                sessionId,
+            };
+            return query;
+        },
+        message: '该拍品已经存在于同一个拍卖当中',
     },
 ];
-
 
 const AuctionCreateControl = {
     auths: [
@@ -254,21 +277,21 @@ const AuctionCreateControl = {
                 attr: 'session',
                 relation: [sessionRelation.owner],
             },
-            '#exists': AuctionExistsSession,
+            '#exists': AuctionCanCreate,
             '#unexists': AuctionNoOtherAuctionOnSameContract,
         },
         {
             '#relation': {
                 attr: 'session.vendue',
             },
-            '#exists': AuctionExistsSession,
+            '#exists': AuctionCanCreate,
             '#unexists': AuctionNoOtherAuctionOnSameContract,
         },
         {
             '#relation': {
                 attr: 'session.vendue.auctionHouse',
             },
-            '#exists': AuctionExistsSession,
+            '#exists': AuctionCanCreate,
             '#unexists': AuctionNoOtherAuctionOnSameContract,
         },
     ],
@@ -1483,7 +1506,7 @@ const AUTH_MATRIX = {
             auths: AuctionGeneralStateChangeFn([auctionState.preparing], '非准备状态的展品不能就绪'),
         },
         [auctionAction.start]: {
-            auths: AuctionGeneralStateChangeFn([auctionState.ready, state.pausing], '非预展和暂停的展品不能进入拍卖'),
+            auths: AuctionGeneralStateChangeFn([auctionState.ready, auctionState.pausing], '非预展和暂停的展品不能进入拍卖'),
         },
         [auctionAction.restart]: {
             auths: AuctionGeneralStateChangeFn([auctionState.unsold], '非流拍的展品不能进入拍卖'),
