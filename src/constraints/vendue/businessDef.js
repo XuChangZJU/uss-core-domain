@@ -223,6 +223,28 @@ const AuctionExistsSession = [
     },
 ];
 
+const AuctionNoOtherAuctionOnSameContract = [
+    {
+        relation: 'auction',
+        condition: ({ actionData }) => {
+            const { auction } = actionData;
+            const { contractId } = auction;
+            const query = {
+                state: {
+                    $in: [
+                        auctionState.sold,
+                        auctionState.ready,
+                        auctionState.ongoing,
+                    ],
+                },
+                contractId,
+            };
+            return query;
+        },
+    },
+];
+
+
 const AuctionCreateControl = {
     auths: [
         {
@@ -231,18 +253,21 @@ const AuctionCreateControl = {
                 relation: [sessionRelation.owner],
             },
             '#exists': AuctionExistsSession,
+            '#unexists': AuctionNoOtherAuctionOnSameContract,
         },
         {
             '#relation': {
                 attr: 'session.vendue',
             },
             '#exists': AuctionExistsSession,
+            '#unexists': AuctionNoOtherAuctionOnSameContract,
         },
         {
             '#relation': {
                 attr: 'session.vendue.auctionHouse',
             },
             '#exists': AuctionExistsSession,
+            '#unexists': AuctionNoOtherAuctionOnSameContract,
         },
     ],
 };
