@@ -86,6 +86,7 @@ const STATE_TRAN_MATRIX = {
     [action.sold]: [state.ongoing, state.sold],
     [action.unsold]: [[state.ongoing, state.sold], state.unsold],
     [action.pause]: [state.ongoing, state.pausing],
+    [action.restart]: [state.unsold, state.ongoing],
 };
 
 const category = {
