@@ -248,6 +248,7 @@ const checkType = {
     'firstVisit': 1,
     'revisit': 2,
 }
+
 const decodeCheckType = (ct) => {
     const CT = {
         [checkType.firstVisit]: '初诊',

@@ -1531,18 +1531,18 @@ const AUTH_MATRIX = {
             auths: [
                 {
                     "#relation": {
-                        attr: 'lgShop',
+                        attr: 'lgSku.lgShop',
                         relations: [shopRelation.owner, shopRelation.manager],
                     },
                 },
                 {
                     "#relation": {
-                        attr: 'lgShop.lgMall',
+                        attr: 'lgSku.lgShop.lgMall',
                     },
                 },
                 {
                     "#relation": {
-                        attr: 'lgShop.lgMall.lgDistrict',
+                        attr: 'lgSku.lgShop.lgMall.lgDistrict',
                     },
                 },
             ]
@@ -1551,18 +1551,18 @@ const AUTH_MATRIX = {
             auths: [
                 {
                     "#relation": {
-                        attr: 'lgShop',
+                        attr: 'lgSku.lgShop',
                         relations: [shopRelation.owner, shopRelation.manager],
                     },
                 },
                 {
                     "#relation": {
-                        attr: 'lgShop.lgMall',
+                        attr: 'lgSku.lgShop.lgMall',
                     },
                 },
                 {
                     "#relation": {
-                        attr: 'lgShop.lgMall.lgDistrict',
+                        attr: 'lgSku.lgShop.lgMall.lgDistrict',
                     },
                 },
             ]
