@@ -203,7 +203,7 @@ const AuctionGeneralStateChangeFn = (state, msg, extraConstraint) => {
     return control;
 }
 
-const AuctionExistsSession = [
+const AuctionCanCreate = [
     {
         relation: 'session',
         condition: ({ actionData }) => {
@@ -217,6 +217,17 @@ const AuctionExistsSession = [
                         sessionState.ongoing,
                     ],
                 },
+            };
+            return query;
+        },
+    },
+    {
+        relation: 'contract',
+        condition: ({ actionData }) => {
+            const { auction } = actionData;
+            const query = {
+                id: auction.contractId,
+                state: contractState.contracted,
             };
             return query;
         },
@@ -241,10 +252,22 @@ const AuctionNoOtherAuctionOnSameContract = [
             };
             return query;
         },
-        message: '该合同已经在另一个有效的拍卖当中',
+        message: '该拍品已经在另一个有效的拍卖当中',
+    },
+    {
+        relation: 'auction',
+        condition: ({ actionData }) => {
+            const { auction } = actionData;
+            const { contractId, sessionId } = auction;
+            const query = {
+                contractId,
+                sessionId,
+            };
+            return query;
+        },
+        message: '该拍品已经存在于同一个拍卖当中',
     },
 ];
-
 
 const AuctionCreateControl = {
     auths: [
@@ -253,21 +276,21 @@ const AuctionCreateControl = {
                 attr: 'session',
                 relation: [sessionRelation.owner],
             },
-            '#exists': AuctionExistsSession,
+            '#exists': AuctionCanCreate,
             '#unexists': AuctionNoOtherAuctionOnSameContract,
         },
         {
             '#relation': {
                 attr: 'session.vendue',
             },
-            '#exists': AuctionExistsSession,
+            '#exists': AuctionCanCreate,
             '#unexists': AuctionNoOtherAuctionOnSameContract,
         },
         {
             '#relation': {
                 attr: 'session.vendue.auctionHouse',
             },
-            '#exists': AuctionExistsSession,
+            '#exists': AuctionCanCreate,
             '#unexists': AuctionNoOtherAuctionOnSameContract,
         },
     ],

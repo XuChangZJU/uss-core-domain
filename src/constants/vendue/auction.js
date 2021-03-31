@@ -21,10 +21,10 @@ const state = Object.assign({}, commonState, {
     // preparing: 301,
     ready: 310,
     ongoing: 311,
+    pausing: 312,
     sold: 501,
     unsold: 511,
     breakUp: 601,
-    // pausing: 520,
     // cancelled: 610,
 });
 const decodeState = (s) => {
@@ -35,7 +35,7 @@ const decodeState = (s) => {
         [state.sold]: '已成交',
         [state.unsold]: '已流拍',
         [state.breakUp]: '违约',
-        // [state.pausing]: '暂停',
+        [state.pausing]: '暂停',
         // [state.cancelled]: '撤销',
     };
 
@@ -46,10 +46,10 @@ const action = Object.assign({}, commonAction, {
     ready: 501,
     start: 511,
     restart: 512,
+    pause: 513,
     sold: 601,
     unsold: 610,
     // resold: 611,
-    pause: 620,
     // cancel: 621,
 });
 
