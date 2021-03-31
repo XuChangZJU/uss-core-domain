@@ -241,6 +241,7 @@ const AuctionNoOtherAuctionOnSameContract = [
             };
             return query;
         },
+        message: '该合同已经在另一个有效的拍卖当中',
     },
 ];
 
