@@ -761,6 +761,22 @@ const AUTH_MATRIX = {
                             },
                         }
                     ],
+                    '#exists': [
+                        {
+                            relation: 'auction',
+                            condition: ({ user, row }) => {
+                                return {
+                                    session: {
+                                        vendueId: row.id,
+                                    },
+                                    state: {
+                                        $nin: [auctionState.unsold, auctionState.sold],
+                                    }
+                                };
+                            },
+                            message: '请将拍卖会中所有拍品流拍或成交后再将拍卖会结束',
+                        },
+                    ],
                 },
                 {
                     "#relation": {
@@ -772,6 +788,22 @@ const AUTH_MATRIX = {
                                 return [vendueState.ongoing].includes(row.state);
                             },
                         }
+                    ],
+                    '#exists': [
+                        {
+                            relation: 'auction',
+                            condition: ({ user, row }) => {
+                                return {
+                                    session: {
+                                        vendueId: row.id,
+                                    },
+                                    state: {
+                                        $nin: [auctionState.unsold, auctionState.sold],
+                                    }
+                                };
+                            },
+                            message: '请将拍卖会中所有拍品流拍或成交后再将拍卖会结束',
+                        },
                     ],
                 },
             ]
