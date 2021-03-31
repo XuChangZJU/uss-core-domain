@@ -1,3 +1,4 @@
+const assign = require('lodash/assign');
 const {
     AllowEveryoneAuth,
     OwnerRelationAuth,

@@ -107,6 +107,11 @@ const {
 const {
     action: serviceAction,
 } = require('../../constants/lg/service');
+
+const {
+    action: ReckonerAction,
+    relation: ReckonerRelation,
+} = require('../../constants/lg/reckoner');
 const AUTH_MATRIX = {
     lgService: {
         [serviceAction.create]: AllowEveryoneAuth,
@@ -1583,6 +1588,28 @@ const AUTH_MATRIX = {
     lgTradeSkuItemShop: {
         [tradeSkuItemShopAction.create]: AllowEveryoneAuth,
     },
+    lgReckoner: {
+        [ReckonerAction.create]: AllowEveryoneAuth,
+        [ReckonerAction.update]: {
+            auths: [
+                {
+                    "#relation": {
+                        attr: '',
+                    },
+                },
+            ]
+        },
+        [ReckonerAction.remove]: {
+            auths: [
+                {
+                    "#relation": {
+                        attr: '',
+                        relation: [ReckonerRelation.owner],
+                    },
+                },
+            ]
+        },
+    }
 };
 const STATE_TRAN_MATRIX = {
     lgShop: SHOP_STATE_TRANS_MATRIX,
