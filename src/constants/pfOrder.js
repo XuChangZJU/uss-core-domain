@@ -7,6 +7,7 @@ const {
     COMMON_STATE_TRAN_MATRIX,
  } = require('./action');
  const { AllowEveryoneAuth } = require('../constraints/action');
+ const { Roles } = require('../constants/roleConstant2');
 
 const state = pick(commonState, [
     'unpaid',
