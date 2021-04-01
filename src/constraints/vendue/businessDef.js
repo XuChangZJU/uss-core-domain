@@ -2277,10 +2277,11 @@ const AUTH_MATRIX = {
                     '#exists': [
                         {
                             relation: 'paddle',
-                            condition: ({ user, actionData, roleName }) => {
-                                const { agent } = actionData;
+                            condition: ({ user, row, roleName }) => {
+                                // const { agent } = actionData;
+                                const { paddleId } = row;
                                 const query = {
-                                    id: agent.paddleId,
+                                    id: paddleId,
                                 };
                                 if (roleName !== Roles.ROOT.name) {
                                     assign(query, {
