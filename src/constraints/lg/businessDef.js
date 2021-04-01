@@ -1,3 +1,4 @@
+const { Roles } = require('../../constants/roleConstant2');
 const {
     AllowEveryoneAuth,
     OwnerRelationAuth,
@@ -112,6 +113,7 @@ const {
     action: ReckonerAction,
     relation: ReckonerRelation,
 } = require('../../constants/lg/reckoner');
+
 const AUTH_MATRIX = {
     lgService: {
         [serviceAction.create]: AllowEveryoneAuth,
@@ -912,7 +914,8 @@ const AUTH_MATRIX = {
                         attr: 'lgMall',
                         relations: [mallRelation.owner, mallRelation.manager],
                     },
-                },   {
+                },
+                {
                     "#relation": {
                         relations: [shopRelation.owner],
                     },
@@ -953,6 +956,11 @@ const AUTH_MATRIX = {
                         }
                     ],
                 },
+                {
+                    "#relation": {
+                        relations: [shopRelation.owner, shopRelation.manager],
+                    },
+                },
             ],
         },
         [shopAction.offline]: {
@@ -983,21 +991,24 @@ const AUTH_MATRIX = {
                         }
                     ],
                 },
+                {
+                    "#relation": {
+                        relations: [shopRelation.owner, shopRelation.manager],
+                    },
+                },
             ],
         },
         [shopAction.disable]: {
             auths: [
                 {
-                    "#relation": {
-                        attr: 'lgMall',
-                        relations: [mallRelation.owner, mallRelation.manager],
-                    },
+                    '#role': [Roles.ROOT.name],
                 },
+            ],
+        },
+        [shopAction.able]: {
+            auths: [
                 {
-                    "#relation": {
-                        attr: 'lgMall.lgDistrict',
-                        relations: [districtRelation.owner, districtRelation.manager],
-                    },
+                    '#role': [Roles.ROOT.name],
                 },
             ],
         },

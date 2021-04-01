@@ -25,7 +25,6 @@ const decodeTransportState = (ts) => {
         [transportState.unsend]: '未发货',
         [transportState.unpicked]: '待提货',
         [transportState.picked]: '已提货',
-
     };
     return TEXT[ts] || decodeCommonTransportState(ts);
 };
@@ -39,7 +38,6 @@ const decodeAction = (a) => {
     const TEXT = {
         [action.pick]: '确认提货',
     };
-
     return TEXT[a] || decodeCommonAction(a) || decodeTransportAction(a);
 };
 
