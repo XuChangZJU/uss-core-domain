@@ -991,6 +991,13 @@ const AUTH_MATRIX = {
             auths: [
                 {
                     '#role': [Roles.ROOT.name],
+                    '#data': [
+                        {
+                            check: ({user, row}) => {
+                                return [shopState.offline, shopState.online].includes(row.state);
+                            },
+                        }
+                    ],
                 },
             ],
         },
@@ -998,6 +1005,13 @@ const AUTH_MATRIX = {
             auths: [
                 {
                     '#role': [Roles.ROOT.name],
+                    '#data': [
+                        {
+                            check: ({user, row}) => {
+                                return [shopState.disabled].includes(row.state);
+                            },
+                        }
+                    ],
                 },
             ],
         },
