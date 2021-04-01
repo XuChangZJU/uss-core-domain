@@ -2254,8 +2254,10 @@ const AUTH_MATRIX = {
                     '#unexists': [
                         {
                             relation: 'agent',
-                            condition: ({ user, row }) => {
-                                const { auctionId } = row;
+                            needData: true,
+                            condition: ({ user, actionData }) => {
+                                const { agent } = actionData;
+                                const { auctionId } = agent;
                                 const query = {
                                     paddle: {
                                         userId: user.id,
