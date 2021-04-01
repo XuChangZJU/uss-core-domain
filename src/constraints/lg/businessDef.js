@@ -960,6 +960,13 @@ const AUTH_MATRIX = {
                     "#relation": {
                         relations: [shopRelation.owner, shopRelation.manager],
                     },
+                    '#data': [
+                        {
+                            check: ({user, row}) => {
+                                return [shopState.offline].includes(row.state);
+                            },
+                        }
+                    ],
                 },
             ],
         },
@@ -995,6 +1002,13 @@ const AUTH_MATRIX = {
                     "#relation": {
                         relations: [shopRelation.owner, shopRelation.manager],
                     },
+                    '#data': [
+                        {
+                            check: ({user, row}) => {
+                                return [shopState.online].includes(row.state);
+                            },
+                        }
+                    ],
                 },
             ],
         },
@@ -1005,7 +1019,7 @@ const AUTH_MATRIX = {
                     '#data': [
                         {
                             check: ({user, row}) => {
-                                return [shopState.offline, shopState.online].includes(row.state);
+                                return [shopState.online, shopState.offline].includes(row.state);
                             },
                         }
                     ],
