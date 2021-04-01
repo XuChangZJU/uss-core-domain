@@ -1,11 +1,20 @@
-'use strict';
+const pick = require('lodash/pick');
+const assign = require('lodash/assign');
 
-const state = {
+const { 
+    state: commonState, 
+    action: commonAction,
+    decodeState: decodeCommonState,
+    decodeAction: decodeCommonAction,
+    COMMON_STATE_TRAN_MATRIX,
+ } = require('./action');
+
+const state = assign(pick(commonState, ['create']), {
     refunding: 10001,
     refunded: 10201,
     cancelled: 10899,
     abnormal: 11001,
-};
+});
 
 const decodeState = (s) => {
     const TEXT = {
@@ -15,15 +24,15 @@ const decodeState = (s) => {
         [state.abnormal]: "退款异常",
     };
     
-    return TEXT[s]
+    return TEXT[s] || decodeCommonState(s);
 };
 
-const action = {
+const action = assign(pick(commonState, ['create']),{
     refundSuccess: 10201,
     refundManually: 10202,
     refundFailure: 11001,
     cancel: 10899,
-};
+});
 
 const decodeAction = (a) => {
     const TEXT = {
@@ -33,7 +42,7 @@ const decodeAction = (a) => {
         [action.cancel]: '退款异常',
     };
 
-    return TEXT[a];
+    return TEXT[a] || decodeCommonAction(a);
 };
 
 const STATE_TRANS_MATRIX = {
@@ -62,12 +71,45 @@ const decodeChannel = (c) => {
     return TEXT[c];
 }
 
+const AUTH_MATRIX = {
+    [action.create]: AllowEveryoneAuth,
+    [action.refundSuccess]: {
+        auths: [
+            {
+                "#role": [Roles.ROOT.name]
+            },
+        ],
+    },
+    [action.cancel]: {
+        auths: [
+            {
+                "#role": [Roles.ROOT.name]
+            },
+        ],
+    },
+    [action.refundManually]: {      // 这个目前应该没用
+        auths: [
+            {
+                "#role": [Roles.ROOT.name]
+            },
+        ],
+    },
+    [action.refundFailure]: {
+        auths: [
+            {
+                "#role": [Roles.ROOT.name]
+            },
+        ],
+    },
+};
+
 module.exports = {
     state,
     decodeState,
     action,
     decodeAction,
     STATE_TRANS_MATRIX,
+    AUTH_MATRIX,
 
     channel,
     decodeChannel,
