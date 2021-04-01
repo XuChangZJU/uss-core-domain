@@ -8,6 +8,7 @@ const {
     decodeAction: decodeCommonAction,
     COMMON_STATE_TRAN_MATRIX,
  } = require('./action');
+ const { AllowEveryoneAuth } = require('../constraints/action');
 
 const state = assign(pick(commonState, ['create']), {
     refunding: 10001,

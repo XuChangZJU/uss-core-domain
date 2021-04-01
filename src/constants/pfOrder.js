@@ -6,6 +6,7 @@ const {
     decodeAction,
     COMMON_STATE_TRAN_MATRIX,
  } = require('./action');
+ const { AllowEveryoneAuth } = require('../constraints/action');
 
 const state = pick(commonState, [
     'unpaid',
