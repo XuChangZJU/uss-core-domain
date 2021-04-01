@@ -2232,6 +2232,7 @@ const AUTH_MATRIX = {
                                 }
                                 return query;
                             },
+                            message: '您未拥有当前号牌，请领取号牌或重新登录后再进行操作',
                         },
                         {
                             relation: 'auction',
@@ -2247,7 +2248,25 @@ const AUTH_MATRIX = {
                                 };
                                 return query;
                             },
+                            message: '该拍品已结束拍卖或尚在准备，不能进行委托',
                         },
+                    ],
+                    '#unexists': [
+                        {
+                            relation: 'agent',
+                            condition: ({ user }) => {
+                                const { auctionId } = row;
+                                const query = {
+                                    paddle: {
+                                        userId: user.id,
+                                    },
+                                    state: agentState.normal,
+                                    auctionId,
+                                };
+                                return query;
+                            },
+                            message: '您在此拍品上已有一个委托，不可重复委托',
+                        }
                     ],
                 },
             ]
@@ -2270,6 +2289,7 @@ const AUTH_MATRIX = {
                                 }
                                 return query;
                             },
+                            message: '您未拥有当前号牌，请领取号牌或重新登录后再进行操作',
                         },
                         {
                             relation: 'auction',
@@ -2281,24 +2301,8 @@ const AUTH_MATRIX = {
                                 };
                                 return query;
                             },
+                            message: '拍品开始拍卖后不能取消委托',
                         },
-                    ],
-                    '#unexists': [
-                        {
-                            relation: 'agent',
-                            condition: ({ user }) => {
-                                const { auctionId } = row;
-                                const query = {
-                                    paddle: {
-                                        userId: user.id,
-                                    },
-                                    state: agentState.normal,
-                                    auctionId,
-                                };
-                                return query;
-                            },
-                            message: '您在此拍品上已有一个委托，不可重复委托',
-                        }
                     ],
                     '#data': [
                         {
