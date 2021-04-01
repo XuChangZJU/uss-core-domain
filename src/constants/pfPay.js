@@ -12,6 +12,7 @@ const state = pick(commonState, [
     'legal',
     'paying',
     'partialPaid',
+    'cancelled',
 ]);
 
 const action = pick(commonAction, [
@@ -20,6 +21,7 @@ const action = pick(commonAction, [
     'stopPaying',
     'pay',
     'create',
+    'cancel',
 ]);
 
 const STATE_TRANS_MATRIX = pick(COMMON_STATE_TRAN_MATRIX, Object.values(action));
