@@ -1,4 +1,6 @@
 const pick = require('lodash/pick');
+const { Roles } = require('../constants/roleConstant2');
+const { AllowEveryoneAuth } = require('../constraints/action');
 const {
     state: commonState,
     action: commonAction,
@@ -17,9 +19,9 @@ const state = pick(commonState, [
 const action = pick(commonAction, [
     'payPartially',
     'startToPay',
-    'stopPaying',
     'pay',
     'create',
+    'stopPaying',
 ]);
 
 const STATE_TRANS_MATRIX = pick(COMMON_STATE_TRAN_MATRIX, Object.values(action));
@@ -58,12 +60,45 @@ const decodeMethod = (m) => {
     return TEXT[m];
 };
 
+const AUTH_MATRIX = {
+    [action.create]: AllowEveryoneAuth,
+    [action.pay]: {
+        auths: [
+            {
+                "#role": [Roles.ROOT.name]
+            },
+        ],
+    },
+    [action.stopPaying]: {
+        auths: [
+            {
+                "#role": [Roles.ROOT.name]
+            },
+        ],
+    },
+    [action.startToPay]: {
+        auths: [
+            {
+                "#role": [Roles.ROOT.name]
+            },
+        ],
+    },
+    [action.payPartially]: {
+        auths: [
+            {
+                "#role": [Roles.ROOT.name]
+            },
+        ],
+    },
+}
+
 module.exports = {
     action,
     state,
     decodeAction,
     decodeState,
     STATE_TRANS_MATRIX,
+    AUTH_MATRIX,
 
     origin,
     decodeOrigin,
