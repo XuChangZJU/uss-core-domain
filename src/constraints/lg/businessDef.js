@@ -1156,6 +1156,16 @@ const AUTH_MATRIX = {
                 }
             ]
         },
+        [skuAction.remove]: {
+            auths: [
+                {
+                    "#relation": {
+                        attr: 'lgShop',
+                        relations: [shopRelation.owner, shopRelation.manager],
+                    },
+                }
+            ]
+        },
         [skuAction.online]: {
             auths: [
                 {
