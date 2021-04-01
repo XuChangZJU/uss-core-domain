@@ -14,7 +14,6 @@ const state = pick(commonState, [
     'legal',
     'paying',
     'partialPaid',
-    'cancelled',
 ]);
 
 const action = pick(commonAction, [
@@ -22,7 +21,7 @@ const action = pick(commonAction, [
     'startToPay',
     'pay',
     'create',
-    'cancel',
+    'stopPaying',
 ]);
 
 const STATE_TRANS_MATRIX = pick(COMMON_STATE_TRAN_MATRIX, Object.values(action));
@@ -70,7 +69,7 @@ const AUTH_MATRIX = {
             },
         ],
     },
-    [action.cancel]: {
+    [action.stopPaying]: {
         auths: [
             {
                 "#role": [Roles.ROOT.name]

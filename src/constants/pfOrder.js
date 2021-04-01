@@ -17,13 +17,12 @@ const state = pick(commonState, [
     'refunding',
     'refunded',
     'partialRefunded',
-    'cancelled',
     'expired',
     'completed',
 ]);
 
 const action = pick(commonAction, [
-    'cancel',
+    'stopPaying',
     'pay',
     'expire',
     'complete',
@@ -45,7 +44,7 @@ const AUTH_MATRIX = {
             },
         ],
     },
-    [action.cancel]: {
+    [action.stopPaying]: {
         auths: [
             {
                 "#role": [Roles.ROOT.name]
