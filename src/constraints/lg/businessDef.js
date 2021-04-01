@@ -914,7 +914,8 @@ const AUTH_MATRIX = {
                         attr: 'lgMall',
                         relations: [mallRelation.owner, mallRelation.manager],
                     },
-                },   {
+                },
+                {
                     "#relation": {
                         relations: [shopRelation.owner],
                     },
@@ -955,6 +956,11 @@ const AUTH_MATRIX = {
                         }
                     ],
                 },
+                {
+                    "#relation": {
+                        relations: [shopRelation.owner, shopRelation.manager],
+                    },
+                },
             ],
         },
         [shopAction.offline]: {
@@ -984,6 +990,11 @@ const AUTH_MATRIX = {
                             },
                         }
                     ],
+                },
+                {
+                    "#relation": {
+                        relations: [shopRelation.owner, shopRelation.manager],
+                    },
                 },
             ],
         },
