@@ -2276,6 +2276,14 @@ const AUTH_MATRIX = {
         [agentAction.remove]: {
             auths: [
                 {
+                    '#data': [
+                        {
+                            check: ({ row }) => {
+                                return [agentState.normal].includes(row.state);
+                            },
+                            message: '已经成功或失败的委托不能取消',
+                        }
+                    ],
                     '#exists': [
                         {
                             relation: 'paddle',
@@ -2306,14 +2314,6 @@ const AUTH_MATRIX = {
                             },
                             message: '拍品开始拍卖后不能取消委托',
                         },
-                    ],
-                    '#data': [
-                        {
-                            check: ({ row }) => {
-                                return [agentState.normal].includes(row.state);
-                            },
-                            message: '已经成功或失败的委托不能取消',
-                        }
                     ],
                 },
             ]
