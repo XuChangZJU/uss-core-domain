@@ -2312,6 +2312,7 @@ const AUTH_MATRIX = {
                             check: ({ row }) => {
                                 return [agentState.normal].includes(row.state);
                             },
+                            message: '已经成功或失败的委托不能取消',
                         }
                     ],
                 },
