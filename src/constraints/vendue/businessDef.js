@@ -1,4 +1,5 @@
 const assign = require('lodash/assign');
+const assert = require('assert');
 const {
     AllowEveryoneAuth,
     OwnerRelationAuth,
