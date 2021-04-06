@@ -159,6 +159,7 @@ const AUTH_MATRIX = {
     },
     express: {
         [expressAction.create]: AllowEveryoneAuth,
+        [expressAction.update]: AllowEveryoneAuth,
         [expressAction.remove]: AllowEveryoneAuth,
         [expressAction.taPrepare]: AllowEveryoneAuth,
         [expressAction.taAccept]: {
