@@ -168,7 +168,7 @@ const AUTH_MATRIX = {
                     '#data': [
                         {
                             check: ({user, row}) => {
-                                return [expressState.tsSending].includes(row.state);
+                                return [expressState.tsSending].includes(row.transportState);
                             },
                         }
                     ],
@@ -181,7 +181,7 @@ const AUTH_MATRIX = {
                     '#data': [
                         {
                             check: ({user, row}) => {
-                                return [expressState.tsSending].includes(row.state);
+                                return [expressState.tsSending].includes(row.transportState);
                             },
                         }
                     ],
@@ -194,7 +194,7 @@ const AUTH_MATRIX = {
                     '#data': [
                         {
                             check: ({user, row}) => {
-                                return [expressState.tsInPreparing].includes(row.state);
+                                return [expressState.tsInPreparing].includes(row.transportState);
                             },
                         }
                     ],
