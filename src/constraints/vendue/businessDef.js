@@ -581,7 +581,7 @@ const paddleRefundUnexistsAuth = [
 
 const CheckOutCheckDataFn = (action, states, transportStates) => ({
     check: ({ row }) => {
-        if (transportStates && transportStates.includes(row.transportState)) {
+        if (transportStates && !transportStates.includes(row.transportState)) {
             return ErrorCode.createErrorByCode(ErrorCode.errorDataInconsistency,
                 `当前物流状态不支持${decodeCheckOutAction(action)}操作`, {
                 name: 'checkOut',
@@ -589,7 +589,7 @@ const CheckOutCheckDataFn = (action, states, transportStates) => ({
                 data: row,
             });
         };
-        if (states && states.includes(row.state)) {
+        if (states && !states.includes(row.state)) {
             return ErrorCode.createErrorByCode(ErrorCode.errorDataInconsistency,
                 `当前状态不支持${decodeCheckOutAction(action)}操作`, {
                 name: 'checkOut',
@@ -1946,13 +1946,13 @@ const AUTH_MATRIX = {
                 {
                     "#relation": {
                     },
-                    '#data': CheckContractDataState([contractState.convertible, contractState.contracted], '合同当前状态不允许更新'),
+                    '#data': CheckContractDataState([contractState.contracted], '合同当前状态不允许更新'),
                 },
                 {
                     "#relation": {
                         attr: 'actionHouse',
                     },
-                    '#data': CheckContractDataState([contractState.convertible, contractState.contracted], '合同当前状态不允许更新'),
+                    '#data': CheckContractDataState([contractState.contracted], '合同当前状态不允许更新'),
                 },
             ],
         },
@@ -1962,7 +1962,7 @@ const AUTH_MATRIX = {
                     "#relation": {
                         attr: 'actionHouse',
                     },
-                    '#data': CheckContractDataState([contractState.convertible, contractState.contracted], '合同当前状态不允许改价'),
+                    '#data': CheckContractDataState([contractState.contracted, contractState.convertible, contractState.contracted], '合同当前状态不允许改价'),
                 },
             ],
         },
