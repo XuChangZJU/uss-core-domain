@@ -669,6 +669,43 @@ const LicenseOperationControl = {
     ]
 };
 
+const CheckOutPushExistsCheckOut = [
+    {
+        relation: 'checkOut',
+        needData: true,
+        condition: ({ actionData }) => {
+            const { checkOutPush } = actionData;
+            const { checkOutId } = checkOutPush;
+            const query = {
+                state: {
+                    $in: [checkOutState.unpaid, checkOutState.paying],
+                },
+                id: checkOutId,
+            };
+            return query;
+        },
+    },
+];
+
+const CheckOutPushUnexistsRecentCheckOutPush = [
+    {
+        relation: 'checkOutPush',
+        needData: true,
+        condition: ({ actionData }) => {
+            const { checkOutPush } = actionData;
+            const { checkOutId } = checkOutPush;
+            const query = {
+                checkOutId,
+                _createAt_: {
+                    $gt: Date.now() - 3600 * 1000,
+                },
+            };
+            return query;
+        },
+        message: '一小时以内请勿重复打扰客户',
+    },
+];
+
 const AUTH_MATRIX = {
     vendue: {
         [vendueAction.assign]: {
@@ -2190,15 +2227,13 @@ const AUTH_MATRIX = {
         },
         [checkOutAction.changePrice]: {
             auths: [
-                CheckOutVendueWorkerCheckFn(checkOutAction.changePrice, [checkOutState.init, checkOutState.unpaid], null),
-                CheckOutVendueAuctionHouseWorkerCheckFn(checkOutAction.changePrice, [checkOutState.init, checkOutState.unpaid], null),
+                CheckOutVendueWorkerCheckFn(checkOutAction.changePrice, [checkOutState.init, checkOutState.unpaid, checkOutState.legal2], null),
+                CheckOutVendueAuctionHouseWorkerCheckFn(checkOutAction.changePrice, [checkOutState.init, checkOutState.unpaid, checkOutState.legal2], null),
             ]
         },
         [checkOutAction.makePaid]: {
             auths: [
-                {
-                    '#role': [Roles.ROOT.name],
-                }
+                CheckOutVendueAuctionHouseWorkerCheckFn(checkOutAction.makePaid, [checkOutState.unpaid], null),
             ]
         },
         [checkOutAction.finish]: {
@@ -2400,23 +2435,18 @@ const AUTH_MATRIX = {
         [CommonAction.create]: {
             auths: [
                 {
-                    '#exists': [
-                        {
-                            relation: 'checkOut',
-                            needData: true,
-                            condition: ({ user, actionData }) => {
-                                const { checkOutPush } = actionData;
-                                const { checkOutId } = checkOutPush;
-                                const query = {
-                                    state: {
-                                        $in: [checkOutState.unpaid, checkOutState.paying],
-                                    },
-                                    id: checkOutId,
-                                };
-                                return query;
-                            },
-                        },
-                    ],
+                    '#exists': CheckOutPushExistsCheckOut,
+                    '#relation': {
+                        attr: 'paddle.vendue',
+                    },
+                    '#unexists': CheckOutPushUnexistsRecentCheckOutPush,
+                },
+                {
+                    '#exists': CheckOutPushExistsCheckOut,
+                    '#relation': {
+                        attr: 'paddle.vendue.auctionHouse',
+                    },
+                    '#unexists': CheckOutPushUnexistsRecentCheckOutPush,
                 }
             ]
         }
