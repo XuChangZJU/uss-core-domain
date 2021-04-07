@@ -721,20 +721,7 @@ const AUTH_MATRIX = {
         [vendueAction.start]: {
             auths: [
                 {
-                    "#relation": {
-                    },
-                    '#data': [
-                        {
-                            check: ({ user, row }) => {
-                                return [vendueState.ready].includes(row.state);
-                            },
-                        }
-                    ],
-                },
-                {
-                    "#relation": {
-                        attr: 'auctionHouse',
-                    },
+                    "#role": [Roles.ROOT.name],
                     '#data': [
                         {
                             check: ({ user, row }) => {
@@ -1078,6 +1065,20 @@ const AUTH_MATRIX = {
                             },
                         }
                     ],
+                    '#exists': [
+                        {
+                            relation: 'vendue',
+                            condition: ({ row }) => {
+                                const query = {
+                                    id: row.vendueId,
+                                    state: {
+                                        $in: [vendueState.ready, vendueState.ongoing],
+                                    },
+                                };
+                                return query;
+                            },
+                        },
+                    ],
                 },
                 {
                     "#relation": {
@@ -1091,6 +1092,20 @@ const AUTH_MATRIX = {
                             },
                         }
                     ],
+                    '#exists': [
+                        {
+                            relation: 'vendue',
+                            condition: ({ row }) => {
+                                const query = {
+                                    id: row.vendueId,
+                                    state: {
+                                        $in: [vendueState.ready, vendueState.ongoing],
+                                    },
+                                };
+                                return query;
+                            },
+                        },
+                    ],
                 },
                 {
                     "#relation": {
@@ -1103,6 +1118,20 @@ const AUTH_MATRIX = {
                                 return [sessionState.ready, sessionState.pausing].includes(row.state);
                             },
                         }
+                    ],
+                    '#exists': [
+                        {
+                            relation: 'vendue',
+                            condition: ({ row }) => {
+                                const query = {
+                                    id: row.vendueId,
+                                    state: {
+                                        $in: [vendueState.ready, vendueState.ongoing],
+                                    },
+                                };
+                                return query;
+                            },
+                        },
                     ],
                 }
             ]
