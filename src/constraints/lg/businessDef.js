@@ -1223,7 +1223,7 @@ const AUTH_MATRIX = {
                     '#data': [
                         {
                             check: ({user, row}) => {
-                                return [tradeState.unpaid].includes(row.state);
+                                return [tradeState.legal2].includes(row.state);
                             },
                         }
                     ],
@@ -1236,8 +1236,15 @@ const AUTH_MATRIX = {
                     '#data': [
                         {
                             check: ({user, row}) => {
-                                return [tradeTransportState.unpicked].includes(row.state);
+                                return [tradeTransportState.unpicked].includes(row.transportState);
                             },
+                            message: '订单已提货'
+                        },
+                        {
+                            check: ({user, row}) => {
+                                return [tradeState.legal2, tradeState.legal].includes(row.state);
+                            },
+                            message: '订单未结算，请结算完成后再进行提货',
                         }
                     ],
                 }
