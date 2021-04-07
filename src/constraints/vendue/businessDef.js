@@ -163,7 +163,7 @@ const AuctionDataCheck = (states, msg) => [
             if (states) {
                 assert(row);
 
-                if (states.includes(row.state)) {
+                if (!states.includes(row.state)) {
                     return ErrorCode.createErrorByCode(ErrorCode.errorDataInconsistency, msg, {
                         name: 'auction',
                         operation: 'update',
