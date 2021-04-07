@@ -372,13 +372,15 @@ const AnyAuctionHouseWorker = {
 const CheckContractDataState = (states, msg) => [
     {
         check: ({ row }) => {
-            if (!states.includes(row.data)) {
+            if (!states.includes(row.state)) {
                 return ErrorCode.createErrorByCode(ErrorCode.errorDataInconsistency, msg, {
                     name: 'contract',
                     operation: 'update',
                     data: row,
                 });
             }
+
+            return true;
         },
     },
 ];
@@ -1962,7 +1964,7 @@ const AUTH_MATRIX = {
                     "#relation": {
                         attr: 'actionHouse',
                     },
-                    '#data': CheckContractDataState([contractState.contracted, contractState.convertible, contractState.contracted], '合同当前状态不允许改价'),
+                    '#data': CheckContractDataState([contractState.contracted, contractState.convertible], '合同当前状态不允许改价'),
                 },
             ],
         },
