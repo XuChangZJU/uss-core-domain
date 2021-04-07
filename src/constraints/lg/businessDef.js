@@ -159,6 +159,7 @@ const AUTH_MATRIX = {
     },
     express: {
         [expressAction.create]: AllowEveryoneAuth,
+        [expressAction.update]: AllowEveryoneAuth,
         [expressAction.remove]: AllowEveryoneAuth,
         [expressAction.taPrepare]: AllowEveryoneAuth,
         [expressAction.taAccept]: {
@@ -167,7 +168,7 @@ const AUTH_MATRIX = {
                     '#data': [
                         {
                             check: ({user, row}) => {
-                                return [expressState.tsSending].includes(row.state);
+                                return [expressState.tsSending].includes(row.transportState);
                             },
                         }
                     ],
@@ -180,7 +181,7 @@ const AUTH_MATRIX = {
                     '#data': [
                         {
                             check: ({user, row}) => {
-                                return [expressState.tsSending].includes(row.state);
+                                return [expressState.tsSending].includes(row.transportState);
                             },
                         }
                     ],
@@ -193,7 +194,7 @@ const AUTH_MATRIX = {
                     '#data': [
                         {
                             check: ({user, row}) => {
-                                return [expressState.tsInPreparing].includes(row.state);
+                                return [expressState.tsInPreparing].includes(row.transportState);
                             },
                         }
                     ],
@@ -960,6 +961,13 @@ const AUTH_MATRIX = {
                     "#relation": {
                         relations: [shopRelation.owner, shopRelation.manager],
                     },
+                    '#data': [
+                        {
+                            check: ({user, row}) => {
+                                return [shopState.offline].includes(row.state);
+                            },
+                        }
+                    ],
                 },
             ],
         },
@@ -995,6 +1003,13 @@ const AUTH_MATRIX = {
                     "#relation": {
                         relations: [shopRelation.owner, shopRelation.manager],
                     },
+                    '#data': [
+                        {
+                            check: ({user, row}) => {
+                                return [shopState.online].includes(row.state);
+                            },
+                        }
+                    ],
                 },
             ],
         },
@@ -1002,6 +1017,13 @@ const AUTH_MATRIX = {
             auths: [
                 {
                     '#role': [Roles.ROOT.name],
+                    '#data': [
+                        {
+                            check: ({user, row}) => {
+                                return [shopState.online, shopState.offline].includes(row.state);
+                            },
+                        }
+                    ],
                 },
             ],
         },
@@ -1009,6 +1031,13 @@ const AUTH_MATRIX = {
             auths: [
                 {
                     '#role': [Roles.ROOT.name],
+                    '#data': [
+                        {
+                            check: ({user, row}) => {
+                                return [shopState.disabled].includes(row.state);
+                            },
+                        }
+                    ],
                 },
             ],
         },
@@ -1128,6 +1157,16 @@ const AUTH_MATRIX = {
                 }
             ]
         },
+        [skuAction.remove]: {
+            auths: [
+                {
+                    "#relation": {
+                        attr: 'lgShop',
+                        relations: [shopRelation.owner, shopRelation.manager],
+                    },
+                }
+            ]
+        },
         [skuAction.online]: {
             auths: [
                 {
@@ -1184,7 +1223,7 @@ const AUTH_MATRIX = {
                     '#data': [
                         {
                             check: ({user, row}) => {
-                                return [tradeState.unpaid].includes(row.state);
+                                return [tradeState.legal2].includes(row.state);
                             },
                         }
                     ],
@@ -1197,8 +1236,15 @@ const AUTH_MATRIX = {
                     '#data': [
                         {
                             check: ({user, row}) => {
-                                return [tradeTransportState.unpicked].includes(row.state);
+                                return [tradeTransportState.unpicked].includes(row.transportState);
                             },
+                            message: '订单已提货'
+                        },
+                        {
+                            check: ({user, row}) => {
+                                return [tradeState.legal2, tradeState.legal].includes(row.state);
+                            },
+                            message: '订单未结算，请结算完成后再进行提货',
                         }
                     ],
                 }

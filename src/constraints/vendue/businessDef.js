@@ -1,4 +1,5 @@
 const assign = require('lodash/assign');
+const assert = require('assert');
 const {
     AllowEveryoneAuth,
     OwnerRelationAuth,
@@ -2261,6 +2262,7 @@ const AUTH_MATRIX = {
                                 }
                                 return query;
                             },
+                            message: '您未拥有当前号牌，请领取号牌或重新登录后再进行操作',
                         },
                         {
                             relation: 'auction',
@@ -2276,47 +2278,16 @@ const AUTH_MATRIX = {
                                 };
                                 return query;
                             },
-                        },
-                    ],
-                },
-            ]
-        },
-        [agentAction.remove]: {
-            auths: [
-                {
-                    '#exists': [
-                        {
-                            relation: 'paddle',
-                            condition: ({ user, actionData, roleName }) => {
-                                const { agent } = actionData;
-                                const query = {
-                                    id: agent.paddleId,
-                                };
-                                if (roleName !== Roles.ROOT.name) {
-                                    assign(query, {
-                                        userId: user.id,
-                                    });
-                                }
-                                return query;
-                            },
-                        },
-                        {
-                            relation: 'auction',
-                            condition: ({ user, row }) => {
-                                const { auctionId } = row;
-                                const query = {
-                                    id: auctionId,
-                                    state: auctionState.ready,
-                                };
-                                return query;
-                            },
+                            message: '该拍品已结束拍卖或尚在准备，不能进行委托',
                         },
                     ],
                     '#unexists': [
                         {
                             relation: 'agent',
-                            condition: ({ user }) => {
-                                const { auctionId } = row;
+                            needData: true,
+                            condition: ({ user, actionData }) => {
+                                const { agent } = actionData;
+                                const { auctionId } = agent;
                                 const query = {
                                     paddle: {
                                         userId: user.id,
@@ -2329,12 +2300,50 @@ const AUTH_MATRIX = {
                             message: '您在此拍品上已有一个委托，不可重复委托',
                         }
                     ],
+                },
+            ]
+        },
+        [agentAction.remove]: {
+            auths: [
+                {
                     '#data': [
                         {
                             check: ({ row }) => {
                                 return [agentState.normal].includes(row.state);
                             },
+                            message: '已经成功或失败的委托不能取消',
                         }
+                    ],
+                    '#exists': [
+                        {
+                            relation: 'paddle',
+                            condition: ({ user, row, roleName }) => {
+                                // const { agent } = actionData;
+                                const { paddleId } = row;
+                                const query = {
+                                    id: paddleId,
+                                };
+                                if (roleName !== Roles.ROOT.name) {
+                                    assign(query, {
+                                        userId: user.id,
+                                    });
+                                }
+                                return query;
+                            },
+                            message: '您未拥有当前号牌，请领取号牌或重新登录后再进行操作',
+                        },
+                        {
+                            relation: 'auction',
+                            condition: ({ user, row }) => {
+                                const { auctionId } = row;
+                                const query = {
+                                    id: auctionId,
+                                    state: auctionState.ready,
+                                };
+                                return query;
+                            },
+                            message: '拍品开始拍卖后不能取消委托',
+                        },
                     ],
                 },
             ]
