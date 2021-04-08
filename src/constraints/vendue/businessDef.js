@@ -163,7 +163,7 @@ const AuctionDataCheck = (states, msg) => [
             if (states) {
                 assert(row);
 
-                if (states.includes(row.state)) {
+                if (!states.includes(row.state)) {
                     return ErrorCode.createErrorByCode(ErrorCode.errorDataInconsistency, msg, {
                         name: 'auction',
                         operation: 'update',
@@ -372,13 +372,15 @@ const AnyAuctionHouseWorker = {
 const CheckContractDataState = (states, msg) => [
     {
         check: ({ row }) => {
-            if (!states.includes(row.data)) {
+            if (!states.includes(row.state)) {
                 return ErrorCode.createErrorByCode(ErrorCode.errorDataInconsistency, msg, {
                     name: 'contract',
                     operation: 'update',
                     data: row,
                 });
             }
+
+            return true;
         },
     },
 ];
@@ -581,7 +583,7 @@ const paddleRefundUnexistsAuth = [
 
 const CheckOutCheckDataFn = (action, states, transportStates) => ({
     check: ({ row }) => {
-        if (transportStates && transportStates.includes(row.transportState)) {
+        if (transportStates && !transportStates.includes(row.transportState)) {
             return ErrorCode.createErrorByCode(ErrorCode.errorDataInconsistency,
                 `当前物流状态不支持${decodeCheckOutAction(action)}操作`, {
                 name: 'checkOut',
@@ -589,7 +591,7 @@ const CheckOutCheckDataFn = (action, states, transportStates) => ({
                 data: row,
             });
         };
-        if (states && states.includes(row.state)) {
+        if (states && !states.includes(row.state)) {
             return ErrorCode.createErrorByCode(ErrorCode.errorDataInconsistency,
                 `当前状态不支持${decodeCheckOutAction(action)}操作`, {
                 name: 'checkOut',
@@ -667,6 +669,43 @@ const LicenseOperationControl = {
     ]
 };
 
+const CheckOutPushExistsCheckOut = [
+    {
+        relation: 'checkOut',
+        needData: true,
+        condition: ({ actionData }) => {
+            const { checkOutPush } = actionData;
+            const { checkOutId } = checkOutPush;
+            const query = {
+                state: {
+                    $in: [checkOutState.unpaid, checkOutState.paying],
+                },
+                id: checkOutId,
+            };
+            return query;
+        },
+    },
+];
+
+const CheckOutPushUnexistsRecentCheckOutPush = [
+    {
+        relation: 'checkOutPush',
+        needData: true,
+        condition: ({ actionData }) => {
+            const { checkOutPush } = actionData;
+            const { checkOutId } = checkOutPush;
+            const query = {
+                checkOutId,
+                _createAt_: {
+                    $gt: Date.now() - 3600 * 1000,
+                },
+            };
+            return query;
+        },
+        message: '一小时以内请勿重复打扰客户',
+    },
+];
+
 const AUTH_MATRIX = {
     vendue: {
         [vendueAction.assign]: {
@@ -722,20 +761,7 @@ const AUTH_MATRIX = {
         [vendueAction.start]: {
             auths: [
                 {
-                    "#relation": {
-                    },
-                    '#data': [
-                        {
-                            check: ({ user, row }) => {
-                                return [vendueState.ready].includes(row.state);
-                            },
-                        }
-                    ],
-                },
-                {
-                    "#relation": {
-                        attr: 'auctionHouse',
-                    },
+                    "#role": [Roles.ROOT.name],
                     '#data': [
                         {
                             check: ({ user, row }) => {
@@ -1079,6 +1105,20 @@ const AUTH_MATRIX = {
                             },
                         }
                     ],
+                    '#exists': [
+                        {
+                            relation: 'vendue',
+                            condition: ({ row }) => {
+                                const query = {
+                                    id: row.vendueId,
+                                    state: {
+                                        $in: [vendueState.ready, vendueState.ongoing],
+                                    },
+                                };
+                                return query;
+                            },
+                        },
+                    ],
                 },
                 {
                     "#relation": {
@@ -1092,6 +1132,20 @@ const AUTH_MATRIX = {
                             },
                         }
                     ],
+                    '#exists': [
+                        {
+                            relation: 'vendue',
+                            condition: ({ row }) => {
+                                const query = {
+                                    id: row.vendueId,
+                                    state: {
+                                        $in: [vendueState.ready, vendueState.ongoing],
+                                    },
+                                };
+                                return query;
+                            },
+                        },
+                    ],
                 },
                 {
                     "#relation": {
@@ -1104,6 +1158,20 @@ const AUTH_MATRIX = {
                                 return [sessionState.ready, sessionState.pausing].includes(row.state);
                             },
                         }
+                    ],
+                    '#exists': [
+                        {
+                            relation: 'vendue',
+                            condition: ({ row }) => {
+                                const query = {
+                                    id: row.vendueId,
+                                    state: {
+                                        $in: [vendueState.ready, vendueState.ongoing],
+                                    },
+                                };
+                                return query;
+                            },
+                        },
                     ],
                 }
             ]
@@ -1922,13 +1990,13 @@ const AUTH_MATRIX = {
                 {
                     "#relation": {
                     },
-                    '#data': CheckContractDataState([contractState.convertible, contractState.contracted], '合同当前状态不允许更新'),
+                    '#data': CheckContractDataState([contractState.contracted], '合同当前状态不允许更新'),
                 },
                 {
                     "#relation": {
                         attr: 'actionHouse',
                     },
-                    '#data': CheckContractDataState([contractState.convertible, contractState.contracted], '合同当前状态不允许更新'),
+                    '#data': CheckContractDataState([contractState.contracted], '合同当前状态不允许更新'),
                 },
             ],
         },
@@ -1938,7 +2006,7 @@ const AUTH_MATRIX = {
                     "#relation": {
                         attr: 'actionHouse',
                     },
-                    '#data': CheckContractDataState([contractState.convertible, contractState.contracted], '合同当前状态不允许改价'),
+                    '#data': CheckContractDataState([contractState.contracted, contractState.convertible], '合同当前状态不允许改价'),
                 },
             ],
         },
@@ -2164,15 +2232,13 @@ const AUTH_MATRIX = {
         },
         [checkOutAction.changePrice]: {
             auths: [
-                CheckOutVendueWorkerCheckFn(checkOutAction.changePrice, [checkOutState.init, checkOutState.unpaid], null),
-                CheckOutVendueAuctionHouseWorkerCheckFn(checkOutAction.changePrice, [checkOutState.init, checkOutState.unpaid], null),
+                CheckOutVendueWorkerCheckFn(checkOutAction.changePrice, [checkOutState.init, checkOutState.unpaid, checkOutState.legal2], null),
+                CheckOutVendueAuctionHouseWorkerCheckFn(checkOutAction.changePrice, [checkOutState.init, checkOutState.unpaid, checkOutState.legal2], null),
             ]
         },
         [checkOutAction.makePaid]: {
             auths: [
-                {
-                    '#role': [Roles.ROOT.name],
-                }
+                CheckOutVendueAuctionHouseWorkerCheckFn(checkOutAction.makePaid, [checkOutState.unpaid], null),
             ]
         },
         [checkOutAction.finish]: {
@@ -2374,23 +2440,18 @@ const AUTH_MATRIX = {
         [CommonAction.create]: {
             auths: [
                 {
-                    '#exists': [
-                        {
-                            relation: 'checkOut',
-                            needData: true,
-                            condition: ({ user, actionData }) => {
-                                const { checkOutPush } = actionData;
-                                const { checkOutId } = checkOutPush;
-                                const query = {
-                                    state: {
-                                        $in: [checkOutState.unpaid, checkOutState.paying],
-                                    },
-                                    id: checkOutId,
-                                };
-                                return query;
-                            },
-                        },
-                    ],
+                    '#exists': CheckOutPushExistsCheckOut,
+                    '#relation': {
+                        attr: 'paddle.vendue',
+                    },
+                    '#unexists': CheckOutPushUnexistsRecentCheckOutPush,
+                },
+                {
+                    '#exists': CheckOutPushExistsCheckOut,
+                    '#relation': {
+                        attr: 'paddle.vendue.auctionHouse',
+                    },
+                    '#unexists': CheckOutPushUnexistsRecentCheckOutPush,
                 }
             ]
         }

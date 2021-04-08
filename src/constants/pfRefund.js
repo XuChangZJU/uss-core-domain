@@ -11,12 +11,12 @@ const {
  const { AllowEveryoneAuth } = require('../constraints/action');
  const { Roles } = require('../constants/roleConstant2');
 
-const state = assign(pick(commonState, ['create']), {
+const state = {
     refunding: 10001,
     refunded: 10201,
     cancelled: 10899,
     abnormal: 11001,
-});
+};
 
 const decodeState = (s) => {
     const TEXT = {
@@ -26,7 +26,7 @@ const decodeState = (s) => {
         [state.abnormal]: "退款异常",
     };
     
-    return TEXT[s] || decodeCommonState(s);
+    return TEXT[s];
 };
 
 const action = assign(pick(commonState, ['create']),{
