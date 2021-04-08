@@ -2236,12 +2236,19 @@ const AUTH_MATRIX = {
                 CheckOutVendueAuctionHouseWorkerCheckFn(checkOutAction.changePrice, [checkOutState.init, checkOutState.unpaid, checkOutState.legal2], null),
             ]
         },
+        [checkOutAction.confirmToPay]: {
+            auths: [
+                CheckOutGuestCheckFn(checkOutAction.confirmToPay, [checkOutState.init], null),
+                CheckOutVendueWorkerCheckFn(checkOutAction.confirmToPay, [checkOutState.init], null),
+                CheckOutVendueAuctionHouseWorkerCheckFn(checkOutAction.confirmToPay, [checkOutState.init], null),
+            ]
+        },
         [checkOutAction.makePaid]: {
             auths: [
                 CheckOutVendueAuctionHouseWorkerCheckFn(checkOutAction.makePaid, [checkOutState.unpaid], null),
             ]
         },
-        [checkOutAction.finish]: {
+        [checkOutAction.complete]: {
             auths: [
                 {
                     '#role': [Roles.ROOT.name],
