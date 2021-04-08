@@ -1562,10 +1562,15 @@ const AUTH_MATRIX = {
                             needData: true,
                             condition: ({ user, actionData }) => {
                                 const { bid } = actionData;
-                                return {
-                                    id: bid.paddleId,
+                                const query = {
                                     userId: user.id,
-                                };
+                                }
+                                if (bid.paddleId){
+                                    assign(query, {
+                                        id: bid.paddleId,
+                                    })
+                                }
+                                return query;
                             },
                         },
                     ],
