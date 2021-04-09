@@ -12,6 +12,8 @@ const action = Object.assign(
 
 const AUTH_MATRIX = {
     [action.create]: AllowEveryoneAuth,
+    [action.update]: AllowEveryoneAuth,
+    [action.remove]: AllowEveryoneAuth,
     [action.taSend]: AllowEveryoneAuth,
     [action.taAccept]: AllowEveryoneAuth,
     [action.taReject]: AllowEveryoneAuth,
