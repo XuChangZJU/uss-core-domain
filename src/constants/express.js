@@ -2,6 +2,7 @@ const {
     TRANSPORT_STATE_TRANS_MATRIX,
     action: commonAction,
     transportAction,
+    transportState,
 } = require('./action');
 
 const { AllowEveryoneAuth } = require('../constraints/action');
@@ -22,5 +23,7 @@ const AUTH_MATRIX = {
 
 module.exports = {
     STATE_TRANS_MATRIX: TRANSPORT_STATE_TRANS_MATRIX,
+    action,
     AUTH_MATRIX,
+    transportState,
 }
