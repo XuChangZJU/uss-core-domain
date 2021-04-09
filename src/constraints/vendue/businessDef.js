@@ -675,12 +675,31 @@ const CheckOutPushExistsCheckOut = [
         needData: true,
         condition: ({ actionData }) => {
             const { checkOutPush } = actionData;
-            const { checkOutId } = checkOutPush;
+            const { paddleId } = checkOutPush;
             const query = {
                 state: {
                     $in: [checkOutState.unpaid, checkOutState.paying],
                 },
-                id: checkOutId,
+                paddleId,
+            };
+            return query;
+        },
+    },
+];
+
+const CheckOutPushExistsBid = [
+    {
+        relation: 'bid',
+        needData: true,
+        condition: ({ actionData }) => {
+            const { checkOutPush } = actionData;
+            const { paddleId } = checkOutPush;
+            const query = {
+                checkOutId: {
+                    $exists: false,
+                },
+                state: bidState.success,
+                paddleId,
             };
             return query;
         },
@@ -693,9 +712,9 @@ const CheckOutPushUnexistsRecentCheckOutPush = [
         needData: true,
         condition: ({ actionData }) => {
             const { checkOutPush } = actionData;
-            const { checkOutId } = checkOutPush;
+            const { paddleId } = checkOutPush;
             const query = {
-                checkOutId,
+                paddleId,
                 _createAt_: {
                     $gt: Date.now() - 3600 * 1000,
                 },
@@ -2455,6 +2474,20 @@ const AUTH_MATRIX = {
                 },
                 {
                     '#exists': CheckOutPushExistsCheckOut,
+                    '#relation': {
+                        attr: 'paddle.vendue.auctionHouse',
+                    },
+                    '#unexists': CheckOutPushUnexistsRecentCheckOutPush,
+                },
+                {
+                    '#exists': CheckOutPushExistsBid,
+                    '#relation': {
+                        attr: 'paddle.vendue',
+                    },
+                    '#unexists': CheckOutPushUnexistsRecentCheckOutPush,
+                },
+                {
+                    '#exists': CheckOutPushExistsBid,
                     '#relation': {
                         attr: 'paddle.vendue.auctionHouse',
                     },
