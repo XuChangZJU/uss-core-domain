@@ -2195,6 +2195,12 @@ const AUTH_MATRIX = {
         },
     },
     checkOut: {
+        [checkOutAction.takeAway]: {
+            auths: [
+                CheckOutVendueWorkerCheckFn(checkOutAction.takeAway, null, [checkOutTransportState.unpicked]),
+                CheckOutVendueAuctionHouseWorkerCheckFn(checkOutAction.takeAway, null, [checkOutTransportState.unpicked])
+            ]
+        },
         [checkOutAction.taPrepare]: {
             auths: [
                 CheckOutGuestCheckFn(checkOutAction.taPrepare, null, [checkOutTransportState.shipping]),
@@ -2204,28 +2210,28 @@ const AUTH_MATRIX = {
         },
         [checkOutAction.taCancel]: {
             auths: [
-                CheckOutGuestCheckFn(checkOutAction.taPrepare, null, [checkOutTransportState.shipping]),
-                CheckOutVendueWorkerCheckFn(checkOutAction.taPrepare, null, [checkOutTransportState.shipping]),
-                CheckOutVendueAuctionHouseWorkerCheckFn(checkOutAction.taPrepare, null, [checkOutTransportState.shipping]),
+                CheckOutGuestCheckFn(checkOutAction.taCancel, null, [checkOutTransportState.tsInPreparing]),
+                CheckOutVendueWorkerCheckFn(checkOutAction.taCancel, null, [checkOutTransportState.tsInPreparing]),
+                CheckOutVendueAuctionHouseWorkerCheckFn(checkOutAction.taCancel, null, [checkOutTransportState.tsInPreparing]),
             ]
         },
         [checkOutAction.taSend]: {
             auths: [
-                CheckOutVendueWorkerCheckFn(checkOutAction.taPrepare, null, [checkOutTransportState.tsInPreparing]),
-                CheckOutVendueAuctionHouseWorkerCheckFn(checkOutAction.taPrepare, null, [checkOutTransportState.tsInPreparing]),
+                CheckOutVendueWorkerCheckFn(checkOutAction.taSend, null, [checkOutTransportState.tsInPreparing]),
+                CheckOutVendueAuctionHouseWorkerCheckFn(checkOutAction.taSend, null, [checkOutTransportState.tsInPreparing]),
             ]
         },
         [checkOutAction.taAccept]: {
             auths: [
-                CheckOutGuestCheckFn(checkOutAction.taPrepare, null, [checkOutTransportState.tsSending]),
+                CheckOutGuestCheckFn(checkOutAction.taAccept, null, [checkOutTransportState.tsSending]),
             ]
         },
-        [checkOutAction.takeAway]: {
-            auths: [
-                CheckOutVendueWorkerCheckFn(checkOutAction.taPrepare, null, [checkOutTransportState.tsInPreparing, checkOutTransportState.shipping]),
-                CheckOutVendueAuctionHouseWorkerCheckFn(checkOutAction.taPrepare, null, [checkOutTransportState.tsInPreparing, checkOutTransportState.shipping]),
-            ]
-        },
+        // [checkOutAction.takeAway]: {
+        //     auths: [
+        //         CheckOutVendueWorkerCheckFn(checkOutAction.taPrepare, null, [checkOutTransportState.tsInPreparing, checkOutTransportState.shipping]),
+        //         CheckOutVendueAuctionHouseWorkerCheckFn(checkOutAction.taPrepare, null, [checkOutTransportState.tsInPreparing, checkOutTransportState.shipping]),
+        //     ]
+        // },
         [checkOutAction.create]: {
             auths: [
                 {

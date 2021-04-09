@@ -14,7 +14,7 @@ const {
 } = require('../action');
 
 const action = Object.assign({
-    takeAway: 20002,
+    takeAway: 32000,
 }, commonAction, transportAction);
 const decodeAction = (a) => {
     const DICT = {
@@ -25,11 +25,15 @@ const decodeAction = (a) => {
 
 const transportState = Object.assign({}, commonTransportState, {
     shipping: 20001,
+    unpicked: 20010,
+    picked: 20100,
 });
 
 const decodeTransportState = (ts) => {
     const DICT = {
         [transportState.shipping]: '暂存中',
+        [transportState.unpicked]: '待提货',
+        [transportAction.picked]: '已提货',
     };
     return DICT[ts] || decodeCommonTransportState(ts);
 };
@@ -38,16 +42,13 @@ const STATE_TRAN_MATRIX = Object.assign(
     {
         [transportAction.taPrepare]: [transportState.shipping, transportState.tsInPreparing],
         [transportAction.taCancel]: [transportState.tsInPreparing, transportState.shipping],
+        [action.takeAway]: [transportState.unpicked, transportState.picked],
     }, COMMON_STATE_TRAN_MATRIX, TRANSPORT_STATE_TRANS_MATRIX);
 
 const getActionStateAttr = (action) => {
-    if (action > 20000) {
-        return 'billState';
-    }
-    if (action > 10000) {
+    if (action > 30000) {
         return 'transportState';
     }
-
     return 'state';
 };
 
