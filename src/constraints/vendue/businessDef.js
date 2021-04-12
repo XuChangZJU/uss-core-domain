@@ -371,7 +371,11 @@ const AnyAuctionHouseWorker = {
 
 const CheckContractDataState = (states, msg) => [
     {
-        check: ({ row }) => {
+        check: ({ row , actionData}) => {
+            const { contract } = actionData;
+            if (contract.hasOwnProperty('price')) {
+                assert(contract.price >= 0, `合同「${row.id}」的价格必须大于等于0`);
+            }
             if (!states.includes(row.state)) {
                 return ErrorCode.createErrorByCode(ErrorCode.errorDataInconsistency, msg, {
                     name: 'contract',
@@ -410,7 +414,11 @@ const BidGeneralUpdateControl = (states) => ({
             },
             '#data': [
                 {
-                    check: ({ row }) => {
+                    check: ({ row, actionData }) => {
+                        const { bid } = actionData;
+                        if (bid && bid.hasOwnProperty('price')) {
+                            assert(bid.price >= 0, `bid「${row.id}」的价格必须大于等于0`);
+                        }
                         return states.includes(row.state);
                     },
                 },
@@ -521,8 +529,10 @@ const paddleRefundDataCheck = (isSuperUser) => [
     {
         check: ({ row, actionData, user }) => {
             const { paddle, paymentMethod } = actionData;
-            const { refundingDeposit } = paddle;
+            const { refundingDeposit, id } = paddle;
             const { onlineDeposit } = row;
+            assert (id === row.id);
+            
             if (row.availableDeposit <= 0.01) {
                 return ErrorCode.createErrorByCode(ErrorCode.errorLegalBodyError, '没有可退的余额');
             }
@@ -582,7 +592,7 @@ const paddleRefundUnexistsAuth = [
 ];
 
 const CheckOutCheckDataFn = (action, states, transportStates) => ({
-    check: ({ row }) => {
+    check: ({ row, actionData }) => {
         if (transportStates && !transportStates.includes(row.transportState)) {
             return ErrorCode.createErrorByCode(ErrorCode.errorDataInconsistency,
                 `当前物流状态不支持${decodeCheckOutAction(action)}操作`, {
@@ -600,6 +610,10 @@ const CheckOutCheckDataFn = (action, states, transportStates) => ({
             });
         };
 
+        const { checkOut } = actionData;
+        if (checkOut && checkOut.hasOwnProperty(price)) {
+            assert(data.price > 0, `checkOut的价格必须大于等于0`);
+        }
         return true;
     },
 });
@@ -1761,11 +1775,31 @@ const AUTH_MATRIX = {
                         attr: 'vendue',
                         relations: [vendueRelation.worker, vendueRelation.manager, vendueRelation.owner],
                     },
+                    '#data': {
+                        check: ({ actionData, row }) => {
+                            const { paddle } = actionData;
+                            const totalDeposit = paddle.totalDeposit || row.totalDeposit;
+                            const availableDeposit = paddle.availableDeposit || row.availableDeposit;
+                            assert(totalDeposit >= 0, `paddle「${row.id}」的totalDeposit必须大于等于0`);
+                            assert(availableDeposit >= 0, `paddle「${row.id}」的availableDeposit必须大于等于0`);
+                            assert(totalDeposit >= availableDeposit, `paddle「${row.id}」的totalDeposit必须大于等于availableDeposit`);
+                        },
+                    },
                 },
                 {
                     "#relation": {
                         attr: 'vendue.auctionHouse',
                         relations: [auctionHouseRelation.manager, auctionHouseRelation.owner],
+                    },
+                    '#data': {
+                        check: ({ actionData, row }) => {
+                            const { paddle } = actionData;
+                            const totalDeposit = paddle.totalDeposit || row.totalDeposit;
+                            const availableDeposit = paddle.availableDeposit || row.availableDeposit;
+                            assert(totalDeposit >= 0, `paddle「${row.id}」的totalDeposit必须大于等于0`);
+                            assert(availableDeposit >= 0, `paddle「${row.id}」的availableDeposit必须大于等于0`);
+                            assert(totalDeposit >= availableDeposit, `paddle「${row.id}」的totalDeposit必须大于等于availableDeposit`);
+                        },
                     },
                 },
             ]
@@ -2252,7 +2286,26 @@ const AUTH_MATRIX = {
         },
     },
     cashIn: {
-        [cashInAction.create]: AllowEveryoneAuth,
+        [cashInAction.create]: {
+            auths: [
+                {
+                    '#exists': [
+                        {
+                            relation: 'userAuctionHouse',
+                            condition: ({ user, row }) => {
+                                return {
+                                    userId: user.id,
+                                    auctionHouseId: row.auctionHouseId,
+                                    relation: {
+                                        $in: [auctionHouseRelation.owner, auctionHouseRelation.manager, auctionHouseRelation.settler],
+                                    }
+                                };
+                            },
+                        },
+                    ],
+                }
+            ],
+        },
         [cashInAction.makePaid]: {
             auths: [
                 {
