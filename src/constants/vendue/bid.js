@@ -7,9 +7,10 @@ const {
     decodeState: decodeCommonState,
 } = require('../action');
 const action = Object.assign({}, commonAction, {
-    success: 701,
-    confirm: 702,
-    violate: 703,
+    success: 401,
+    confirm: 402,
+    violate: 1001,
+    makeFailure: 2001,
 });
 
 const decodeAction = (a) => {
@@ -17,6 +18,7 @@ const decodeAction = (a) => {
         [action.success]: '成交',
         [action.confirm]: '确认',
         [action.violate]: '违约',
+        [action.makeFailure]: '失败',
     };
 
     return S[a] || decodeCommonAction(a);
@@ -37,8 +39,9 @@ function decodeCategory(o) {
 const state = Object.assign({}, commonState, {
     bidding: 301,
     success: 401,
-    confirmed: 702,
+    confirmed: 402,
     violated: 1001,
+    failure: 2001,
 });
 const decodeState = (s) => {
     const S = {
@@ -46,6 +49,7 @@ const decodeState = (s) => {
         [state.success]: '成交',
         [state.confirmed]: '已核对',
         [state.violated]: '已违约',
+        [state.failure]: '已失败',
     };
     return S[s] || decodeCommonState(s);
 };
@@ -53,6 +57,7 @@ const STATE_TRAN_MATRIX = {
     [action.success]: [state.bidding, state.success],
     [action.confirm]: [state.success, state.confirmed],
     [action.violate]: [[state.success, state.confirmed], state.violated],
+    [action.makeFailure]: [state.bidding, state.failure],
 };
 
 
