@@ -1741,6 +1741,24 @@ const AUTH_MATRIX = {
         [bidAction.changePrice]: BidGeneralUpdateControl([bidState.success]),
         [bidAction.confirm]: BidGeneralUpdateControl([bidState.success]),
         [bidAction.violate]: BidGeneralUpdateControl([bidState.success, bidState.confirmed]),
+        [bidAction.makeFailure]: {
+            auths: [
+                {
+                    "#role": [Roles.ROOT.name],
+                    '#data': [
+                        {
+                            check: ({ row, actionData }) => {
+                                const { bid } = actionData;
+                                if (bid && bid.hasOwnProperty('price')) {
+                                    assert(bid.price >= 0, `bid「${row.id}」的价格必须大于等于0`);
+                                }
+                                return states.includes(row.state);
+                            },
+                        },
+                    ],
+                }
+            ]
+        },
     },
     paddle: {
         [paddleAction.create]: {
