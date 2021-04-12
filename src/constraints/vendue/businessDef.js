@@ -689,12 +689,31 @@ const CheckOutPushExistsCheckOut = [
         needData: true,
         condition: ({ actionData }) => {
             const { checkOutPush } = actionData;
-            const { checkOutId } = checkOutPush;
+            const { paddleId } = checkOutPush;
             const query = {
                 state: {
                     $in: [checkOutState.unpaid, checkOutState.paying],
                 },
-                id: checkOutId,
+                paddleId,
+            };
+            return query;
+        },
+    },
+];
+
+const CheckOutPushExistsBid = [
+    {
+        relation: 'bid',
+        needData: true,
+        condition: ({ actionData }) => {
+            const { checkOutPush } = actionData;
+            const { paddleId } = checkOutPush;
+            const query = {
+                checkOutId: {
+                    $exists: false,
+                },
+                state: bidState.success,
+                paddleId,
             };
             return query;
         },
@@ -707,9 +726,9 @@ const CheckOutPushUnexistsRecentCheckOutPush = [
         needData: true,
         condition: ({ actionData }) => {
             const { checkOutPush } = actionData;
-            const { checkOutId } = checkOutPush;
+            const { paddleId } = checkOutPush;
             const query = {
-                checkOutId,
+                paddleId,
                 _createAt_: {
                     $gt: Date.now() - 3600 * 1000,
                 },
@@ -1644,10 +1663,15 @@ const AUTH_MATRIX = {
                             needData: true,
                             condition: ({ user, actionData }) => {
                                 const { bid } = actionData;
-                                return {
-                                    id: bid.paddleId,
+                                const query = {
                                     userId: user.id,
-                                };
+                                }
+                                if (bid.paddleId){
+                                    assign(query, {
+                                        id: bid.paddleId,
+                                    })
+                                }
+                                return query;
                             },
                         },
                     ],
@@ -2205,6 +2229,12 @@ const AUTH_MATRIX = {
         },
     },
     checkOut: {
+        [checkOutAction.takeAway]: {
+            auths: [
+                CheckOutVendueWorkerCheckFn(checkOutAction.takeAway, null, [checkOutTransportState.unpicked]),
+                CheckOutVendueAuctionHouseWorkerCheckFn(checkOutAction.takeAway, null, [checkOutTransportState.unpicked])
+            ]
+        },
         [checkOutAction.taPrepare]: {
             auths: [
                 CheckOutGuestCheckFn(checkOutAction.taPrepare, null, [checkOutTransportState.shipping]),
@@ -2214,28 +2244,28 @@ const AUTH_MATRIX = {
         },
         [checkOutAction.taCancel]: {
             auths: [
-                CheckOutGuestCheckFn(checkOutAction.taPrepare, null, [checkOutTransportState.shipping]),
-                CheckOutVendueWorkerCheckFn(checkOutAction.taPrepare, null, [checkOutTransportState.shipping]),
-                CheckOutVendueAuctionHouseWorkerCheckFn(checkOutAction.taPrepare, null, [checkOutTransportState.shipping]),
+                CheckOutGuestCheckFn(checkOutAction.taCancel, null, [checkOutTransportState.tsInPreparing]),
+                CheckOutVendueWorkerCheckFn(checkOutAction.taCancel, null, [checkOutTransportState.tsInPreparing]),
+                CheckOutVendueAuctionHouseWorkerCheckFn(checkOutAction.taCancel, null, [checkOutTransportState.tsInPreparing]),
             ]
         },
         [checkOutAction.taSend]: {
             auths: [
-                CheckOutVendueWorkerCheckFn(checkOutAction.taPrepare, null, [checkOutTransportState.tsInPreparing]),
-                CheckOutVendueAuctionHouseWorkerCheckFn(checkOutAction.taPrepare, null, [checkOutTransportState.tsInPreparing]),
+                CheckOutVendueWorkerCheckFn(checkOutAction.taSend, null, [checkOutTransportState.tsInPreparing]),
+                CheckOutVendueAuctionHouseWorkerCheckFn(checkOutAction.taSend, null, [checkOutTransportState.tsInPreparing]),
             ]
         },
         [checkOutAction.taAccept]: {
             auths: [
-                CheckOutGuestCheckFn(checkOutAction.taPrepare, null, [checkOutTransportState.tsSending]),
+                CheckOutGuestCheckFn(checkOutAction.taAccept, null, [checkOutTransportState.tsSending]),
             ]
         },
-        [checkOutAction.takeAway]: {
-            auths: [
-                CheckOutVendueWorkerCheckFn(checkOutAction.taPrepare, null, [checkOutTransportState.tsInPreparing, checkOutTransportState.shipping]),
-                CheckOutVendueAuctionHouseWorkerCheckFn(checkOutAction.taPrepare, null, [checkOutTransportState.tsInPreparing, checkOutTransportState.shipping]),
-            ]
-        },
+        // [checkOutAction.takeAway]: {
+        //     auths: [
+        //         CheckOutVendueWorkerCheckFn(checkOutAction.taPrepare, null, [checkOutTransportState.tsInPreparing, checkOutTransportState.shipping]),
+        //         CheckOutVendueAuctionHouseWorkerCheckFn(checkOutAction.taPrepare, null, [checkOutTransportState.tsInPreparing, checkOutTransportState.shipping]),
+        //     ]
+        // },
         [checkOutAction.create]: {
             auths: [
                 {
@@ -2265,12 +2295,19 @@ const AUTH_MATRIX = {
                 CheckOutVendueAuctionHouseWorkerCheckFn(checkOutAction.changePrice, [checkOutState.init, checkOutState.unpaid, checkOutState.legal2], null),
             ]
         },
+        [checkOutAction.confirmToPay]: {
+            auths: [
+                CheckOutGuestCheckFn(checkOutAction.confirmToPay, [checkOutState.init], null),
+                CheckOutVendueWorkerCheckFn(checkOutAction.confirmToPay, [checkOutState.init], null),
+                CheckOutVendueAuctionHouseWorkerCheckFn(checkOutAction.confirmToPay, [checkOutState.init], null),
+            ]
+        },
         [checkOutAction.makePaid]: {
             auths: [
                 CheckOutVendueAuctionHouseWorkerCheckFn(checkOutAction.makePaid, [checkOutState.unpaid], null),
             ]
         },
-        [checkOutAction.finish]: {
+        [checkOutAction.complete]: {
             auths: [
                 {
                     '#role': [Roles.ROOT.name],
@@ -2496,6 +2533,20 @@ const AUTH_MATRIX = {
                 },
                 {
                     '#exists': CheckOutPushExistsCheckOut,
+                    '#relation': {
+                        attr: 'paddle.vendue.auctionHouse',
+                    },
+                    '#unexists': CheckOutPushUnexistsRecentCheckOutPush,
+                },
+                {
+                    '#exists': CheckOutPushExistsBid,
+                    '#relation': {
+                        attr: 'paddle.vendue',
+                    },
+                    '#unexists': CheckOutPushUnexistsRecentCheckOutPush,
+                },
+                {
+                    '#exists': CheckOutPushExistsBid,
                     '#relation': {
                         attr: 'paddle.vendue.auctionHouse',
                     },
