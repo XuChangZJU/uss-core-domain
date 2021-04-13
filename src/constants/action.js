@@ -100,14 +100,14 @@ const state = {
 
 const decodeState = (s) => {
     const STRINGS = {
-        [state.init]: '初始的',
+        [state.init]: '初始',
 
-        [state.unpaid]: '待支付的',
-        [state.legal]: '生效的',
-        [state.legal2]: '手动生效的',
-        [state.aborted]: '中止的',
-        [state.cancelled]: '取消的',
-        [state.cantPaid]: '暂不可支付的',
+        [state.unpaid]: '待支付',
+        [state.legal]: '已支付',
+        [state.legal2]: '手动支付',
+        [state.aborted]: '已中止',
+        [state.cancelled]: '已取消',
+        [state.cantPaid]: '暂不可支付',
         [state.abandoned]: '已取消',
         [state.partialPaid]: '已部分支付',
         [state.paying]: '支付中',
@@ -118,8 +118,8 @@ const decodeState = (s) => {
         [state.aborting]: '正在中止',
         [state.abandoning]: '正在取消',
 
-        [state.confirmed]: '确认的',
-        [state.expired]: '过期的',
+        [state.confirmed]: '已确认',
+        [state.expired]: '已过期',
         [state.completed]: '已完成',
     };
 

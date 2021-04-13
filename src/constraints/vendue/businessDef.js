@@ -613,8 +613,8 @@ const CheckOutCheckDataFn = (action, states, transportStates) => ({
         };
 
         const { checkOut } = actionData;
-        if (checkOut && checkOut.hasOwnProperty(price)) {
-            assert(data.price > 0, `checkOut的价格必须大于等于0`);
+        if (checkOut && checkOut.hasOwnProperty('price')) {
+            assert(checkOut.price > 0, `checkOut的价格必须大于等于0`);
         }
         return true;
     },
