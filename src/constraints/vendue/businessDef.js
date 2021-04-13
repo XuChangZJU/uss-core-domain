@@ -2313,7 +2313,7 @@ const AUTH_MATRIX = {
         },
         [checkOutAction.makePaid]: {
             auths: [
-                CheckOutVendueAuctionHouseWorkerCheckFn(checkOutAction.makePaid, [checkOutState.unpaid], null),
+                CheckOutVendueAuctionHouseWorkerCheckFn(checkOutAction.makePaid, [checkOutState.init, checkOutState.unpaid], null),
             ]
         },
         [checkOutAction.complete]: {
