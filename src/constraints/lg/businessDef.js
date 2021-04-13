@@ -5,24 +5,24 @@ const {
     AnyRelationAuth,
 } = require('../action');
 const {
-    action: shopSpeciesAction,
+    action: ShopSpeciesAction,
 } = require('../../constants/lg/shopSpecies');
 const {
-    action: enterUpAction,
+    action: EnterUpAction,
 } = require('../../constants/lg/enterUp');
 const {
-    action: districtAction,
-    relation: districtRelation,
+    action: DistrictAction,
+    relation: DistrictRelation,
 } = require('../../constants/lg/district');
 const {
-    action: mallAction,
-    relation: mallRelation,
+    action: MallAction,
+    relation: MallRelation,
 } = require('../../constants/lg/mall');
 
 const {
-    action: shopAction,
-    state: shopState,
-    relation: shopRelation,
+    action: ShopAction,
+    state: ShopState,
+    relation: ShopRelation,
     STATE_TRANS_MATRIX: SHOP_STATE_TRANS_MATRIX,
 } = require('../../constants/lg/shop');
 
@@ -33,55 +33,55 @@ const {
 } = require('../../constants/lg/weChatSettlement');
 
 const {
-    action: skuAction,
-    state: skuState,
+    action: SkuAction,
+    state: SkuState,
     STATE_TRANS_MATRIX: SKU_STATE_TRANS_MATRIX,
 } = require('../../constants/lg/sku');
 
 const {
-    action: tradeAction,
-    transportState: tradeTransportState,
-    state: tradeState,
+    action: TradeAction,
+    transportState: TradeTransportState,
+    state: TradeState,
     STATE_TRANS_MATRIX: TRADE_STATE_TRANS_MATRIX,
 } = require('../../constants/lg/trade');
 
 const {
-    action: skuItemAction,
-    state: skuItemState,
+    action: SkuItemAction,
+    state: SkuItemState,
     STATE_TRANS_MATRIX: SKUITEM_STATE_TRANS_MATRIX,
 } = require('../../constants/lg/skuItem');
 
 const {
-    action: brandAction,
+    action: BrandAction,
 } = require('../../constants/lg/brand');
 
 const {
-    action: speciesAction,
+    action: SpeciesAction,
 } = require('../../constants/lg/species');
 
 const {
-    action: propertyAction
+    action: PropertyAction
 } = require('../../constants/lg/property');
 
 const {
-    action: propertySpeciesAction,
+    action: PropertySpeciesAction,
 } = require('../../constants/lg/propertySpecies');
 
 const {
-    action: valueAction,
+    action: ValueAction,
 } = require('../../constants/lg/value');
 
 const {
-    action: skuValueAction,
+    action: SkuValueAction,
 } = require('../../constants/lg/skuValue');
 
 const {
-    action: serviceCompanyAction,
-    relation: serviceCompanyRelation
+    action: ServiceCompanyAction,
+    relation: ServiceCompanyRelation
 } = require('../../constants/lg/serviceCompany');
 
 const {
-    action: shoppingCartAction,
+    action: ShoppingCartAction,
 } = require('../../constants/lg/shoppingCart');
 
 const {
@@ -89,24 +89,24 @@ const {
 } = require('../../constants/lg/skuItemValue');
 
 const {
-    action: skuItemShopAction,
+    action: SkuItemShopAction,
 } = require('../../constants/lg/skuItemShop');
 
 const {
-    action: plateAction,
+    action: PlateAction,
 } = require('../../constants/lg/plate');
 
 const {
-    action: tradeSkuItemShopAction,
-    state: tradeSkuItemShopState,
+    action: TradeSkuItemShopAction,
+    state: TradeSkuItemShopState,
 } = require('../../constants/lg/tradeSkuItemShop');
 
 const {
-    action: expressAction,
-    state: expressState,
+    action: ExpressAction,
+    state: ExpressState,
 } = require('../../constants/lg/express');
 const {
-    action: serviceAction,
+    action: ServiceAction,
 } = require('../../constants/lg/service');
 
 const {
@@ -116,10 +116,10 @@ const {
 
 const AUTH_MATRIX = {
     lgService: {
-        [serviceAction.create]: AllowEveryoneAuth,
+        [ServiceAction.create]: AllowEveryoneAuth,
     },
     lgShopSpecies: {
-        [shopSpeciesAction.create]: {
+        [ShopSpeciesAction.create]: {
             auths: [
                 {
                     "#exists": [
@@ -133,7 +133,7 @@ const AUTH_MATRIX = {
                                         userId: user.id,
                                         lgShopId: lgShopSpecies.lgShopId,
                                         relation: {
-                                            $in: [shopRelation.owner, shopRelation.manager]
+                                            $in: [ShopRelation.owner, ShopRelation.manager]
                                         }
                                     }
                                 }
@@ -146,55 +146,55 @@ const AUTH_MATRIX = {
                 },
             ]
         },
-        [shopSpeciesAction.remove]: {
+        [ShopSpeciesAction.remove]: {
             auths: [
                 {
                     "#relation": {
                         attr: 'lgShop',
-                        relations: [shopRelation.owner, shopRelation.manager],
+                        relations: [ShopRelation.owner, ShopRelation.manager],
                     },
                 },
             ]
         },
     },
     express: {
-        [expressAction.create]: AllowEveryoneAuth,
-        [expressAction.update]: AllowEveryoneAuth,
-        [expressAction.remove]: AllowEveryoneAuth,
-        [expressAction.taPrepare]: AllowEveryoneAuth,
-        [expressAction.taAccept]: {
+        [ExpressAction.create]: AllowEveryoneAuth,
+        [ExpressAction.update]: AllowEveryoneAuth,
+        [ExpressAction.remove]: AllowEveryoneAuth,
+        [ExpressAction.taPrepare]: AllowEveryoneAuth,
+        [ExpressAction.taAccept]: {
             auths: [
                 {
                     '#data': [
                         {
                             check: ({user, row}) => {
-                                return [expressState.tsSending].includes(row.transportState);
+                                return [ExpressState.tsSending].includes(row.transportState);
                             },
                         }
                     ],
                 }
             ]
         },
-        [expressAction.taReject]: {
+        [ExpressAction.taReject]: {
             auths: [
                 {
                     '#data': [
                         {
                             check: ({user, row}) => {
-                                return [expressState.tsSending].includes(row.transportState);
+                                return [ExpressState.tsSending].includes(row.transportState);
                             },
                         }
                     ],
                 }
             ]
         },
-        [expressAction.taSend]: {
+        [ExpressAction.taSend]: {
             auths: [
                 {
                     '#data': [
                         {
                             check: ({user, row}) => {
-                                return [expressState.tsInPreparing].includes(row.transportState);
+                                return [ExpressState.tsInPreparing].includes(row.transportState);
                             },
                         }
                     ],
@@ -203,7 +203,7 @@ const AUTH_MATRIX = {
         },
     },
     lgSkuValue: {
-        [skuValueAction.create]: {
+        [SkuValueAction.create]: {
             auths: [
                 {
                     "#exists": [
@@ -213,7 +213,7 @@ const AUTH_MATRIX = {
                                 return {
                                     userId: user.id,
                                     relation: {
-                                        $in: [shopRelation.owner, shopRelation.manager],
+                                        $in: [ShopRelation.owner, ShopRelation.manager],
                                     },
                                 };
                             },
@@ -222,29 +222,29 @@ const AUTH_MATRIX = {
                 },
             ]
         },
-        [skuValueAction.update]: {
+        [SkuValueAction.update]: {
             auths: [
                 {
                     "#relation": {
                         attr: 'lgSku.lgShop',
-                        relations: [shopRelation.owner, shopRelation.manager],
+                        relations: [ShopRelation.owner, ShopRelation.manager],
                     },
                 },
             ]
         },
-        [valueAction.remove]: {
+        [ValueAction.remove]: {
             auths: [
                 {
                     "#relation": {
                         attr: 'lgSku.lgShop',
-                        relations: [shopRelation.owner, shopRelation.manager],
+                        relations: [ShopRelation.owner, ShopRelation.manager],
                     },
                 },
             ]
         },
     },
     lgValue: {
-        [valueAction.create]: {
+        [ValueAction.create]: {
             auths: [
                 {
                     "#exists": [
@@ -254,7 +254,7 @@ const AUTH_MATRIX = {
                                 const query = {
                                     userId: user.id,
                                     relation: {
-                                        $in: [districtRelation.owner, districtRelation.manager],
+                                        $in: [DistrictRelation.owner, DistrictRelation.manager],
                                     },
                                 };
                                 return query;
@@ -270,7 +270,7 @@ const AUTH_MATRIX = {
                                 const query = {
                                     userId: user.id,
                                     relation: {
-                                        $in: [mallRelation.owner, mallRelation.manager],
+                                        $in: [MallRelation.owner, MallRelation.manager],
                                     },
                                 };
                                 return query;
@@ -289,7 +289,7 @@ const AUTH_MATRIX = {
                                     return {
                                         userId: user.id,
                                         relation: {
-                                            $in: [shopRelation.owner, shopRelation.manager],
+                                            $in: [ShopRelation.owner, ShopRelation.manager],
                                         },
                                     }
                                 }
@@ -302,7 +302,7 @@ const AUTH_MATRIX = {
                 },
             ]
         },
-        [valueAction.update]: {
+        [ValueAction.update]: {
             auths: [
                 {
                     "#exists": [
@@ -312,7 +312,7 @@ const AUTH_MATRIX = {
                                 const query = {
                                     userId: user.id,
                                     relation: {
-                                        $in: [districtRelation.owner, districtRelation.manager],
+                                        $in: [DistrictRelation.owner, DistrictRelation.manager],
                                     },
                                 };
                                 return query;
@@ -328,7 +328,7 @@ const AUTH_MATRIX = {
                                 const query = {
                                     userId: user.id,
                                     relation: {
-                                        $in: [mallRelation.owner, mallRelation.manager],
+                                        $in: [MallRelation.owner, MallRelation.manager],
                                     },
                                 };
                                 return query;
@@ -339,12 +339,12 @@ const AUTH_MATRIX = {
                 {
                     "#relation": {
                         attr: 'lgSku.lgShop',
-                        relations: [shopRelation.owner, shopRelation.manager],
+                        relations: [ShopRelation.owner, ShopRelation.manager],
                     },
                 },
             ]
         },
-        [valueAction.remove]: {
+        [ValueAction.remove]: {
             auths: [
                 {
                     "#exists": [
@@ -354,7 +354,7 @@ const AUTH_MATRIX = {
                                 const query = {
                                     userId: user.id,
                                     relation: {
-                                        $in: [districtRelation.owner, districtRelation.manager],
+                                        $in: [DistrictRelation.owner, DistrictRelation.manager],
                                     },
                                 };
                                 return query;
@@ -370,7 +370,7 @@ const AUTH_MATRIX = {
                                 const query = {
                                     userId: user.id,
                                     relation: {
-                                        $in: [mallRelation.owner, mallRelation.manager],
+                                        $in: [MallRelation.owner, MallRelation.manager],
                                     },
                                 };
                                 return query;
@@ -381,14 +381,14 @@ const AUTH_MATRIX = {
                 {
                     "#relation": {
                         attr: 'lgSku.lgShop',
-                        relations: [shopRelation.owner, shopRelation.manager],
+                        relations: [ShopRelation.owner, ShopRelation.manager],
                     },
                 },
             ]
         },
     },
     lgProperty: {
-        [propertyAction.create]: {
+        [PropertyAction.create]: {
             auths: [
                 {
                     "#exists": [
@@ -398,7 +398,7 @@ const AUTH_MATRIX = {
                                 const query = {
                                     userId: user.id,
                                     relation: {
-                                        $in: [districtRelation.owner, districtRelation.manager],
+                                        $in: [DistrictRelation.owner, DistrictRelation.manager],
                                     },
                                 };
                                 return query;
@@ -414,7 +414,7 @@ const AUTH_MATRIX = {
                                 const query = {
                                     userId: user.id,
                                     relation: {
-                                        $in: [mallRelation.owner, mallRelation.manager],
+                                        $in: [MallRelation.owner, MallRelation.manager],
                                     },
                                 };
                                 return query;
@@ -433,7 +433,7 @@ const AUTH_MATRIX = {
                                     return {
                                         userId: user.id,
                                         relation: {
-                                            $in: [shopRelation.owner, shopRelation.manager],
+                                            $in: [ShopRelation.owner, ShopRelation.manager],
                                         },
                                     }
                                 }
@@ -446,7 +446,7 @@ const AUTH_MATRIX = {
                 },
             ]
         },
-        [propertyAction.update]: {
+        [PropertyAction.update]: {
             auths: [
                 {
                     "#exists": [
@@ -456,7 +456,7 @@ const AUTH_MATRIX = {
                                 const query = {
                                     userId: user.id,
                                     relation: {
-                                        $in: [districtRelation.owner, districtRelation.manager],
+                                        $in: [DistrictRelation.owner, DistrictRelation.manager],
                                     },
                                 };
                                 return query;
@@ -472,7 +472,7 @@ const AUTH_MATRIX = {
                                 const query = {
                                     userId: user.id,
                                     relation: {
-                                        $in: [mallRelation.owner, mallRelation.manager],
+                                        $in: [MallRelation.owner, MallRelation.manager],
                                     },
                                 };
                                 return query;
@@ -483,12 +483,12 @@ const AUTH_MATRIX = {
                 {
                     "#relation": {
                         attr: 'lgSku.lgShop',
-                        relations: [shopRelation.owner, shopRelation.manager],
+                        relations: [ShopRelation.owner, ShopRelation.manager],
                     },
                 },
             ]
         },
-        [propertyAction.remove]: {
+        [PropertyAction.remove]: {
             auths: [
                 {
                     "#exists": [
@@ -498,7 +498,7 @@ const AUTH_MATRIX = {
                                 const query = {
                                     userId: user.id,
                                     relation: {
-                                        $in: [districtRelation.owner, districtRelation.manager],
+                                        $in: [DistrictRelation.owner, DistrictRelation.manager],
                                     },
                                 };
                                 return query;
@@ -514,7 +514,7 @@ const AUTH_MATRIX = {
                                 const query = {
                                     userId: user.id,
                                     relation: {
-                                        $in: [mallRelation.owner, mallRelation.manager],
+                                        $in: [MallRelation.owner, MallRelation.manager],
                                     },
                                 };
                                 return query;
@@ -525,14 +525,14 @@ const AUTH_MATRIX = {
                 {
                     "#relation": {
                         attr: 'lgSku.lgShop',
-                        relations: [shopRelation.owner, shopRelation.manager],
+                        relations: [ShopRelation.owner, ShopRelation.manager],
                     },
                 },
             ]
         },
     },
     lgPropertySpecies: {
-        [propertySpeciesAction.create]: {
+        [PropertySpeciesAction.create]: {
             auths: [
                 {
                     "#exists": [
@@ -542,7 +542,7 @@ const AUTH_MATRIX = {
                                 const query = {
                                     userId: user.id,
                                     relation: {
-                                        $in: [districtRelation.owner, districtRelation.manager],
+                                        $in: [DistrictRelation.owner, DistrictRelation.manager],
                                     },
                                 };
                                 return query;
@@ -552,7 +552,7 @@ const AUTH_MATRIX = {
                 }
             ]
         },
-        [propertySpeciesAction.update]: {
+        [PropertySpeciesAction.update]: {
             auths: [
                 {
                     "#exists": [
@@ -562,7 +562,7 @@ const AUTH_MATRIX = {
                                 const query = {
                                     userId: user.id,
                                     relation: {
-                                        $in: [districtRelation.owner, districtRelation.manager],
+                                        $in: [DistrictRelation.owner, DistrictRelation.manager],
                                     },
                                 };
                                 return query;
@@ -572,7 +572,7 @@ const AUTH_MATRIX = {
                 }
             ]
         },
-        [propertySpeciesAction.remove]: {
+        [PropertySpeciesAction.remove]: {
             auths: [
                 {
                     "#exists": [
@@ -582,7 +582,7 @@ const AUTH_MATRIX = {
                                 const query = {
                                     userId: user.id,
                                     relation: {
-                                        $in: [districtRelation.owner, districtRelation.manager],
+                                        $in: [DistrictRelation.owner, DistrictRelation.manager],
                                     },
                                 };
                                 return query;
@@ -594,7 +594,7 @@ const AUTH_MATRIX = {
         },
     },
     lgSpecies: {
-        [speciesAction.create]: {
+        [SpeciesAction.create]: {
             auths: [
                 {
                     "#exists": [
@@ -604,7 +604,7 @@ const AUTH_MATRIX = {
                                 const query = {
                                     userId: user.id,
                                     relation: {
-                                        $in: [districtRelation.owner, districtRelation.manager],
+                                        $in: [DistrictRelation.owner, DistrictRelation.manager],
                                     },
                                 };
                                 return query;
@@ -614,7 +614,7 @@ const AUTH_MATRIX = {
                 }
             ]
         },
-        [speciesAction.update]: {
+        [SpeciesAction.update]: {
             auths: [
                 {
                     "#exists": [
@@ -624,7 +624,7 @@ const AUTH_MATRIX = {
                                 const query = {
                                     userId: user.id,
                                     relation: {
-                                        $in: [districtRelation.owner, districtRelation.manager],
+                                        $in: [DistrictRelation.owner, DistrictRelation.manager],
                                     },
                                 };
                                 return query;
@@ -634,7 +634,7 @@ const AUTH_MATRIX = {
                 }
             ]
         },
-        [speciesAction.remove]: {
+        [SpeciesAction.remove]: {
             auths: [
                 {
                     "#exists": [
@@ -644,7 +644,7 @@ const AUTH_MATRIX = {
                                 const query = {
                                     userId: user.id,
                                     relation: {
-                                        $in: [districtRelation.owner, districtRelation.manager],
+                                        $in: [DistrictRelation.owner, DistrictRelation.manager],
                                     },
                                 };
                                 return query;
@@ -656,7 +656,7 @@ const AUTH_MATRIX = {
         },
     },
     lgBrand: {
-        [brandAction.create]: {
+        [BrandAction.create]: {
             auths: [
                 {
                     "#exists": [
@@ -666,7 +666,7 @@ const AUTH_MATRIX = {
                                 const query = {
                                     userId: user.id,
                                     relation: {
-                                        $in: [districtRelation.owner, districtRelation.manager],
+                                        $in: [DistrictRelation.owner, DistrictRelation.manager],
                                     },
                                 };
                                 return query;
@@ -676,7 +676,7 @@ const AUTH_MATRIX = {
                 }
             ]
         },
-        [brandAction.update]: {
+        [BrandAction.update]: {
             auths: [
                 {
                     '#exists': [
@@ -686,7 +686,7 @@ const AUTH_MATRIX = {
                                 const query = {
                                     userId: user.id,
                                     relation: {
-                                        $in: [districtRelation.owner, districtRelation.manager],
+                                        $in: [DistrictRelation.owner, DistrictRelation.manager],
                                     },
                                 };
                                 return query;
@@ -696,7 +696,7 @@ const AUTH_MATRIX = {
                 }
             ]
         },
-        [brandAction.remove]: {
+        [BrandAction.remove]: {
             auths: [
                 {
                     "#exists": [
@@ -706,7 +706,7 @@ const AUTH_MATRIX = {
                                 const query = {
                                     userId: user.id,
                                     relation: {
-                                        $in: [districtRelation.owner, districtRelation.manager],
+                                        $in: [DistrictRelation.owner, DistrictRelation.manager],
                                     },
                                 };
                                 return query;
@@ -718,7 +718,7 @@ const AUTH_MATRIX = {
         },
     },
     lgSkuItem: {
-        [skuItemAction.create]: {  // todo 细化写在definition中
+        [SkuItemAction.create]: {  // todo 细化写在definition中
             auths: [
                 {
                     "#exists": [
@@ -735,44 +735,44 @@ const AUTH_MATRIX = {
                 },
             ],
         },
-        [skuItemAction.update]: {
+        [SkuItemAction.update]: {
             auths: [
                 {
                     "#relation": {
                         attr: 'lgSku.lgShop',
-                        relations: [shopRelation.owner, shopRelation.manager],
+                        relations: [ShopRelation.owner, ShopRelation.manager],
                     },
                 },
             ],
         },
-        [skuItemAction.online]: {
+        [SkuItemAction.online]: {
             auths: [
                 {
                     "#relation": {
                         attr: 'lgSku.lgShop',
-                        relations: [shopRelation.owner, shopRelation.manager],
+                        relations: [ShopRelation.owner, ShopRelation.manager],
                     },
                     '#data': [
                         {
                             check: ({user, row}) => {
-                                return [skuItemState.offline].includes(row.state);
+                                return [SkuItemState.offline].includes(row.state);
                             },
                         }
                     ],
                 }
             ]
         },
-        [skuAction.offline]: {
+        [SkuAction.offline]: {
             auths: [
                 {
                     "#relation": {
                         attr: 'lgSku.lgShop',
-                        relations: [shopRelation.owner, shopRelation.manager],
+                        relations: [ShopRelation.owner, ShopRelation.manager],
                     },
                     '#data': [
                         {
                             check: ({user, row}) => {
-                                return [skuItemState.online].includes(row.state);
+                                return [SkuItemState.online].includes(row.state);
                             },
                         }
                     ],
@@ -781,27 +781,27 @@ const AUTH_MATRIX = {
         },
     },
     lgDistrict: {
-        [districtAction.update]: {
+        [DistrictAction.update]: {
             auths: [
                 {
                     "#relation": {
-                        relations: [districtRelation.owner, districtRelation.manager],
+                        relations: [DistrictRelation.owner, DistrictRelation.manager],
                     },
                 },
             ],
         },
-        [districtRelation.remove]: {
+        [DistrictAction.remove]: {
             auths: [
                 {
                     "#relation": {
-                        relations: [districtRelation.owner],
+                        relations: [DistrictRelation.owner],
                     },
                 },
             ],
         },
     },
     lgMall: {
-        [mallAction.create]: {
+        [MallAction.create]: {
             auths: [
                 {
                     '#exists': [
@@ -821,39 +821,39 @@ const AUTH_MATRIX = {
                 },
             ],
         },
-        [mallAction.update]: {
+        [MallAction.update]: {
             auths: [
                 {
                     "#relation": {
                         attr: 'lgDistrict',
-                        relations: [districtRelation.owner, districtRelation.manager],
+                        relations: [DistrictRelation.owner, DistrictRelation.manager],
                     },
                 },
                 {
                     "#relation": {
-                        relations: [mallRelation.owner, mallRelation.manager],
+                        relations: [MallRelation.owner, MallRelation.manager],
                     },
                 },
             ],
         },
-        [mallRelation.remove]: {
+        [MallRelation.remove]: {
             auths: [
                 {
                     "#relation": {
                         attr: 'lgDistrict',
-                        relations: [districtRelation.owner, districtRelation.manager],
+                        relations: [DistrictRelation.owner, DistrictRelation.manager],
                     },
                 },
                 {
                     "#relation": {
-                        relations: [mallRelation.owner],
+                        relations: [MallRelation.owner],
                     },
                 },
             ],
         },
     },
     lgShop: {
-        [shopAction.create]: {
+        [ShopAction.create]: {
             auths: [
                 {
                     '#exists': [
@@ -886,60 +886,60 @@ const AUTH_MATRIX = {
                 },
             ],
         },
-        [shopAction.update]: {
+        [ShopAction.update]: {
             auths: [
                 {
                     "#relation": {
                         attr: '',
-                        relations: [shopRelation.owner, shopRelation.manager],
+                        relations: [ShopRelation.owner, ShopRelation.manager],
                     },
                 },
                 {
                     "#relation": {
                         attr: 'lgMall',
-                        relations: [mallRelation.owner, mallRelation.manager],
+                        relations: [MallRelation.owner, MallRelation.manager],
                     },
                 },
                 {
                     "#relation": {
                         attr: 'lgMall.lgDistrict',
-                        relations: [districtRelation.owner, districtRelation.manager],
+                        relations: [DistrictRelation.owner, DistrictRelation.manager],
                     },
                 },
             ],
         },
-        [shopAction.remove]: {
+        [ShopAction.remove]: {
             auths: [
                 {
                     "#relation": {
                         attr: 'lgMall',
-                        relations: [mallRelation.owner, mallRelation.manager],
+                        relations: [MallRelation.owner, MallRelation.manager],
                     },
                 },
                 {
                     "#relation": {
-                        relations: [shopRelation.owner],
+                        relations: [ShopRelation.owner],
                     },
                 },
                 {
                     "#relation": {
                         attr: 'lgMall.lgDistrict',
-                        relations: [districtRelation.owner, districtRelation.manager],
+                        relations: [DistrictRelation.owner, DistrictRelation.manager],
                     },
                 },
             ],
         },
-        [shopAction.online]: {
+        [ShopAction.online]: {
             auths: [
                 {
                     "#relation": {
                         attr: 'lgMall',
-                        relations: [mallRelation.owner, mallRelation.manager],
+                        relations: [MallRelation.owner, MallRelation.manager],
                     },
                     '#data': [
                         {
                             check: ({user, row}) => {
-                                return [shopState.offline].includes(row.state);
+                                return [ShopState.offline].includes(row.state);
                             },
                         }
                     ],
@@ -947,41 +947,41 @@ const AUTH_MATRIX = {
                 {
                     "#relation": {
                         attr: 'lgMall.lgDistrict',
-                        relations: [districtRelation.owner, districtRelation.manager],
+                        relations: [DistrictRelation.owner, DistrictRelation.manager],
                     },
                     '#data': [
                         {
                             check: ({user, row}) => {
-                                return [shopState.offline].includes(row.state);
+                                return [ShopState.offline].includes(row.state);
                             },
                         }
                     ],
                 },
                 {
                     "#relation": {
-                        relations: [shopRelation.owner, shopRelation.manager],
+                        relations: [ShopRelation.owner, ShopRelation.manager],
                     },
                     '#data': [
                         {
                             check: ({user, row}) => {
-                                return [shopState.offline].includes(row.state);
+                                return [ShopState.offline].includes(row.state);
                             },
                         }
                     ],
                 },
             ],
         },
-        [shopAction.offline]: {
+        [ShopAction.offline]: {
             auths: [
                 {
                     "#relation": {
                         attr: 'lgMall',
-                        relations: [mallRelation.owner, mallRelation.manager],
+                        relations: [MallRelation.owner, MallRelation.manager],
                     },
                     '#data': [
                         {
                             check: ({user, row}) => {
-                                return [shopState.online].includes(row.state);
+                                return [ShopState.online].includes(row.state);
                             },
                         }
                     ],
@@ -989,102 +989,102 @@ const AUTH_MATRIX = {
                 {
                     "#relation": {
                         attr: 'lgMall.lgDistrict',
-                        relations: [districtRelation.owner, districtRelation.manager],
+                        relations: [DistrictRelation.owner, DistrictRelation.manager],
                     },
                     '#data': [
                         {
                             check: ({user, row}) => {
-                                return [shopState.online].includes(row.state);
+                                return [ShopState.online].includes(row.state);
                             },
                         }
                     ],
                 },
                 {
                     "#relation": {
-                        relations: [shopRelation.owner, shopRelation.manager],
+                        relations: [ShopRelation.owner, ShopRelation.manager],
                     },
                     '#data': [
                         {
                             check: ({user, row}) => {
-                                return [shopState.online].includes(row.state);
+                                return [ShopState.online].includes(row.state);
                             },
                         }
                     ],
                 },
             ],
         },
-        [shopAction.disable]: {
+        [ShopAction.disable]: {
             auths: [
                 {
                     '#role': [Roles.ROOT.name],
                     '#data': [
                         {
                             check: ({user, row}) => {
-                                return [shopState.online, shopState.offline].includes(row.state);
+                                return [ShopState.online, ShopState.offline].includes(row.state);
                             },
                         }
                     ],
                 },
             ],
         },
-        [shopAction.able]: {
+        [ShopAction.able]: {
             auths: [
                 {
                     '#role': [Roles.ROOT.name],
                     '#data': [
                         {
                             check: ({user, row}) => {
-                                return [shopState.disabled].includes(row.state);
+                                return [ShopState.disabled].includes(row.state);
                             },
                         }
                     ],
                 },
             ],
         },
-        [shopAction.assign]: {
+        [ShopAction.assign]: {
             auths: [
                 {
                     "#relation": {
                         attr: 'lgMall',
-                        relations: [mallRelation.owner, mallRelation.manager],
+                        relations: [MallRelation.owner, MallRelation.manager],
                     },
                 },
                 {
                     "#relation": {
                         attr: 'lgMall.lgDistrict',
-                        relations: [districtRelation.owner, districtRelation.manager],
+                        relations: [DistrictRelation.owner, DistrictRelation.manager],
                     },
                 },
                 {
                     "#relation": {
-                        relations: [shopRelation.owner],
-                    },
-                },
-            ],
-        },
-        [shopAction.transfer]: {
-            auths: [
-                {
-                    "#relation": {
-                        relations: [shopRelation.owner],
+                        relations: [ShopRelation.owner],
                     },
                 },
             ],
         },
-        [shopAction.authGrantMulti2]: {
+        [ShopAction.transfer]: {
             auths: [
                 {
                     "#relation": {
-                        relations: [shopRelation.owner, shopRelation.manager],
+                        relations: [ShopRelation.owner],
                     },
                 },
             ],
         },
-        [shopAction.authRevoke]: {
+        [ShopAction.authGrantMulti2]: {
             auths: [
                 {
                     "#relation": {
-                        relations: [shopRelation.owner],
+                        relations: [ShopRelation.owner, ShopRelation.manager],
+                    },
+                },
+            ],
+        },
+        [ShopAction.authRevoke]: {
+            auths: [
+                {
+                    "#relation": {
+                        relations: [ShopRelation.owner],
                     },
                 },
             ],
@@ -1103,7 +1103,7 @@ const AUTH_MATRIX = {
                                 const query = {
                                     userId: user.id,
                                     lgShopId: lgWeChatSettlement.lgShopId,
-                                    relation: shopRelation.owner,
+                                    relation: ShopRelation.owner,
                                 };
                                 return query;
                             },
@@ -1117,14 +1117,14 @@ const AUTH_MATRIX = {
                 {
                     "#relation": {
                         attr: 'lgShop',
-                        relations: [shopRelation.owner],
+                        relations: [ShopRelation.owner],
                     },
                 },
             ],
         },
     },
     lgSku: {
-        [skuAction.create]: {
+        [SkuAction.create]: {
             auths: [
                 {
                     '#exists': [
@@ -1137,7 +1137,7 @@ const AUTH_MATRIX = {
                                     userId: user.id,
                                     lgShopId: lgSku.lgShopId,
                                     relation: {
-                                        $in: [shopRelation.owner, shopRelation.manager],
+                                        $in: [ShopRelation.owner, ShopRelation.manager],
                                     },
                                 };
                                 return query;
@@ -1147,54 +1147,54 @@ const AUTH_MATRIX = {
                 },
             ]
         },
-        [skuAction.update]: {
+        [SkuAction.update]: {
             auths: [
                 {
                     "#relation": {
                         attr: 'lgShop',
-                        relations: [shopRelation.owner, shopRelation.manager],
+                        relations: [ShopRelation.owner, ShopRelation.manager],
                     },
                 }
             ]
         },
-        [skuAction.remove]: {
+        [SkuAction.remove]: {
             auths: [
                 {
                     "#relation": {
                         attr: 'lgShop',
-                        relations: [shopRelation.owner, shopRelation.manager],
+                        relations: [ShopRelation.owner, ShopRelation.manager],
                     },
                 }
             ]
         },
-        [skuAction.online]: {
+        [SkuAction.online]: {
             auths: [
                 {
                     "#relation": {
                         attr: 'lgShop',
-                        relations: [shopRelation.owner, shopRelation.manager],
+                        relations: [ShopRelation.owner, ShopRelation.manager],
                     },
                     '#data': [
                         {
                             check: ({user, row}) => {
-                                return [skuState.offline].includes(row.state);
+                                return [SkuState.offline].includes(row.state);
                             },
                         }
                     ],
                 }
             ]
         },
-        [skuAction.offline]: {
+        [SkuAction.offline]: {
             auths: [
                 {
                     "#relation": {
                         attr: 'lgShop',
-                        relations: [shopRelation.owner, shopRelation.manager],
+                        relations: [ShopRelation.owner, ShopRelation.manager],
                     },
                     '#data': [
                         {
                             check: ({user, row}) => {
-                                return [skuState.online].includes(row.state);
+                                return [SkuState.online].includes(row.state);
                             },
                         }
                     ],
@@ -1203,8 +1203,8 @@ const AUTH_MATRIX = {
         },
     },
     lgTrade: {
-        [tradeAction.create]: AllowEveryoneAuth,
-        [tradeAction.makePaid]: {
+        [TradeAction.create]: AllowEveryoneAuth,
+        [TradeAction.makePaid]: {
             auths: [
                 {
                     "#relation": {
@@ -1213,36 +1213,36 @@ const AUTH_MATRIX = {
                 }
             ]
         },
-        [tradeAction.makeAbandoned]: {
+        [TradeAction.makeAbandoned]: {
             auths: [
                 {
                     "#relation": {
                         attr: 'lgShop',
-                        relations: [shopRelation.manager, shopRelation.owner],
+                        relations: [ShopRelation.manager, ShopRelation.owner],
                     },
                     '#data': [
                         {
                             check: ({user, row}) => {
-                                return [tradeState.legal2].includes(row.state);
+                                return [TradeState.legal2].includes(row.state);
                             },
                         }
                     ],
                 },
             ]
         },
-        [tradeAction.pick]: {
+        [TradeAction.pick]: {
             auths: [
                 {
                     '#data': [
                         {
                             check: ({user, row}) => {
-                                return [tradeTransportState.unpicked].includes(row.transportState);
+                                return [TradeTransportState.unpicked].includes(row.transportState);
                             },
                             message: '订单已提货'
                         },
                         {
                             check: ({user, row}) => {
-                                return [tradeState.legal2, tradeState.legal].includes(row.state);
+                                return [TradeState.legal2, TradeState.legal].includes(row.state);
                             },
                             message: '订单未结算，请结算完成后再进行提货',
                         }
@@ -1250,20 +1250,20 @@ const AUTH_MATRIX = {
                 }
             ]
         },
-        [tradeAction.taPrepare]: {
+        [TradeAction.taPrepare]: {
             auths: [
                 {
                     '#data': [
                         {
                             check: ({user, row}) => {
-                                return [tradeState.legal, tradeState.legal2].includes(row.state) && [tradeTransportState.unsend].includes(row.transportState);
+                                return [TradeState.legal, TradeState.legal2].includes(row.state) && [TradeTransportState.unsend].includes(row.transportState);
                             },
                         }
                     ],
                 },
             ],
         },
-        [tradeAction.taSend]: {
+        [TradeAction.taSend]: {
             auths: [
                 {
                     "#relation": {
@@ -1272,46 +1272,46 @@ const AUTH_MATRIX = {
                     '#data': [
                         {
                             check: ({user, row}) => {
-                                return [tradeState.legal, tradeState.legal2].includes(row.state) && [tradeTransportState.tsInPreparing].includes(row.transportState);
+                                return [TradeState.legal, TradeState.legal2].includes(row.state) && [TradeTransportState.tsInPreparing].includes(row.transportState);
                             },
                         }
                     ],
                 },
             ],
         },
-        [tradeAction.taAccept]: {
+        [TradeAction.taAccept]: {
             auths: [
                 {
                     '#data': [
                         {
                             check: ({user, row}) => {
-                                return [tradeState.legal, tradeState.legal2].includes(row.state) && row.buyerId && row.buyerId === user.id && [tradeTransportState.tsSending].includes(row.transportState);
+                                return [TradeState.legal, TradeState.legal2].includes(row.state) && row.buyerId && row.buyerId === user.id && [TradeTransportState.tsSending].includes(row.transportState);
                             },
                         }
                     ],
                 },
             ],
         },
-        [tradeAction.taReject]: {
+        [TradeAction.taReject]: {
             auths: [
                 {
                     '#data': [
                         {
                             check: ({user, row}) => {
-                                return [tradeState.legal, tradeState.legal2].includes(row.state) && row.buyerId && row.buyerId === user.id && [tradeTransportState.tsSending].includes(row.transportState);
+                                return [TradeState.legal, TradeState.legal2].includes(row.state) && row.buyerId && row.buyerId === user.id && [TradeTransportState.tsSending].includes(row.transportState);
                             },
                         }
                     ],
                 },
             ],
         },
-        [tradeAction.cancel]: {
+        [TradeAction.cancel]: {
             auths: [
                 {
                     '#data': [
                         {
                             check: ({user, row}) => {
-                                return row.buyerId === user.id && [tradeState.unpaid].includes(row.state);
+                                return row.buyerId === user.id && [TradeState.unpaid].includes(row.state);
                             },
                         }
                     ],
@@ -1323,14 +1323,27 @@ const AUTH_MATRIX = {
                     '#data': [
                         {
                             check: ({user, row}) => {
-                                return [tradeState.unpaid].includes(row.state);
+                                return [TradeState.unpaid].includes(row.state);
                             },
                         }
                     ],
                 }
             ]
         },
-        [tradeAction.stopPaying]: {
+        [TradeAction.refund]: {
+            auths: [
+                {
+                    '#data': [
+                        {
+                            check: ({user, row}) => {
+                                return row.buyerId === user.id && [TradeState.legal, TradeState.partialPaid].includes(row.state);
+                            },
+                        }
+                    ],
+                },
+            ]
+        },
+        [TradeAction.stopPaying]: {
             auths: [
                 {
                     "#relation": {
@@ -1339,14 +1352,14 @@ const AUTH_MATRIX = {
                     '#data': [
                         {
                             check: ({user, row}) => {
-                                return [tradeState.paying, tradeState.partialPaid].includes(row.state);
+                                return [TradeState.paying, TradeState.partialPaid].includes(row.state);
                             },
                         }
                     ],
                 }
             ]
         },
-        [tradeAction.startToPay]: {
+        [TradeAction.startToPay]: {
             auths: [
                 {
                     "#relation": {
@@ -1355,7 +1368,7 @@ const AUTH_MATRIX = {
                     '#data': [
                         {
                             check: ({user, row}) => {
-                                return [tradeState.unpaid, tradeState.partialPaid].includes(row.state);
+                                return [TradeState.unpaid, TradeState.partialPaid].includes(row.state);
                             },
                         }
                     ],
@@ -1367,7 +1380,7 @@ const AUTH_MATRIX = {
                     '#data': [
                         {
                             check: ({user, row}) => {
-                                return [tradeState.unpaid, tradeState.partialPaid].includes(row.state);
+                                return [TradeState.unpaid, TradeState.partialPaid].includes(row.state);
                             },
                         }
                     ],
@@ -1376,51 +1389,51 @@ const AUTH_MATRIX = {
         },
     },
     lgServiceCompany: {
-        [serviceCompanyAction.create]: AllowEveryoneAuth,
-        [serviceCompanyAction.update]: {
+        [ServiceCompanyAction.create]: AllowEveryoneAuth,
+        [ServiceCompanyAction.update]: {
             auths: [
                 {
                     "#relation": {
-                        relations: [serviceCompanyRelation.owner, serviceCompanyRelation.manager],
+                        relations: [ServiceCompanyRelation.owner, ServiceCompanyRelation.manager],
                     },
                 }
             ]
         },
-        [serviceCompanyAction.remove]: {
+        [ServiceCompanyAction.remove]: {
             auths: [
                 {
                     "#relation": {
-                        relations: [serviceCompanyRelation.owner],
+                        relations: [ServiceCompanyRelation.owner],
                     },
                 }
             ]
         },
-        [serviceCompanyAction.authGrantMulti2]: {
+        [ServiceCompanyAction.authGrantMulti2]: {
             auths: [
                 {
                     "#relation": {
-                        relations: [serviceCompanyRelation.owner, serviceCompanyRelation.manager],
+                        relations: [ServiceCompanyRelation.owner, ServiceCompanyRelation.manager],
                     },
                 }
             ]
         },
-        [serviceCompanyAction.assign]: {
+        [ServiceCompanyAction.assign]: {
             auths: [
                 {
                     "#relation": {
-                        relations: [serviceCompanyRelation.owner, serviceCompanyRelation.manager],
+                        relations: [ServiceCompanyRelation.owner, ServiceCompanyRelation.manager],
                     },
                 }
             ]
         },
     },
     enterUp: {
-        [enterUpAction.create]: AllowEveryoneAuth,
-        [enterUpAction.update]: AnyRelationAuth,
+        [EnterUpAction.create]: AllowEveryoneAuth,
+        [EnterUpAction.update]: AnyRelationAuth,
     },
     lgShoppingCart: {
-        [shoppingCartAction.create]: AllowEveryoneAuth,
-        [shoppingCartAction.update]: {
+        [ShoppingCartAction.create]: AllowEveryoneAuth,
+        [ShoppingCartAction.update]: {
             auths: [
                 {
                     "#data": [
@@ -1433,7 +1446,7 @@ const AUTH_MATRIX = {
                 },
             ]
         },
-        [shoppingCartAction.remove]: {
+        [ShoppingCartAction.remove]: {
             auths: [
                 {
                     "#data": [
@@ -1458,7 +1471,7 @@ const AUTH_MATRIX = {
                                 return {
                                     userId: user.id,
                                     relation: {
-                                        $in: [shopRelation.owner, shopRelation.manager],
+                                        $in: [ShopRelation.owner, ShopRelation.manager],
                                     },
                                 };
                             },
@@ -1501,7 +1514,7 @@ const AUTH_MATRIX = {
                                 return {
                                     userId: user.id,
                                     relation: {
-                                        $in: [shopRelation.owner, shopRelation.manager],
+                                        $in: [ShopRelation.owner, ShopRelation.manager],
                                     },
                                 };
                             },
@@ -1544,7 +1557,7 @@ const AUTH_MATRIX = {
                                 return {
                                     userId: user.id,
                                     relation: {
-                                        $in: [shopRelation.owner, shopRelation.manager],
+                                        $in: [ShopRelation.owner, ShopRelation.manager],
                                     },
                                 };
                             },
@@ -1579,7 +1592,7 @@ const AUTH_MATRIX = {
         },
     },
     lgSkuItemShop: {
-        [skuItemShopAction.create]: {
+        [SkuItemShopAction.create]: {
             auths: [
                 {
                     "#exists": [
@@ -1589,7 +1602,7 @@ const AUTH_MATRIX = {
                                 return {
                                     userId: user.id,
                                     relation: {
-                                        $in: [shopRelation.owner, shopRelation.manager],
+                                        $in: [ShopRelation.owner, ShopRelation.manager],
                                     },
                                 };
                             },
@@ -1598,12 +1611,12 @@ const AUTH_MATRIX = {
                 },
             ]
         },
-        [skuItemShopAction.update]: {
+        [SkuItemShopAction.update]: {
             auths: [
                 {
                     "#relation": {
                         attr: 'lgSku.lgShop',
-                        relations: [shopRelation.owner, shopRelation.manager],
+                        relations: [ShopRelation.owner, ShopRelation.manager],
                     },
                 },
                 {
@@ -1618,12 +1631,12 @@ const AUTH_MATRIX = {
                 },
             ]
         },
-        [skuItemShopAction.remove]: {
+        [SkuItemShopAction.remove]: {
             auths: [
                 {
                     "#relation": {
                         attr: 'lgSku.lgShop',
-                        relations: [shopRelation.owner, shopRelation.manager],
+                        relations: [ShopRelation.owner, ShopRelation.manager],
                     },
                 },
                 {
@@ -1640,10 +1653,10 @@ const AUTH_MATRIX = {
         },
     },
     lgPlate: {
-        [plateAction.create]: AllowEveryoneAuth,
+        [PlateAction.create]: AllowEveryoneAuth,
     },
     lgTradeSkuItemShop: {
-        [tradeSkuItemShopAction.create]: AllowEveryoneAuth,
+        [TradeSkuItemShopAction.create]: AllowEveryoneAuth,
     },
     lgReckoner: {
         [ReckonerAction.create]: AllowEveryoneAuth,
