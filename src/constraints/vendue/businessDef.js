@@ -1785,8 +1785,8 @@ const AUTH_MATRIX = {
             ],
         }),
         [bidAction.remove]: BidGeneralUpdateControl([bidState.bidding]),
-        [bidAction.update]: BidGeneralUpdateControl([bidState.bidding]),
-        [bidAction.changePrice]: BidGeneralUpdateControl([bidState.success]),
+        [bidAction.update]: BidGeneralUpdateControl([bidState.bidding, bidState.success, bidState.confirmed]),
+        [bidAction.changePrice]: BidGeneralUpdateControl([bidState.success, bidState.confirmed]),
         [bidAction.confirm]: BidGeneralUpdateControl([bidState.success]),
         [bidAction.violate]: BidGeneralUpdateControl([bidState.success, bidState.confirmed]),
         [bidAction.makeFailure]: {
