@@ -614,7 +614,7 @@ const CheckOutCheckDataFn = (action, states, transportStates) => ({
 
         const { checkOut } = actionData;
         if (checkOut && checkOut.hasOwnProperty('price')) {
-            assert(data.price > 0, `checkOut的价格必须大于等于0`);
+            assert(checkOut.price > 0, `checkOut的价格必须大于等于0`);
         }
         return true;
     },
@@ -1754,7 +1754,7 @@ const AUTH_MATRIX = {
                                 if (bid && bid.hasOwnProperty('price')) {
                                     assert(bid.price >= 0, `bid「${row.id}」的价格必须大于等于0`);
                                 }
-                                return states.includes(row.state);
+                                return [bidState.bidding].includes(row.state);
                             },
                         },
                     ],
