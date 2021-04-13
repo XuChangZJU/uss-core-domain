@@ -840,7 +840,14 @@ const AUTH_MATRIX = {
                     '#data': [
                         {
                             check: ({ user, row }) => {
-                                return [vendueState.ready].includes(row.state);
+                                if (![vendueState.ready].includes(row.state)) {
+                                    return ErrorCode.createErrorByCode(ErrorCode.errorDataInconsistency, '当前状态无法开始拍卖会', {
+                                        name: 'vendue',
+                                        operation: 'update',
+                                        data: row,
+                                    });
+                                }
+                                return true;
                             },
                         }
                     ],
@@ -856,7 +863,14 @@ const AUTH_MATRIX = {
                     '#data': [
                         {
                             check: ({ user, row }) => {
-                                return [vendueState.preparing].includes(row.state);
+                                if (![vendueState.preparing].includes(row.state)) {
+                                    return ErrorCode.createErrorByCode(ErrorCode.errorDataInconsistency, '当前状态无法开始拍卖会', {
+                                        name: 'vendue',
+                                        operation: 'update',
+                                        data: row,
+                                    });
+                                }
+                                return true;
                             },
                         }
                     ]
@@ -867,7 +881,14 @@ const AUTH_MATRIX = {
                     '#data': [
                         {
                             check: ({ user, row }) => {
-                                return [vendueState.preparing].includes(row.state);
+                                if (![vendueState.preparing].includes(row.state)) {
+                                    return ErrorCode.createErrorByCode(ErrorCode.errorDataInconsistency, '当前状态无法开始拍卖会', {
+                                        name: 'vendue',
+                                        operation: 'update',
+                                        data: row,
+                                    });
+                                }
+                                return true;
                             },
                         }
                     ]
@@ -882,7 +903,14 @@ const AUTH_MATRIX = {
                     '#data': [
                         {
                             check: ({ user, row }) => {
-                                return [vendueState.ongoing].includes(row.state);
+                                if (![vendueState.ongoing].includes(row.state)) {
+                                    return ErrorCode.createErrorByCode(ErrorCode.errorDataInconsistency, '当前状态无法开始拍卖会', {
+                                        name: 'vendue',
+                                        operation: 'update',
+                                        data: row,
+                                    });
+                                }
+                                return true;
                             },
                         }
                     ],
@@ -894,7 +922,14 @@ const AUTH_MATRIX = {
                     '#data': [
                         {
                             check: ({ user, row }) => {
-                                return [vendueState.ongoing].includes(row.state);
+                                if (![vendueState.ongoing].includes(row.state)) {
+                                    return ErrorCode.createErrorByCode(ErrorCode.errorDataInconsistency, '当前状态无法开始拍卖会', {
+                                        name: 'vendue',
+                                        operation: 'update',
+                                        data: row,
+                                    });
+                                }
+                                return true;
                             },
                         }
                     ],
@@ -936,7 +971,14 @@ const AUTH_MATRIX = {
                     "#data": [
                         {
                             check: ({ user, row }) => {
-                                return [vendueState.preparing, vendueState.ready].includes(row.state);
+                                if (![vendueState.preparing, vendueState.ready].includes(row.state)) {
+                                    return ErrorCode.createErrorByCode(ErrorCode.errorDataInconsistency, '当前状态无法开始拍卖会', {
+                                        name: 'vendue',
+                                        operation: 'update',
+                                        data: row,
+                                    });
+                                }
+                                return true;
                             },
                         }
                     ],
@@ -947,7 +989,14 @@ const AUTH_MATRIX = {
                     "#data": [
                         {
                             check: ({ user, row }) => {
-                                return [vendueState.preparing, vendueState.ready].includes(row.state);
+                                if (![vendueState.preparing, vendueState.ready].includes(row.state)) {
+                                    return ErrorCode.createErrorByCode(ErrorCode.errorDataInconsistency, '当前状态无法开始拍卖会', {
+                                        name: 'vendue',
+                                        operation: 'update',
+                                        data: row,
+                                    });
+                                }
+                                return true;
                             },
                         }
                     ],
