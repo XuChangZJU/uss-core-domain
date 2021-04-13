@@ -105,6 +105,8 @@ const {
 const {
     action: expressAction,
 } = require('../../constants/vendue/express');
+
+const { AUTH_MATRIX: EXPRESS_AUTH_MATRIX, STATE_TRANS_MATRIX: EXPRESS_STATE_TRANS_MATRIX } = require('../../constants/express');
 const ErrorCode = require('../../constants/errorCode');
 const { Roles } = require('../../constants/roleConstant2');
 
@@ -1817,7 +1819,7 @@ const AUTH_MATRIX = {
                         attr: 'vendue',
                         relations: [vendueRelation.worker, vendueRelation.manager, vendueRelation.owner],
                     },
-                    '#data': {
+                    '#data': [{
                         check: ({ actionData, row }) => {
                             const { paddle } = actionData;
                             const totalDeposit = paddle.totalDeposit || row.totalDeposit;
@@ -1826,14 +1828,14 @@ const AUTH_MATRIX = {
                             assert(availableDeposit >= 0, `paddle「${row.id}」的availableDeposit必须大于等于0`);
                             assert(totalDeposit >= availableDeposit, `paddle「${row.id}」的totalDeposit必须大于等于availableDeposit`);
                         },
-                    },
+                    }]
                 },
                 {
                     "#relation": {
                         attr: 'vendue.auctionHouse',
                         relations: [auctionHouseRelation.manager, auctionHouseRelation.owner],
                     },
-                    '#data': {
+                    '#data': [{
                         check: ({ actionData, row }) => {
                             const { paddle } = actionData;
                             const totalDeposit = paddle.totalDeposit || row.totalDeposit;
@@ -1842,7 +1844,7 @@ const AUTH_MATRIX = {
                             assert(availableDeposit >= 0, `paddle「${row.id}」的availableDeposit必须大于等于0`);
                             assert(totalDeposit >= availableDeposit, `paddle「${row.id}」的totalDeposit必须大于等于availableDeposit`);
                         },
-                    },
+                    }],
                 },
             ]
         },
@@ -2572,7 +2574,8 @@ const AUTH_MATRIX = {
                 }
             ]
         }
-    }
+    },
+    express: EXPRESS_AUTH_MATRIX,
 };
 
 const STATE_TRAN_MATRIX = {
@@ -2587,6 +2590,7 @@ const STATE_TRAN_MATRIX = {
     cashIn: CASHIN_STATE_TRAN_MATRIX,
     bid: BID_STATE_TRAN_MATRIX,
     contractTerms: CONTRACTTERMS_STATE_TRAN_MATRIX,
+    express: EXPRESS_STATE_TRANS_MATRIX,
 };
 
 module.exports = {
