@@ -1745,7 +1745,7 @@ const AUTH_MATRIX = {
                 {
                     "#role": [Roles.ROOT.name],
                     '#data': [
-                        BidDataCheckStateFn(bidState.bidding),
+                        BidDataCheckStateFn([bidState.bidding]),
                     ],
                 }
             ]
