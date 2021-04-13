@@ -373,7 +373,7 @@ const AnyAuctionHouseWorker = {
 
 const CheckContractDataState = (states, msg) => [
     {
-        check: ({ row , actionData}) => {
+        check: ({ row, actionData }) => {
             const { contract } = actionData;
             if (contract.hasOwnProperty('price')) {
                 assert(contract.price >= 0, `合同「${row.id}」的价格必须大于等于0`);
@@ -407,53 +407,58 @@ const CheckContractAuctionInactive = (message) => [
     },
 ];
 
-const BidGeneralUpdateControl = (states) => ({
-    auths: [
-        {
-            "#relation": {
-                attr: 'auction.session',
-                relations: [sessionRelation.manager, sessionRelation.auctioneer, sessionRelation.owner],
-            },
-            '#data': [
-                {
-                    check: ({ row, actionData }) => {
-                        const { bid } = actionData;
-                        if (bid && bid.hasOwnProperty('price')) {
-                            assert(bid.price >= 0, `bid「${row.id}」的价格必须大于等于0`);
-                        }
-                        return states.includes(row.state);
-                    },
-                },
-            ],
-        },
-        {
-            "#relation": {
-                attr: 'auction.session.vendue',
-                relations: [vendueRelation.manager, vendueRelation.owner],
-            },
-            '#data': [
-                {
-                    check: ({ row }) => {
-                        return states.includes(row.state);
-                    },
-                },
-            ],
-        },
-        {
-            "#relation": {
-                attr: 'auction.session.vendue.auctionHouse',
-                relations: [auctionHouseRelation.manager, auctionHouseRelation.owner],
-            },
-            '#data': [
-                {
-                    check: ({ row }) => {
-                        return states.includes(row.state);
-                    },
-                },
-            ],
+const BidDataCheckStateFn = (states) => ({
+    check: ({ row, actionData }) => {
+        const { bid } = actionData;
+        if (bid && bid.hasOwnProperty('price')) {
+            assert(bid.price >= 0, `bid「${row.id}」的价格必须大于等于0`);
         }
-    ]
+        if (!states.includes(row.state)) {
+            return ErrorCode.createErrorByCode(ErrorCode.errorDataInconsistency,
+                `当前状态不支持此操作`, {
+                name: 'bid',
+                operation: 'update',
+                data: row,
+            });
+        }
+        return true;
+    },
 });
+
+const BidGeneralUpdateControl = (states, extra) => {
+    const DataCheck = BidDataCheckStateFn(states);
+    const Auth1 = assign({
+        "#relation": {
+            attr: 'auction.session',
+            relations: [sessionRelation.manager, sessionRelation.auctioneer, sessionRelation.owner],
+        },
+        '#data': [
+            DataCheck,
+        ],
+    }, extra);
+    const Auth2 = assign({
+        "#relation": {
+            attr: 'auction.session.vendue',
+            relations: [vendueRelation.manager, vendueRelation.owner],
+        },
+        '#data': [
+            DataCheck,
+        ],
+    }, extra);
+    const Auth3 = assign({
+        "#relation": {
+            attr: 'auction.session.vendue.auctionHouse',
+            relations: [auctionHouseRelation.manager, auctionHouseRelation.owner],
+        },
+        '#data': [
+            DataCheck,
+        ],
+    }, extra);
+
+    return {
+        auths: [ Auth1, Auth2, Auth3],
+    };
+};
 
 const DepositExistsPaddleVendue = {
     relation: 'paddle',
@@ -533,8 +538,8 @@ const paddleRefundDataCheck = (isSuperUser) => [
             const { paddle, paymentMethod } = actionData;
             const { refundingDeposit, id } = paddle;
             const { onlineDeposit } = row;
-            assert (id === row.id);
-            
+            assert(id === row.id);
+
             if (row.availableDeposit <= 0.01) {
                 return ErrorCode.createErrorByCode(ErrorCode.errorLegalBodyError, '没有可退的余额');
             }
@@ -741,6 +746,41 @@ const CheckOutPushUnexistsRecentCheckOutPush = [
     },
 ];
 
+const UnexistsActiveAuctionInSession = {
+    relation: 'auction',
+    condition: ({ user, row }) => {
+        return {
+            sessionId: row.id,
+            state: {
+                $nin: [auctionState.unsold, auctionState.sold],
+            }
+        };
+    },
+    message: '请将拍卖会中所有拍品流拍或成交后再将拍卖会结束',
+};
+
+const ExistsAuctionForBidCreation = {
+    relation: 'auction',
+    needData: true,
+    condition: ({ user, actionData }) => {
+        const { bid } = actionData;
+        if (bid.agentId) {
+            return {
+                id: bid.auctionId,
+                state: {
+                    $in: [auctionState.ongoing, auctionState.ready],
+                },
+            };
+        }
+        return {
+            id: bid.auctionId,
+            state: {
+                $in: [auctionState.ongoing],
+            },
+        };
+    },
+};
+
 const AUTH_MATRIX = {
     vendue: {
         [vendueAction.assign]: {
@@ -846,22 +886,6 @@ const AUTH_MATRIX = {
                             },
                         }
                     ],
-                    '#exists': [
-                        {
-                            relation: 'auction',
-                            condition: ({ user, row }) => {
-                                return {
-                                    session: {
-                                        vendueId: row.id,
-                                    },
-                                    state: {
-                                        $nin: [auctionState.unsold, auctionState.sold],
-                                    }
-                                };
-                            },
-                            message: '请将拍卖会中所有拍品流拍或成交后再将拍卖会结束',
-                        },
-                    ],
                 },
                 {
                     "#relation": {
@@ -873,22 +897,6 @@ const AUTH_MATRIX = {
                                 return [vendueState.ongoing].includes(row.state);
                             },
                         }
-                    ],
-                    '#exists': [
-                        {
-                            relation: 'auction',
-                            condition: ({ user, row }) => {
-                                return {
-                                    session: {
-                                        vendueId: row.id,
-                                    },
-                                    state: {
-                                        $nin: [auctionState.unsold, auctionState.sold],
-                                    }
-                                };
-                            },
-                            message: '请将拍卖会中所有拍品流拍或成交后再将拍卖会结束',
-                        },
                     ],
                 },
             ]
@@ -1265,6 +1273,7 @@ const AUTH_MATRIX = {
                             },
                         }
                     ],
+                    '#unexists': [UnexistsActiveAuctionInSession],
                 },
                 {
                     "#relation": {
@@ -1278,6 +1287,7 @@ const AUTH_MATRIX = {
                             },
                         }
                     ],
+                    '#unexists': [UnexistsActiveAuctionInSession],
                 },
                 {
                     "#relation": {
@@ -1291,6 +1301,7 @@ const AUTH_MATRIX = {
                             },
                         }
                     ],
+                    '#unexists': [UnexistsActiveAuctionInSession],
                 }
             ]
         },
@@ -1649,17 +1660,7 @@ const AUTH_MATRIX = {
             auths: [
                 {
                     '#exists': [
-                        {
-                            relation: 'auction',
-                            needData: true,
-                            condition: ({ user, actionData }) => {
-                                const { bid } = actionData;
-                                return {
-                                    id: bid.auctionId,
-                                    state: auctionState.ongoing,
-                                };
-                            },
-                        },
+                        ExistsAuctionForBidCreation,
                         {
                             relation: 'paddle',
                             needData: true,
@@ -1668,7 +1669,7 @@ const AUTH_MATRIX = {
                                 const query = {
                                     userId: user.id,
                                 }
-                                if (bid.paddleId){
+                                if (bid.paddleId) {
                                     assign(query, {
                                         id: bid.paddleId,
                                     })
@@ -1684,17 +1685,7 @@ const AUTH_MATRIX = {
                         relations: [sessionRelation.manager, sessionRelation.auctioneer, sessionRelation.owner],
                     },
                     '#exists': [
-                        {
-                            relation: 'auction',
-                            needData: true,
-                            condition: ({ user, actionData }) => {
-                                const { bid } = actionData;
-                                return {
-                                    id: bid.auctionId,
-                                    state: auctionState.ongoing,
-                                };
-                            },
-                        },
+                        ExistsAuctionForBidCreation
                     ],
                 },
                 {
@@ -1703,17 +1694,7 @@ const AUTH_MATRIX = {
                         relations: [vendueRelation.manager, vendueRelation.owner],
                     },
                     '#exists': [
-                        {
-                            relation: 'auction',
-                            needData: true,
-                            condition: ({ actionData }) => {
-                                const { bid } = actionData;
-                                return {
-                                    id: bid.auctionId,
-                                    state: auctionState.ongoing,
-                                };
-                            },
-                        },
+                        ExistsAuctionForBidCreation
                     ],
                 },
                 {
@@ -1737,7 +1718,23 @@ const AUTH_MATRIX = {
                 }
             ],
         },
-        [bidAction.success]: BidGeneralUpdateControl([bidState.bidding]),
+        [bidAction.success]: BidGeneralUpdateControl([bidState.bidding], {
+            '#unexists': [
+                {
+                    relation: 'bid',
+                    condition: ({ row }) => {
+                        return {
+                            id: {
+                                $gt: row.id, 
+                            },
+                            auctionId: row.auctionId,
+                            state: bidState.bidding,
+                        };
+                    },
+                    message: '当前出价已经更新，请重新落槌',
+                },
+            ],
+        }),
         [bidAction.remove]: BidGeneralUpdateControl([bidState.bidding]),
         [bidAction.update]: BidGeneralUpdateControl([bidState.bidding]),
         [bidAction.changePrice]: BidGeneralUpdateControl([bidState.success]),
@@ -1748,15 +1745,7 @@ const AUTH_MATRIX = {
                 {
                     "#role": [Roles.ROOT.name],
                     '#data': [
-                        {
-                            check: ({ row, actionData }) => {
-                                const { bid } = actionData;
-                                if (bid && bid.hasOwnProperty('price')) {
-                                    assert(bid.price >= 0, `bid「${row.id}」的价格必须大于等于0`);
-                                }
-                                return [bidState.bidding].includes(row.state);
-                            },
-                        },
+                        BidDataCheckStateFn(bidState.bidding),
                     ],
                 }
             ]
