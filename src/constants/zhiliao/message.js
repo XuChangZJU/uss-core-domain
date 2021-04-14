@@ -64,7 +64,7 @@ const STATE_TRANS_MATRIX = {
     [action.send]: [state.unsent, state.unread],
     [action.read]: [state.unread, state.read],
     [action.withdraw]: [[state.unread, state.read], state.withdrawn],
-    [action.conceal]: [[state.unread, state.read], state.cancelled],
+    [action.conceal]: [[state.unsent, state.unread, state.read], state.cancelled],
 };
 module.exports = {
     relation,
