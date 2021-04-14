@@ -904,7 +904,7 @@ const AUTH_MATRIX = {
                         {
                             check: ({ user, row }) => {
                                 if (![vendueState.ongoing].includes(row.state)) {
-                                    return ErrorCode.createErrorByCode(ErrorCode.errorDataInconsistency, '当前状态无法开始拍卖会', {
+                                    return ErrorCode.createErrorByCode(ErrorCode.errorDataInconsistency, '当前状态无法结束拍卖会', {
                                         name: 'vendue',
                                         operation: 'update',
                                         data: row,
@@ -923,7 +923,7 @@ const AUTH_MATRIX = {
                         {
                             check: ({ user, row }) => {
                                 if (![vendueState.ongoing].includes(row.state)) {
-                                    return ErrorCode.createErrorByCode(ErrorCode.errorDataInconsistency, '当前状态无法开始拍卖会', {
+                                    return ErrorCode.createErrorByCode(ErrorCode.errorDataInconsistency, '当前状态无法结束拍卖会', {
                                         name: 'vendue',
                                         operation: 'update',
                                         data: row,
