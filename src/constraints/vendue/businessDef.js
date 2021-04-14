@@ -1306,7 +1306,7 @@ const AUTH_MATRIX = {
                             relation: 'auction',
                             condition: ({ row }) => {
                                 const query = {
-                                    sessionId: row.sessionId,
+                                    sessionId: row.id,
                                     state: {
                                         $in: [auctionState.ready],
                                     },
@@ -1911,10 +1911,10 @@ const AUTH_MATRIX = {
                     '#data': [{
                         check: ({ actionData, row }) => {
                             const { paddle } = actionData;
-                            const totalDeposit = paddle.totalDeposit || row.totalDeposit;
-                            const availableDeposit = paddle.availableDeposit || row.availableDeposit;
-                            assert(totalDeposit >= 0, `paddle「${row.id}」的totalDeposit必须大于等于0`);
-                            assert(availableDeposit >= 0, `paddle「${row.id}」的availableDeposit必须大于等于0`);
+                            const totalDeposit = paddle.totalDeposit + 1 || row.totalDeposit + 1;
+                            const availableDeposit = paddle.totalDeposit + 1 || row.totalDeposit + 1;
+                            assert(totalDeposit >= 1, `paddle「${row.id}」的totalDeposit必须大于等于0`);
+                            assert(availableDeposit >= 1, `paddle「${row.id}」的availableDeposit必须大于等于0`);
                             assert(totalDeposit >= availableDeposit, `paddle「${row.id}」的totalDeposit必须大于等于availableDeposit`);
                         },
                     }]
@@ -1927,10 +1927,10 @@ const AUTH_MATRIX = {
                     '#data': [{
                         check: ({ actionData, row }) => {
                             const { paddle } = actionData;
-                            const totalDeposit = paddle.totalDeposit || row.totalDeposit;
-                            const availableDeposit = paddle.availableDeposit || row.availableDeposit;
-                            assert(totalDeposit >= 0, `paddle「${row.id}」的totalDeposit必须大于等于0`);
-                            assert(availableDeposit >= 0, `paddle「${row.id}」的availableDeposit必须大于等于0`);
+                            const totalDeposit = paddle.totalDeposit + 1 || row.totalDeposit + 1;
+                            const availableDeposit = paddle.totalDeposit + 1 || row.totalDeposit + 1;
+                            assert(totalDeposit >= 1, `paddle「${row.id}」的totalDeposit必须大于等于0`);
+                            assert(availableDeposit >= 1, `paddle「${row.id}」的availableDeposit必须大于等于0`);
                             assert(totalDeposit >= availableDeposit, `paddle「${row.id}」的totalDeposit必须大于等于availableDeposit`);
                         },
                     }],
