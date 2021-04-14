@@ -596,6 +596,18 @@ const paddleRefundUnexistsAuth = [
         },
         message: '该号牌上有待进行结算的拍卖',
     },
+    {
+        relation: 'agent',
+        condition: ({ row }) => {
+            return {
+                paddleId: row.id,
+                state: {
+                    $in: [agentState.normal],
+                },
+            };
+        },
+        message: '该号牌上有生效中的委托',
+    },
 ];
 
 const CheckOutCheckDataFn = (action, states, transportStates) => ({
