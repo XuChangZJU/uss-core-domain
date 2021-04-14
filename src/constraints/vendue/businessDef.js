@@ -1210,6 +1210,19 @@ const AUTH_MATRIX = {
                                 return query;
                             },
                         },
+                        {
+                            relation: 'auction',
+                            condition: ({ row }) => {
+                                const query = {
+                                    sessionId: row.sessionId,
+                                    state: {
+                                        $in: [auctionState.ready],
+                                    },
+                                };
+                                return query;
+                            },
+                            message: '专场中没有预展的拍品，不能开拍',
+                        },
                     ],
                 },
                 {
@@ -1237,6 +1250,19 @@ const AUTH_MATRIX = {
                                 return query;
                             },
                         },
+                        {
+                            relation: 'auction',
+                            condition: ({ row }) => {
+                                const query = {
+                                    sessionId: row.sessionId,
+                                    state: {
+                                        $in: [auctionState.ready],
+                                    },
+                                };
+                                return query;
+                            },
+                            message: '专场中没有预展的拍品，不能开拍',
+                        },
                     ],
                 },
                 {
@@ -1263,6 +1289,19 @@ const AUTH_MATRIX = {
                                 };
                                 return query;
                             },
+                        },
+                        {
+                            relation: 'auction',
+                            condition: ({ row }) => {
+                                const query = {
+                                    sessionId: row.sessionId,
+                                    state: {
+                                        $in: [auctionState.ready],
+                                    },
+                                };
+                                return query;
+                            },
+                            message: '专场中没有预展的拍品，不能开拍',
                         },
                     ],
                 }
