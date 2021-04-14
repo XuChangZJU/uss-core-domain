@@ -1266,7 +1266,7 @@ const AUTH_MATRIX = {
                             relation: 'auction',
                             condition: ({ row }) => {
                                 const query = {
-                                    sessionId: row.sessionId,
+                                    sessionId: row.id,
                                     state: {
                                         $in: [auctionState.ready],
                                     },
