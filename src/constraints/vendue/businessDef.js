@@ -425,34 +425,28 @@ const BidDataCheckStateFn = (states) => ({
     },
 });
 
-const BidGeneralUpdateControl = (states, extra) => {
+const BidGeneralUpdateControl = (states, extra, dataCheck) => {
     const DataCheck = BidDataCheckStateFn(states);
     const Auth1 = assign({
         "#relation": {
             attr: 'auction.session',
             relations: [sessionRelation.manager, sessionRelation.auctioneer, sessionRelation.owner],
         },
-        '#data': [
-            DataCheck,
-        ],
+        '#data': (dataCheck || []).push(DataCheck),
     }, extra);
     const Auth2 = assign({
         "#relation": {
             attr: 'auction.session.vendue',
             relations: [vendueRelation.manager, vendueRelation.owner],
         },
-        '#data': [
-            DataCheck,
-        ],
+        '#data': (dataCheck || []).push(DataCheck),
     }, extra);
     const Auth3 = assign({
         "#relation": {
             attr: 'auction.session.vendue.auctionHouse',
             relations: [auctionHouseRelation.manager, auctionHouseRelation.owner],
         },
-        '#data': [
-            DataCheck,
-        ],
+        '#data': (dataCheck || []).push(DataCheck),
     }, extra);
 
     return {
@@ -595,6 +589,18 @@ const paddleRefundUnexistsAuth = [
             };
         },
         message: '该号牌上有待进行结算的拍卖',
+    },
+    {
+        relation: 'agent',
+        condition: ({ row }) => {
+            return {
+                paddleId: row.id,
+                state: {
+                    $in: [agentState.normal],
+                },
+            };
+        },
+        message: '该号牌上有生效中的委托',
     },
 ];
 
@@ -781,6 +787,45 @@ const ExistsAuctionForBidCreation = {
     },
 };
 
+const SessionStateForBidCreation = {
+    relation: 'session',
+    needData: true,
+    condition: ({ user, actionData }) => {
+        const { bid } = actionData;
+        if (bid.agentId) {
+            return {
+                id: {
+                    $in: {
+                        name: 'auction',
+                        query: {
+                            id: bid.auctionId,
+                        },
+                        projection: 'sessionId',
+                    },
+                },
+                state: {
+                    $in: [auctionState.ongoing, auctionState.ready],
+                },
+            };
+        }
+        return {
+            id: {
+                $in: {
+                    name: 'auction',
+                    query: {
+                        id: bid.auctionId,
+                    },
+                    projection: 'sessionId',
+                },
+            },
+            state: {
+                $in: [auctionState.ongoing],
+            },
+        };
+    },
+    message: '专场尚未开始，不能出价',
+};
+
 const AUTH_MATRIX = {
     vendue: {
         [vendueAction.assign]: {
@@ -904,7 +949,7 @@ const AUTH_MATRIX = {
                         {
                             check: ({ user, row }) => {
                                 if (![vendueState.ongoing].includes(row.state)) {
-                                    return ErrorCode.createErrorByCode(ErrorCode.errorDataInconsistency, '当前状态无法开始拍卖会', {
+                                    return ErrorCode.createErrorByCode(ErrorCode.errorDataInconsistency, '当前状态无法结束拍卖会', {
                                         name: 'vendue',
                                         operation: 'update',
                                         data: row,
@@ -923,7 +968,7 @@ const AUTH_MATRIX = {
                         {
                             check: ({ user, row }) => {
                                 if (![vendueState.ongoing].includes(row.state)) {
-                                    return ErrorCode.createErrorByCode(ErrorCode.errorDataInconsistency, '当前状态无法开始拍卖会', {
+                                    return ErrorCode.createErrorByCode(ErrorCode.errorDataInconsistency, '当前状态无法结束拍卖会', {
                                         name: 'vendue',
                                         operation: 'update',
                                         data: row,
@@ -1193,7 +1238,7 @@ const AUTH_MATRIX = {
                     '#data': [
                         {
                             check: ({ user, row }) => {
-                                return [sessionState.ready, sessionState.pausing].includes(row.state);
+                                return [sessionState.ready, sessionState.pausing, auctionState.ongoing].includes(row.state);
                             },
                         }
                     ],
@@ -1214,9 +1259,9 @@ const AUTH_MATRIX = {
                             relation: 'auction',
                             condition: ({ row }) => {
                                 const query = {
-                                    sessionId: row.sessionId,
+                                    sessionId: row.id,
                                     state: {
-                                        $in: [auctionState.ready],
+                                        $in: [auctionState.ready, auctionState.pausing, auctionState.ongoing],
                                     },
                                 };
                                 return query;
@@ -1254,9 +1299,9 @@ const AUTH_MATRIX = {
                             relation: 'auction',
                             condition: ({ row }) => {
                                 const query = {
-                                    sessionId: row.sessionId,
+                                    sessionId: row.id,
                                     state: {
-                                        $in: [auctionState.ready],
+                                        $in: [auctionState.ready, auctionState.pausing],
                                     },
                                 };
                                 return query;
@@ -1294,9 +1339,9 @@ const AUTH_MATRIX = {
                             relation: 'auction',
                             condition: ({ row }) => {
                                 const query = {
-                                    sessionId: row.sessionId,
+                                    sessionId: row.id,
                                     state: {
-                                        $in: [auctionState.ready],
+                                        $in: [auctionState.ready, auctionState.pausing, auctionState.ongoing],
                                     },
                                 };
                                 return query;
@@ -1765,6 +1810,7 @@ const AUTH_MATRIX = {
                                 return query;
                             },
                         },
+                        SessionStateForBidCreation,
                     ],
                 },
                 {
@@ -1773,7 +1819,7 @@ const AUTH_MATRIX = {
                         relations: [sessionRelation.manager, sessionRelation.auctioneer, sessionRelation.owner],
                     },
                     '#exists': [
-                        ExistsAuctionForBidCreation
+                        ExistsAuctionForBidCreation,
                     ],
                 },
                 {
@@ -1782,7 +1828,8 @@ const AUTH_MATRIX = {
                         relations: [vendueRelation.manager, vendueRelation.owner],
                     },
                     '#exists': [
-                        ExistsAuctionForBidCreation
+                        ExistsAuctionForBidCreation,
+                        SessionStateForBidCreation,
                     ],
                 },
                 {
@@ -1823,7 +1870,37 @@ const AUTH_MATRIX = {
                 },
             ],
         }),
-        [bidAction.remove]: BidGeneralUpdateControl([bidState.bidding]),
+        [bidAction.remove]: BidGeneralUpdateControl([bidState.bidding], {
+            '#unexists': [
+                {
+                    relation: 'bid',
+                    condition: ({ row }) => {
+                        return {
+                            auctionId: row.auctionId,
+                            state: bidState.bidding,
+                            price: {
+                                $gt: row.price,
+                            }
+                        };
+                    },
+                    message: '只有当前最高价才能取消',
+                },
+            ],
+        },[
+            {
+                check: ({ row }) => {
+                    if (row.paddleId){
+                        return ErrorCode.createErrorByCode(ErrorCode.errorDataInconsistency,
+                            `只允许取消现场出价`, {
+                                name: 'bid',
+                                operation: 'update',
+                                data: row,
+                            });
+                    }
+                    return true;
+                },
+            }
+        ]),
         [bidAction.update]: BidGeneralUpdateControl([bidState.bidding, bidState.success, bidState.confirmed]),
         [bidAction.changePrice]: BidGeneralUpdateControl([bidState.success, bidState.confirmed]),
         [bidAction.confirm]: BidGeneralUpdateControl([bidState.success]),
@@ -1899,10 +1976,10 @@ const AUTH_MATRIX = {
                     '#data': [{
                         check: ({ actionData, row }) => {
                             const { paddle } = actionData;
-                            const totalDeposit = paddle.totalDeposit || row.totalDeposit;
-                            const availableDeposit = paddle.availableDeposit || row.availableDeposit;
-                            assert(totalDeposit >= 0, `paddle「${row.id}」的totalDeposit必须大于等于0`);
-                            assert(availableDeposit >= 0, `paddle「${row.id}」的availableDeposit必须大于等于0`);
+                            const totalDeposit = paddle.totalDeposit + 1 || row.totalDeposit + 1;
+                            const availableDeposit = paddle.totalDeposit + 1 || row.totalDeposit + 1;
+                            assert(totalDeposit >= 1, `paddle「${row.id}」的totalDeposit必须大于等于0`);
+                            assert(availableDeposit >= 1, `paddle「${row.id}」的availableDeposit必须大于等于0`);
                             assert(totalDeposit >= availableDeposit, `paddle「${row.id}」的totalDeposit必须大于等于availableDeposit`);
                         },
                     }]
@@ -1915,10 +1992,10 @@ const AUTH_MATRIX = {
                     '#data': [{
                         check: ({ actionData, row }) => {
                             const { paddle } = actionData;
-                            const totalDeposit = paddle.totalDeposit || row.totalDeposit;
-                            const availableDeposit = paddle.availableDeposit || row.availableDeposit;
-                            assert(totalDeposit >= 0, `paddle「${row.id}」的totalDeposit必须大于等于0`);
-                            assert(availableDeposit >= 0, `paddle「${row.id}」的availableDeposit必须大于等于0`);
+                            const totalDeposit = paddle.totalDeposit + 1 || row.totalDeposit + 1;
+                            const availableDeposit = paddle.totalDeposit + 1 || row.totalDeposit + 1;
+                            assert(totalDeposit >= 1, `paddle「${row.id}」的totalDeposit必须大于等于0`);
+                            assert(availableDeposit >= 1, `paddle「${row.id}」的availableDeposit必须大于等于0`);
                             assert(totalDeposit >= availableDeposit, `paddle「${row.id}」的totalDeposit必须大于等于availableDeposit`);
                         },
                     }],
@@ -2499,6 +2576,30 @@ const AUTH_MATRIX = {
                                         $in: [auctionState.ready, auctionState.ongoing],
                                     },
                                     id: auctionId,
+                                };
+                                return query;
+                            },
+                            message: '该拍品已结束拍卖或尚在准备，不能进行委托',
+                        },
+                        {
+                            relation: 'session',
+                            needData: true,
+                            condition: ({ user, actionData }) => {
+                                const { agent } = actionData;
+                                const { auctionId } = agent;
+                                const query = {
+                                    state: {
+                                        $in: [sessionState.ready, sessionState.ongoing],
+                                    },
+                                    id: {
+                                        $in: {
+                                            name: 'auction',
+                                            query: {
+                                                id: auctionId,
+                                            },
+                                            projection: 'sessionId',
+                                        },
+                                    },
                                 };
                                 return query;
                             },
