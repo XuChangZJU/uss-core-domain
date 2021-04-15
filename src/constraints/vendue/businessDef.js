@@ -1933,7 +1933,55 @@ const AUTH_MATRIX = {
                                 }
                             },
                         },
-                    ]
+                    ],
+                    '#unexists': [
+                        {
+                            relation: 'paddle',
+                            needData: true,
+                            condition: ({ user, actionData }) => {
+                                return {
+                                    userId: actionData.paddle.userId,
+                                    vendueId: actionData.paddle.vendueId,
+                                }
+                            },
+                            message: '用户已经申领过一个号牌',
+                        },
+                    ],
+                },
+                {
+                    '#exists': [
+                        {
+                            relation: 'userAuctionHouse',
+                            needData: true,
+                            condition: ({ user, actionData }) => {
+                                return {
+                                    userId: user.id,
+                                    auctionHouseId: {
+                                        $in: {
+                                            name: 'vendue',
+                                            query: {
+                                                id: actionData.paddle.vendueId,
+                                            },
+                                            projection: 'auctionHouseId',
+                                        }
+                                    },
+                                }
+                            },
+                        },
+                    ],
+                    '#unexists': [
+                        {
+                            relation: 'paddle',
+                            needData: true,
+                            condition: ({ user, actionData }) => {
+                                return {
+                                    userId: actionData.paddle.userId,
+                                    vendueId: actionData.paddle.vendueId,
+                                }
+                            },
+                            message: '用户已经申领过一个号牌',
+                        },
+                    ],
                 },
                 {
                     '#unexists': [
