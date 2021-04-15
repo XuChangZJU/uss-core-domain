@@ -66,6 +66,26 @@ const STATE_TRANS_MATRIX = {
     [action.withdraw]: [[state.unread, state.read], state.withdrawn],
     [action.conceal]: [[state.unsent, state.unread, state.read], state.cancelled],
 };
+
+const type = {
+    text: 1,
+    photo: 2,
+    file: 3,
+    video: 4,
+    voice: 5,
+};
+
+const decodeType = (d) => {
+    const D = {
+        [type.text]: '文本',
+        [type.photo]: '照片',
+        [type.file]: '文件',
+        [type.video]: '视频',
+        [type.voice]: '语音',
+    };
+    return D[d];
+}
+
 module.exports = {
     relation,
     decodeRelation,
@@ -74,4 +94,6 @@ module.exports = {
     state,
     decodeState,
     STATE_TRANS_MATRIX,
+    type,
+    decodeType,
 };
