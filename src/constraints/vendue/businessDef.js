@@ -2630,51 +2630,51 @@ const AUTH_MATRIX = {
                 },
             ]
         },
-        [agentAction.remove]: {
-            auths: [
-                {
-                    '#data': [
-                        {
-                            check: ({ row }) => {
-                                return [agentState.normal].includes(row.state);
-                            },
-                            message: '已经成功或失败的委托不能取消',
-                        }
-                    ],
-                    '#exists': [
-                        {
-                            relation: 'paddle',
-                            condition: ({ user, row, roleName }) => {
-                                // const { agent } = actionData;
-                                const { paddleId } = row;
-                                const query = {
-                                    id: paddleId,
-                                };
-                                if (roleName !== Roles.ROOT.name) {
-                                    assign(query, {
-                                        userId: user.id,
-                                    });
-                                }
-                                return query;
-                            },
-                            message: '您未拥有当前号牌，请领取号牌或重新登录后再进行操作',
-                        },
-                        {
-                            relation: 'auction',
-                            condition: ({ user, row }) => {
-                                const { auctionId } = row;
-                                const query = {
-                                    id: auctionId,
-                                    state: auctionState.ready,
-                                };
-                                return query;
-                            },
-                            message: '拍品开始拍卖后不能取消委托',
-                        },
-                    ],
-                },
-            ]
-        }
+        // [agentAction.remove]: {
+        //     auths: [
+        //         {
+        //             '#data': [
+        //                 {
+        //                     check: ({ row }) => {
+        //                         return [agentState.normal].includes(row.state);
+        //                     },
+        //                     message: '已经成功或失败的委托不能取消',
+        //                 }
+        //             ],
+        //             '#exists': [
+        //                 {
+        //                     relation: 'paddle',
+        //                     condition: ({ user, row, roleName }) => {
+        //                         // const { agent } = actionData;
+        //                         const { paddleId } = row;
+        //                         const query = {
+        //                             id: paddleId,
+        //                         };
+        //                         if (roleName !== Roles.ROOT.name) {
+        //                             assign(query, {
+        //                                 userId: user.id,
+        //                             });
+        //                         }
+        //                         return query;
+        //                     },
+        //                     message: '您未拥有当前号牌，请领取号牌或重新登录后再进行操作',
+        //                 },
+        //                 {
+        //                     relation: 'auction',
+        //                     condition: ({ user, row }) => {
+        //                         const { auctionId } = row;
+        //                         const query = {
+        //                             id: auctionId,
+        //                             state: auctionState.ready,
+        //                         };
+        //                         return query;
+        //                     },
+        //                     message: '拍品开始拍卖后不能取消委托',
+        //                 },
+        //             ],
+        //         },
+        //     ]
+        // }
     },
     qiniuFile: {
         [qiniuFileAction.create]: AllowEveryoneAuth,
