@@ -439,18 +439,14 @@ const BidGeneralUpdateControl = (states, extra, dataCheck) => {
             attr: 'auction.session.vendue',
             relations: [vendueRelation.manager, vendueRelation.owner],
         },
-        '#data': [
-            (dataCheck || []).push(DataCheck),
-        ],
+        '#data': (dataCheck || []).push(DataCheck),
     }, extra);
     const Auth3 = assign({
         "#relation": {
             attr: 'auction.session.vendue.auctionHouse',
             relations: [auctionHouseRelation.manager, auctionHouseRelation.owner],
         },
-        '#data': [
-            (dataCheck || []).push(DataCheck),
-        ],
+        '#data': (dataCheck || []).push(DataCheck),
     }, extra);
 
     return {
