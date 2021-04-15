@@ -425,16 +425,14 @@ const BidDataCheckStateFn = (states) => ({
     },
 });
 
-const BidGeneralUpdateControl = (states, extra) => {
+const BidGeneralUpdateControl = (states, extra, dataCheck) => {
     const DataCheck = BidDataCheckStateFn(states);
     const Auth1 = assign({
         "#relation": {
             attr: 'auction.session',
             relations: [sessionRelation.manager, sessionRelation.auctioneer, sessionRelation.owner],
         },
-        '#data': [
-            DataCheck,
-        ],
+        '#data': (dataCheck || []).push(DataCheck),
     }, extra);
     const Auth2 = assign({
         "#relation": {
@@ -442,7 +440,7 @@ const BidGeneralUpdateControl = (states, extra) => {
             relations: [vendueRelation.manager, vendueRelation.owner],
         },
         '#data': [
-            DataCheck,
+            (dataCheck || []).push(DataCheck),
         ],
     }, extra);
     const Auth3 = assign({
@@ -451,7 +449,7 @@ const BidGeneralUpdateControl = (states, extra) => {
             relations: [auctionHouseRelation.manager, auctionHouseRelation.owner],
         },
         '#data': [
-            DataCheck,
+            (dataCheck || []).push(DataCheck),
         ],
     }, extra);
 
@@ -791,6 +789,45 @@ const ExistsAuctionForBidCreation = {
             },
         };
     },
+};
+
+const SessionStateForBidCreation = {
+    relation: 'session',
+    needData: true,
+    condition: ({ user, actionData }) => {
+        const { bid } = actionData;
+        if (bid.agentId) {
+            return {
+                id: {
+                    $in: {
+                        name: 'auction',
+                        query: {
+                            id: bid.auctionId,
+                        },
+                        projection: 'sessionId',
+                    },
+                },
+                state: {
+                    $in: [auctionState.ongoing, auctionState.ready],
+                },
+            };
+        }
+        return {
+            id: {
+                $in: {
+                    name: 'auction',
+                    query: {
+                        id: bid.auctionId,
+                    },
+                    projection: 'sessionId',
+                },
+            },
+            state: {
+                $in: [auctionState.ongoing],
+            },
+        };
+    },
+    message: '专场尚未开始，不能出价',
 };
 
 const AUTH_MATRIX = {
@@ -1777,6 +1814,7 @@ const AUTH_MATRIX = {
                                 return query;
                             },
                         },
+                        SessionStateForBidCreation,
                     ],
                 },
                 {
@@ -1785,7 +1823,7 @@ const AUTH_MATRIX = {
                         relations: [sessionRelation.manager, sessionRelation.auctioneer, sessionRelation.owner],
                     },
                     '#exists': [
-                        ExistsAuctionForBidCreation
+                        ExistsAuctionForBidCreation,
                     ],
                 },
                 {
@@ -1794,7 +1832,8 @@ const AUTH_MATRIX = {
                         relations: [vendueRelation.manager, vendueRelation.owner],
                     },
                     '#exists': [
-                        ExistsAuctionForBidCreation
+                        ExistsAuctionForBidCreation,
+                        SessionStateForBidCreation,
                     ],
                 },
                 {
@@ -1835,7 +1874,37 @@ const AUTH_MATRIX = {
                 },
             ],
         }),
-        [bidAction.remove]: BidGeneralUpdateControl([bidState.bidding]),
+        [bidAction.remove]: BidGeneralUpdateControl([bidState.bidding], {
+            '#unexists': [
+                {
+                    relation: 'bid',
+                    condition: ({ row }) => {
+                        return {
+                            auctionId: row.auctionId,
+                            state: bidState.bidding,
+                            price: {
+                                $gt: row.price,
+                            }
+                        };
+                    },
+                    message: '只有当前最高价才能取消',
+                },
+            ],
+        },[
+            {
+                check: ({ row }) => {
+                    if (row.paddleId){
+                        return ErrorCode.createErrorByCode(ErrorCode.errorDataInconsistency,
+                            `只允许取消现场出价`, {
+                                name: 'bid',
+                                operation: 'update',
+                                data: row,
+                            });
+                    }
+                    return true;
+                },
+            }
+        ]),
         [bidAction.update]: BidGeneralUpdateControl([bidState.bidding, bidState.success, bidState.confirmed]),
         [bidAction.changePrice]: BidGeneralUpdateControl([bidState.success, bidState.confirmed]),
         [bidAction.confirm]: BidGeneralUpdateControl([bidState.success]),
@@ -2511,6 +2580,30 @@ const AUTH_MATRIX = {
                                         $in: [auctionState.ready, auctionState.ongoing],
                                     },
                                     id: auctionId,
+                                };
+                                return query;
+                            },
+                            message: '该拍品已结束拍卖或尚在准备，不能进行委托',
+                        },
+                        {
+                            relation: 'session',
+                            needData: true,
+                            condition: ({ user, actionData }) => {
+                                const { agent } = actionData;
+                                const { auctionId } = agent;
+                                const query = {
+                                    state: {
+                                        $in: [sessionState.ready, sessionState.ongoing],
+                                    },
+                                    id: {
+                                        $in: {
+                                            name: 'auction',
+                                            query: {
+                                                id: auctionId,
+                                            },
+                                            projection: 'sessionId',
+                                        },
+                                    },
                                 };
                                 return query;
                             },
