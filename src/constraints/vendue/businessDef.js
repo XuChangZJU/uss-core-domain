@@ -1240,7 +1240,7 @@ const AUTH_MATRIX = {
                     '#data': [
                         {
                             check: ({ user, row }) => {
-                                return [sessionState.ready, sessionState.pausing, auctionState.ongoing].includes(row.state);
+                                return [sessionState.ready, sessionState.pausing].includes(row.state);
                             },
                         }
                     ],
