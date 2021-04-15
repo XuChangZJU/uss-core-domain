@@ -427,26 +427,28 @@ const BidDataCheckStateFn = (states) => ({
 
 const BidGeneralUpdateControl = (states, extra, dataCheck) => {
     const DataCheck = BidDataCheckStateFn(states);
+    const data = dataCheck || [];
+    data.push(DataCheck);
     const Auth1 = assign({
         "#relation": {
             attr: 'auction.session',
             relations: [sessionRelation.manager, sessionRelation.auctioneer, sessionRelation.owner],
         },
-        '#data': (dataCheck || []).push(DataCheck),
+        '#data': data,
     }, extra);
     const Auth2 = assign({
         "#relation": {
             attr: 'auction.session.vendue',
             relations: [vendueRelation.manager, vendueRelation.owner],
         },
-        '#data': (dataCheck || []).push(DataCheck),
+        '#data': data,
     }, extra);
     const Auth3 = assign({
         "#relation": {
             attr: 'auction.session.vendue.auctionHouse',
             relations: [auctionHouseRelation.manager, auctionHouseRelation.owner],
         },
-        '#data': (dataCheck || []).push(DataCheck),
+        '#data': data,
     }, extra);
 
     return {
