@@ -21,6 +21,13 @@ const {
     STATE_TRANS_MATRIX: SUBSCRIBED_SERVICE_STATE_TRANS_MATRIX,
 } = require('../../constants/zhiliao/subscribedService');
 
+const {
+    action: sessionAction,
+    state: sessionState,
+    relation: sessionRelation,
+    STATE_TRAN_MATRIX: SESSION_STATE_TRAN_MATRIX,
+} = require('../../constants/zhiliao/session');
+
 // 被操作的orderedService的所属公司和操作者有owner和manager关系
 const orderedServiceCompany = {
     attr: 'company',
@@ -86,11 +93,35 @@ const AUTH_MATRIX = {
             ],
         },
     },
+    session: {
+        /*[sessionAction.create]: {},
+        [sessionAction.update]: {},
+        [sessionAction.remove]: {},*/
+        [sessionAction.toManualService]: {
+            auths: [
+                {
+                    '#relation': {
+                        relation: [sessionRelation.customer],
+                    },
+                },
+            ],
+        },
+        [sessionAction.finish]: {
+            auths: [
+                {
+                    '#relation': {
+                        relation: [sessionRelation.customer, sessionRelation.service],
+                    },
+                },
+            ],
+        },
+    },
 };
 
 const STATE_TRAN_MATRIX = {
     company: COMPANY_STATE_TRANS_MATRIX,
     subscribedService: SUBSCRIBED_SERVICE_STATE_TRANS_MATRIX,
+    session: SESSION_STATE_TRAN_MATRIX,
 };
 
 module.exports = {

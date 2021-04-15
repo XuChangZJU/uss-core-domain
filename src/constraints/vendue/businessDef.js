@@ -596,6 +596,18 @@ const paddleRefundUnexistsAuth = [
         },
         message: '该号牌上有待进行结算的拍卖',
     },
+    {
+        relation: 'agent',
+        condition: ({ row }) => {
+            return {
+                paddleId: row.id,
+                state: {
+                    $in: [agentState.normal],
+                },
+            };
+        },
+        message: '该号牌上有生效中的委托',
+    },
 ];
 
 const CheckOutCheckDataFn = (action, states, transportStates) => ({
@@ -904,7 +916,7 @@ const AUTH_MATRIX = {
                         {
                             check: ({ user, row }) => {
                                 if (![vendueState.ongoing].includes(row.state)) {
-                                    return ErrorCode.createErrorByCode(ErrorCode.errorDataInconsistency, '当前状态无法开始拍卖会', {
+                                    return ErrorCode.createErrorByCode(ErrorCode.errorDataInconsistency, '当前状态无法结束拍卖会', {
                                         name: 'vendue',
                                         operation: 'update',
                                         data: row,
@@ -923,7 +935,7 @@ const AUTH_MATRIX = {
                         {
                             check: ({ user, row }) => {
                                 if (![vendueState.ongoing].includes(row.state)) {
-                                    return ErrorCode.createErrorByCode(ErrorCode.errorDataInconsistency, '当前状态无法开始拍卖会', {
+                                    return ErrorCode.createErrorByCode(ErrorCode.errorDataInconsistency, '当前状态无法结束拍卖会', {
                                         name: 'vendue',
                                         operation: 'update',
                                         data: row,
@@ -1210,6 +1222,19 @@ const AUTH_MATRIX = {
                                 return query;
                             },
                         },
+                        {
+                            relation: 'auction',
+                            condition: ({ row }) => {
+                                const query = {
+                                    sessionId: row.id,
+                                    state: {
+                                        $in: [auctionState.ready],
+                                    },
+                                };
+                                return query;
+                            },
+                            message: '专场中没有预展的拍品，不能开拍',
+                        },
                     ],
                 },
                 {
@@ -1237,6 +1262,19 @@ const AUTH_MATRIX = {
                                 return query;
                             },
                         },
+                        {
+                            relation: 'auction',
+                            condition: ({ row }) => {
+                                const query = {
+                                    sessionId: row.sessionId,
+                                    state: {
+                                        $in: [auctionState.ready],
+                                    },
+                                };
+                                return query;
+                            },
+                            message: '专场中没有预展的拍品，不能开拍',
+                        },
                     ],
                 },
                 {
@@ -1263,6 +1301,19 @@ const AUTH_MATRIX = {
                                 };
                                 return query;
                             },
+                        },
+                        {
+                            relation: 'auction',
+                            condition: ({ row }) => {
+                                const query = {
+                                    sessionId: row.id,
+                                    state: {
+                                        $in: [auctionState.ready],
+                                    },
+                                };
+                                return query;
+                            },
+                            message: '专场中没有预展的拍品，不能开拍',
                         },
                     ],
                 }
@@ -1860,10 +1911,10 @@ const AUTH_MATRIX = {
                     '#data': [{
                         check: ({ actionData, row }) => {
                             const { paddle } = actionData;
-                            const totalDeposit = paddle.totalDeposit || row.totalDeposit;
-                            const availableDeposit = paddle.availableDeposit || row.availableDeposit;
-                            assert(totalDeposit >= 0, `paddle「${row.id}」的totalDeposit必须大于等于0`);
-                            assert(availableDeposit >= 0, `paddle「${row.id}」的availableDeposit必须大于等于0`);
+                            const totalDeposit = paddle.totalDeposit + 1 || row.totalDeposit + 1;
+                            const availableDeposit = paddle.totalDeposit + 1 || row.totalDeposit + 1;
+                            assert(totalDeposit >= 1, `paddle「${row.id}」的totalDeposit必须大于等于0`);
+                            assert(availableDeposit >= 1, `paddle「${row.id}」的availableDeposit必须大于等于0`);
                             assert(totalDeposit >= availableDeposit, `paddle「${row.id}」的totalDeposit必须大于等于availableDeposit`);
                         },
                     }]
@@ -1876,10 +1927,10 @@ const AUTH_MATRIX = {
                     '#data': [{
                         check: ({ actionData, row }) => {
                             const { paddle } = actionData;
-                            const totalDeposit = paddle.totalDeposit || row.totalDeposit;
-                            const availableDeposit = paddle.availableDeposit || row.availableDeposit;
-                            assert(totalDeposit >= 0, `paddle「${row.id}」的totalDeposit必须大于等于0`);
-                            assert(availableDeposit >= 0, `paddle「${row.id}」的availableDeposit必须大于等于0`);
+                            const totalDeposit = paddle.totalDeposit + 1 || row.totalDeposit + 1;
+                            const availableDeposit = paddle.totalDeposit + 1 || row.totalDeposit + 1;
+                            assert(totalDeposit >= 1, `paddle「${row.id}」的totalDeposit必须大于等于0`);
+                            assert(availableDeposit >= 1, `paddle「${row.id}」的availableDeposit必须大于等于0`);
                             assert(totalDeposit >= availableDeposit, `paddle「${row.id}」的totalDeposit必须大于等于availableDeposit`);
                         },
                     }],
