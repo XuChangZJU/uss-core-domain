@@ -47,7 +47,7 @@ const decodeAction = (a) => {
     return A[a] || decodeCommonAction(a);
 };
 
-const relation = Object.assign({}, commonRelation, {
+/*const relation = Object.assign({}, commonRelation, {
     sender: 301,
     receiver: 302,
 });
@@ -58,7 +58,7 @@ const decodeRelation = (r) => {
         [relation.receiver]: '接受者',
     };
     return R[r] || decodeCommonRelation(r);
-};
+};*/
 
 const STATE_TRANS_MATRIX = {
     [action.send]: [state.unsent, state.unread],
@@ -87,8 +87,8 @@ const decodeType = (d) => {
 }
 
 module.exports = {
-    relation,
-    decodeRelation,
+    // relation,
+    // decodeRelation,
     action,
     decodeAction,
     state,

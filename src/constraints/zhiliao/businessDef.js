@@ -31,7 +31,7 @@ const {
 const {
     action: chatMessageAction,
     state: chatMessageState,
-    relation: chatMessageRelation,
+    // relation: chatMessageRelation,
     STATE_TRANS_MATRIX: CHAT_MESSAGE_STATE_TRAN_MATRIX,
 } = require('../../constants/zhiliao/chatMessage');
 
@@ -41,42 +41,29 @@ const orderedServiceCompany = {
     relations: [companyRelation.owner, companyRelation.manager],
 };
 
-const chatMessageSender = {
-    'exists': [
-        {
-            relation: 'userChatMessage',
-            condition: ({ user, row }) => {
-                const { id } = row;
-                const query = {
-                    userId: user.id,
-                    chatMessageId: id,
-                    relation: {
-                        $in: [chatMessageRelation.receiver],
-                    },
-                };
-                return query;
-            },
-        },
-    ],
+const chatMessageUserSessionExists = {
+    relation: 'userSession',
+    condition: ({ user, row }) => {
+        const { sessionId } = row;
+        const query = {
+            userId: user.id,
+            sessionId,
+        };
+        return query;
+    },
 };
 
-const chatMessageReceiver = {
-    'exists': [
-        {
-            relation: 'userChatMessage',
-            condition: ({ user, row }) => {
-                const { id } = row;
-                const query = {
-                    userId: user.id,
-                    chatMessageId: id,
-                    relation: {
-                        $in: [chatMessageRelation.receiver],
-                    },
-                };
-                return query;
-            },
-        },
-    ],
+const chatMessageCreator = {
+    relation: 'userChatMessageAction',
+    condition: ({ user, row }) => {
+        const { id: chatMessageId } = row;
+        const query = {
+            operatorId: user.id,
+            action: commonAction.create,
+            chatMessageId,
+        };
+        return query;
+    },
 };
 
 const AUTH_MATRIX = {
@@ -165,42 +152,47 @@ const AUTH_MATRIX = {
         [chatMessageAction.create]: {
             auths: [
                 {
-                    'exists': [
-                        {
-                            relation: 'userChatMessage',
-                            condition: ({ user, row }) => {
-                                const query = {
-                                    userId: user.id,
-                                    relation: {
-                                        $in: [chatMessageRelation.sender],
-                                    },
-                                };
-                                return query;
-                            },
-                        },
+                    '#exists': [
+                        chatMessageUserSessionExists,
                     ],
                 },
             ],
         },
         [chatMessageAction.send]: {
             auths: [
-                chatMessageSender,
+                {
+                    '#exists': [
+                        chatMessageUserSessionExists,
+                    ],
+                },
             ],
         },
         [chatMessageAction.read]: {
             auths: [
-                chatMessageReceiver,
+                {
+                    '#unexists': [
+                        chatMessageCreator,
+                    ],
+                },
             ],
         },
         [chatMessageAction.withdraw]: {
             auths: [
-                chatMessageSender,
+                {
+                    '#exists': [
+                        chatMessageUserSessionExists,
+                        chatMessageCreator,
+                    ],
+                }
             ],
         },
         [chatMessageAction.concealed]: {
             auths: [
-                chatMessageSender,
-                chatMessageReceiver,
+                {
+                    '#exists': [
+                        chatMessageUserSessionExists,
+                    ],
+                },
             ],
         },
     },
