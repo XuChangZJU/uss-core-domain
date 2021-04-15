@@ -2416,7 +2416,7 @@ const AUTH_MATRIX = {
                 {
                     '#exists': [DepositExistsPaddleVendue],
                     "#relation": {
-                        attr: 'paddle.vendue',
+                        attr: 'paddle.vendue.auctionHouse',
                     },
                 },
                 {
