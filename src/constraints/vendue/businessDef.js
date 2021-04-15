@@ -1228,7 +1228,7 @@ const AUTH_MATRIX = {
                                 const query = {
                                     sessionId: row.id,
                                     state: {
-                                        $in: [auctionState.ready],
+                                        $in: [auctionState.ready, auctionState.pausing],
                                     },
                                 };
                                 return query;
@@ -1268,7 +1268,7 @@ const AUTH_MATRIX = {
                                 const query = {
                                     sessionId: row.id,
                                     state: {
-                                        $in: [auctionState.ready],
+                                        $in: [auctionState.ready, auctionState.pausing],
                                     },
                                 };
                                 return query;
@@ -1308,7 +1308,7 @@ const AUTH_MATRIX = {
                                 const query = {
                                     sessionId: row.id,
                                     state: {
-                                        $in: [auctionState.ready],
+                                        $in: [auctionState.ready, auctionState.pausing],
                                     },
                                 };
                                 return query;
