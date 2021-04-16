@@ -109,6 +109,7 @@ const {
 const { AUTH_MATRIX: EXPRESS_AUTH_MATRIX, STATE_TRANS_MATRIX: EXPRESS_STATE_TRANS_MATRIX } = require('../../constants/express');
 const ErrorCode = require('../../constants/errorCode');
 const { Roles } = require('../../constants/roleConstant2');
+const { omit } = require('lodash/omit');
 
 const ContractAuctionHouseWorkerExists = [
     {
@@ -2682,6 +2683,65 @@ const AUTH_MATRIX = {
                             message: '您在此拍品上已有一个委托，不可重复委托',
                         }
                     ],
+                },
+            ]
+        },
+        [agentAction.update]: {
+            auths: [
+                {
+                    '#exists': [
+                        {
+                            relation: 'paddle',
+                            needData: true,
+                            condition: ({ user, row, roleName }) => {
+                                const { paddleId } = row;
+                                const query = {
+                                    id: paddleId,
+                                };
+                                if (!roleName || roleName !== Roles.ROOT.name) {
+                                    assign(query, {
+                                        userId: user.id,
+                                    });
+                                }
+                                return query;
+                            },
+                            message: '您未拥有当前号牌，请领取号牌或重新登录后再进行操作',
+                        },
+                    ],
+                    '#unexists': [
+                        {
+                            relation: 'bid',
+                            needData: true,
+                            condition: ({ user, actionData, row }) => {
+                                const { agent } = actionData;
+                                const { price: agentPrice } = agent;
+                                const { auctionId } = row;
+                                const others = omit(agent, ['price', 'id']);
+                                assert(Object.keys(others).length === 0, '只允许修改委托价格');
+                                return {
+                                    price: {
+                                        $gt: agentPrice,
+                                    },
+                                    auctionId,
+                                };
+                            },
+                            message: '委托不能低于当前最高价',
+                        }
+                    ],
+                    '#data': [
+                        {
+                            check: ({ user, row }) => {
+                                if (row.state !== agentState.normal) {
+                                    return ErrorCode.createErrorByCode(ErrorCode.errorDataInconsistency, '成交或失败的委托不能进行修改', {
+                                        name: 'contract',
+                                        operation: 'update',
+                                        data: row,
+                                    });
+                                }
+                                return true;
+                            }
+                        },
+                    ]
                 },
             ]
         },
