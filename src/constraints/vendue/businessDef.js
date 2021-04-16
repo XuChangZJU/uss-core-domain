@@ -303,7 +303,14 @@ const AuctionCreateControl = {
 const AuctionUnexistsBid = [
     {
         relation: 'bid',
-        condition: ({ row }) => {
+        condition: ({ row, actionData }) => {
+            const { auction } = actionData;
+
+            if (auction.hasOwnProperty('id') && Object.keys.length === 1){
+                return {
+                    id: -1,
+                }
+            }
             return {
                 auctionId: row.id,
             };
