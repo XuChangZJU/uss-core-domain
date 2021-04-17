@@ -2731,7 +2731,7 @@ const AUTH_MATRIX = {
                             check: ({ user, row }) => {
                                 if (row.state !== agentState.normal) {
                                     return ErrorCode.createErrorByCode(ErrorCode.errorDataInconsistency, '成交或失败的委托不能进行修改', {
-                                        name: 'contract',
+                                        name: 'agent',
                                         operation: 'update',
                                         data: row,
                                     });
