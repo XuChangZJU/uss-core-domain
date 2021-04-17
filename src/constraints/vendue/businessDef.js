@@ -109,7 +109,7 @@ const {
 const { AUTH_MATRIX: EXPRESS_AUTH_MATRIX, STATE_TRANS_MATRIX: EXPRESS_STATE_TRANS_MATRIX } = require('../../constants/express');
 const ErrorCode = require('../../constants/errorCode');
 const { Roles } = require('../../constants/roleConstant2');
-const { omit } = require('lodash/omit');
+const omit = require('lodash/omit');
 
 const ContractAuctionHouseWorkerExists = [
     {
