@@ -454,7 +454,7 @@ const BidGeneralUpdateControl = (states, extra, dataCheck) => {
     const Auth3 = assign({
         "#relation": {
             attr: 'auction.session.vendue.auctionHouse',
-            relations: [auctionHouseRelation.manager, auctionHouseRelation.owner],
+            relations: [auctionHouseRelation.manager, auctionHouseRelation.owner, auctionHouseRelation.auctioneer],
         },
         '#data': data,
     }, extra);
