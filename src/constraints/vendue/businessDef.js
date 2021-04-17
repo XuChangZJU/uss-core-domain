@@ -2716,8 +2716,6 @@ const AUTH_MATRIX = {
                                 const { agent } = actionData;
                                 const { price: agentPrice } = agent;
                                 const { auctionId } = row;
-                                const others = omit(agent, ['price', 'id']);
-                                assert(Object.keys(others).length === 0, '只允许修改委托价格');
                                 return {
                                     price: {
                                         $gt: agentPrice,
