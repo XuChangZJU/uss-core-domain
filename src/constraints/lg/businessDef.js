@@ -1416,6 +1416,38 @@ const AUTH_MATRIX = {
                 }
             ]
         },
+        [TradeAction.allocWeChatQrCode]: {
+            auths: [
+                {
+                    "#exist": [
+                        {
+                            relation: 'lgTrade',
+                            condition: ({ user, row }) => {
+                                const query = {
+                                    buyerId: user.id,
+                                    id: row.id,
+                                };
+                                return query;
+                            },
+                        },
+                    ],
+                },
+                {
+                    '#relation': {
+                        attr: 'lgShop',
+                    }
+                },
+                {
+                    '#relation': {
+                        attr: 'lgShop.lgMall',
+                    }
+                },      {
+                    '#relation': {
+                        attr: 'lgShop.lgMall.lgDistrict',
+                    }
+                },
+            ]
+        },
     },
     lgServiceCompany: {
         [ServiceCompanyAction.create]: AllowEveryoneAuth,
