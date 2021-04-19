@@ -133,7 +133,7 @@ const AUTH_MATRIX = {
             auths: [
                 {
                     '#relation': {
-                        relation: [sessionRelation.customer],
+                        relations: [sessionRelation.customer],
                     },
                 },
             ],
@@ -142,7 +142,7 @@ const AUTH_MATRIX = {
             auths: [
                 {
                     '#relation': {
-                        relation: [sessionRelation.customer, sessionRelation.service],
+                        relations: [sessionRelation.customer, sessionRelation.service],
                     },
                 },
             ],
@@ -197,27 +197,17 @@ const AUTH_MATRIX = {
         },
     },
     repository: {
-        [commonAction.create]: {
-            auths: [
-                {
-                    '#exists': [
-                        {
-                            relation: 'userCompany',
-                            condition: ({ user, row }) => {
-                                const { companyId } = row;
-                                return {
-                                    userId: user.id,
-                                    companyId: companyId,
-                                    relation: {
-                                        $in: [companyRelation.owner, companyRelation.manager],
-                                    },
-                                };
-                            },
+        [commonAction.create]:
+            {
+                auths: [
+                    {
+                        '#relation': {
+                            attr: 'company',
+                            relations: [companyRelation.owner, companyRelation.manager],
                         },
-                    ],
-                },
-            ],
-        },
+                    },
+                ],
+            },
         [commonAction.update]: AllowEveryoneAuth,
         [commonAction.remove]: AllowEveryoneAuth,
     },
