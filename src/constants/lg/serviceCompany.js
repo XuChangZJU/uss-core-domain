@@ -19,14 +19,12 @@ const decodeType = (t) => {
 }
 const relation = Object.assign({}, commonRelation, {
     'worker': 301,
-    'seller': 401,
-    'driver': 501,
+    'guide': 401,
 })
 const decodeRelation = (a) => {
     const TEXT = {
         [relation.worker]: '员工',
-        [relation.seller]: '销售',
-        [relation.driver]: '司机',
+        [relation.guide]: '导游',
     };
 
     return TEXT[a] || decodeCommonRelation(a);
