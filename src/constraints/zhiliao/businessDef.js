@@ -196,6 +196,31 @@ const AUTH_MATRIX = {
             ],
         },
     },
+    repository: {
+        [commonAction.create]: {
+            auths: [
+                {
+                    '#exists': [
+                        {
+                            relation: 'userCompany',
+                            condition: ({ user, row }) => {
+                                const { companyId } = row;
+                                return {
+                                    userId: user.id,
+                                    companyId: companyId,
+                                    relation: {
+                                        $in: [companyRelation.owner, companyRelation.manager],
+                                    },
+                                };
+                            },
+                        },
+                    ],
+                },
+            ],
+        },
+        [commonAction.update]: AllowEveryoneAuth,
+        [commonAction.remove]: AllowEveryoneAuth,
+    },
 };
 
 const STATE_TRAN_MATRIX = {
