@@ -17,7 +17,9 @@ const decodeType = (t) => {
     }
     return T[t];
 }
-const relation = Object.assign({}, commonRelation, {
+const relation = Object.assign({},{
+    'owner': commonRelation.owner,
+    'manager': commonRelation.manager,
     'worker': 301,
     'guide': 401,
 })
