@@ -1,4 +1,5 @@
 const { Roles } = require('../../constants/roleConstant2');
+const ErrorCode = require('../../constants/errorCode');
 const {
     AllowEveryoneAuth,
     OwnerRelationAuth,
@@ -114,6 +115,34 @@ const {
     relation: ReckonerRelation,
 } = require('../../constants/lg/reckoner');
 
+const {
+    action: TradeRefundAction,
+    state: TradeRefundState,
+    STATE_TRANS_MATRIX: TRADEREFUND_STATE_TRANS_MATRIX,
+} = require('../../constants/lg/tradeRefund');
+
+const {
+    action: TradeSkuItemShopRefundAction,
+    state: TradeSkuItemShopRefundState,
+} = require('../../constants/lg/tradeSkuItemShopRefund');
+
+const tradeRefundDataCheck = (states) => {
+    return [
+        {
+            check: ({user, row}) => {
+                if (!states.includes(row.state)){
+                    return ErrorCode.createErrorByCode(ErrorCode.errorDataInconsistency,
+                        `当前状态不支持此操作`, {
+                            name: 'lgTradeRefund',
+                            operation: 'update',
+                            data: row,
+                        });
+                };
+                return true;
+            },
+        }
+    ];
+}
 const AUTH_MATRIX = {
     lgService: {
         [ServiceAction.create]: AllowEveryoneAuth,
@@ -1679,13 +1708,142 @@ const AUTH_MATRIX = {
                 },
             ]
         },
+    },
+    lgTradeRefund: {
+        [TradeRefundAction.create]: {
+            auths: [
+                {
+                    '#exists': [
+                        {
+                            relation: 'lgTrade',
+                            needData: true,
+                            condition: ({ actionData, user }) => {
+                                const { lgTradeRefund } = actionData;
+                                const query = {
+                                    id: lgTradeRefund.lgTradeId,
+                                    buyerId: user.id,
+                                };
+                                return query;
+                            },
+                            message: '您不是该订单的付款人，不能申请退货',
+                        },
+                        {
+                            relation: 'lgTrade',
+                            needData: true,
+                            condition: ({ actionData, user }) => {
+                                const { lgTradeRefund } = actionData;
+                                const query = {
+                                    id: lgTradeRefund.lgTradeId,
+                                    state: {
+                                        $in: [TradeState.legal, TradeState.legal2, TradeState.partialRefunded]
+                                    },
+                                };
+                                return query;
+                            },
+                            message: '当前订单尚未支付或已经退款，无法进行退款申请',
+                        },
+                    ],
+                    '#unexists': [
+                        {
+                            relation: 'lgTradeRefund',
+                            needData: true,
+                            condition: ({ actionData, user }) => {
+                                const { lgTradeRefund } = actionData;
+                                const query = {
+                                    lgTradeId: lgTradeRefund.lgTradeId,
+                                    state: {
+                                        $nin: [TradeRefundState.refunded, TradeRefundState.partialRefunded, TradeRefundState.cancelled],
+                                    },
+                                };
+                                return query;
+                            },
+                            message: '您对该订单的退货申请正在处理中，请勿重复操作',
+                        },
+                    ],
+                },
+            ]
+        },
+        [TradeRefundAction.refund]: {
+            auths: [
+                {
+                    '#data': tradeRefundDataCheck([TradeRefundState.waitingForAccept]),
+                    '#relation': {
+                        attr: 'lgTrade.lgShop',
+                        relations: [ShopRelation.owner, ShopRelation.manager],
+                    },
+                },
+                {
+                    '#data': tradeRefundDataCheck([TradeRefundState.waitingForAccept]),
+                    '#relation': {
+                        attr: 'lgTrade.lgShop.lgMall',
+                        relations: [MallRelation.owner, MallRelation.manager],
+                    },
+                },
+                {
+                    '#data': tradeRefundDataCheck([TradeRefundState.waitingForAccept]),
+                    '#relation': {
+                        attr: 'lgTrade.lgShop.lgMall.lgDistrict',
+                        relations: [DistrictRelation.owner, DistrictRelation.manager],
+                    },
+                },
+            ],
+        },
+        [TradeRefundAction.cancel]: {
+            auths: [
+                {
+                    '#data': tradeRefundDataCheck([TradeRefundState.waitingForAccept]),
+                    '#exists': [
+                        {
+                            relation: 'lgTrade',
+                            condition: ({ row, user }) => {
+                                const query = {
+                                    id: row.lgTradeId,
+                                    buyerId: user.id,
+                                };
+                                return query;
+                            },
+                            message: '您不是该退款的发起人，不能取消退款',
+                        },
+                    ],
+                },
+            ],
+        },
+    },
+    lgTradeSkuItemShopRefund: {
+        [TradeSkuItemShopRefundAction.create]: {
+            auths: [
+                {
+                    '#unexists': [
+                        {
+                            relation: 'lgTradeSkuItemShopRefund',
+                            needData: true,
+                            condition: ({ actionData, user }) => {
+                                const { lgTradeSkuItemShopRefund } = actionData;
+                                const query = {
+                                    lgTradeRefund: {
+                                        state: {
+                                            $nin: [TradeRefundState.cancelled],
+                                        }
+                                    },
+                                    lgTradeSkuItemShopId: lgTradeSkuItemShopRefund.lgTradeSkuItemShopId,
+                                };
+                                return query;
+                            },
+                            message: '该商品已经发起过退款，不能重复退款',
+                        },
+                    ],
+                }
+            ]
+        }
     }
 };
+
 const STATE_TRAN_MATRIX = {
     lgShop: SHOP_STATE_TRANS_MATRIX,
     lgTrade: TRADE_STATE_TRANS_MATRIX,
     lgSku: SKU_STATE_TRANS_MATRIX,
     lgSkuItem: SKUITEM_STATE_TRANS_MATRIX,
+    lgTradeRefund: TRADEREFUND_STATE_TRANS_MATRIX,
 };
 module.exports = {
     AUTH_MATRIX,
