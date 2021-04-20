@@ -7,6 +7,7 @@ const {
     decodeState: decodeCommonState,
 } = require('../action');
 const action = Object.assign({}, commonAction, {
+    rollbackMakeFailure: 301,
     success: 401,
     confirm: 402,
     violate: 1001,
@@ -15,6 +16,7 @@ const action = Object.assign({}, commonAction, {
 
 const decodeAction = (a) => {
     const S = {
+        [action.rollbackMakeFailure]: '回退使失败',
         [action.success]: '成交',
         [action.confirm]: '确认',
         [action.violate]: '违约',
@@ -54,6 +56,7 @@ const decodeState = (s) => {
     return S[s] || decodeCommonState(s);
 };
 const STATE_TRAN_MATRIX = {
+    [action.rollbackMakeFailure]: [state.failure, state.bidding],
     [action.success]: [state.bidding, state.success],
     [action.confirm]: [state.success, state.confirmed],
     [action.violate]: [[state.success, state.confirmed], state.violated],
@@ -72,4 +75,3 @@ module.exports = {
     decodeCategory,
     STATE_TRAN_MATRIX
 };
-
