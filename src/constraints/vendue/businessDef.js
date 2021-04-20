@@ -2279,7 +2279,7 @@ const AUTH_MATRIX = {
                 },
                 {
                     "#relation": {
-                        attr: 'actionHouse',
+                        attr: 'auctionHouse',
                     },
                     '#data': CheckContractDataState([contractState.contracted], '合同当前状态不允许更新'),
                 },
@@ -2289,7 +2289,7 @@ const AUTH_MATRIX = {
             auths: [
                 {
                     "#relation": {
-                        attr: 'actionHouse',
+                        attr: 'auctionHouse',
                     },
                     '#data': CheckContractDataState([contractState.contracted, contractState.convertible], '合同当前状态不允许改价'),
                 },
@@ -2299,7 +2299,7 @@ const AUTH_MATRIX = {
             auths: [
                 {
                     "#relation": {
-                        attr: 'actionHouse',
+                        attr: 'auctionHouse',
                     },
                     '#data': CheckContractDataState([contractState.contracted], '合同当前状态不允许删除'),
                     '#unexisted': CheckContractAuctionInactive('拍卖已经开始，无法删除'),
@@ -2317,7 +2317,7 @@ const AUTH_MATRIX = {
             auths: [
                 {
                     "#relation": {
-                        attr: 'actionHouse',
+                        attr: 'auctionHouse',
                     },
                     '#data': CheckContractDataState([contractState.convertible], '当前状态无法结算'),
                 },
@@ -2327,7 +2327,7 @@ const AUTH_MATRIX = {
             auths: [
                 {
                     "#relation": {
-                        attr: 'actionHouse',
+                        attr: 'auctionHouse',
                     },
                     '#data': CheckContractDataState([contractState.contracted], '当前状态无法取消'),
                     '#unexisted': CheckContractAuctionInactive('拍卖已经开始，无法取消'),

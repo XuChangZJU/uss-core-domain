@@ -57,3 +57,28 @@ module.exports = {
     decodeAction,
     STATE_TRAN_MATRIX,
 };
+
+const query = {
+    entity: 'schedule',
+    query: {
+        userId: {
+            $in: {
+                name: 'userBrand',
+                query: {
+                    relation: {
+                        $in: {
+                            name: 'brandRoleCategory',
+                            query: {
+                                categoryId: 1
+                            },
+                            projection: 'relation',
+                        }
+                    },
+                    brandId: 1
+                },
+                projection: 'userId',
+            }
+        },
+        dutyTime: 1000000000,
+    }
+}
