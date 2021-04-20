@@ -28,10 +28,42 @@ const {
     STATE_TRAN_MATRIX: SESSION_STATE_TRAN_MATRIX,
 } = require('../../constants/zhiliao/session');
 
+const {
+    action: chatMessageAction,
+    state: chatMessageState,
+    // relation: chatMessageRelation,
+    STATE_TRANS_MATRIX: CHAT_MESSAGE_STATE_TRAN_MATRIX,
+} = require('../../constants/zhiliao/chatMessage');
+
 // 被操作的orderedService的所属公司和操作者有owner和manager关系
 const orderedServiceCompany = {
     attr: 'company',
     relations: [companyRelation.owner, companyRelation.manager],
+};
+
+const chatMessageUserSessionExists = {
+    relation: 'userSession',
+    condition: ({ user, row }) => {
+        const { sessionId } = row;
+        const query = {
+            userId: user.id,
+            sessionId,
+        };
+        return query;
+    },
+};
+
+const chatMessageCreator = {
+    relation: 'userChatMessageAction',
+    condition: ({ user, row }) => {
+        const { id: chatMessageId } = row;
+        const query = {
+            operatorId: user.id,
+            action: commonAction.create,
+            chatMessageId,
+        };
+        return query;
+    },
 };
 
 const AUTH_MATRIX = {
@@ -101,7 +133,7 @@ const AUTH_MATRIX = {
             auths: [
                 {
                     '#relation': {
-                        relation: [sessionRelation.customer],
+                        relations: [sessionRelation.customer],
                     },
                 },
             ],
@@ -110,11 +142,74 @@ const AUTH_MATRIX = {
             auths: [
                 {
                     '#relation': {
-                        relation: [sessionRelation.customer, sessionRelation.service],
+                        relations: [sessionRelation.customer, sessionRelation.service],
                     },
                 },
             ],
         },
+    },
+    chatMessage: {
+        [chatMessageAction.create]: {
+            auths: [
+                {
+                    '#exists': [
+                        chatMessageUserSessionExists,
+                    ],
+                },
+            ],
+        },
+        [chatMessageAction.send]: {
+            auths: [
+                {
+                    '#exists': [
+                        chatMessageUserSessionExists,
+                    ],
+                },
+            ],
+        },
+        [chatMessageAction.read]: {
+            auths: [
+                {
+                    '#unexists': [
+                        chatMessageCreator,
+                    ],
+                },
+            ],
+        },
+        [chatMessageAction.withdraw]: {
+            auths: [
+                {
+                    '#exists': [
+                        chatMessageUserSessionExists,
+                        chatMessageCreator,
+                    ],
+                }
+            ],
+        },
+        [chatMessageAction.concealed]: {
+            auths: [
+                {
+                    '#exists': [
+                        chatMessageUserSessionExists,
+                    ],
+                },
+            ],
+        },
+    },
+    repository: {
+        [commonAction.create]:
+            {
+                auths: [
+                    {
+                        '#relation': {
+                            attr: 'company',
+                            relations: [companyRelation.owner, companyRelation.manager],
+                        },
+                    },
+                ],
+            },
+        [commonAction.update]: AllowEveryoneAuth,
+        [commonAction.remove]: AllowEveryoneAuth,
     },
 };
 
@@ -122,6 +217,7 @@ const STATE_TRAN_MATRIX = {
     company: COMPANY_STATE_TRANS_MATRIX,
     subscribedService: SUBSCRIBED_SERVICE_STATE_TRANS_MATRIX,
     session: SESSION_STATE_TRAN_MATRIX,
+    chatMessage: CHAT_MESSAGE_STATE_TRAN_MATRIX,
 };
 
 module.exports = {

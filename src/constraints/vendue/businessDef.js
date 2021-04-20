@@ -109,6 +109,7 @@ const {
 const { AUTH_MATRIX: EXPRESS_AUTH_MATRIX, STATE_TRANS_MATRIX: EXPRESS_STATE_TRANS_MATRIX } = require('../../constants/express');
 const ErrorCode = require('../../constants/errorCode');
 const { Roles } = require('../../constants/roleConstant2');
+const omit = require('lodash/omit');
 
 const ContractAuctionHouseWorkerExists = [
     {
@@ -303,7 +304,14 @@ const AuctionCreateControl = {
 const AuctionUnexistsBid = [
     {
         relation: 'bid',
-        condition: ({ row }) => {
+        condition: ({ row, actionData }) => {
+            const { auction } = actionData;
+
+            if (auction.hasOwnProperty('id') && Object.keys.length === 1){
+                return {
+                    id: -1,
+                }
+            }
             return {
                 auctionId: row.id,
             };
@@ -435,27 +443,21 @@ const BidGeneralUpdateControl = (states, extra, checkDataFn) => {
             attr: 'auction.session',
             relations: [sessionRelation.manager, sessionRelation.auctioneer, sessionRelation.owner],
         },
-        '#data': [
-            DataCheck,
-        ],
+        '#data': DataCheck,
     }, extra);
     const Auth2 = assign({
         "#relation": {
             attr: 'auction.session.vendue',
             relations: [vendueRelation.manager, vendueRelation.owner],
         },
-        '#data': [
-            DataCheck,
-        ],
+        '#data': DataCheck,
     }, extra);
     const Auth3 = assign({
         "#relation": {
             attr: 'auction.session.vendue.auctionHouse',
-            relations: [auctionHouseRelation.manager, auctionHouseRelation.owner],
+            relations: [auctionHouseRelation.manager, auctionHouseRelation.owner, auctionHouseRelation.auctioneer],
         },
-        '#data': [
-            DataCheck,
-        ],
+        '#data': DataCheck,
     }, extra);
 
     return {
@@ -794,6 +796,45 @@ const ExistsAuctionForBidCreation = {
             },
         };
     },
+};
+
+const SessionStateForBidCreation = {
+    relation: 'session',
+    needData: true,
+    condition: ({ user, actionData }) => {
+        const { bid } = actionData;
+        if (bid.agentId) {
+            return {
+                id: {
+                    $in: {
+                        name: 'auction',
+                        query: {
+                            id: bid.auctionId,
+                        },
+                        projection: 'sessionId',
+                    },
+                },
+                state: {
+                    $in: [auctionState.ongoing, auctionState.ready],
+                },
+            };
+        }
+        return {
+            id: {
+                $in: {
+                    name: 'auction',
+                    query: {
+                        id: bid.auctionId,
+                    },
+                    projection: 'sessionId',
+                },
+            },
+            state: {
+                $in: [auctionState.ongoing],
+            },
+        };
+    },
+    message: '专场尚未开始，不能出价',
 };
 
 const AUTH_MATRIX = {
@@ -1231,7 +1272,7 @@ const AUTH_MATRIX = {
                                 const query = {
                                     sessionId: row.id,
                                     state: {
-                                        $in: [auctionState.ready],
+                                        $in: [auctionState.ready, auctionState.pausing, auctionState.ongoing],
                                     },
                                 };
                                 return query;
@@ -1269,9 +1310,9 @@ const AUTH_MATRIX = {
                             relation: 'auction',
                             condition: ({ row }) => {
                                 const query = {
-                                    sessionId: row.sessionId,
+                                    sessionId: row.id,
                                     state: {
-                                        $in: [auctionState.ready],
+                                        $in: [auctionState.ready, auctionState.pausing],
                                     },
                                 };
                                 return query;
@@ -1311,7 +1352,7 @@ const AUTH_MATRIX = {
                                 const query = {
                                     sessionId: row.id,
                                     state: {
-                                        $in: [auctionState.ready],
+                                        $in: [auctionState.ready, auctionState.pausing, auctionState.ongoing],
                                     },
                                 };
                                 return query;
@@ -1780,6 +1821,7 @@ const AUTH_MATRIX = {
                                 return query;
                             },
                         },
+                        SessionStateForBidCreation,
                     ],
                 },
                 {
@@ -1788,7 +1830,7 @@ const AUTH_MATRIX = {
                         relations: [sessionRelation.manager, sessionRelation.auctioneer, sessionRelation.owner],
                     },
                     '#exists': [
-                        ExistsAuctionForBidCreation
+                        ExistsAuctionForBidCreation,
                     ],
                 },
                 {
@@ -1797,7 +1839,8 @@ const AUTH_MATRIX = {
                         relations: [vendueRelation.manager, vendueRelation.owner],
                     },
                     '#exists': [
-                        ExistsAuctionForBidCreation
+                        ExistsAuctionForBidCreation,
+                        SessionStateForBidCreation,
                     ],
                 },
                 {
@@ -1895,7 +1938,55 @@ const AUTH_MATRIX = {
                                 }
                             },
                         },
-                    ]
+                    ],
+                    '#unexists': [
+                        {
+                            relation: 'paddle',
+                            needData: true,
+                            condition: ({ user, actionData }) => {
+                                return {
+                                    userId: actionData.paddle.userId,
+                                    vendueId: actionData.paddle.vendueId,
+                                }
+                            },
+                            message: '用户已经申领过一个号牌',
+                        },
+                    ],
+                },
+                {
+                    '#exists': [
+                        {
+                            relation: 'userAuctionHouse',
+                            needData: true,
+                            condition: ({ user, actionData }) => {
+                                return {
+                                    userId: user.id,
+                                    auctionHouseId: {
+                                        $in: {
+                                            name: 'vendue',
+                                            query: {
+                                                id: actionData.paddle.vendueId,
+                                            },
+                                            projection: 'auctionHouseId',
+                                        }
+                                    },
+                                }
+                            },
+                        },
+                    ],
+                    '#unexists': [
+                        {
+                            relation: 'paddle',
+                            needData: true,
+                            condition: ({ user, actionData }) => {
+                                return {
+                                    userId: actionData.paddle.userId,
+                                    vendueId: actionData.paddle.vendueId,
+                                }
+                            },
+                            message: '用户已经申领过一个号牌',
+                        },
+                    ],
                 },
                 {
                     '#unexists': [
@@ -2330,7 +2421,7 @@ const AUTH_MATRIX = {
                 {
                     '#exists': [DepositExistsPaddleVendue],
                     "#relation": {
-                        attr: 'paddle.vendue',
+                        attr: 'paddle.vendue.auctionHouse',
                     },
                 },
                 {
@@ -2545,6 +2636,30 @@ const AUTH_MATRIX = {
                             },
                             message: '该拍品已结束拍卖或尚在准备，不能进行委托',
                         },
+                        {
+                            relation: 'session',
+                            needData: true,
+                            condition: ({ user, actionData }) => {
+                                const { agent } = actionData;
+                                const { auctionId } = agent;
+                                const query = {
+                                    state: {
+                                        $in: [sessionState.ready, sessionState.ongoing],
+                                    },
+                                    id: {
+                                        $in: {
+                                            name: 'auction',
+                                            query: {
+                                                id: auctionId,
+                                            },
+                                            projection: 'sessionId',
+                                        },
+                                    },
+                                };
+                                return query;
+                            },
+                            message: '该拍品已结束拍卖或尚在准备，不能进行委托',
+                        },
                     ],
                     '#unexists': [
                         {
@@ -2568,27 +2683,19 @@ const AUTH_MATRIX = {
                 },
             ]
         },
-        [agentAction.remove]: {
+        [agentAction.update]: {
             auths: [
                 {
-                    '#data': [
-                        {
-                            check: ({ row }) => {
-                                return [agentState.normal].includes(row.state);
-                            },
-                            message: '已经成功或失败的委托不能取消',
-                        }
-                    ],
                     '#exists': [
                         {
                             relation: 'paddle',
+                            needData: true,
                             condition: ({ user, row, roleName }) => {
-                                // const { agent } = actionData;
                                 const { paddleId } = row;
                                 const query = {
                                     id: paddleId,
                                 };
-                                if (roleName !== Roles.ROOT.name) {
+                                if (!roleName || roleName !== Roles.ROOT.name) {
                                     assign(query, {
                                         userId: user.id,
                                     });
@@ -2597,22 +2704,87 @@ const AUTH_MATRIX = {
                             },
                             message: '您未拥有当前号牌，请领取号牌或重新登录后再进行操作',
                         },
-                        {
-                            relation: 'auction',
-                            condition: ({ user, row }) => {
-                                const { auctionId } = row;
-                                const query = {
-                                    id: auctionId,
-                                    state: auctionState.ready,
-                                };
-                                return query;
-                            },
-                            message: '拍品开始拍卖后不能取消委托',
-                        },
                     ],
+                    '#unexists': [
+                        {
+                            relation: 'bid',
+                            needData: true,
+                            condition: ({ user, actionData, row }) => {
+                                const { agent } = actionData;
+                                const { price: agentPrice } = agent;
+                                const { auctionId } = row;
+                                return {
+                                    price: {
+                                        $gt: agentPrice,
+                                    },
+                                    auctionId,
+                                };
+                            },
+                            message: '委托不能低于当前最高价',
+                        }
+                    ],
+                    '#data': [
+                        {
+                            check: ({ user, row }) => {
+                                if (row.state !== agentState.normal) {
+                                    return ErrorCode.createErrorByCode(ErrorCode.errorDataInconsistency, '成交或失败的委托不能进行修改', {
+                                        name: 'agent',
+                                        operation: 'update',
+                                        data: row,
+                                    });
+                                }
+                                return true;
+                            }
+                        },
+                    ]
                 },
             ]
-        }
+        },
+        // [agentAction.remove]: {
+        //     auths: [
+        //         {
+        //             '#data': [
+        //                 {
+        //                     check: ({ row }) => {
+        //                         return [agentState.normal].includes(row.state);
+        //                     },
+        //                     message: '已经成功或失败的委托不能取消',
+        //                 }
+        //             ],
+        //             '#exists': [
+        //                 {
+        //                     relation: 'paddle',
+        //                     condition: ({ user, row, roleName }) => {
+        //                         // const { agent } = actionData;
+        //                         const { paddleId } = row;
+        //                         const query = {
+        //                             id: paddleId,
+        //                         };
+        //                         if (roleName !== Roles.ROOT.name) {
+        //                             assign(query, {
+        //                                 userId: user.id,
+        //                             });
+        //                         }
+        //                         return query;
+        //                     },
+        //                     message: '您未拥有当前号牌，请领取号牌或重新登录后再进行操作',
+        //                 },
+        //                 {
+        //                     relation: 'auction',
+        //                     condition: ({ user, row }) => {
+        //                         const { auctionId } = row;
+        //                         const query = {
+        //                             id: auctionId,
+        //                             state: auctionState.ready,
+        //                         };
+        //                         return query;
+        //                     },
+        //                     message: '拍品开始拍卖后不能取消委托',
+        //                 },
+        //             ],
+        //         },
+        //     ]
+        // }
     },
     qiniuFile: {
         [qiniuFileAction.create]: AllowEveryoneAuth,
