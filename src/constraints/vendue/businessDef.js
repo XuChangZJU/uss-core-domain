@@ -2613,10 +2613,12 @@ const AUTH_MATRIX = {
                     '#exists': [
                         {
                             relation: 'userAuctionHouse',
-                            condition: ({ user, row }) => {
+                            needData: true,
+                            condition: ({ user, actionData }) => {
+                                const { cashIn } = actionData;
                                 return {
                                     userId: user.id,
-                                    auctionHouseId: row.auctionHouseId,
+                                    auctionHouseId: cashIn.auctionHouseId,
                                     relation: {
                                         $in: [auctionHouseRelation.owner, auctionHouseRelation.manager, auctionHouseRelation.settler],
                                     }
