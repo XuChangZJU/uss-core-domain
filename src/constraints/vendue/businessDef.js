@@ -407,7 +407,7 @@ const CheckContractAuctionInactive = (message) => [
     },
 ];
 
-const BidDataCheckStateFn = (states) => ({
+const BidDataCheckStateFn = (states, checkDataFn) => ({
     check: ({ row, actionData }) => {
         const { bid } = actionData;
         if (bid && bid.hasOwnProperty('price')) {
@@ -421,12 +421,15 @@ const BidDataCheckStateFn = (states) => ({
                 data: row,
             });
         }
+        if (checkDataFn) {
+            return checkDataFn({ row, actionData });
+        }
         return true;
     },
 });
 
-const BidGeneralUpdateControl = (states, extra) => {
-    const DataCheck = BidDataCheckStateFn(states);
+const BidGeneralUpdateControl = (states, extra, checkDataFn) => {
+    const DataCheck = BidDataCheckStateFn(states, checkDataFn);
     const Auth1 = assign({
         "#relation": {
             attr: 'auction.session',
@@ -1835,7 +1838,33 @@ const AUTH_MATRIX = {
                 },
             ],
         }),
-        [bidAction.remove]: BidGeneralUpdateControl([bidState.bidding]),
+        [bidAction.remove]: BidGeneralUpdateControl([bidState.bidding], {
+            '#unexists': [
+                {
+                    relation: 'bid',
+                    condition: ({ row }) => {
+                        return {
+                            id: {
+                                $gt: row.id, 
+                            },
+                            auctionId: row.auctionId,
+                            state: bidState.bidding,
+                        };
+                    },
+                    message: '只能移除最后一条出价',
+                },
+            ],
+        }, ({ row }) => {
+            if (row.isOnline || row.agentId)  {
+                return ErrorCode.createErrorByCode(ErrorCode.errorDataInconsistency,
+                    `只能移除来自现场的出价`, {
+                    name: 'bid',
+                    operation: 'update',
+                    data: row,
+                });
+            }
+            return true;
+        }),
         [bidAction.update]: BidGeneralUpdateControl([bidState.bidding, bidState.success, bidState.confirmed]),
         [bidAction.changePrice]: BidGeneralUpdateControl([bidState.success, bidState.confirmed]),
         [bidAction.confirm]: BidGeneralUpdateControl([bidState.success]),
