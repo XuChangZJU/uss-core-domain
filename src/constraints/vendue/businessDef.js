@@ -2280,6 +2280,61 @@ const AUTH_MATRIX = {
                     },
                     '#data': CheckContractDataState([contractState.contracted], '合同当前状态不允许更新'),
                 },
+                {
+                    "#relation": {
+                    },
+                    '#data': [
+                        {
+                            check: ({ row, actionData }) => {
+                                const { contract } = actionData;
+                                if (contract.hasOwnProperty('price')) {
+                                    return ErrorCode.createErrorByCode(ErrorCode.errorDataInconsistency, '合同不能修改成交价', {
+                                        name: 'contract',
+                                        operation: 'update',
+                                        data: row,
+                                    });
+                                }
+                                if (![contractState.convertible].includes(row.state)) {
+                                    return ErrorCode.createErrorByCode(ErrorCode.errorDataInconsistency, '合同当前状态不允许更新', {
+                                        name: 'contract',
+                                        operation: 'update',
+                                        data: row,
+                                    });
+                                }
+
+                                return true;
+                            },
+                        },
+                    ],
+                },
+                {
+                    "#relation": {
+                        attr: 'auctionHouse',
+                    },
+                    '#data': [
+                        {
+                            check: ({ row, actionData }) => {
+                                const { contract } = actionData;
+                                if (contract.hasOwnProperty('price')) {
+                                    return ErrorCode.createErrorByCode(ErrorCode.errorDataInconsistency, '合同不能修改成交价', {
+                                        name: 'contract',
+                                        operation: 'update',
+                                        data: row,
+                                    });
+                                }
+                                if (![contractState.convertible].includes(row.state)) {
+                                    return ErrorCode.createErrorByCode(ErrorCode.errorDataInconsistency, '合同当前状态不允许更新', {
+                                        name: 'contract',
+                                        operation: 'update',
+                                        data: row,
+                                    });
+                                }
+
+                                return true;
+                            },
+                        },
+                    ],
+                },
             ],
         },
         [contractAction.changePrice]: {
