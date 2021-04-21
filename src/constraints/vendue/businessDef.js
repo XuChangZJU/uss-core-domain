@@ -2276,9 +2276,64 @@ const AUTH_MATRIX = {
                 },
                 {
                     "#relation": {
-                        attr: 'actionHouse',
+                        attr: 'auctionHouse',
                     },
                     '#data': CheckContractDataState([contractState.contracted], '合同当前状态不允许更新'),
+                },
+                {
+                    "#relation": {
+                    },
+                    '#data': [
+                        {
+                            check: ({ row, actionData }) => {
+                                const { contract } = actionData;
+                                if (contract.hasOwnProperty('price')) {
+                                    return ErrorCode.createErrorByCode(ErrorCode.errorDataInconsistency, '合同不能修改成交价', {
+                                        name: 'contract',
+                                        operation: 'update',
+                                        data: row,
+                                    });
+                                }
+                                if (![contractState.convertible].includes(row.state)) {
+                                    return ErrorCode.createErrorByCode(ErrorCode.errorDataInconsistency, '合同当前状态不允许更新', {
+                                        name: 'contract',
+                                        operation: 'update',
+                                        data: row,
+                                    });
+                                }
+
+                                return true;
+                            },
+                        },
+                    ],
+                },
+                {
+                    "#relation": {
+                        attr: 'auctionHouse',
+                    },
+                    '#data': [
+                        {
+                            check: ({ row, actionData }) => {
+                                const { contract } = actionData;
+                                if (contract.hasOwnProperty('price')) {
+                                    return ErrorCode.createErrorByCode(ErrorCode.errorDataInconsistency, '合同不能修改成交价', {
+                                        name: 'contract',
+                                        operation: 'update',
+                                        data: row,
+                                    });
+                                }
+                                if (![contractState.convertible].includes(row.state)) {
+                                    return ErrorCode.createErrorByCode(ErrorCode.errorDataInconsistency, '合同当前状态不允许更新', {
+                                        name: 'contract',
+                                        operation: 'update',
+                                        data: row,
+                                    });
+                                }
+
+                                return true;
+                            },
+                        },
+                    ],
                 },
             ],
         },
@@ -2286,7 +2341,7 @@ const AUTH_MATRIX = {
             auths: [
                 {
                     "#relation": {
-                        attr: 'actionHouse',
+                        attr: 'auctionHouse',
                     },
                     '#data': CheckContractDataState([contractState.contracted, contractState.convertible], '合同当前状态不允许改价'),
                 },
@@ -2296,7 +2351,7 @@ const AUTH_MATRIX = {
             auths: [
                 {
                     "#relation": {
-                        attr: 'actionHouse',
+                        attr: 'auctionHouse',
                     },
                     '#data': CheckContractDataState([contractState.contracted], '合同当前状态不允许删除'),
                     '#unexisted': CheckContractAuctionInactive('拍卖已经开始，无法删除'),
@@ -2314,7 +2369,7 @@ const AUTH_MATRIX = {
             auths: [
                 {
                     "#relation": {
-                        attr: 'actionHouse',
+                        attr: 'auctionHouse',
                     },
                     '#data': CheckContractDataState([contractState.convertible], '当前状态无法结算'),
                 },
@@ -2324,7 +2379,7 @@ const AUTH_MATRIX = {
             auths: [
                 {
                     "#relation": {
-                        attr: 'actionHouse',
+                        attr: 'auctionHouse',
                     },
                     '#data': CheckContractDataState([contractState.contracted], '当前状态无法取消'),
                     '#unexisted': CheckContractAuctionInactive('拍卖已经开始，无法取消'),
@@ -2558,10 +2613,12 @@ const AUTH_MATRIX = {
                     '#exists': [
                         {
                             relation: 'userAuctionHouse',
-                            condition: ({ user, row }) => {
+                            needData: true,
+                            condition: ({ user, actionData }) => {
+                                const { cashIn } = actionData;
                                 return {
                                     userId: user.id,
-                                    auctionHouseId: row.auctionHouseId,
+                                    auctionHouseId: cashIn.auctionHouseId,
                                     relation: {
                                         $in: [auctionHouseRelation.owner, auctionHouseRelation.manager, auctionHouseRelation.settler],
                                     }
