@@ -9,9 +9,9 @@ const type = {
 	passport: 2,
 	hkCard: 3,
 	amCard: 4,
-	twCard: 4,
-	birth: 5,
-	soldier: 6,
+	twCard: 5,
+	birth: 6,
+	soldier: 7,
 };
 
 
