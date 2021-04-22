@@ -1768,7 +1768,7 @@ const AUTH_MATRIX = {
             auths: AuctionGeneralStateChangeFn([auctionState.ready, auctionState.pausing], '非预展和暂停的展品不能进入拍卖'),
         },
         [auctionAction.restart]: {
-            auths: AuctionGeneralStateChangeFn([auctionState.unsold], '非流拍的展品不能进入拍卖'),
+            auths: AuctionGeneralStateChangeFn([auctionState.unsold], '非流拍的展品不能重拍'),
         },
         [auctionAction.pause]: {
             auths: AuctionGeneralStateChangeFn([auctionState.ongoing], '非拍卖状态的展品不能暂停'),
@@ -1798,7 +1798,10 @@ const AUTH_MATRIX = {
         [auctionAction.remove]: AuctionCheckBidUnexistedControl,
         [auctionAction.assign]: AllowEveryoneAuth,
         [auctionAction.authRevoke]: AllowEveryoneAuth,
-    },
+        [auctionAction.makeReady]: {
+            auths: AuctionGeneralStateChangeFn([auctionState.unsold], '非流拍的展品不能重拍'),
+        },
+},
     bid: {
         [bidAction.create]: {
             auths: [
