@@ -1912,8 +1912,30 @@ const AUTH_MATRIX = {
             return true;
         }),
         [bidAction.update]: BidGeneralUpdateControl([bidState.bidding, bidState.success, bidState.confirmed]),
-        [bidAction.changePrice]: BidGeneralUpdateControl([bidState.success, bidState.confirmed]),
-        [bidAction.confirm]: BidGeneralUpdateControl([bidState.success]),
+        [bidAction.changePrice]: BidGeneralUpdateControl([bidState.success, bidState.confirmed],{},
+            ({row}) => {
+                if (row.checkOutId) {
+                    return ErrorCode.createErrorByCode(ErrorCode.errorDataInconsistency,
+                        '已结算的拍品不能再修改价格', {
+                            name: 'bid',
+                            operation: 'update',
+                            data: row,
+                        });
+                }
+                return true;
+            }),
+        [bidAction.confirm]: BidGeneralUpdateControl([bidState.success, bidState.confirmed],{},
+            ({row}) => {
+                if (row.checkOutId) {
+                    return ErrorCode.createErrorByCode(ErrorCode.errorDataInconsistency,
+                        '已结算的拍品不能再进行核对', {
+                            name: 'bid',
+                            operation: 'update',
+                            data: row,
+                        });
+                }
+                return true;
+            }),
         [bidAction.violate]: BidGeneralUpdateControl([bidState.success, bidState.confirmed]),
         [bidAction.makeFailure]: {
             auths: [
