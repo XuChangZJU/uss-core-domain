@@ -2735,6 +2735,23 @@ const AUTH_MATRIX = {
                                 return query;
                             },
                             message: '您在此拍品上已有一个委托，不可重复委托',
+                        },
+                        {
+                            relation: 'bid',
+                            needData: true,
+                            condition: ({ user, actionData }) => {
+                                const { agent } = actionData;
+                                const { auctionId, price } = agent;
+                                const query = {
+                                    price: {
+                                        $gte: price,
+                                    },
+                                    state: bidState.bidding,
+                                    auctionId,
+                                };
+                                return query;
+                            },
+                            message: '委托价必须高于当前最高价',
                         }
                     ],
                 },
