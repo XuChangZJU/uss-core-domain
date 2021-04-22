@@ -54,6 +54,7 @@ const decodeAction = (a) => {
 
 const relation = Object.assign({}, commonRelation, {
     seller: 1001,        // 营业员
+    customer: 301,
     doctor: 401,
     VIP: 501,
     regularCostomer: 601,
@@ -64,6 +65,7 @@ const relation = Object.assign({}, commonRelation, {
 const decodeRelation = (r) => {
     const T = {
         [relation.seller]: '营业员',
+        [relation.customer]: '顾客',
         [relation.doctor]: '验光医生',
         [relation.VIP]: 'VIP顾客',
         [relation.regularCostomer]: '熟客',
