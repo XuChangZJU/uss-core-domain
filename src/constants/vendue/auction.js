@@ -25,7 +25,7 @@ const state = Object.assign({}, commonState, {
     sold: 501,
     unsold: 511,
     breakUp: 601,
-    cancelled: 610,
+    revoke: 610,
 });
 const decodeState = (s) => {
     const S = {
@@ -36,7 +36,7 @@ const decodeState = (s) => {
         [state.unsold]: '已流拍',
         [state.breakUp]: '违约',
         [state.pausing]: '暂停',
-        [state.cancelled]: '撤销',
+        [state.revoke]: '撤销',
     };
 
     return S[s] || decodeCommonState(s);
