@@ -769,7 +769,7 @@ const UnexistsActiveAuctionInSession = {
         return {
             sessionId: row.id,
             state: {
-                $nin: [auctionState.unsold, auctionState.sold],
+                $nin: [auctionState.unsold, auctionState.sold, auctionState.revoke],
             }
         };
     },
