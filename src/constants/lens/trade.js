@@ -99,17 +99,17 @@ const decodeTransportState = (ts) => {
     return TS[ts] || decodeCommonTransportState(ts);
 };
 
-const getMethod = {
-    helpYourself: 1,
-    express: 2,
-    atOnce: 3,
+const getMethodId = {
+    HelpYourself: 1,
+    Express: 2,
+    AtOnce: 3,
 };
 
-const decodeGetMethod = (gm) => {
+const decodeGetMethodId = (gm) => {
     const GM = {
-        [getMethod.helpYourself]: '顾客自取',
-        [getMethod.express]: '快递',
-        [getMethod.atOnce]: '当场立取',
+        [getMethod.HelpYourself]: '顾客自取',
+        [getMethod.Express]: '快递',
+        [getMethod.AtOnce]: '当场立取',
     };
 
     return GM[gm];
@@ -164,98 +164,63 @@ const STATE_TRAN_MATRIX =    Object.assign({},  COMMON_STATE_TRAN_MATRIX, TRANSP
 });
 
 
-const category = {
-    'makeGlasses': 1,
+const categoryId = {
+    'Glasses': 1,
     'OKGlasses': 2,
     'DoneGlasses': 3,
-    'consumables': 4,
-    'visionTraining': 5,
-    'check': 6,
+    'Others': 4,
+    'Training': 5,
+    'Check': 6,
     'DISCGlasses': 7,
-    'SCL': 8,
-    'OkGlassCheck': 9,
-    'doctorService': 10,
-    'visionTrainingCheck': 11,
-    'service': 12,
-    'gift': 13,
-    'classIIIMedicineDevice': 14,
+    'BandgeGlasses': 8,
+    'OkGlassTry': 9,
+    'Inquiry': 10,
+    'TrainingCheck': 11,
+    'Service': 12,
+    'Gift': 13,
+    'OkGlassRecheck': 14,
+    'CareLiquid': 15,
+    'Food': 16,
+    'OkGlassFetch': 17,
 }
-const decodeCategory = (c) => {
+const decodeCategoryId = (c) => {
     const C = {
-        [category.makeGlasses]: '框架眼镜',
-        [category.OKGlasses]: '角膜塑形镜',
-        [category.DoneGlasses]: '成镜',
-        [category.consumables]: '耗品',
-        [category.visionTraining]: '视训',
-        [category.check]: '验光检查',
-        [category.DISCGlasses]: '多焦软镜',
-        [category.SCL]: '软性隐形眼镜',
-        [category.OkGlassCheck]: '角膜塑形镜检查',
-        [category.doctorService]: '医生问诊',
-        [category.visionTrainingCheck]: '视训检查',
-        [category.service]: '服务/线下宣讲',
-        [category.gift]: '赠品',
-        [category.classIIIMedicineDevice]: '三类医疗器械',
+        [categoryId.Glasses]: '框架眼镜',
+        [categoryId.OKGlasses]: '角膜塑形镜',
+        [categoryId.DoneGlasses]: '成镜',
+        [categoryId.Others]: '其它',
+        [categoryId.Training]: '视训',
+        [categoryId.Check]: '验光检查',
+        [categoryId.DISCGlasses]: '多焦软镜',
+        [categoryId.BandgeGlasses]: '绷带镜',
+        [categoryId.OkGlassTry]: '角膜塑形镜试戴',
+        [categoryId.Service]: '医生问诊',
+        [categoryId.TrainingCheck]: '弱视检查',
+        [categoryId.Service]: '服务/线下宣讲',
+        [categoryId.Gift]: '赠品',
+        [categoryId.OkGlassRecheck]: '角膜塑形镜复查',
+        [categoryId.CareLiquid]: '护理液',
+        [categoryId.Food]: '眼保健食品',
+        [categoryId.OkGlassFetch]: '角膜塑形镜试戴',
     }
     return C[c];
 }
 
-const mainCategory = {
-    makeBill: 1,
-    check: 2,
-    others: 3,
+const mainCategoryId = {
+    MakeBill: 1,
+    Check: 2,
+    Service: 3,
 };
 
-const decodeMainCategory = (mc) => {
+const decodeMainCategoryId = (mc) => {
     const MC = {
-        [mainCategory.makeBill]: '开单',
-        [mainCategory.check]: '检查',
-        [mainCategory.others]: '其他',
+        [mainCategoryId.MakeBill]: '开单',
+        [mainCategoryId.Check]: '检查',
+        [mainCategoryId.Service]: '服务',
     }
     return MC[mc];
 }
 
-const getMainCategory = (c) => {
-    const C = {
-        [category.makeGlasses]: mainCategory.makeBill,
-        [category.OKGlasses]: mainCategory.makeBill,
-        [category.DoneGlasses]: mainCategory.makeBill,
-        [category.consumables]: mainCategory.makeBill,
-        [category.visionTraining]: mainCategory.makeBill,
-        [category.check]: mainCategory.check,
-        [category.DISCGlasses]: mainCategory.makeBill,
-        [category.SCL]: mainCategory.makeBill,
-        [category.OkGlassCheck]: mainCategory.check,
-        [category.doctorService]: mainCategory.check,
-        [category.visionTrainingCheck]: mainCategory.check,
-        [category.service]: mainCategory.others,
-        [category.gift]: mainCategory.makeBill,
-        [category.classIIIMedicineDevice]: mainCategory.makeBill,
-    }
-    return C[c];
-}
-
-const getCategory = (mc) => {
-    const MC = {
-        [mainCategory.makeBill]: [category.makeGlasses, category.OKGlasses, category.visionTraining, category.DISCGlasses, category.SCL, category.gift, category.DoneGlasses, category.consumables, category.classIIIMedicineDevice],
-        [mainCategory.check]: [category.OkGlassCheck, category.visionTrainingCheck, category.check, category.doctorService],
-        [mainCategory.others]: [category.service],
-    }
-    return MC[mc];
-}
-
-const checkType = {
-    'firstVisit': 1,
-    'revisit': 2,
-}
-
-const decodeCheckType = (ct) => {
-    const CT = {
-        [checkType.firstVisit]: '初诊',
-        [checkType.revisit]: '复查',
-    };
-    return CT[ct];
-}
 
 module.exports = {
     action,
@@ -264,21 +229,17 @@ module.exports = {
     decodeState,
     relation,
     decodeRelation,
-    getMethod,
-    decodeGetMethod,
     transportState,
     decodeTransportState,
     messageState,
     decodeMessageState,
-    category,
-    decodeCategory,
+    getMethodId,
+    decodeGetMethodId,
+    categoryId,
+    decodeCategoryId,
     getActionStateAttr,
-    mainCategory,
-    decodeMainCategory,
-    getMainCategory,
-    getCategory,
-    checkType,
-    decodeCheckType,
+    mainCategoryId,
+    decodeMainCategoryId,
     billState,
     decodeBillState,
     STATE_TRAN_MATRIX,
