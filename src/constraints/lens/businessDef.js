@@ -5,6 +5,9 @@
 
 // userOrganization不再用于权限判断，根据人员当日打卡所在门店赋予权限，由于复杂写在definition中，这里只做基础的判断
 const {
+    action: CommonAction,
+} = require('../../constants/action');
+const {
     action: revisitQuestionAction,
 } = require('../../constants/lens/revisitQuestion')
 const {
@@ -2128,6 +2131,18 @@ const AUTH_MATRIX = {
                 },
             ],
         }
+    },
+    organizationCategory: {
+        [CommonAction.create]: {
+            auths: [
+                {
+                    '#relation': {
+                        attr: 'organization.brand',
+                        relations: [BrandRelation.owner, BrandRelation.manager, BrandRelation.customerService],
+                    },
+                }
+            ]
+        },
     },
 };
 
