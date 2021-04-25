@@ -41,6 +41,14 @@ const orderedServiceCompany = {
     relations: [companyRelation.owner, companyRelation.manager],
 };
 
+// 被操作item的所属公司和操作者有owner和manager关系
+const itemCompanyRelation = {
+    '#relation': {
+        attr: 'repository.company',
+        relations: [companyRelation.owner, companyRelation.manager],
+    }
+};
+
 const chatMessageUserSessionExists = {
     relation: 'userSession',
     condition: ({ user, row }) => {
@@ -197,19 +205,34 @@ const AUTH_MATRIX = {
         },
     },
     repository: {
-        [commonAction.create]:
-            {
-                auths: [
-                    {
-                        '#relation': {
-                            attr: 'company',
-                            relations: [companyRelation.owner, companyRelation.manager],
-                        },
+        [commonAction.create]:{
+            auths: [
+                {
+                    '#relation': {
+                        attr: 'company',
+                        relations: [companyRelation.owner, companyRelation.manager],
                     },
-                ],
-            },
+                },
+            ],
+        },
         [commonAction.update]: AllowEveryoneAuth,
         [commonAction.remove]: AllowEveryoneAuth,
+    },
+    label: {
+        [commonAction.create]:AllowEveryoneAuth,
+        [commonAction.update]: AllowEveryoneAuth,
+        [commonAction.remove]: AllowEveryoneAuth,
+    },
+    item: {
+        [commonAction.create]: {
+            auths: [itemCompanyRelation],
+        },
+        [commonAction.update]: {
+            auths: [itemCompanyRelation],
+        },
+        [commonAction.remove]: {
+            auths: [itemCompanyRelation],
+        },
     },
 };
 

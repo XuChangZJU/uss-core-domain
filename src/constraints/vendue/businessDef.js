@@ -599,7 +599,7 @@ const paddleRefundUnexistsAuth = [
                 },
             };
         },
-        message: '该号牌上有待进行结算的拍卖',
+        message: '该号牌上有待进行结算的订单',
     },
     {
         relation: 'agent',
@@ -769,7 +769,7 @@ const UnexistsActiveAuctionInSession = {
         return {
             sessionId: row.id,
             state: {
-                $nin: [auctionState.unsold, auctionState.sold],
+                $nin: [auctionState.unsold, auctionState.sold, auctionState.revoke],
             }
         };
     },
@@ -1768,7 +1768,7 @@ const AUTH_MATRIX = {
             auths: AuctionGeneralStateChangeFn([auctionState.ready, auctionState.pausing], '非预展和暂停的展品不能进入拍卖'),
         },
         [auctionAction.restart]: {
-            auths: AuctionGeneralStateChangeFn([auctionState.unsold], '非流拍的展品不能进入拍卖'),
+            auths: AuctionGeneralStateChangeFn([auctionState.unsold], '非流拍的展品不能重拍'),
         },
         [auctionAction.pause]: {
             auths: AuctionGeneralStateChangeFn([auctionState.ongoing], '非拍卖状态的展品不能暂停'),
@@ -1798,7 +1798,10 @@ const AUTH_MATRIX = {
         [auctionAction.remove]: AuctionCheckBidUnexistedControl,
         [auctionAction.assign]: AllowEveryoneAuth,
         [auctionAction.authRevoke]: AllowEveryoneAuth,
-    },
+        [auctionAction.makeReady]: {
+            auths: AuctionGeneralStateChangeFn([auctionState.unsold], '非流拍的展品不能重拍'),
+        },
+},
     bid: {
         [bidAction.create]: {
             auths: [
@@ -1909,8 +1912,30 @@ const AUTH_MATRIX = {
             return true;
         }),
         [bidAction.update]: BidGeneralUpdateControl([bidState.bidding, bidState.success, bidState.confirmed]),
-        [bidAction.changePrice]: BidGeneralUpdateControl([bidState.success, bidState.confirmed]),
-        [bidAction.confirm]: BidGeneralUpdateControl([bidState.success]),
+        [bidAction.changePrice]: BidGeneralUpdateControl([bidState.success, bidState.confirmed],{},
+            ({row}) => {
+                if (row.checkOutId) {
+                    return ErrorCode.createErrorByCode(ErrorCode.errorDataInconsistency,
+                        '已结算的拍品不能再修改价格', {
+                            name: 'bid',
+                            operation: 'update',
+                            data: row,
+                        });
+                }
+                return true;
+            }),
+        [bidAction.confirm]: BidGeneralUpdateControl([bidState.success, bidState.confirmed],{},
+            ({row}) => {
+                if (row.checkOutId) {
+                    return ErrorCode.createErrorByCode(ErrorCode.errorDataInconsistency,
+                        '已结算的拍品不能再进行核对', {
+                            name: 'bid',
+                            operation: 'update',
+                            data: row,
+                        });
+                }
+                return true;
+            }),
         [bidAction.violate]: BidGeneralUpdateControl([bidState.success, bidState.confirmed]),
         [bidAction.makeFailure]: {
             auths: [
@@ -2515,33 +2540,33 @@ const AUTH_MATRIX = {
     checkOut: {
         [checkOutAction.takeAway]: {
             auths: [
-                CheckOutVendueWorkerCheckFn(checkOutAction.takeAway, null, [checkOutTransportState.unpicked]),
-                CheckOutVendueAuctionHouseWorkerCheckFn(checkOutAction.takeAway, null, [checkOutTransportState.unpicked])
+                CheckOutVendueWorkerCheckFn(checkOutAction.takeAway, [checkOutState.legal, checkOutState.legal2], [checkOutTransportState.unpicked]),
+                CheckOutVendueAuctionHouseWorkerCheckFn(checkOutAction.takeAway, [checkOutState.legal, checkOutState.legal2], [checkOutTransportState.unpicked])
             ]
         },
         [checkOutAction.taPrepare]: {
             auths: [
-                CheckOutGuestCheckFn(checkOutAction.taPrepare, null, [checkOutTransportState.shipping]),
-                CheckOutVendueWorkerCheckFn(checkOutAction.taPrepare, null, [checkOutTransportState.shipping]),
-                CheckOutVendueAuctionHouseWorkerCheckFn(checkOutAction.taPrepare, null, [checkOutTransportState.shipping])
+                CheckOutGuestCheckFn(checkOutAction.taPrepare, [checkOutState.legal, checkOutState.legal2], [checkOutTransportState.shipping]),
+                CheckOutVendueWorkerCheckFn(checkOutAction.taPrepare, [checkOutState.legal, checkOutState.legal2], [checkOutTransportState.shipping]),
+                CheckOutVendueAuctionHouseWorkerCheckFn(checkOutAction.taPrepare, [checkOutState.legal, checkOutState.legal2], [checkOutTransportState.shipping])
             ]
         },
         [checkOutAction.taCancel]: {
             auths: [
-                CheckOutGuestCheckFn(checkOutAction.taCancel, null, [checkOutTransportState.tsInPreparing]),
-                CheckOutVendueWorkerCheckFn(checkOutAction.taCancel, null, [checkOutTransportState.tsInPreparing]),
-                CheckOutVendueAuctionHouseWorkerCheckFn(checkOutAction.taCancel, null, [checkOutTransportState.tsInPreparing]),
+                CheckOutGuestCheckFn(checkOutAction.taCancel, [checkOutState.legal, checkOutState.legal2], [checkOutTransportState.tsInPreparing]),
+                CheckOutVendueWorkerCheckFn(checkOutAction.taCancel, [checkOutState.legal, checkOutState.legal2], [checkOutTransportState.tsInPreparing]),
+                CheckOutVendueAuctionHouseWorkerCheckFn(checkOutAction.taCancel, [checkOutState.legal, checkOutState.legal2], [checkOutTransportState.tsInPreparing]),
             ]
         },
         [checkOutAction.taSend]: {
             auths: [
-                CheckOutVendueWorkerCheckFn(checkOutAction.taSend, null, [checkOutTransportState.tsInPreparing]),
-                CheckOutVendueAuctionHouseWorkerCheckFn(checkOutAction.taSend, null, [checkOutTransportState.tsInPreparing]),
+                CheckOutVendueWorkerCheckFn(checkOutAction.taSend, [checkOutState.legal, checkOutState.legal2], [checkOutTransportState.tsInPreparing]),
+                CheckOutVendueAuctionHouseWorkerCheckFn(checkOutAction.taSend, [checkOutState.legal, checkOutState.legal2], [checkOutTransportState.tsInPreparing]),
             ]
         },
         [checkOutAction.taAccept]: {
             auths: [
-                CheckOutGuestCheckFn(checkOutAction.taAccept, null, [checkOutTransportState.tsSending]),
+                CheckOutGuestCheckFn(checkOutAction.taAccept, [checkOutState.legal, checkOutState.legal2], [checkOutTransportState.tsSending]),
             ]
         },
         // [checkOutAction.takeAway]: {
@@ -2735,6 +2760,23 @@ const AUTH_MATRIX = {
                                 return query;
                             },
                             message: '您在此拍品上已有一个委托，不可重复委托',
+                        },
+                        {
+                            relation: 'bid',
+                            needData: true,
+                            condition: ({ user, actionData }) => {
+                                const { agent } = actionData;
+                                const { auctionId, price } = agent;
+                                const query = {
+                                    price: {
+                                        $gte: price,
+                                    },
+                                    state: bidState.bidding,
+                                    auctionId,
+                                };
+                                return query;
+                            },
+                            message: '委托价必须高于当前最高价',
                         }
                     ],
                 },

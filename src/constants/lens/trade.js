@@ -3,10 +3,12 @@ const {
     decodeAction: decodeCommonAction,
     COMMON_STATE_TRAN_MATRIX,
     state: commonState,
-    transportState: commonTransportState,
+    transportState: TransportState,
     TRANSPORT_STATE_TRANS_MATRIX,
     decodeTransportState: decodeCommonTransportState,
+    decodeTransportAction: decodeCommonTransportAction,
     decodeState: decodeCommonState,
+    transportAction: TransportAction,
     relation,
     decodeRelation,
 
@@ -28,7 +30,7 @@ const decodeBillState = (b) => {
 }
 
 
-const transportState = Object.assign({}, commonTransportState, {
+const transportState = Object.assign({}, TransportState, {
     wdd: 10003,
     dqj: 10004,
     yqj: 10005,
@@ -87,7 +89,6 @@ const decodeTransportState = (ts) => {
         [transportState.wdd]: '未到店',
         [transportState.dqj]: '待取件（到店）',
         [transportState.dgkqr]: '待顾客确认',
-        [transportState.yfh]: '已发货',        // 快递已发出
         [transportState.yqj]: '已取件',
         [transportState.yth]: '已退货',
         // [transportState.yzf]: '已作废',
@@ -118,16 +119,13 @@ const decodeGetMethodId = (gm) => {
 
 
 
-const action = Object.assign({}, commonAction, {
+const action = Object.assign({}, commonAction, TransportAction, {
     financialRefund: 501,
     confirmArriveAtShop: 10001,
-    confirmGet: 10002,
-    send: 10003,
     confirmPick: 10004,
     customConfirm: 10005,
     completeCheck: 10006,
     cancelCheck: 10007,
-    updateFeedback: 9000,
     issueBill: 20001,
     completeBill: 20002,
 });
@@ -136,9 +134,6 @@ const decodeAction = (a) => {
     const S = {
         [action.financialRefund]: '财务退款',
         [action.confirmArriveAtShop]: '确认到店',
-        [action.confirmGet]: '确认收货',
-        [action.send]: '发快递',
-        [action.updateFeedback]: '更新评价',
         [action.customConfirm]: '顾客确认',
         [action.confirmPick]: '确认取货',
         [action.completeCheck]: '完成',
@@ -147,16 +142,16 @@ const decodeAction = (a) => {
         [action.completeBill]: '完成开票'
     };
 
-    return S[a] || decodeCommonAction(a);
+    return S[a] || decodeCommonAction(a) || decodeCommonTransportAction(a);
 };
 
 const STATE_TRAN_MATRIX =    Object.assign({},  COMMON_STATE_TRAN_MATRIX, TRANSPORT_STATE_TRANS_MATRIX, {
+    [action.taPrepare]: [transportState.wdd, transportState.tsInPreparing],
+    [action.taCancel]: [transportState.tsInPreparing, transportState.wdd],
     [action.financialRefund]: [[state.legal2, state.legal, state.abandoned], state.financialRefunded],
     [action.confirmArriveAtShop]: [transportState.wdd, transportState.dqj],
-    [action.confirmGet]: [transportState.yfh, transportState.yqj],
     [action.confirmPick]:  [transportState.dqj, transportState.dgkqr],
     [action.customConfirm]: [transportState.dgkqr, transportState.yqj],
-    [action.send]: [transportState.wdd, transportState.yfh],
     [action.completeCheck]: [transportState.checkInQueue, transportState.checkCompleted],
     [action.cancelCheck]: [transportState.checkInQueue, transportState.checkCanceled],
     [action.issueBill]: [[billState.noBill, billState.pending], billState.pending],
