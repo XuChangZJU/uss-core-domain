@@ -108,9 +108,9 @@ const getMethodId = {
 
 const decodeGetMethodId = (gm) => {
     const GM = {
-        [getMethod.HelpYourself]: '顾客自取',
-        [getMethod.Express]: '快递',
-        [getMethod.AtOnce]: '当场立取',
+        [getMethodId.HelpYourself]: '顾客自取',
+        [getMethodId.Express]: '快递',
+        [getMethodId.AtOnce]: '当场立取',
     };
 
     return GM[gm];
