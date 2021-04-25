@@ -599,7 +599,7 @@ const paddleRefundUnexistsAuth = [
                 },
             };
         },
-        message: '该号牌上有待进行结算的拍卖',
+        message: '该号牌上有待进行结算的订单',
     },
     {
         relation: 'agent',
@@ -2540,33 +2540,33 @@ const AUTH_MATRIX = {
     checkOut: {
         [checkOutAction.takeAway]: {
             auths: [
-                CheckOutVendueWorkerCheckFn(checkOutAction.takeAway, null, [checkOutTransportState.unpicked]),
-                CheckOutVendueAuctionHouseWorkerCheckFn(checkOutAction.takeAway, null, [checkOutTransportState.unpicked])
+                CheckOutVendueWorkerCheckFn(checkOutAction.takeAway, [checkOutState.legal, checkOutState.legal2], [checkOutTransportState.unpicked]),
+                CheckOutVendueAuctionHouseWorkerCheckFn(checkOutAction.takeAway, [checkOutState.legal, checkOutState.legal2], [checkOutTransportState.unpicked])
             ]
         },
         [checkOutAction.taPrepare]: {
             auths: [
-                CheckOutGuestCheckFn(checkOutAction.taPrepare, null, [checkOutTransportState.shipping]),
-                CheckOutVendueWorkerCheckFn(checkOutAction.taPrepare, null, [checkOutTransportState.shipping]),
-                CheckOutVendueAuctionHouseWorkerCheckFn(checkOutAction.taPrepare, null, [checkOutTransportState.shipping])
+                CheckOutGuestCheckFn(checkOutAction.taPrepare, [checkOutState.legal, checkOutState.legal2], [checkOutTransportState.shipping]),
+                CheckOutVendueWorkerCheckFn(checkOutAction.taPrepare, [checkOutState.legal, checkOutState.legal2], [checkOutTransportState.shipping]),
+                CheckOutVendueAuctionHouseWorkerCheckFn(checkOutAction.taPrepare, [checkOutState.legal, checkOutState.legal2], [checkOutTransportState.shipping])
             ]
         },
         [checkOutAction.taCancel]: {
             auths: [
-                CheckOutGuestCheckFn(checkOutAction.taCancel, null, [checkOutTransportState.tsInPreparing]),
-                CheckOutVendueWorkerCheckFn(checkOutAction.taCancel, null, [checkOutTransportState.tsInPreparing]),
-                CheckOutVendueAuctionHouseWorkerCheckFn(checkOutAction.taCancel, null, [checkOutTransportState.tsInPreparing]),
+                CheckOutGuestCheckFn(checkOutAction.taCancel, [checkOutState.legal, checkOutState.legal2], [checkOutTransportState.tsInPreparing]),
+                CheckOutVendueWorkerCheckFn(checkOutAction.taCancel, [checkOutState.legal, checkOutState.legal2], [checkOutTransportState.tsInPreparing]),
+                CheckOutVendueAuctionHouseWorkerCheckFn(checkOutAction.taCancel, [checkOutState.legal, checkOutState.legal2], [checkOutTransportState.tsInPreparing]),
             ]
         },
         [checkOutAction.taSend]: {
             auths: [
-                CheckOutVendueWorkerCheckFn(checkOutAction.taSend, null, [checkOutTransportState.tsInPreparing]),
-                CheckOutVendueAuctionHouseWorkerCheckFn(checkOutAction.taSend, null, [checkOutTransportState.tsInPreparing]),
+                CheckOutVendueWorkerCheckFn(checkOutAction.taSend, [checkOutState.legal, checkOutState.legal2], [checkOutTransportState.tsInPreparing]),
+                CheckOutVendueAuctionHouseWorkerCheckFn(checkOutAction.taSend, [checkOutState.legal, checkOutState.legal2], [checkOutTransportState.tsInPreparing]),
             ]
         },
         [checkOutAction.taAccept]: {
             auths: [
-                CheckOutGuestCheckFn(checkOutAction.taAccept, null, [checkOutTransportState.tsSending]),
+                CheckOutGuestCheckFn(checkOutAction.taAccept, [checkOutState.legal, checkOutState.legal2], [checkOutTransportState.tsSending]),
             ]
         },
         // [checkOutAction.takeAway]: {
