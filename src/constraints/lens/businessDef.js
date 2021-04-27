@@ -129,6 +129,7 @@ const {
     } = require('../action');
 
 const { Roles } = require('../../constants/lens/roles');
+const ErrorCode = require('../../constants/errorCode');
 
 const Jobs = {
     guardian: 1, //守护者
@@ -150,6 +151,29 @@ const OrganizationManagement = {
         },
     ],
 };
+
+const AppointmentBrandUserFn = (states, hasPatientId, hasNotPatientId) => (
+    {
+        "#relation": {
+            attr: 'organization.brand',
+        },
+        '#data': [
+            {
+                check: ({ row }) => {
+                    if (!states.includes(row.state) || hasPatientId && !row.patientId
+                        || hasNotPatientId && row.patientId) {
+                        return ErrorCode.createErrorByCode(ErrorCode.errorDataInconsistency, '预约无效', {
+                            name: 'appointment',
+                            operation: 'update',
+                            data: row,
+                        });
+                    }
+                    return true;
+                },
+            }
+        ]
+    }
+)
 
 const AUTH_MATRIX = {
     qiniuFile: {
@@ -1677,21 +1701,33 @@ const AUTH_MATRIX = {
     },
     appointment: {
         [appointmentAction.create]: AllowEveryoneAuth,
-        [appointmentAction.update]: AllowEveryoneAuth,
-        [appointmentAction.cancel]: {
+        [appointmentAction.update]: {
             auths: [
                 {
-                    "#relation": {
-                        attr: 'organization.brand',
-                    },
                     '#data': [
                         {
-                            check: ({ user, row }) => {
-                                return  row.state === appointmentState.normal;
+                            check: ({ user, row, actionData }) => {
+                                if (!row.state === appointmentState.normal && !row.patientId) {
+                                    return ErrorCode.createErrorByCode(ErrorCode.errorDataInconsistency, '预约已失效', {
+                                        name: 'appointment',
+                                        operation: 'update',
+                                        data: row,
+                                    });
+                                }
+                                const { appointment } = actionData;
+                                if (Object.keys(appointment).length !== 1 || !appointment.hasOwnProperty('patientId')) {
+                                    return new Error('数据非法');
+                                }
+                                return true;
                             },
                         }
                     ]
                 },
+            ],
+        },
+        [appointmentAction.cancel]: {
+            auths: [
+                AppointmentBrandUserFn([appointmentState.normal]),
                 {
                     "#relation": {
                         attr: 'patient',
@@ -1699,7 +1735,14 @@ const AUTH_MATRIX = {
                     '#data': [
                         {
                             check: ({ user, row }) => {
-                                return  row.state === appointmentState.normal;
+                                if (!row.state === appointmentState.normal) {
+                                    return ErrorCode.createErrorByCode(ErrorCode.errorDataInconsistency, '预约已失效', {
+                                        name: 'appointment',
+                                        operation: 'update',
+                                        data: row,
+                                    });
+                                }
+                                return true;
                             },
                         }
                     ]
@@ -1708,18 +1751,17 @@ const AUTH_MATRIX = {
         },
         [appointmentAction.regist]: {
             auths: [
-                {
-                    "#relation": {
-                        attr: 'organization.brand',
-                    },
-                    '#data': [
-                        {
-                            check: ({ user, row }) => {
-                                return  row.state === appointmentState.normal && !!row.patientId;
-                            },
-                        }
-                    ]
-                },
+                AppointmentBrandUserFn([appointmentState.normal], true),
+            ],
+        },
+        [appointmentAction.makeLate]: {
+            auths: [
+                AppointmentBrandUserFn([appointmentState.normal], true),
+            ],
+        },
+        [appointmentAction.makeAbsent]: {
+            auths: [
+                AppointmentBrandUserFn([appointmentState.normal], true),
             ],
         },
         [appointmentAction.allocWeChatQrCode]: {
@@ -1728,6 +1770,13 @@ const AUTH_MATRIX = {
                     "#relation": {
                         attr: 'organization.brand',
                     },
+                    '#data': [
+                        {
+                            check: ({ user, row }) => {
+                                return !row.patientId;
+                            },
+                        }
+                    ]
                 }
             ],
         },

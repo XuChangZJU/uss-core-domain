@@ -25,7 +25,7 @@ const decodeTimeSlot = (timeSlot) => {
 
 const {
     category,
-    decodeCategory
+    decodeCategoryId
 } = require('./trade');
 const type = {
     appointment: 1,
@@ -42,8 +42,10 @@ const decodeType = (t) => {
 
 const state = {
     normal: 301,
+    late: 302,
     cancelled: 401,
     completed: 501,
+    absent: 601,
 }
 
 const decodeState = (s) => {
@@ -51,26 +53,36 @@ const decodeState = (s) => {
         [state.normal]: '待就诊',
         [state.cancelled]: '已取消',
         [state.completed]: '已完成',
+        [state.late]: '已过号',
+        [state.absent]: '缺席',
     }
-    return S[s] || decodeCommonState(s);
+    return S[s];
 }
 
 const action = Object.assign({}, commonAction, {
-    regist: 301,
+    makeLate: 302,
     cancel: 401,
+    regist: 501,
+    makeAbsent: 601,
 });
 
 const decodeAction = (a) => {
     const A = {
         [action.regist]: '确认',
         [action.cancel]: '取消',
+        [action.makeLate]: '过号',
+        [action.makeAbsent]: '爽约',
     }
     return A[a] || decodeCommonAction(a);
 }
+
 const STATE_TRANS_MATRIX = {
     [action.regist]: [state.normal, state.completed],
     [action.cancel]: [state.normal, state.cancelled],
+    [action.makeLate]: [state.normal, state.late],
+    [action.makeAbsent]: [[state.normal, state.late], state.absent],
 };
+
 module.exports = {
     relation,
     decodeRelation,
@@ -81,8 +93,6 @@ module.exports = {
     type,
     decodeType,
     category,
-    decodeCategory,
-    timeSlot,
-    decodeTimeSlot,
+    decodeCategoryId,
     STATE_TRANS_MATRIX,
 };
