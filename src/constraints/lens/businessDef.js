@@ -1751,7 +1751,7 @@ const AUTH_MATRIX = {
         },
         [appointmentAction.regist]: {
             auths: [
-                AppointmentBrandUserFn([appointmentState.normal], true),
+                AppointmentBrandUserFn([appointmentState.normal, appointmentState.late], true),
             ],
         },
         [appointmentAction.makeLate]: {
@@ -1761,7 +1761,7 @@ const AUTH_MATRIX = {
         },
         [appointmentAction.makeAbsent]: {
             auths: [
-                AppointmentBrandUserFn([appointmentState.normal], true),
+                AppointmentBrandUserFn([appointmentState.normal, appointmentState.late], true),
             ],
         },
         [appointmentAction.allocWeChatQrCode]: {

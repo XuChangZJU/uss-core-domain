@@ -77,7 +77,7 @@ const decodeAction = (a) => {
 }
 
 const STATE_TRANS_MATRIX = {
-    [action.regist]: [state.normal, state.completed],
+    [action.regist]: [[state.normal, state.late], state.completed],
     [action.cancel]: [state.normal, state.cancelled],
     [action.makeLate]: [state.normal, state.late],
     [action.makeAbsent]: [[state.normal, state.late], state.absent],
