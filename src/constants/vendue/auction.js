@@ -50,6 +50,7 @@ const action = Object.assign({}, commonAction, {
     pause: 513,
     sold: 601,
     unsold: 610,
+    breakUp: 701,
     // resold: 611,
     // cancel: 621,
 });
@@ -63,6 +64,7 @@ const decodeAction = (a) => {
         [action.sold]: '成交',
         [action.unsold]: '流拍',
         [action.pause]: '暂停',
+        [action.breakUp]: '违约',
         // [action.cancel]: '撤销'
     };
 
@@ -90,6 +92,7 @@ const STATE_TRAN_MATRIX = {
     [action.pause]: [state.ongoing, state.pausing],
     [action.restart]: [state.unsold, state.ongoing],
     [action.makeReady]: [state.unsold, state.ready],
+    [action.breakUp]: [state.sold, state.breakUp],
 };
 
 const category = {
