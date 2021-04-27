@@ -539,27 +539,6 @@ const AUTH_MATRIX = {
                 }
             ]
         },
-        [TradeAction.updateFeedback]: {
-            auths: [
-                {
-                    '#exists': [
-                        {
-                            relation: 'userRole',
-                            condition: ({ user }) => {
-                                return {
-                                    userId: user.id,
-                                }
-                            }
-                        }
-                    ]
-                },
-                {
-                    "#relation": {
-                        attr: 'patient',
-                    },
-                },
-            ]
-        },
         [TradeAction.confirmPick]: {
             auths: [
                 {
@@ -659,41 +638,6 @@ const AUTH_MATRIX = {
                         {
                             check: ({user, row}) => {
                                 return [TradeTransportState.wdd, TradeTransportState.dqj].includes(row.transportState) && row.getMethodId === TradeGetMethod.express && [TradeState.legal, TradeState.legal2].includes(row.state);
-                            },
-                        }
-                    ],
-                },
-            ]
-        },
-        [TradeAction.confirmGet]: {
-            auths: [
-                {
-                    '#exists': [
-                        {
-                            relation: 'userRole',
-                            condition: ({ user }) => {
-                                return {
-                                    userId: user.id,
-                                }
-                            }
-                        }
-                    ],
-                    '#data': [                 // 表示对现有对象或者用户的数据有要求，可以有多项，每项之间是AND的关系
-                        {
-                            check: ({user, row}) => {
-                                return [TradeTransportState.yfh].includes(row.transportState) && row.getMethodId === TradeGetMethod.express && [TradeState.legal, TradeState.legal2].includes(row.state);
-                            },
-                        }
-                    ],
-                },
-                {
-                    "#relation": {
-                        attr: 'patient',
-                    },
-                    '#data': [                 // 表示对现有对象或者用户的数据有要求，可以有多项，每项之间是AND的关系
-                        {
-                            check: ({user, row}) => {
-                                return [TradeTransportState.yfh].includes(row.transportState) && row.getMethodId === TradeGetMethod.express && [TradeState.legal, TradeState.legal2].includes(row.state);
                             },
                         }
                     ],
