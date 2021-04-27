@@ -1801,30 +1801,7 @@ const AUTH_MATRIX = {
         [auctionAction.makeReady]: {
             auths: AuctionGeneralStateChangeFn([auctionState.unsold], '非流拍的展品不能重拍'),
         },
-        [auctionAction.breakUp]: {
-            auths: {
-                '#relation': {
-                    attr: 'session.vendue.auctionHouse',
-                    relations: [auctionHouseRelation.manager, auctionHouseRelation.owner],
-                },
-                '#data': [
-                    {
-                        check: ({ row }) => {
-                            if (row.state === auctionState.sold) {
-                                return true;
-                            }
-                            return ErrorCode.createErrorByCode(ErrorCode.errorDataInconsistency,
-                                '只有成交的拍品可以违约', {
-                                    name: 'auction',
-                                    operation: 'update',
-                                    data: row,
-                                });
-                        },
-                    }
-                ]
-            }
-        }
-},
+    },
     bid: {
         [bidAction.create]: {
             auths: [
