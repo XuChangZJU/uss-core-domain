@@ -575,7 +575,7 @@ const paddleRefundUnexistsAuth = [
             return {
                 paddleId: row.id,
                 state: {
-                    $in: [bidState.success, bidState.confirmed],
+                    $in: [bidState.bidding, bidState.success, bidState.confirmed],
                 },
                 checkOutId: {
                     $exists: false,
