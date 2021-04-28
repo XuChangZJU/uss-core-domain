@@ -196,7 +196,7 @@ const decodeCategoryId = (c) => {
         [categoryId.OkGlassRecheck]: '角膜塑形镜复查',
         [categoryId.CareLiquid]: '护理液',
         [categoryId.Food]: '眼保健食品',
-        [categoryId.OkGlassFetch]: '角膜塑形镜试戴',
+        [categoryId.OkGlassFetch]: '角膜塑形镜取镜',
     }
     return C[c];
 }
