@@ -52,7 +52,7 @@ const decodeAction = (a) => {
 const STATE_TRANS_MATRIX = {
     [action.activate]: [state.inactive, state.active],
     [action.confirm]: [state.active, state.confirmed],
-    [action.complete]: [[state.inactive, state.active, state.confirmed, state.expired], state.confirmed],
+    [action.complete]: [[state.inactive, state.active, state.confirmed, state.expired], state.completed],
     [action.expire]: [[state.active, state.confirmed], state.expired],
     [action.makeDead]: [state.expired, state.dead],
 };
