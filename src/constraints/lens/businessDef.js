@@ -4,6 +4,8 @@
  */
 
 // userOrganization不再用于权限判断，根据人员当日打卡所在门店赋予权限，由于复杂写在definition中，这里只做基础的判断
+const assert = require('assert');
+const xor = require('lodash/xor');
 const {
     action: CommonAction,
 } = require('../../constants/action');
@@ -205,7 +207,32 @@ const AppointmentBrandUserFn = (states, hasPatientId, hasNotPatientId) => (
             }
         ]
     }
-)
+);
+
+const RecheckRootFn = (states, msg) => {
+    const auth = {
+        "#role": [Roles.ROOT.name],
+    };
+    if (states) {
+        Object.assign(auth, {
+            '#data': [
+                {
+                    check: ({ row }) => {
+                        if (!states.includes(row.state)) {
+                            return ErrorCode.createErrorByCode(ErrorCode.errorDataInconsistency, msg || '状态无效', {
+                                name: 'recheck',
+                                operation: 'update',
+                                data: row,
+                            });
+                        }
+                        return true;
+                    },
+                }
+            ]
+        });
+    }
+    return auth;
+}
 
 const AUTH_MATRIX = {
     qiniuFile: {
@@ -1173,65 +1200,59 @@ const AUTH_MATRIX = {
         }
     },
     recheck: {
+        [RecheckAction.create]: {
+            auths: [
+                RecheckRootFn(),
+            ],
+        },
+        [RecheckAction.activate]: {
+            auths: [
+                RecheckRootFn([RecheckState.inactive]),
+            ],
+        },
+        [RecheckAction.confirm]: {
+            auths: [
+                RecheckRootFn([RecheckState.active]),
+            ],
+        },
         [RecheckAction.update]: {
             auths: [
                 {
                     "#relation": {
                         attr: 'trade.diagnosis.organization.brand',
                     },
-                },
-                {
-                    "#relation": {
-                        attr: 'trade.diagnosis.patient',
-                        relations: [PatientRelation.owner],
-                    },
+                    '#data': ({ actionData, row }) => {
+                        const { recheck } = actionData;
+                        assert (recheck);
+                        const beginsAt = recheck.beginsAt || row.beginsAt;
+                        const endsAt = recheck.endsAt || row.endsAt;
+                        assert(beginsAt < endsAt);
+                        const allowUpdateAttrs = ['beginsAt', 'endsAt'];
+                        assert (xor(Object.keys(recheck), allowUpdateAttrs).length === 0);
+
+                        return true;
+                    }
                 }
             ],
         },
-        [RecheckAction.confirm]: {
+        [RecheckAction.complete]: {
+            auths: [
+                RecheckRootFn([RecheckState.inactive, RecheckState.active, RecheckState.confirmed, RecheckState.expired]),
+            ],
+        },
+        [RecheckAction.expire]: {
+            auths: [
+                RecheckRootFn([RecheckState.active, RecheckState.confirmed]),
+            ],
+        },        
+        [RecheckAction.makeDead]: {
             auths: [
                 {
                     "#relation": {
-                        attr: 'trade.diagnosis.patient',
-                        relations: [PatientRelation.owner],
-                    },
-                    '#data': [                 // 表示对现有对象或者用户的数据有要求，可以有多项，每项之间是AND的关系
-                        {
-                            check: ({user, row}) => {
-                                return row.state === RecheckState.active;
-                            },
-                        }
-                    ],
-                },
-            ]
-        },
-        [RecheckAction.kill]: {
-            auths: [
-                {
-                    '#relation': {
                         attr: 'trade.diagnosis.organization.brand',
                     },
-                    '#data': [                 // 表示对现有对象或者用户的数据有要求，可以有多项，每项之间是AND的关系
-                        {
-                            check: ({user, row}) => {
-                                return row.state === RecheckState.expired;
-                            },
-                        }
-                    ],
-                },
-                {
-                    '#relation': {
-                        attr: 'trade.diagnosis.organization.brand',
-                    },
-                    '#data': [                 // 表示对现有对象或者用户的数据有要求，可以有多项，每项之间是AND的关系
-                        {
-                            check: ({user, row}) => {
-                                return row.state === RecheckState.expired;
-                            },
-                        }
-                    ],
-                },
-            ]
+                }
+            ],
         },
         [RecheckAction.remove]: {
             auths: [

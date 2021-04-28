@@ -1,6 +1,7 @@
 /**
  * Created by Xc on 2020/2/20.
  */
+const pick = require('lodash/pick');
 const {
     action: commonAction,
     decodeAction: decodeCommonAction,
@@ -9,40 +10,40 @@ const {
 const state = {
     inactive: 2001,          // 待推送
     active: 2002,            // 推送中
-    confirmed: 2003,         // 用户已确认
+    confirmed: 2003,         // 预约已创建
     completed: 2004,         // 复查完成
     expired: 100001,        // 过期
-    killed: 100010,         // 用户已回绝
+    dead: 100002,
 };
 
 const decodeState = (s) => {
     const S = {
         [state.inactive]: '未到复查时间',
         [state.active]: '已到复查时间',
-        [state.confirmed]: '已确认',
+        [state.confirmed]: '已预约',
         [state.completed]: '已完成',
         [state.expired]: '已过期',
-        [state.killed]: '已被回绝'
+        [state.dead]: '已放弃',
     };
 
     return S[s];
 };
 
-const action = Object.assign({}, commonAction, {
+const action = Object.assign({}, pick(commonAction, 'create', 'update', 'remove'), {
     activate: 2002,
     confirm: 2003,
     complete: 2004,
-    expire: 2005,
-    kill: 2006,
+    expire: 100001,
+    makeDead: 100002,
 });
 
 const decodeAction = (a) => {
     const S = {
         [action.activate]: '激活',
-        [action.confirm]: '确认',
+        [action.confirm]: '预约',
         [action.complete]: '完成',
         [action.expire]: '过期',
-        [action.kill]: '回绝',
+        [action.makeDead]: '放弃',
     };
 
     return S[a] || decodeCommonAction(a);
@@ -51,9 +52,9 @@ const decodeAction = (a) => {
 const STATE_TRANS_MATRIX = {
     [action.activate]: [state.inactive, state.active],
     [action.confirm]: [state.active, state.confirmed],
-    [action.complete]: [[state.inactive, state.active, state.confirmed, state.expired, state.killed], state.confirmed],
+    [action.complete]: [[state.inactive, state.active, state.confirmed, state.expired], state.confirmed],
     [action.expire]: [[state.active, state.confirmed], state.expired],
-    [action.kill]: [state.expired, state.killed]
+    [action.makeDead]: [state.expired, state.dead],
 };
 
 module.exports = {
