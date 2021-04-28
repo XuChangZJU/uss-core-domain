@@ -173,7 +173,32 @@ const AppointmentBrandUserFn = (states, hasPatientId, hasNotPatientId) => (
             }
         ]
     }
-)
+);
+
+const RecheckRootFn = (states, msg) => {
+    const auth = {
+        "#role": [Roles.ROOT.name],
+    };
+    if (states) {
+        Object.assign(auth, {
+            '#data': [
+                {
+                    check: ({ row }) => {
+                        if (!states.includes(row.state)) {
+                            return ErrorCode.createErrorByCode(ErrorCode.errorDataInconsistency, msg || '状态无效', {
+                                name: 'recheck',
+                                operation: 'update',
+                                data: row,
+                            });
+                        }
+                        return true;
+                    },
+                }
+            ]
+        });
+    }
+    return auth;
+}
 
 const AUTH_MATRIX = {
     qiniuFile: {
@@ -1061,67 +1086,41 @@ const AUTH_MATRIX = {
         }
     },
     recheck: {
-        [RecheckAction.update]: {
+        [RecheckAction.create]: {
             auths: [
-                {
-                    "#relation": {
-                        attr: 'trade.diagnosis.organization.brand',
-                    },
-                },
-                {
-                    "#relation": {
-                        attr: 'trade.diagnosis.patient',
-                        relations: [PatientRelation.owner],
-                    },
-                }
+                RecheckRootFn(),
+            ],
+        },
+        [RecheckAction.activate]: {
+            auths: [
+                RecheckRootFn([RecheckState.inactive]),
             ],
         },
         [RecheckAction.confirm]: {
             auths: [
-                {
-                    "#relation": {
-                        attr: 'trade.diagnosis.patient',
-                        relations: [PatientRelation.owner],
-                    },
-                    '#data': [                 // 表示对现有对象或者用户的数据有要求，可以有多项，每项之间是AND的关系
-                        {
-                            check: ({user, row}) => {
-                                return row.state === RecheckState.active;
-                            },
-                        }
-                    ],
-                },
-            ]
-        },
-        [RecheckAction.kill]: {
-            auths: [
-                {
-                    '#relation': {
-                        attr: 'trade.diagnosis.organization.brand',
-                    },
-                    '#data': [                 // 表示对现有对象或者用户的数据有要求，可以有多项，每项之间是AND的关系
-                        {
-                            check: ({user, row}) => {
-                                return row.state === RecheckState.expired;
-                            },
-                        }
-                    ],
-                },
-                {
-                    '#relation': {
-                        attr: 'trade.diagnosis.organization.brand',
-                    },
-                    '#data': [                 // 表示对现有对象或者用户的数据有要求，可以有多项，每项之间是AND的关系
-                        {
-                            check: ({user, row}) => {
-                                return row.state === RecheckState.expired;
-                            },
-                        }
-                    ],
-                },
-            ]
+                RecheckRootFn([RecheckState.active]),
+            ],
         },
         [RecheckAction.remove]: {
+            auths: [
+                {
+                    "#relation": {
+                        attr: 'trade.diagnosis.organization.brand',
+                    },
+                }
+            ],
+        },
+        [RecheckAction.complete]: {
+            auths: [
+                RecheckRootFn([RecheckState.inactive, RecheckState.active, RecheckState.confirmed, RecheckState.expired]),
+            ],
+        },
+        [RecheckAction.expire]: {
+            auths: [
+                RecheckRootFn([RecheckState.active, RecheckState.confirmed]),
+            ],
+        },        
+        [RecheckAction.makeDead]: {
             auths: [
                 {
                     "#relation": {
