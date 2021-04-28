@@ -18,7 +18,7 @@ const {
     STATE_TRANS_MATRIX: REVISIT_STATE_TRANS_MATRIX,
 } = require('../../constants/lens/revisit')
 const {
-    action: questionAction,
+    action: questionAction, category,
 } = require('../../constants/lens/question')
 const {
     action: reportAction,
@@ -232,7 +232,17 @@ const RecheckRootFn = (states, msg) => {
         });
     }
     return auth;
-}
+};
+
+const CheckInCreateBySelfCategory = (category) => ({
+    check: ({ user, row, actionData }) => {
+        const { checkIn } = actionData;
+        if (checkIn.userId === user.id && checkIn.category === category) {
+            return false;
+        }
+        return true;
+    },
+});
 
 const AUTH_MATRIX = {
     qiniuFile: {
@@ -1643,13 +1653,87 @@ const AUTH_MATRIX = {
         [CheckInAction.create]: {
             auths: [
                 {
-                    '#exists': [
+                    '#relation': {
+                        attr: 'organization.brand',
+                        relations: [BrandRelation.owner, BrandRelation.manager, BrandRelation.customerService, BrandRelation.worker, BrandRelation.financialStuff],                    
+                    },
+                },
+                {
+                    // 营业员自己打上班卡
+                    '#data': [
+                        CheckInCreateBySelfCategory(CheckInCategory.start),
+                    ],
+                    '#relation': {
+                        attr: 'organization.brand',
+                        relations: [BrandRelation.seller, BrandRelation.doctor, BrandRelation.OKGlassesDoctor, BrandRelation.visionTrainingDoctor]
+                    },
+                    '#unexists': [
                         {
-                            relation: 'userBrand',
-                            condition: ({ user }) => {
-                                // actionData取不到brandId,目前写到definition中
+                            relation: 'checkIn',
+                            message: '每天上班打卡只能一次',
+                            condition: ({ user, actionData }) => {
+                                const { checkIn } = actionData;
+                                const { organizationId } = checkIn;
+                                const now = new Date();
+                                now.setHours(0, 0, 0, 0);
                                 const query = {
                                     userId: user.id,
+                                    organizationId,
+                                    time: {
+                                        $gt: now.valueOf(),
+                                    }
+                                };
+                                return query;
+                            },
+                        },
+                    ],
+                },
+                {
+                    // 营业员自己打下班卡
+                    '#data': [
+                        CheckInCreateBySelfCategory(CheckInCategory.off),
+                    ],
+                    '#relation': {
+                        attr: 'organization.brand',
+                        relations: [BrandRelation.seller, BrandRelation.doctor, BrandRelation.OKGlassesDoctor, BrandRelation.visionTrainingDoctor]
+                    },
+                    '#unexists': [
+                        {
+                            relation: 'checkIn',
+                            message: '每天下班打卡只能一次',
+                            condition: ({ user, actionData }) => {
+                                const { checkIn } = actionData;
+                                const { organizationId } = checkIn;
+                                const now = new Date();
+                                now.setHours(0, 0, 0, 0);
+                                const query = {
+                                    userId: user.id,
+                                    organizationId,
+                                    time: {
+                                        $gt: now.valueOf(),
+                                    },
+                                    category: CheckInCategory.off,
+                                };
+                                return query;
+                            },
+                        },
+                    ],
+                    '#exists': [
+                        {
+                            relation: 'checkIn',
+                            message: '必须先打上班卡才能打下班卡',
+                            condition: ({ user, actionData }) => {
+                                const { checkIn } = actionData;
+                                const { organizationId } = checkIn;
+                                const now = new Date();
+                                now.setHours(0, 0, 0, 0);
+                                const query = {
+                                    userId: user.id,
+                                    organizationId,
+                                    time: {
+                                        $gt: now.valueOf(),
+                                    },
+                                    category: CheckInCategory.start,
                                 };
                                 return query;
                             },
@@ -1665,15 +1749,6 @@ const AUTH_MATRIX = {
                         attr: 'organization.brand',
                         relations: [BrandRelation.owner, BrandRelation.manager, BrandRelation.customerService, BrandRelation.worker, BrandRelation.financialStuff],
                     },
-                },
-                {
-                    '#data': [
-                        {
-                            check: ({ user, row }) => {
-                                return user.id === row.userId && row.category === CheckInCategory.off;
-                            },
-                        }
-                    ],
                 },
             ]
         },
