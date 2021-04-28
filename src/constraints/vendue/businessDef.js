@@ -575,7 +575,7 @@ const paddleRefundUnexistsAuth = [
             return {
                 paddleId: row.id,
                 state: {
-                    $in: [bidState.success, bidState.confirmed],
+                    $in: [bidState.bidding, bidState.success, bidState.confirmed],
                 },
                 checkOutId: {
                     $exists: false,
@@ -2057,9 +2057,8 @@ const AUTH_MATRIX = {
                         check: ({ actionData, row }) => {
                             const { paddle } = actionData;
                             const totalDeposit = paddle.totalDeposit + 1 || row.totalDeposit + 1;
-                            const availableDeposit = paddle.totalDeposit + 1 || row.totalDeposit + 1;
+                            const availableDeposit = paddle.availableDeposit + 1 || row.availableDeposit + 1;
                             assert(totalDeposit >= 1, `paddle「${row.id}」的totalDeposit必须大于等于0`);
-                            assert(availableDeposit >= 1, `paddle「${row.id}」的availableDeposit必须大于等于0`);
                             assert(totalDeposit >= availableDeposit, `paddle「${row.id}」的totalDeposit必须大于等于availableDeposit`);
                         },
                     }]
