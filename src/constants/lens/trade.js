@@ -188,7 +188,7 @@ const decodeCategoryId = (c) => {
         [categoryId.Check]: '验光检查',
         [categoryId.DISCGlasses]: '多焦软镜',
         [categoryId.BandgeGlasses]: '绷带镜',
-        [categoryId.OkGlassTry]: '角膜塑形镜初查',
+        [categoryId.OkGlassTry]: '角膜塑形镜试戴',
         [categoryId.Service]: '医生问诊',
         [categoryId.TrainingCheck]: '弱视检查',
         [categoryId.Service]: '服务/线下宣讲',
@@ -196,7 +196,7 @@ const decodeCategoryId = (c) => {
         [categoryId.OkGlassRecheck]: '角膜塑形镜复查',
         [categoryId.CareLiquid]: '护理液',
         [categoryId.Food]: '眼保健食品',
-        [categoryId.OkGlassFetch]: '角膜塑形镜试戴',
+        [categoryId.OkGlassFetch]: '角膜塑形镜取镜',
     }
     return C[c];
 }
