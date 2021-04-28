@@ -4,6 +4,8 @@
  */
 
 // userOrganization不再用于权限判断，根据人员当日打卡所在门店赋予权限，由于复杂写在definition中，这里只做基础的判断
+const assert = require('assert');
+const xor = require('lodash/xor');
 const {
     action: CommonAction,
 } = require('../../constants/action');
@@ -1101,12 +1103,23 @@ const AUTH_MATRIX = {
                 RecheckRootFn([RecheckState.active]),
             ],
         },
-        [RecheckAction.remove]: {
+        [RecheckAction.update]: {
             auths: [
                 {
                     "#relation": {
                         attr: 'trade.diagnosis.organization.brand',
                     },
+                    '#data': ({ actionData, row }) => {
+                        const { recheck } = actionData;
+                        assert (recheck);
+                        const beginsAt = recheck.beginsAt || row.beginsAt;
+                        const endsAt = recheck.endsAt || row.endsAt;
+                        assert(beginsAt < endsAt);
+                        const allowUpdateAttrs = ['beginsAt', 'endsAt'];
+                        assert (xor(Object.keys(recheck), allowUpdateAttrs).length === 0);
+
+                        return true;
+                    }
                 }
             ],
         },
@@ -1121,6 +1134,15 @@ const AUTH_MATRIX = {
             ],
         },        
         [RecheckAction.makeDead]: {
+            auths: [
+                {
+                    "#relation": {
+                        attr: 'trade.diagnosis.organization.brand',
+                    },
+                }
+            ],
+        },
+        [RecheckAction.remove]: {
             auths: [
                 {
                     "#relation": {
