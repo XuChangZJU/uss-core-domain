@@ -1678,7 +1678,6 @@ const AUTH_MATRIX = {
                                 now.setHours(0, 0, 0, 0);
                                 const query = {
                                     userId: user.id,
-                                    organizationId,
                                     time: {
                                         $gt: now.valueOf(),
                                     }
@@ -1708,7 +1707,6 @@ const AUTH_MATRIX = {
                                 now.setHours(0, 0, 0, 0);
                                 const query = {
                                     userId: user.id,
-                                    organizationId,
                                     time: {
                                         $gt: now.valueOf(),
                                     },
@@ -1729,7 +1727,6 @@ const AUTH_MATRIX = {
                                 now.setHours(0, 0, 0, 0);
                                 const query = {
                                     userId: user.id,
-                                    organizationId,
                                     time: {
                                         $gt: now.valueOf(),
                                     },
