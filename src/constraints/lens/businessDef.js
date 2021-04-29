@@ -598,7 +598,7 @@ const AUTH_MATRIX = {
                         {
                             check: ({ row, actionData }) => {
                                 const { trade } = actionData;
-                                if (trade.price || trade.categoryId) {
+                                if (trade && (trade.price || trade.categoryId)) {
                                     return ErrorCode.createErrorByCode(ErrorCode.errorDataInconsistency, '不允许修改价格', {
                                         name: 'trade',
                                         operation: 'update',
