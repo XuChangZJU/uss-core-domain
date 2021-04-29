@@ -146,8 +146,8 @@ const decodeAction = (a) => {
 };
 
 const STATE_TRAN_MATRIX =    Object.assign({},  COMMON_STATE_TRAN_MATRIX, TRANSPORT_STATE_TRANS_MATRIX, {
-    [action.taPrepare]: [transportState.wdd, transportState.tsInPreparing],
-    [action.taCancel]: [transportState.tsInPreparing, transportState.wdd],
+    [action.taPrepare]: [transportState.wdd, transportState.tsSending],
+    // [action.taCancel]: [transportState.tsInPreparing, transportState.wdd],
     [action.financialRefund]: [[state.legal2, state.legal, state.abandoned], state.financialRefunded],
     [action.confirmArriveAtShop]: [transportState.wdd, transportState.dqj],
     [action.confirmPick]:  [transportState.dqj, transportState.dgkqr],

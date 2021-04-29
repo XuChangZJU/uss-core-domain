@@ -739,29 +739,29 @@ const AUTH_MATRIX = {
                 },
             ]
         },
-        [TradeAction.taCancel]: {
-            auths: [
-                {
-                    '#exists': [
-                        {
-                            relation: 'userRole',
-                            condition: ({ user }) => {
-                                return {
-                                    userId: user.id,
-                                }
-                            }
-                        }
-                    ],
-                    '#data': tradeTransportCheck([TradeState.legal, TradeState.legal2], [TradeTransportState.tsInPreparing], [TradeGetMethodId.Express])
-                },
-                {
-                    "#relation": {
-                        attr: 'diagnosis.organization.brand',
-                    },
-                    '#data': tradeTransportCheck([TradeState.legal, TradeState.legal2], [TradeTransportState.tsInPreparing], [TradeGetMethodId.Express])
-                },
-            ]
-        },
+        // [TradeAction.taCancel]: {
+        //     auths: [
+        //         {
+        //             '#exists': [
+        //                 {
+        //                     relation: 'userRole',
+        //                     condition: ({ user }) => {
+        //                         return {
+        //                             userId: user.id,
+        //                         }
+        //                     }
+        //                 }
+        //             ],
+        //             '#data': tradeTransportCheck([TradeState.legal, TradeState.legal2], [TradeTransportState.tsInPreparing], [TradeGetMethodId.Express])
+        //         },
+        //         {
+        //             "#relation": {
+        //                 attr: 'diagnosis.organization.brand',
+        //             },
+        //             '#data': tradeTransportCheck([TradeState.legal, TradeState.legal2], [TradeTransportState.tsInPreparing], [TradeGetMethodId.Express])
+        //         },
+        //     ]
+        // },
         [TradeAction.taPrepare]: {
             auths: [
                 {
