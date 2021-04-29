@@ -146,8 +146,8 @@ const decodeAction = (a) => {
 };
 
 const STATE_TRAN_MATRIX =    Object.assign({},  COMMON_STATE_TRAN_MATRIX, TRANSPORT_STATE_TRANS_MATRIX, {
-    [action.taPrepare]: [transportState.wdd, transportState.tsInPreparing],
-    [action.taCancel]: [transportState.tsInPreparing, transportState.wdd],
+    [action.taPrepare]: [transportState.wdd, transportState.tsSending],
+    // [action.taCancel]: [transportState.tsInPreparing, transportState.wdd],
     [action.financialRefund]: [[state.legal2, state.legal, state.abandoned], state.financialRefunded],
     [action.confirmArriveAtShop]: [transportState.wdd, transportState.dqj],
     [action.confirmPick]:  [transportState.dqj, transportState.dgkqr],
@@ -189,7 +189,7 @@ const decodeCategoryId = (c) => {
         [categoryId.DISCGlasses]: '多焦软镜',
         [categoryId.BandgeGlasses]: '绷带镜',
         [categoryId.OkGlassTry]: '角膜塑形镜试戴',
-        [categoryId.Service]: '医生问诊',
+        [categoryId.Inquiry]: '医生问诊',
         [categoryId.TrainingCheck]: '弱视检查',
         [categoryId.Service]: '服务/线下宣讲',
         [categoryId.Gift]: '赠品',
@@ -200,6 +200,7 @@ const decodeCategoryId = (c) => {
     }
     return C[c];
 }
+
 
 const mainCategoryId = {
     MakeBill: 1,

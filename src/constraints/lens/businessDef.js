@@ -5,6 +5,7 @@
 
 // userOrganization不再用于权限判断，根据人员当日打卡所在门店赋予权限，由于复杂写在definition中，这里只做基础的判断
 const assert = require('assert');
+const omit = require('omit');
 const xor = require('lodash/xor');
 const {
     action: CommonAction,
@@ -570,25 +571,25 @@ const AUTH_MATRIX = {
                             }
                         }
                     ],
-                    '#data': [                 // 表示对现有对象或者用户的数据有要求，可以有多项，每项之间是AND的关系
-                        {
-                            check: ({user, row}) => {
-                                return [TradeTransportState.wdd, TradeTransportState.dqj, TradeTransportState.yqj].includes(row.transportState);
-                            },
-                        }
-                    ],
+                    // '#data': [                 // 表示对现有对象或者用户的数据有要求，可以有多项，每项之间是AND的关系
+                    //     {
+                    //         check: ({user, row}) => {
+                    //             return [TradeTransportState.wdd, TradeTransportState.dqj, TradeTransportState.yqj].includes(row.transportState);
+                    //         },
+                    //     }
+                    // ],
                 },
                 {
                     "#relation": {
                         attr: 'diagnosis.organization.brand',
                     },
-                    '#data': [                 // 表示对现有对象或者用户的数据有要求，可以有多项，每项之间是AND的关系
-                        {
-                            check: ({user, row}) => {
-                                return [TradeTransportState.wdd, TradeTransportState.dqj, TradeTransportState.yqj].includes(row.transportState);
-                            },
-                        }
-                    ],
+                    // '#data': [                 // 表示对现有对象或者用户的数据有要求，可以有多项，每项之间是AND的关系
+                    //     {
+                    //         check: ({user, row}) => {
+                    //             return [TradeTransportState.wdd, TradeTransportState.dqj, TradeTransportState.yqj].includes(row.transportState);
+                    //         },
+                    //     }
+                    // ],
                 },
                 {
                     '#relation': {
@@ -596,8 +597,22 @@ const AUTH_MATRIX = {
                     },
                     '#data': [                 // 表示对现有对象或者用户的数据有要求，可以有多项，每项之间是AND的关系
                         {
-                            check: ({user, row}) => {
-                                return [TradeTransportState.wdd].includes(row.transportState);
+                            check: ({ row, actionData }) => {
+                                const { trade } = actionData;
+                                if (trade && (trade.price || trade.categoryId)) {
+                                    return ErrorCode.createErrorByCode(ErrorCode.errorDataInconsistency, '不允许修改价格', {
+                                        name: 'trade',
+                                        operation: 'update',
+                                        data: row,
+                                    });
+                                }
+                                if (row.transportState !== TradeTransportState.wdd) {
+                                    return ErrorCode.createErrorByCode(ErrorCode.errorDataInconsistency, '当前状态不能修改信息', {
+                                        name: 'trade',
+                                        operation: 'update',
+                                        data: row,
+                                    });
+                                }
                             },
                         }
                     ],
@@ -725,29 +740,29 @@ const AUTH_MATRIX = {
                 },
             ]
         },
-        [TradeAction.taCancel]: {
-            auths: [
-                {
-                    '#exists': [
-                        {
-                            relation: 'userRole',
-                            condition: ({ user }) => {
-                                return {
-                                    userId: user.id,
-                                }
-                            }
-                        }
-                    ],
-                    '#data': tradeTransportCheck([TradeState.legal, TradeState.legal2], [TradeTransportState.tsInPreparing], [TradeGetMethodId.Express])
-                },
-                {
-                    "#relation": {
-                        attr: 'diagnosis.organization.brand',
-                    },
-                    '#data': tradeTransportCheck([TradeState.legal, TradeState.legal2], [TradeTransportState.tsInPreparing], [TradeGetMethodId.Express])
-                },
-            ]
-        },
+        // [TradeAction.taCancel]: {
+        //     auths: [
+        //         {
+        //             '#exists': [
+        //                 {
+        //                     relation: 'userRole',
+        //                     condition: ({ user }) => {
+        //                         return {
+        //                             userId: user.id,
+        //                         }
+        //                     }
+        //                 }
+        //             ],
+        //             '#data': tradeTransportCheck([TradeState.legal, TradeState.legal2], [TradeTransportState.tsInPreparing], [TradeGetMethodId.Express])
+        //         },
+        //         {
+        //             "#relation": {
+        //                 attr: 'diagnosis.organization.brand',
+        //             },
+        //             '#data': tradeTransportCheck([TradeState.legal, TradeState.legal2], [TradeTransportState.tsInPreparing], [TradeGetMethodId.Express])
+        //         },
+        //     ]
+        // },
         [TradeAction.taPrepare]: {
             auths: [
                 {
@@ -1864,7 +1879,8 @@ const AUTH_MATRIX = {
                                     });
                                 }
                                 const { appointment } = actionData;
-                                if (Object.keys(appointment).length !== 1 || !appointment.hasOwnProperty('patientId')) {
+                                const appointment2 = omit(appointment, ['patientId', 'id'])
+                                if (Object.keys(appointment2).length !== 0 || !appointment.hasOwnProperty('patientId')) {
                                     return new Error('数据非法');
                                 }
                                 return true;
