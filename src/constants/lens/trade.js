@@ -189,7 +189,7 @@ const decodeCategoryId = (c) => {
         [categoryId.DISCGlasses]: '多焦软镜',
         [categoryId.BandgeGlasses]: '绷带镜',
         [categoryId.OkGlassTry]: '角膜塑形镜试戴',
-        [categoryId.Service]: '医生问诊',
+        [categoryId.Inquiry]: '医生问诊',
         [categoryId.TrainingCheck]: '弱视检查',
         [categoryId.Service]: '服务/线下宣讲',
         [categoryId.Gift]: '赠品',
