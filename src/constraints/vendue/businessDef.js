@@ -1874,7 +1874,7 @@ const AUTH_MATRIX = {
                     condition: ({ row }) => {
                         return {
                             id: {
-                                $gt: row.id, 
+                                $gt: row.id,
                             },
                             auctionId: row.auctionId,
                             state: bidState.bidding,
@@ -1891,7 +1891,7 @@ const AUTH_MATRIX = {
                     condition: ({ row }) => {
                         return {
                             id: {
-                                $gt: row.id, 
+                                $gt: row.id,
                             },
                             auctionId: row.auctionId,
                             state: bidState.bidding,
@@ -1936,7 +1936,18 @@ const AUTH_MATRIX = {
                 }
                 return true;
             }),
-        [bidAction.violate]: BidGeneralUpdateControl([bidState.success, bidState.confirmed]),
+        [bidAction.violate]: BidGeneralUpdateControl([bidState.success, bidState.confirmed], {},
+            ({row}) => {
+                if (row.checkOutId) {
+                    return ErrorCode.createErrorByCode(ErrorCode.errorDataInconsistency,
+                        '已结算的拍品不能再进行弃标', {
+                            name: 'bid',
+                            operation: 'update',
+                            data: row,
+                        });
+                }
+                return true;
+            }),
         [bidAction.makeFailure]: {
             auths: [
                 {
