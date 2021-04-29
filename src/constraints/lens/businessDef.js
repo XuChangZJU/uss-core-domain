@@ -570,25 +570,25 @@ const AUTH_MATRIX = {
                             }
                         }
                     ],
-                    '#data': [                 // 表示对现有对象或者用户的数据有要求，可以有多项，每项之间是AND的关系
-                        {
-                            check: ({user, row}) => {
-                                return [TradeTransportState.wdd, TradeTransportState.dqj, TradeTransportState.yqj].includes(row.transportState);
-                            },
-                        }
-                    ],
+                    // '#data': [                 // 表示对现有对象或者用户的数据有要求，可以有多项，每项之间是AND的关系
+                    //     {
+                    //         check: ({user, row}) => {
+                    //             return [TradeTransportState.wdd, TradeTransportState.dqj, TradeTransportState.yqj].includes(row.transportState);
+                    //         },
+                    //     }
+                    // ],
                 },
                 {
                     "#relation": {
                         attr: 'diagnosis.organization.brand',
                     },
-                    '#data': [                 // 表示对现有对象或者用户的数据有要求，可以有多项，每项之间是AND的关系
-                        {
-                            check: ({user, row}) => {
-                                return [TradeTransportState.wdd, TradeTransportState.dqj, TradeTransportState.yqj].includes(row.transportState);
-                            },
-                        }
-                    ],
+                    // '#data': [                 // 表示对现有对象或者用户的数据有要求，可以有多项，每项之间是AND的关系
+                    //     {
+                    //         check: ({user, row}) => {
+                    //             return [TradeTransportState.wdd, TradeTransportState.dqj, TradeTransportState.yqj].includes(row.transportState);
+                    //         },
+                    //     }
+                    // ],
                 },
                 {
                     '#relation': {
@@ -596,8 +596,22 @@ const AUTH_MATRIX = {
                     },
                     '#data': [                 // 表示对现有对象或者用户的数据有要求，可以有多项，每项之间是AND的关系
                         {
-                            check: ({user, row}) => {
-                                return [TradeTransportState.wdd].includes(row.transportState);
+                            check: ({ row, actionData }) => {
+                                const { trade } = actionData;
+                                if (trade.price || trade.categoryId) {
+                                    return ErrorCode.createErrorByCode(ErrorCode.errorDataInconsistency, '不允许修改价格', {
+                                        name: 'trade',
+                                        operation: 'update',
+                                        data: row,
+                                    });
+                                }
+                                if (row.transportState !== TradeTransportState.wdd) {
+                                    return ErrorCode.createErrorByCode(ErrorCode.errorDataInconsistency, '当前状态不能修改信息', {
+                                        name: 'trade',
+                                        operation: 'update',
+                                        data: row,
+                                    });
+                                }
                             },
                         }
                     ],
