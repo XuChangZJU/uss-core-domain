@@ -1878,10 +1878,12 @@ const AUTH_MATRIX = {
                                         data: row,
                                     });
                                 }
-                                const { appointment } = actionData;
-                                const appointment2 = omit(appointment, ['patientId', 'id'])
-                                if (Object.keys(appointment2).length !== 0 || !appointment.hasOwnProperty('patientId')) {
-                                    return new Error('数据非法');
+                                if (actionData) {
+                                    const { appointment } = actionData;
+                                    const appointment2 = omit(appointment, ['patientId', 'id'])
+                                    if (Object.keys(appointment2).length !== 0 || !appointment.hasOwnProperty('patientId')) {
+                                        return new Error('数据非法');
+                                    }
                                 }
                                 return true;
                             },
