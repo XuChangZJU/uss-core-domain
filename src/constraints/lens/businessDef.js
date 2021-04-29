@@ -5,6 +5,7 @@
 
 // userOrganization不再用于权限判断，根据人员当日打卡所在门店赋予权限，由于复杂写在definition中，这里只做基础的判断
 const assert = require('assert');
+const omit = require('omit');
 const xor = require('lodash/xor');
 const {
     action: CommonAction,
@@ -1881,7 +1882,8 @@ const AUTH_MATRIX = {
                                     });
                                 }
                                 const { appointment } = actionData;
-                                if (Object.keys(appointment).length !== 1 || !appointment.hasOwnProperty('patientId')) {
+                                const appointment2 = omit(appointment, ['patientId', 'id'])
+                                if (Object.keys(appointment2).length !== 0 || !appointment.hasOwnProperty('patientId')) {
                                     return new Error('数据非法');
                                 }
                                 return true;
