@@ -201,6 +201,7 @@ const decodeCategoryId = (c) => {
     return C[c];
 }
 
+
 const mainCategoryId = {
     MakeBill: 1,
     Check: 2,
