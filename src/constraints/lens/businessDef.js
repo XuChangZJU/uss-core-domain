@@ -803,7 +803,7 @@ const AUTH_MATRIX = {
                 },
                 {
                     "#relation": {
-                        attr: 'diagnosis.organization.brand',
+                        attr: 'patient',
                     },
                     '#data': tradeTransportCheck([TradeState.legal, TradeState.legal2], [TradeTransportState.tsSending], [TradeGetMethodId.Express])
                 },
@@ -826,7 +826,7 @@ const AUTH_MATRIX = {
                 },
                 {
                     "#relation": {
-                        attr: 'diagnosis.organization.brand',
+                        attr: 'patient',
                     },
                     '#data': tradeTransportCheck([TradeState.legal, TradeState.legal2], [TradeTransportState.tsSending], [TradeGetMethodId.Express])
                 },
@@ -1937,13 +1937,6 @@ const AUTH_MATRIX = {
                     "#relation": {
                         attr: 'organization.brand',
                     },
-                    '#data': [
-                        {
-                            check: ({ user, row }) => {
-                                return !row.patientId;
-                            },
-                        }
-                    ]
                 }
             ],
         },
