@@ -2047,18 +2047,82 @@ const AUTH_MATRIX = {
         [reportAction.update]: {
             auths: [
                 {
-                    "#relation": {
-                        attr: 'trade.diagnosis.organization.brand',
-                    },
+                    "#exists": [
+                        {
+                            relation: 'userBrand',
+                            condition: ({ user, row }) => {
+                                return {
+                                    userId: user.id,
+                                    brandId: {
+                                        $in: {
+                                            name: 'organization',
+                                            query: {
+                                                id: {
+                                                    $in: {
+                                                        name: 'diagnosis',
+                                                        query: {
+                                                            id: {
+                                                                $in: {
+                                                                    name: 'trade',
+                                                                    query: {
+                                                                        reportId: row.id,
+                                                                    },
+                                                                    projection: 'diagnosisId',
+                                                                }
+                                                            }
+                                                        },
+                                                        projection: 'organizationId',
+                                                    }
+                                                }
+                                            },
+                                            projection: 'brandId',
+                                        },
+                                    },
+                                }
+                            }
+                        },
+                    ]
                 },
             ],
         },
         [reportAction.remove]: {
             auths: [
                 {
-                    "#relation": {
-                        attr: 'trade.diagnosis.organization.brand',
-                    },
+                    "#exists": [
+                        {
+                            relation: 'userBrand',
+                            condition: ({ user, row }) => {
+                                return {
+                                    userId: user.id,
+                                    brandId: {
+                                        $in: {
+                                            name: 'organization',
+                                            query: {
+                                                id: {
+                                                    $in: {
+                                                        name: 'diagnosis',
+                                                        query: {
+                                                            id: {
+                                                                $in: {
+                                                                    name: 'trade',
+                                                                    query: {
+                                                                        reportId: row.id,
+                                                                    },
+                                                                    projection: 'diagnosisId',
+                                                                }
+                                                            }
+                                                        },
+                                                        projection: 'organizationId',
+                                                    }
+                                                }
+                                            },
+                                            projection: 'brandId',
+                                        },
+                                    },
+                                }
+                            }
+                        },
+                    ]
                 },
             ],
         }
