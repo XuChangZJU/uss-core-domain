@@ -1237,7 +1237,7 @@ const AUTH_MATRIX = {
         },
         [RecheckAction.confirm]: {
             auths: [
-                RecheckRootFn([RecheckState.active]),
+                RecheckRootFn([RecheckState.inactive, RecheckState.active]),
             ],
         },
         [RecheckAction.update]: {
