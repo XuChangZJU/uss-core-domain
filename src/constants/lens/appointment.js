@@ -45,6 +45,7 @@ const state = {
     late: 302,
     cancelled: 401,
     completed: 501,
+    checkEnd: 502,
     absent: 601,
 }
 
@@ -52,7 +53,8 @@ const decodeState = (s) => {
     const S = {
         [state.normal]: '待就诊',
         [state.cancelled]: '已取消',
-        [state.completed]: '已完成',
+        [state.completed]: '检查中',
+        [state.checkEnd]: '已完成',
         [state.late]: '已过号',
         [state.absent]: '缺席',
     }
@@ -63,12 +65,14 @@ const action = Object.assign({}, commonAction, {
     makeLate: 302,
     cancel: 401,
     regist: 501,
+    checkEnd: 502,
     makeAbsent: 601,
 });
 
 const decodeAction = (a) => {
     const A = {
-        [action.regist]: '确认',
+        [action.regist]: '开始检查',
+        [action.checkEnd]: '检查完成',
         [action.cancel]: '取消',
         [action.makeLate]: '过号',
         [action.makeAbsent]: '爽约',
@@ -78,6 +82,7 @@ const decodeAction = (a) => {
 
 const STATE_TRANS_MATRIX = {
     [action.regist]: [[state.normal, state.late], state.completed],
+    [action.checkEnd]: [state.completed, state.checkEnd],
     [action.cancel]: [state.normal, state.cancelled],
     [action.makeLate]: [state.normal, state.late],
     [action.makeAbsent]: [[state.normal, state.late], state.absent],

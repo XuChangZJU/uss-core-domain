@@ -1237,7 +1237,7 @@ const AUTH_MATRIX = {
         },
         [RecheckAction.confirm]: {
             auths: [
-                RecheckRootFn([RecheckState.active]),
+                RecheckRootFn([RecheckState.inactive, RecheckState.active]),
             ],
         },
         [RecheckAction.update]: {
@@ -1902,7 +1902,7 @@ const AUTH_MATRIX = {
                     '#data': [
                         {
                             check: ({ user, row }) => {
-                                if (!row.state === appointmentState.normal) {
+                                if (row.state !== appointmentState.normal) {
                                     return ErrorCode.createErrorByCode(ErrorCode.errorDataInconsistency, '预约已失效', {
                                         name: 'appointment',
                                         operation: 'update',
@@ -1919,6 +1919,13 @@ const AUTH_MATRIX = {
         [appointmentAction.regist]: {
             auths: [
                 AppointmentBrandUserFn([appointmentState.normal, appointmentState.late], true),
+            ],
+        },
+        [appointmentAction.checkEnd]: {
+            auths: [
+                {
+                    "#role": [Roles.ROOT.name],
+                },
             ],
         },
         [appointmentAction.makeLate]: {
