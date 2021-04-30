@@ -1921,6 +1921,13 @@ const AUTH_MATRIX = {
                 AppointmentBrandUserFn([appointmentState.normal, appointmentState.late], true),
             ],
         },
+        [appointmentAction.checkEnd]: {
+            auths: [
+                {
+                    "#role": [Roles.ROOT.name],
+                },
+            ],
+        },
         [appointmentAction.makeLate]: {
             auths: [
                 AppointmentBrandUserFn([appointmentState.normal], true),
