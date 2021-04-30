@@ -27,7 +27,7 @@ const AUTH_MATRIX = {
                         check: ({ row }) => {
                             if (![transportState.tsInPreparing].includes(row.transportState)) {
                                 return ErrorCode.createErrorByCode(ErrorCode.errorDataInconsistency,
-                                    `当前物流状态不支持${decodeTransportAction(action)}操作`, {
+                                    `当前物流状态不支持${decodeTransportAction(action.taSend)}操作`, {
                                         name: 'express',
                                         operation: 'update',
                                         data: row,
@@ -48,7 +48,7 @@ const AUTH_MATRIX = {
                         check: ({ row }) => {
                             if (![transportState.tsSending].includes(row.transportState)) {
                                 return ErrorCode.createErrorByCode(ErrorCode.errorDataInconsistency,
-                                    `当前物流状态不支持${decodeTransportAction(action)}操作`, {
+                                    `当前物流状态不支持${decodeTransportAction(action.taAccept)}操作`, {
                                         name: 'express',
                                         operation: 'update',
                                         data: row,
@@ -69,7 +69,7 @@ const AUTH_MATRIX = {
                         check: ({ row }) => {
                             if (![transportState.tsSending].includes(row.transportState)) {
                                 return ErrorCode.createErrorByCode(ErrorCode.errorDataInconsistency,
-                                    `当前物流状态不支持${decodeTransportAction(action)}操作`, {
+                                    `当前物流状态不支持${decodeTransportAction(action.taReject)}操作`, {
                                         name: 'express',
                                         operation: 'update',
                                         data: row,
