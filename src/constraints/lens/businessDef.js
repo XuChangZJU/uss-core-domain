@@ -1902,7 +1902,7 @@ const AUTH_MATRIX = {
                     '#data': [
                         {
                             check: ({ user, row }) => {
-                                if (!row.state === appointmentState.normal) {
+                                if (row.state !== appointmentState.normal) {
                                     return ErrorCode.createErrorByCode(ErrorCode.errorDataInconsistency, '预约已失效', {
                                         name: 'appointment',
                                         operation: 'update',
