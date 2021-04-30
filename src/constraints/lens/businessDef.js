@@ -195,8 +195,8 @@ const AppointmentBrandUserFn = (states, hasPatientId, hasNotPatientId) => (
         '#data': [
             {
                 check: ({ row }) => {
-                    if (!states.includes(row.state) || hasPatientId && !row.patientId
-                        || hasNotPatientId && row.patientId) {
+                    if (!states.includes(row.state) || hasPatientId === true && !row.patientId
+                        || hasNotPatientId === true && row.patientId) {
                         return ErrorCode.createErrorByCode(ErrorCode.errorDataInconsistency, '预约无效', {
                             name: 'appointment',
                             operation: 'update',
