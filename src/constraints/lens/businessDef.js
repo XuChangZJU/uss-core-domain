@@ -239,9 +239,9 @@ const CheckInCreateBySelfCategory = (category) => ({
     check: ({ user, row, actionData }) => {
         const { checkIn } = actionData;
         if (checkIn.userId === user.id && checkIn.category === category) {
-            return false;
+            return true;
         }
-        return true;
+        return false;
     },
 });
 
@@ -1751,6 +1751,59 @@ const AUTH_MATRIX = {
                             },
                         },
                     ],
+                    '#or': {
+                        message: '还有未完成的检查预约，请确认顾客不会到场后再下班',
+                        auth: [
+                            {
+                                // 要么此员工不是最后一个打卡下班的
+                                '#exists': [
+                                    {
+                                        relation: 'checkIn',
+                                        condition: ({ user, actionData }) => {
+                                            const { checkIn } = actionData;
+                                            const { organizationId } = checkIn;
+                                            const startOfDay = new Date();
+                                            startOfDay.setHours(0, 0, 0, 0);
+                                            const query = {
+                                                userId: {
+                                                    $ne: user.id
+                                                },
+                                                time: {
+                                                    $gt: startOfDay.valueOf(),
+                                                },
+                                                organizationId,
+                                                workingTime: {
+                                                    $exists: false,     // 这个域用来表示是否打卡下班（见getWorkingTime函数）
+                                                },
+                                                category: CheckInCategory.start,
+                                            };
+                                            return query;
+                                        }
+                                    }
+                                ],
+                            },
+                            {
+                                // 要么不存在还未进行的预约
+                                '#unexists': [
+                                    {
+                                        relation: 'appointment',
+                                        condition: ({ user, actionData }) => {
+                                            const { checkIn } = actionData;
+                                            const { organizationId } = checkIn;
+                                            const startOfDay = new Date();
+                                            startOfDay.setHours(0, 0, 0, 0);
+                                            const query = {
+                                                day: startOfDay,
+                                                organizationId,
+                                                state: appointmentState.normal,
+                                            };
+                                            return query;
+                                        }
+                                    }
+                                ]
+                            }
+                        ],
+                    }
                 },
             ]
         },
