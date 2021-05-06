@@ -663,7 +663,7 @@ const AUTH_MATRIX = {
                     '#data': [                 // 表示对现有对象或者用户的数据有要求，可以有多项，每项之间是AND的关系
                         {
                             check: ({user, row}) => {
-                                return [TradeTransportState.dqj].includes(row.transportState) && row.getMethodId === TradeGetMethodId.helpYourself && [TradeState.legal, TradeState.legal2].includes(row.state);
+                                return [TradeTransportState.dqj].includes(row.transportState) && row.getMethodId === TradeGetMethodId.HelpYourself && [TradeState.legal, TradeState.legal2].includes(row.state);
                             },
                         }
                     ],
@@ -675,7 +675,7 @@ const AUTH_MATRIX = {
                     '#data': [                 // 表示对现有对象或者用户的数据有要求，可以有多项，每项之间是AND的关系
                         {
                             check: ({user, row}) => {
-                                return [TradeTransportState.dqj].includes(row.transportState) && row.getMethodId === TradeGetMethodId.helpYourself && [TradeState.legal, TradeState.legal2].includes(row.state);
+                                return [TradeTransportState.dqj].includes(row.transportState) && row.getMethodId === TradeGetMethodId.HelpYourself && [TradeState.legal, TradeState.legal2].includes(row.state);
                             },
                         }
                     ],
@@ -848,7 +848,7 @@ const AUTH_MATRIX = {
                     '#data': [                 // 表示对现有对象或者用户的数据有要求，可以有多项，每项之间是AND的关系
                         {
                             check: ({user, row}) => {
-                                return [TradeTransportState.dgkqr].includes(row.transportState) && row.getMethodId === TradeGetMethodId.helpYourself && [TradeState.legal, TradeState.legal2].includes(row.state);
+                                return [TradeTransportState.dgkqr].includes(row.transportState) && row.getMethodId === TradeGetMethodId.HelpYourself && [TradeState.legal, TradeState.legal2].includes(row.state);
                             },
                         }
                     ],
@@ -860,7 +860,7 @@ const AUTH_MATRIX = {
                     '#data': [                 // 表示对现有对象或者用户的数据有要求，可以有多项，每项之间是AND的关系
                         {
                             check: ({user, row}) => {
-                                return [TradeTransportState.dgkqr].includes(row.transportState) && row.getMethodId === TradeGetMethodId.helpYourself && [TradeState.legal, TradeState.legal2].includes(row.state);
+                                return [TradeTransportState.dgkqr].includes(row.transportState) && row.getMethodId === TradeGetMethodId.HelpYourself && [TradeState.legal, TradeState.legal2].includes(row.state);
                             },
                         }
                     ],
