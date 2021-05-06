@@ -1983,7 +1983,7 @@ const AUTH_MATRIX = {
         },
         [appointmentAction.makeLate]: {
             auths: [
-                AppointmentBrandUserFn([appointmentState.normal], true),
+                AppointmentBrandUserFn([appointmentState.normal, appointmentState.late], true),
             ],
         },
         [appointmentAction.makeAbsent]: {

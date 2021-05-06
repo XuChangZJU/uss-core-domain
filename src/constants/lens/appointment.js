@@ -84,7 +84,7 @@ const STATE_TRANS_MATRIX = {
     [action.regist]: [[state.normal, state.late], state.completed],
     [action.checkEnd]: [state.completed, state.checkEnd],
     [action.cancel]: [state.normal, state.cancelled],
-    [action.makeLate]: [state.normal, state.late],
+    [action.makeLate]: [[state.normal, state.late], state.late],
     [action.makeAbsent]: [[state.normal, state.late], state.absent],
 };
 
