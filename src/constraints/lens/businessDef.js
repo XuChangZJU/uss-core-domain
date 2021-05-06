@@ -2091,100 +2091,44 @@ const AUTH_MATRIX = {
         [reportAction.create]: {
             auths: [
                 {
-                    '#exists': [
-                        {
-                            relation: 'userBrand',
-                            condition: ({user}) => {
-                                return {
-                                    userId: user.id,
-                                }
-                            }
-                        },
-                    ]
-                }
+                    "#relation": {
+                        attr: 'trade.organization.brand',
+                    },
+                },
+                {
+                    "#relation": {
+                        attr: 'trade.organization',
+                    },
+                },
             ]
         },
-        [reportAction.update]: {
+        [reportAction.update]: {            
             auths: [
                 {
-                    "#exists": [
-                        {
-                            relation: 'userBrand',
-                            condition: ({ user, row }) => {
-                                return {
-                                    userId: user.id,
-                                    brandId: {
-                                        $in: {
-                                            name: 'organization',
-                                            query: {
-                                                id: {
-                                                    $in: {
-                                                        name: 'diagnosis',
-                                                        query: {
-                                                            id: {
-                                                                $in: {
-                                                                    name: 'trade',
-                                                                    query: {
-                                                                        reportId: row.id,
-                                                                    },
-                                                                    projection: 'diagnosisId',
-                                                                }
-                                                            }
-                                                        },
-                                                        projection: 'organizationId',
-                                                    }
-                                                }
-                                            },
-                                            projection: 'brandId',
-                                        },
-                                    },
-                                }
-                            }
-                        },
-                    ]
+                    "#relation": {
+                        attr: 'trade.organization.brand',
+                    },
                 },
-            ],
+                {
+                    "#relation": {
+                        attr: 'trade.organization',
+                    },
+                },
+            ]
         },
-        [reportAction.remove]: {
+        [reportAction.remove]: {           
             auths: [
                 {
-                    "#exists": [
-                        {
-                            relation: 'userBrand',
-                            condition: ({ user, row }) => {
-                                return {
-                                    userId: user.id,
-                                    brandId: {
-                                        $in: {
-                                            name: 'organization',
-                                            query: {
-                                                id: {
-                                                    $in: {
-                                                        name: 'diagnosis',
-                                                        query: {
-                                                            id: {
-                                                                $in: {
-                                                                    name: 'trade',
-                                                                    query: {
-                                                                        reportId: row.id,
-                                                                    },
-                                                                    projection: 'diagnosisId',
-                                                                }
-                                                            }
-                                                        },
-                                                        projection: 'organizationId',
-                                                    }
-                                                }
-                                            },
-                                            projection: 'brandId',
-                                        },
-                                    },
-                                }
-                            }
-                        },
-                    ]
+                    "#relation": {
+                        attr: 'trade.organization.brand',
+                    },
                 },
-            ],
+                {
+                    "#relation": {
+                        attr: 'trade.organization',
+                    },
+                },
+            ]
         }
     },
     question: {
