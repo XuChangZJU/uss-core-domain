@@ -1945,9 +1945,13 @@ const AUTH_MATRIX = {
                 },
             ],
         },
+        [appointmentAction.remove]: {
+            auths: [
+                AppointmentBrandUserFn([appointmentState.normal, appointmentState.cancelled], false, true),
+            ],
+        },
         [appointmentAction.cancel]: {
             auths: [
-                AppointmentBrandUserFn([appointmentState.normal]),
                 {
                     "#relation": {
                         attr: 'patient',
