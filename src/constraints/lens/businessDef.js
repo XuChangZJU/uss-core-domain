@@ -1691,10 +1691,15 @@ const AUTH_MATRIX = {
                                 const { organizationId } = checkIn;
                                 const now = new Date();
                                 now.setHours(0, 0, 0, 0);
+                                const now2 = new Date();
+                                now2.setHours(23, 59, 59, 0);
                                 const query = {
                                     userId: user.id,
                                     time: {
-                                        $gt: now.valueOf(),
+                                        $between: {
+                                            $left: now.valueOf(),
+                                            $right: now2.valueOf(),
+                                        },
                                     }
                                 };
                                 return query;
@@ -1720,10 +1725,15 @@ const AUTH_MATRIX = {
                                 const { organizationId } = checkIn;
                                 const now = new Date();
                                 now.setHours(0, 0, 0, 0);
+                                const now2 = new Date();
+                                now2.setHours(23, 59, 59, 0);
                                 const query = {
                                     userId: user.id,
                                     time: {
-                                        $gt: now.valueOf(),
+                                        $between: {
+                                            $left: now.valueOf(),
+                                            $right: now2.valueOf(),
+                                        },
                                     },
                                     category: CheckInCategory.off,
                                 };
@@ -1740,10 +1750,15 @@ const AUTH_MATRIX = {
                                 const { organizationId } = checkIn;
                                 const now = new Date();
                                 now.setHours(0, 0, 0, 0);
+                                const now2 = new Date();
+                                now2.setHours(23, 59, 59, 0);
                                 const query = {
                                     userId: user.id,
                                     time: {
-                                        $gt: now.valueOf(),
+                                        $between: {
+                                            $left: now.valueOf(),
+                                            $right: now2.valueOf(),
+                                        },
                                     },
                                     category: CheckInCategory.start,
                                 };
