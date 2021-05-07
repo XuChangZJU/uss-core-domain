@@ -525,7 +525,7 @@ const AUTH_MATRIX = {
                 {
                     "#relation": {
                         attr: 'diagnosis.organization.brand',
-                        relations: [BrandRelation.owner, BrandRelation.manager, BrandRelation.customerService],
+                        // relations: [BrandRelation.owner, BrandRelation.manager, BrandRelation.customerService],
                     },
                 }
             ],
