@@ -242,6 +242,11 @@ const AUTH_MATRIX = {
             auths: [itemCompanyRelation],
         },
     },
+    extraInfo: {
+        [commonAction.create]:AllowEveryoneAuth,
+        [commonAction.update]: AllowEveryoneAuth,
+        [commonAction.remove]: AllowEveryoneAuth,
+    }
 };
 
 const STATE_TRAN_MATRIX = {
