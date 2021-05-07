@@ -1269,7 +1269,7 @@ const AUTH_MATRIX = {
             auths: [
                 RecheckRootFn([RecheckState.active, RecheckState.confirmed]),
             ],
-        },        
+        },
         [RecheckAction.makeDead]: {
             auths: [
                 {
@@ -1670,7 +1670,7 @@ const AUTH_MATRIX = {
                 {
                     '#relation': {
                         attr: 'organization.brand',
-                        relations: [BrandRelation.owner, BrandRelation.manager, BrandRelation.customerService, BrandRelation.worker, BrandRelation.financialStuff],                    
+                        relations: [BrandRelation.owner, BrandRelation.manager, BrandRelation.customerService, BrandRelation.worker, BrandRelation.financialStuff],
                     },
                 },
                 {
@@ -2092,7 +2092,8 @@ const AUTH_MATRIX = {
         }
     },
     report: {
-        [reportAction.create]: {
+        [reportAction.create]: AllowEveryoneAuth,
+        [reportAction.update]: {
             auths: [
                 {
                     "#relation": {
@@ -2106,21 +2107,7 @@ const AUTH_MATRIX = {
                 },
             ]
         },
-        [reportAction.update]: {            
-            auths: [
-                {
-                    "#relation": {
-                        attr: 'trade.organization.brand',
-                    },
-                },
-                {
-                    "#relation": {
-                        attr: 'trade.organization',
-                    },
-                },
-            ]
-        },
-        [reportAction.remove]: {           
+        [reportAction.remove]: {
             auths: [
                 {
                     "#relation": {
