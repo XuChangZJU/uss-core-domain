@@ -77,7 +77,15 @@ const chatMessageCreator = {
 const AUTH_MATRIX = {
     company: {
         [companyAction.create]: AllowEveryoneAuth,
-        [companyAction.update]: OwnerRelationAuth,
+        [companyAction.update]: {
+            auths: [
+                {
+                    '#relation': {
+                        relations: [companyRelation.owner, companyRelation.manager, companyRelation.service, companyRelation.technician, companyRelation.preSaleService, companyRelation.postSaleService],
+                    },
+                },
+            ],
+        },
         [companyAction.remove]: OwnerRelationAuth,
         [companyAction.enable]: OwnerRelationAuth,
         [companyAction.disable]: OwnerRelationAuth,
