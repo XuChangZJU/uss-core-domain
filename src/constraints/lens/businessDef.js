@@ -1815,6 +1815,26 @@ const AUTH_MATRIX = {
                         relations: [BrandRelation.owner, BrandRelation.manager, BrandRelation.customerService, BrandRelation.worker, BrandRelation.financialStuff],
                     },
                 },
+                {
+                    "#relation": {
+                        attr: 'organization.brand',
+                        relations: [BrandRelation.seller],
+                    },
+                    '#data': [
+                        {
+                            check: ({ user, row, actionData }) => {
+                                if (actionData) {
+                                    const { checkIn } = actionData;
+                                    const checkIn2 = omit(checkIn, ['remark', 'id'])
+                                    if (Object.keys(checkIn2).length !== 0) {
+                                        return new Error('非管理人员不能修改备注以外的信息');
+                                    }
+                                }
+                                return true;
+                            },
+                        }
+                    ]
+                }
             ]
         },
         [CheckInAction.remove]: {
