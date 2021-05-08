@@ -284,7 +284,19 @@ const AUTH_MATRIX = {
                             },
                         }
                     ],
-                }
+                },
+                {
+                    '#relation': {
+                        attr: 'patient',
+                    },
+                    '#data': [                 // 表示对现有对象或者用户的数据有要求，可以有多项，每项之间是AND的关系
+                        {
+                            check: ({user, row}) => {
+                                return [TradeState.legal, TradeState.legal2].includes(row.state) && row.price > 0 && [tradeBillState.noBill, tradeBillState.pending].includes(row.billState);
+                            },
+                        }
+                    ],
+                },
             ],
         },
         [TradeAction.completeBill]: {
