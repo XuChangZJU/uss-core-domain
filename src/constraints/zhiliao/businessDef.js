@@ -51,8 +51,8 @@ const itemCompanyRelation = {
 
 const chatMessageUserSessionExists = {
     relation: 'userSession',
-    condition: ({ user, row }) => {
-        const { sessionId } = row;
+    condition: ({ user, actionData }) => {
+        const { sessionId } = actionData;
         const query = {
             userId: user.id,
             sessionId,
