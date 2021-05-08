@@ -2131,17 +2131,36 @@ const AUTH_MATRIX = {
         [reportAction.update]: {
             auths: [
                 {
-                    "#relation": {
-                        attr: 'trade.organization.brand',
-                    },
-                },
-                {
-                    "#relation": {
-                        attr: 'trade.organization',
-                    },
-                },
+                    '#exists': [
+                        {
+                            relation: 'userBrand',
+                            condition: ({user}) => {
+                                return {
+                                    userId: user.id,
+                                    relation: {
+                                        $in: [BrandRelation.owner, BrandRelation.manager, BrandRelation.customerService, BrandRelation.worker, BrandRelation.seller],
+                                    }
+                                }
+                            }
+                        },
+                    ]
+                }
             ]
         },
+        //     {
+        //     auths: [
+        //         {
+        //             "#relation": {
+        //                 attr: 'trade.organization.brand',
+        //             },
+        //         },
+        //         {
+        //             "#relation": {
+        //                 attr: 'trade.organization',
+        //             },
+        //         },
+        //     ]
+        // },
         [reportAction.remove]: {
             auths: [
                 {
