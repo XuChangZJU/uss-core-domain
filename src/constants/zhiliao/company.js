@@ -38,7 +38,8 @@ const relation = Object.assign({}, commonRelation, {
     service: 101,
     preSaleService: 102,
     postSaleService: 103,
-    technician: 104
+    technician: 104,
+    customer: 105,
 });
 
 const decodeRelation = (r) => {
@@ -47,6 +48,7 @@ const decodeRelation = (r) => {
         [relation.preSaleService]: '售前客服',
         [relation.postSaleService]: '售后客服',
         [relation.technician]: '技术人员',
+        [relation.customer]: '客户',
     };
     return R[r] || decodeCommonRelation(r);
 };

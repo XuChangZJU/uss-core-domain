@@ -284,7 +284,19 @@ const AUTH_MATRIX = {
                             },
                         }
                     ],
-                }
+                },
+                {
+                    '#relation': {
+                        attr: 'patient',
+                    },
+                    '#data': [                 // 表示对现有对象或者用户的数据有要求，可以有多项，每项之间是AND的关系
+                        {
+                            check: ({user, row}) => {
+                                return [TradeState.legal, TradeState.legal2].includes(row.state) && row.price > 0 && [tradeBillState.noBill, tradeBillState.pending].includes(row.billState);
+                            },
+                        }
+                    ],
+                },
             ],
         },
         [TradeAction.completeBill]: {
@@ -525,7 +537,7 @@ const AUTH_MATRIX = {
                 {
                     "#relation": {
                         attr: 'diagnosis.organization.brand',
-                        relations: [BrandRelation.owner, BrandRelation.manager, BrandRelation.customerService],
+                        // relations: [BrandRelation.owner, BrandRelation.manager, BrandRelation.customerService],
                     },
                 }
             ],
@@ -1269,7 +1281,7 @@ const AUTH_MATRIX = {
             auths: [
                 RecheckRootFn([RecheckState.active, RecheckState.confirmed]),
             ],
-        },        
+        },
         [RecheckAction.makeDead]: {
             auths: [
                 {
@@ -1670,7 +1682,7 @@ const AUTH_MATRIX = {
                 {
                     '#relation': {
                         attr: 'organization.brand',
-                        relations: [BrandRelation.owner, BrandRelation.manager, BrandRelation.customerService, BrandRelation.worker, BrandRelation.financialStuff],                    
+                        relations: [BrandRelation.owner, BrandRelation.manager, BrandRelation.customerService, BrandRelation.worker, BrandRelation.financialStuff],
                     },
                 },
                 {
@@ -1691,10 +1703,15 @@ const AUTH_MATRIX = {
                                 const { organizationId } = checkIn;
                                 const now = new Date();
                                 now.setHours(0, 0, 0, 0);
+                                const now2 = new Date();
+                                now2.setHours(23, 59, 59, 0);
                                 const query = {
                                     userId: user.id,
                                     time: {
-                                        $gt: now.valueOf(),
+                                        $between: {
+                                            $left: now.valueOf(),
+                                            $right: now2.valueOf(),
+                                        },
                                     }
                                 };
                                 return query;
@@ -1720,10 +1737,15 @@ const AUTH_MATRIX = {
                                 const { organizationId } = checkIn;
                                 const now = new Date();
                                 now.setHours(0, 0, 0, 0);
+                                const now2 = new Date();
+                                now2.setHours(23, 59, 59, 0);
                                 const query = {
                                     userId: user.id,
                                     time: {
-                                        $gt: now.valueOf(),
+                                        $between: {
+                                            $left: now.valueOf(),
+                                            $right: now2.valueOf(),
+                                        },
                                     },
                                     category: CheckInCategory.off,
                                 };
@@ -1740,10 +1762,15 @@ const AUTH_MATRIX = {
                                 const { organizationId } = checkIn;
                                 const now = new Date();
                                 now.setHours(0, 0, 0, 0);
+                                const now2 = new Date();
+                                now2.setHours(23, 59, 59, 0);
                                 const query = {
                                     userId: user.id,
                                     time: {
-                                        $gt: now.valueOf(),
+                                        $between: {
+                                            $left: now.valueOf(),
+                                            $right: now2.valueOf(),
+                                        },
                                     },
                                     category: CheckInCategory.start,
                                 };
@@ -1815,6 +1842,26 @@ const AUTH_MATRIX = {
                         relations: [BrandRelation.owner, BrandRelation.manager, BrandRelation.customerService, BrandRelation.worker, BrandRelation.financialStuff],
                     },
                 },
+                {
+                    "#relation": {
+                        attr: 'organization.brand',
+                        relations: [BrandRelation.seller],
+                    },
+                    '#data': [
+                        {
+                            check: ({ user, row, actionData }) => {
+                                if (actionData) {
+                                    const { checkIn } = actionData;
+                                    const checkIn2 = omit(checkIn, ['remark', 'id'])
+                                    if (Object.keys(checkIn2).length !== 0) {
+                                        return new Error('非管理人员不能修改备注以外的信息');
+                                    }
+                                }
+                                return true;
+                            },
+                        }
+                    ]
+                }
             ]
         },
         [CheckInAction.remove]: {
@@ -2092,35 +2139,41 @@ const AUTH_MATRIX = {
         }
     },
     report: {
-        [reportAction.create]: {
+        [reportAction.create]: AllowEveryoneAuth,
+        [reportAction.update]: {
             auths: [
                 {
-                    "#relation": {
-                        attr: 'trade.organization.brand',
-                    },
-                },
-                {
-                    "#relation": {
-                        attr: 'trade.organization',
-                    },
-                },
+                    '#exists': [
+                        {
+                            relation: 'userBrand',
+                            condition: ({user}) => {
+                                return {
+                                    userId: user.id,
+                                    relation: {
+                                        $in: [BrandRelation.owner, BrandRelation.manager, BrandRelation.customerService, BrandRelation.worker, BrandRelation.seller],
+                                    }
+                                }
+                            }
+                        },
+                    ]
+                }
             ]
         },
-        [reportAction.update]: {            
-            auths: [
-                {
-                    "#relation": {
-                        attr: 'trade.organization.brand',
-                    },
-                },
-                {
-                    "#relation": {
-                        attr: 'trade.organization',
-                    },
-                },
-            ]
-        },
-        [reportAction.remove]: {           
+        //     {
+        //     auths: [
+        //         {
+        //             "#relation": {
+        //                 attr: 'trade.organization.brand',
+        //             },
+        //         },
+        //         {
+        //             "#relation": {
+        //                 attr: 'trade.organization',
+        //             },
+        //         },
+        //     ]
+        // },
+        [reportAction.remove]: {
             auths: [
                 {
                     "#relation": {
