@@ -4,8 +4,7 @@
 const type = {
     // diagnosis
     bindDiagnosis: 1,
-    createOKGlassCheck: 2,
-    appointment: 3,
+    appointment: 2,
 };
 
 
