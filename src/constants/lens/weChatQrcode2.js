@@ -11,7 +11,6 @@ const type = {
 const decodeType = (t) => {
     const TEXT = {
         [type.bindDiagnosis]: '顾客绑定业务',
-        [type.createOKGlassCheck]: '顾客登记角膜塑形镜检查',
         [type.appointment]: '预约',
     };
 
