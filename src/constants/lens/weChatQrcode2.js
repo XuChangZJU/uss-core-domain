@@ -3,8 +3,8 @@
  */
 const type = {
     // diagnosis
-    bindDiagnosis: 1,
-    appointment: 2,
+    bindDiagnosis: '1',
+    appointment: '2',
 };
 
 
