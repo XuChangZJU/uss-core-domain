@@ -87,7 +87,7 @@ const getActionStateAttr = (action) => {
 const decodeTransportState = (ts) => {
     const TS = {
         [transportState.wdd]: '未到店',
-        [transportState.dqj]: '待取件（到店）',
+        [transportState.dqj]: '已到店',
         [transportState.dgkqr]: '待顾客确认',
         [transportState.yqj]: '已取件',
         [transportState.yth]: '已退货',
