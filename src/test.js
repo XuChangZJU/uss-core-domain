@@ -1,25 +1,46 @@
+const Ajv = require('ajv');
+const ajv = new Ajv();
 
-const s = `
-return class A {
-    constructor(a, b) {
-        this.a = a;
-        this.b = b;
-    }
-
-    add() {
-        const assign = require('lodash/assign');
-        return this.a + this.b;
-    }
+const schema = {
+    type: 'object',
+    properties: {
+        id: {
+            type: 'integer',
+            minimum: 1,
+        },
+        price: {
+            type: 'object',
+            properties: {
+                currency: {
+                    type: 'string',
+                    enum: [
+                        'cny',
+                        'dollor',
+                        'jpy',
+                    ],
+                },
+                amount: {
+                    'type': 'number',
+                    'multipleOf': 0.1,
+                    'maximum': 18,
+                },
+            },
+        },
+    },
+    required: ['id', 'price'],
+    additionalProperties: false,
 };
-`;
 
-const f = new Function('require', s);
+const data = {
+    id: 6,
+    price: {
+        currency: 'cny',
+        amount: 12,
+    },
+    aaa: 123,
+};
 
-/* const ff = new f(2, 3);
-
-console.log(ff.add()); */
-console.log(f(require));
-
-const clazz = f(require);
-const ff = new clazz(2, 3);
-console.log(ff.add());
+const start = Date.now();
+const valid = ajv.validate(schema, data);
+if (!valid) console.log(ajv.errors);
+console.log(`cost ${Date.now() - start} ms`);
