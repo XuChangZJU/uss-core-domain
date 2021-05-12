@@ -1488,12 +1488,45 @@ const AUTH_MATRIX = {
                 }
             ]
         },
+        [ServiceCompanyAction.authConfirm]: {
+            auths: [
+                {
+                    '#unexists': [
+                        {
+                            relation: 'userLgServiceCompany',
+                            condition: ({ actionData }) => {
+                                const { userLgServiceCompany } = actionData;
+                                const { userId } = userLgServiceCompany;
+                                const query = {
+                                    userId,
+                                };
+                                return query;
+                            },
+                            message: '您已经与某公司存在关系，无法重复领取',
+                        },
+                    ]
+                }
+            ]
+        },
         [ServiceCompanyAction.assign]: {
             auths: [
                 {
                     "#relation": {
                         relations: [ServiceCompanyRelation.owner, ServiceCompanyRelation.manager],
                     },
+                    '#unexists': [
+                        {
+                            relation: 'lgUserServiceCompany',
+                            condition: ({ actionData }) => {
+                                const { userId } = actionData;
+                                const query = {
+                                    userId,
+                                };
+                                return query;
+                            },
+                            message: '该用户已经与某公司存在关系，无法重复授权',
+                        },
+                    ]
                 }
             ]
         },
