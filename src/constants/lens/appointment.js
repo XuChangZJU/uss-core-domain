@@ -1,6 +1,6 @@
 const {
-    relation,
-    decodeRelation,
+    relation: commonRelation,
+    decodeRelation: decodeCommonRelation,
     action: commonAction,
     decodeAction: decodeCommonAction,
     state: commonState,
@@ -87,6 +87,19 @@ const STATE_TRANS_MATRIX = {
     [action.makeLate]: [[state.normal, state.late], state.late],
     [action.makeAbsent]: [[state.normal, state.late], state.absent],
 };
+
+const relation = Object.assign(
+    {},  commonRelation, {
+        doctor: 401,
+    }
+)
+
+const decodeRelation = (r) => {
+    const R = {
+        [relation.doctor]: '医生',
+    }
+    return decodeCommonRelation(r) || R[r];
+}
 
 module.exports = {
     relation,
