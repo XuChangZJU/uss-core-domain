@@ -1,9 +1,13 @@
 const { Roles } = require('../../constants/roleConstant2');
 const ErrorCode = require('../../constants/errorCode');
+const { action: CommonAction } = require('../../constants/action');
 const {
     AllowEveryoneAuth,
     OwnerRelationAuth,
     AnyRelationAuth,
+    checkActionDataSchema,
+    checkRowState,
+    makeCheckDataConditionFn,
 } = require('../action');
 const {
     action: ShopSpeciesAction,
@@ -78,7 +82,7 @@ const {
 
 const {
     action: ServiceCompanyAction,
-    relation: ServiceCompanyRelation
+    relation: ServiceCompanyRelation,
 } = require('../../constants/lg/serviceCompany');
 
 const {
@@ -125,6 +129,12 @@ const {
     action: TradeSkuItemShopRefundAction,
     state: TradeSkuItemShopRefundState,
 } = require('../../constants/lg/tradeSkuItemShopRefund');
+
+const {
+    action: ShareAction,
+    state: ShareState,
+} = require('../../constants/lg/share');
+
 
 const tradeRefundDataCheck = (states) => {
     return [
@@ -1478,12 +1488,45 @@ const AUTH_MATRIX = {
                 }
             ]
         },
+        [ServiceCompanyAction.authConfirm]: {
+            auths: [
+                {
+                    '#unexists': [
+                        {
+                            relation: 'userLgServiceCompany',
+                            condition: ({ actionData }) => {
+                                const { userLgServiceCompany } = actionData;
+                                const { userId } = userLgServiceCompany;
+                                const query = {
+                                    userId,
+                                };
+                                return query;
+                            },
+                            message: '您已经与某公司存在关系，无法重复领取',
+                        },
+                    ]
+                }
+            ]
+        },
         [ServiceCompanyAction.assign]: {
             auths: [
                 {
                     "#relation": {
                         relations: [ServiceCompanyRelation.owner, ServiceCompanyRelation.manager],
                     },
+                    '#unexists': [
+                        {
+                            relation: 'lgUserServiceCompany',
+                            condition: ({ actionData }) => {
+                                const { userId } = actionData;
+                                const query = {
+                                    userId,
+                                };
+                                return query;
+                            },
+                            message: '该用户已经与某公司存在关系，无法重复授权',
+                        },
+                    ]
                 }
             ]
         },
@@ -1867,7 +1910,136 @@ const AUTH_MATRIX = {
                 }
             ]
         }
-    }
+    },
+    lgShare: {
+        [ShareAction.create]: {
+            auths: [
+                {
+                    '#role': [Roles.ROOT.name],
+                },
+            ],
+        },
+        [ShareAction.remove]: {
+            auths: [
+                {
+                    '#role': [Roles.ROOT.name],
+                },
+            ],
+        },
+        [ShareAction.shareManually]: {
+            auths: [
+                {
+                    '#role': [Roles.ROOT.name],
+                },
+            ],
+        },
+    },
+    lgShareAccount: {
+        [CommonAction.create]: {
+            auths: [
+                {
+                    '#role': [Roles.ROOT.name],
+                },
+            ],
+        },
+        [CommonAction.remove]: {
+            auths: [
+                {
+                    '#role': [Roles.ROOT.name],
+                },
+            ],
+        },
+        [CommonAction.update]: {
+            auths: [
+                {
+                    '#or': [
+                        {
+                            '#role': [Roles.ROOT.name],
+                        },
+                        {
+                             '#relation': {
+                                 attr: 'lgServiceCompany',
+                                 relation: [ServiceCompanyRelation.owner, ServiceCompanyRelation.manager],
+                             },
+                        }
+                    ],
+                    // 只允许更新帐户信息
+                    '#data': [
+                        {
+                            check: checkActionDataSchema({
+                                type: 'object',
+                                properties: {
+                                    lgShareAccount: {
+                                        type: 'object',
+                                        properties: {
+                                            id: {
+                                                type: 'integer',
+                                                minimum: 1,
+                                            },
+                                            accountInfo: {
+                                                type: 'object',
+                                                properties: {
+                                                    channel: {
+                                                        type: 'string',
+                                                    },
+                                                    accountName: {
+                                                        type: 'string',
+                                                    },
+                                                    accountNumber: {
+                                                        type: 'string',
+                                                    },
+                                                    name: {
+                                                        type: 'string',
+                                                    },
+                                                },
+                                                required: ['channel', 'accountName'],
+                                            },
+                                        },
+                                        additionalProperties: false,
+                                        required: ['id', 'accountInfo'],
+                                    },
+                                },
+                                additionalProperties: false,
+                                required: ['lgShareAccount'],
+                            }),
+                        }
+                    ],
+                },
+            ],
+        },
+    },
+    lgSharePay: {
+        [CommonAction.create]: {
+            auths: [
+                {
+                    '#role': [Roles.ROOT.name],
+                },
+            ],
+        },
+        [CommonAction.remove]: {
+            auths: [
+                {
+                    '#role': [Roles.ROOT.name],
+                },
+            ],
+        },
+    },
+    lgShareReturn: {
+        [CommonAction.create]: {
+            auths: [
+                {
+                    '#role': [Roles.ROOT.name],
+                },
+            ],
+        },
+        [CommonAction.remove]: {
+            auths: [
+                {
+                    '#role': [Roles.ROOT.name],
+                },
+            ],
+        },
+    },
 };
 
 const STATE_TRAN_MATRIX = {

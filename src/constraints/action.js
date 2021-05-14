@@ -2,7 +2,7 @@
  * Created by Administrator on 2018/8/31.
  * 本文件定义是公共有支付对象的状态变化矩阵
  */
-
+const ErrorCode = require('../constants/errorCode');
 const { Roles } = require('../constants/roleConstant2');
 const { state: State, relation: Relation } = require('../constants/action');
 
@@ -46,6 +46,57 @@ const OwnerRelationAuth = {
     relation: [Relation.owner],
 };
 
+
+const Ajv = require('ajv');
+const ajv = new Ajv();
+/**
+ * 检查动作后项中actionData的schema
+ * @param {*} schema jsonSchema对传入数据的描述
+ */
+const checkActionDataSchema = (schema) => {
+    return ({ actionData }) => {
+        const valid = ajv.validate(schema, actionData);
+        if (!valid) {
+            return ajv.errors[0]; 
+        }
+        return true;
+    };
+};
+
+const checkRowState = (states, entity, msg) => {
+    return ({ row }) => {
+        const { state } = row;
+        if (!states.includes(state)) {
+            return ErrorCode.createErrorByCode(ErrorCode.errorDataInconsistency, msg, {
+                name: entity,
+                operation: 'update',
+                data: row,
+            });
+        }
+        return true;
+    };
+};
+
+/**
+ * 多个检查data的条件合并成为一个
+ * @param {*} conditions 
+ */
+const makeCheckDataConditionFn = (conditions) => {
+    return () => {
+        let r = true;
+        for (let condition of conditions) {
+            const result = condition.apply(null, arguments);
+            if (result instanceof Error) {
+                return result;
+            }
+            else if (result === false && r === true) {
+                r = false;
+            }
+        }
+        return r;
+    };
+};
+
 module.exports = {
     StateTransformMatrixForPaid,
     StateTransformMatrixForGrant,
@@ -53,4 +104,8 @@ module.exports = {
     AllowEveryoneAuth,
     OwnerRelationAuth,
     AnyRelationAuth,
+
+    checkActionDataSchema,
+    checkRowState,
+    makeCheckDataConditionFn,
 };
