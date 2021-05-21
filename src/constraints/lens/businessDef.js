@@ -1073,7 +1073,39 @@ const AUTH_MATRIX = {
         }
     },
     patient: {
-        [PatientAction.create]: AllowEveryoneAuth,
+        [PatientAction.create]: {
+            auths: [
+                {
+                    '#unexists': [
+                        {
+                            relation: 'patient',
+                            needData: true,
+                            condition: ({user, actionData}) => {
+                                if (!actionData) {
+                                    return {};
+                                }
+                                const query = {};
+                                if (actionData.name) {
+                                    assign(
+                                        query, {
+                                            name: actionData.name,
+                                        }
+                                    );
+                                }
+                                if (actionData.mobile) {
+                                    assign(
+                                        query, {
+                                            mobile: actionData.mobile,
+                                        }
+                                    )
+                                }
+                                return query;
+                            },
+                        },
+                    ],
+                },
+            ],
+        },
         [PatientAction.update]: {
             auths: [
                 {
