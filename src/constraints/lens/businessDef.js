@@ -2118,11 +2118,9 @@ const AUTH_MATRIX = {
                         {
                             relation: 'userBrand',
                             needData: true,
-                            condition: ({ actionData, user }) => {
-                                const { activity } = actionData;
+                            condition: ({ user }) => {
                                 const query = {
                                     userId: user.id,
-                                    brandId: activity.brandId,
                                 };
                                 return query;
                             },
