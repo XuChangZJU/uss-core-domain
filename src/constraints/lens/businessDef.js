@@ -1082,7 +1082,9 @@ const AUTH_MATRIX = {
                             needData: true,
                             condition: ({user, actionData}) => {
                                 if (!actionData) {
-                                    return {};
+                                    return {
+                                        id: -1,
+                                    };
                                 }
                                 const query = {};
                                 if (actionData.name) {
