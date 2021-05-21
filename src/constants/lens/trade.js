@@ -173,11 +173,12 @@ const categoryId = {
     'TrainingCheck': 11,
     'Service': 12,
     'Gift': 13,
-    '`OkGlassRecheck`': 14,
+    'OkGlassRecheck': 14,
     'CareLiquid': 15,
     'Food': 16,
     'OkGlassFetch': 17,
-    'Compensation': 18,
+    'screening': 18,
+    'Compensation': 19,
 }
 const decodeCategoryId = (c) => {
     const C = {
@@ -198,6 +199,7 @@ const decodeCategoryId = (c) => {
         [categoryId.CareLiquid]: '护理液',
         [categoryId.Food]: '眼保健食品',
         [categoryId.OkGlassFetch]: '角膜塑形镜取镜',
+        [categoryId.screening]: '筛查',
         [categoryId.Compensation]: '补件',
     }
     return C[c];
