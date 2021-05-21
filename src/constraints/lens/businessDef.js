@@ -2060,11 +2060,7 @@ const AUTH_MATRIX = {
         },
         [appointmentAction.allocWeChatQrCode]: {
             auths: [
-                {
-                    "#relation": {
-                        attr: 'organization.brand',
-                    },
-                }
+                AppointmentBrandUserFn([appointmentState.normal], false, true, false),
             ],
         },
     },
