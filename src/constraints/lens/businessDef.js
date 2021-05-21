@@ -7,6 +7,7 @@
 const assert = require('assert');
 const omit = require('lodash/omit');
 const xor = require('lodash/xor');
+const assign = require('lodash/assign');
 const {
     action: CommonAction,
 } = require('../../constants/action');
@@ -187,14 +188,14 @@ const OrganizationManagement = {
     ],
 };
 
-const AppointmentBrandUserFn = (states, hasPatientId, hasNotPatientId) => (
-    {
+const AppointmentBrandUserFn = (states, hasPatientId, hasNotPatientId, needCheckIn) => {
+    const auth = {
         "#relation": {
             attr: 'organization.brand',
         },
         '#data': [
             {
-                check: ({ row }) => {
+                check: ({ row, user }) => {
                     if (!states.includes(row.state) || hasPatientId === true && !row.patientId
                         || hasNotPatientId === true && row.patientId) {
                         return ErrorCode.createErrorByCode(ErrorCode.errorDataInconsistency, '预约无效', {
@@ -207,8 +208,32 @@ const AppointmentBrandUserFn = (states, hasPatientId, hasNotPatientId) => (
                 },
             }
         ]
-    }
-);
+    };
+    if (needCheckIn) {
+        assign(
+            auth, {
+                "exists": [
+                    {
+                        relation: 'checkIn',
+                        condition: ({ user, row }) => {
+                            return {
+                                userId: user.id,
+                                organizationId: row.organizationId,
+                                time: {
+                                    $between: {
+                                        $left: new Date().setHours(0, 0),
+                                        $right: new Date().setHours(23, 59),
+                                    }
+                                }
+                            }
+                        }
+                    }
+                ],
+            }
+        )
+    };
+    return auth;
+}
 
 const RecheckRootFn = (states, msg) => {
     const auth = {
@@ -284,7 +309,19 @@ const AUTH_MATRIX = {
                             },
                         }
                     ],
-                }
+                },
+                {
+                    '#relation': {
+                        attr: 'patient',
+                    },
+                    '#data': [                 // 表示对现有对象或者用户的数据有要求，可以有多项，每项之间是AND的关系
+                        {
+                            check: ({user, row}) => {
+                                return [TradeState.legal, TradeState.legal2].includes(row.state) && row.price > 0 && [tradeBillState.noBill, tradeBillState.pending].includes(row.billState);
+                            },
+                        }
+                    ],
+                },
             ],
         },
         [TradeAction.completeBill]: {
@@ -525,7 +562,7 @@ const AUTH_MATRIX = {
                 {
                     "#relation": {
                         attr: 'diagnosis.organization.brand',
-                        relations: [BrandRelation.owner, BrandRelation.manager, BrandRelation.customerService],
+                        // relations: [BrandRelation.owner, BrandRelation.manager, BrandRelation.customerService],
                     },
                 }
             ],
@@ -583,13 +620,6 @@ const AUTH_MATRIX = {
                     "#relation": {
                         attr: 'diagnosis.organization.brand',
                     },
-                    // '#data': [                 // 表示对现有对象或者用户的数据有要求，可以有多项，每项之间是AND的关系
-                    //     {
-                    //         check: ({user, row}) => {
-                    //             return [TradeTransportState.wdd, TradeTransportState.dqj, TradeTransportState.yqj].includes(row.transportState);
-                    //         },
-                    //     }
-                    // ],
                 },
                 {
                     '#relation': {
@@ -663,7 +693,7 @@ const AUTH_MATRIX = {
                     '#data': [                 // 表示对现有对象或者用户的数据有要求，可以有多项，每项之间是AND的关系
                         {
                             check: ({user, row}) => {
-                                return [TradeTransportState.dqj].includes(row.transportState) && row.getMethodId === TradeGetMethodId.helpYourself && [TradeState.legal, TradeState.legal2].includes(row.state);
+                                return [TradeTransportState.dqj].includes(row.transportState) && row.getMethodId === TradeGetMethodId.HelpYourself && [TradeState.legal, TradeState.legal2].includes(row.state);
                             },
                         }
                     ],
@@ -675,7 +705,7 @@ const AUTH_MATRIX = {
                     '#data': [                 // 表示对现有对象或者用户的数据有要求，可以有多项，每项之间是AND的关系
                         {
                             check: ({user, row}) => {
-                                return [TradeTransportState.dqj].includes(row.transportState) && row.getMethodId === TradeGetMethodId.helpYourself && [TradeState.legal, TradeState.legal2].includes(row.state);
+                                return [TradeTransportState.dqj].includes(row.transportState) && row.getMethodId === TradeGetMethodId.HelpYourself && [TradeState.legal, TradeState.legal2].includes(row.state);
                             },
                         }
                     ],
@@ -848,7 +878,7 @@ const AUTH_MATRIX = {
                     '#data': [                 // 表示对现有对象或者用户的数据有要求，可以有多项，每项之间是AND的关系
                         {
                             check: ({user, row}) => {
-                                return [TradeTransportState.dgkqr].includes(row.transportState) && row.getMethodId === TradeGetMethodId.helpYourself && [TradeState.legal, TradeState.legal2].includes(row.state);
+                                return [TradeTransportState.dgkqr].includes(row.transportState) && row.getMethodId === TradeGetMethodId.HelpYourself && [TradeState.legal, TradeState.legal2].includes(row.state);
                             },
                         }
                     ],
@@ -860,7 +890,7 @@ const AUTH_MATRIX = {
                     '#data': [                 // 表示对现有对象或者用户的数据有要求，可以有多项，每项之间是AND的关系
                         {
                             check: ({user, row}) => {
-                                return [TradeTransportState.dgkqr].includes(row.transportState) && row.getMethodId === TradeGetMethodId.helpYourself && [TradeState.legal, TradeState.legal2].includes(row.state);
+                                return [TradeTransportState.dgkqr].includes(row.transportState) && row.getMethodId === TradeGetMethodId.HelpYourself && [TradeState.legal, TradeState.legal2].includes(row.state);
                             },
                         }
                     ],
@@ -992,6 +1022,9 @@ const AUTH_MATRIX = {
         [BrandAction.authRevoke]: {
             auths: [
                 {
+                    "#role": [Roles.ROOT.name],
+                },
+                {
                     '#exists': [
                         {
                             relation: 'userBrand',
@@ -1051,14 +1084,6 @@ const AUTH_MATRIX = {
                 },
                 {
                     '#exists': [
-                        // {
-                        //     relation: 'userOrganization',
-                        //     condition: ({user, row}) => {
-                        //         return {
-                        //             userId: user.id,
-                        //         }
-                        //     },
-                        // },
                         {
                             relation: 'userBrand',
                             condition: ({user, row}) => {
@@ -1269,7 +1294,7 @@ const AUTH_MATRIX = {
             auths: [
                 RecheckRootFn([RecheckState.active, RecheckState.confirmed]),
             ],
-        },        
+        },
         [RecheckAction.makeDead]: {
             auths: [
                 {
@@ -1670,7 +1695,7 @@ const AUTH_MATRIX = {
                 {
                     '#relation': {
                         attr: 'organization.brand',
-                        relations: [BrandRelation.owner, BrandRelation.manager, BrandRelation.customerService, BrandRelation.worker, BrandRelation.financialStuff],                    
+                        relations: [BrandRelation.owner, BrandRelation.manager, BrandRelation.customerService, BrandRelation.worker, BrandRelation.financialStuff],
                     },
                 },
                 {
@@ -1691,10 +1716,15 @@ const AUTH_MATRIX = {
                                 const { organizationId } = checkIn;
                                 const now = new Date();
                                 now.setHours(0, 0, 0, 0);
+                                const now2 = new Date();
+                                now2.setHours(23, 59, 59, 0);
                                 const query = {
                                     userId: user.id,
                                     time: {
-                                        $gt: now.valueOf(),
+                                        $between: {
+                                            $left: now.valueOf(),
+                                            $right: now2.valueOf(),
+                                        },
                                     }
                                 };
                                 return query;
@@ -1720,10 +1750,15 @@ const AUTH_MATRIX = {
                                 const { organizationId } = checkIn;
                                 const now = new Date();
                                 now.setHours(0, 0, 0, 0);
+                                const now2 = new Date();
+                                now2.setHours(23, 59, 59, 0);
                                 const query = {
                                     userId: user.id,
                                     time: {
-                                        $gt: now.valueOf(),
+                                        $between: {
+                                            $left: now.valueOf(),
+                                            $right: now2.valueOf(),
+                                        },
                                     },
                                     category: CheckInCategory.off,
                                 };
@@ -1740,10 +1775,15 @@ const AUTH_MATRIX = {
                                 const { organizationId } = checkIn;
                                 const now = new Date();
                                 now.setHours(0, 0, 0, 0);
+                                const now2 = new Date();
+                                now2.setHours(23, 59, 59, 0);
                                 const query = {
                                     userId: user.id,
                                     time: {
-                                        $gt: now.valueOf(),
+                                        $between: {
+                                            $left: now.valueOf(),
+                                            $right: now2.valueOf(),
+                                        },
                                     },
                                     category: CheckInCategory.start,
                                 };
@@ -1751,59 +1791,62 @@ const AUTH_MATRIX = {
                             },
                         },
                     ],
-                    '#or': {
-                        message: '还有未完成的检查预约，请确认顾客不会到场后再下班',
-                        auth: [
-                            {
-                                // 要么此员工不是最后一个打卡下班的
-                                '#exists': [
-                                    {
-                                        relation: 'checkIn',
-                                        condition: ({ user, actionData }) => {
-                                            const { checkIn } = actionData;
-                                            const { organizationId } = checkIn;
-                                            const startOfDay = new Date();
-                                            startOfDay.setHours(0, 0, 0, 0);
-                                            const query = {
-                                                userId: {
-                                                    $ne: user.id
-                                                },
-                                                time: {
-                                                    $gt: startOfDay.valueOf(),
-                                                },
-                                                organizationId,
-                                                workingTime: {
-                                                    $exists: false,     // 这个域用来表示是否打卡下班（见getWorkingTime函数）
-                                                },
-                                                category: CheckInCategory.start,
-                                            };
-                                            return query;
+                    '#or': [
+                        {
+                            message: '还有未录入的检查预约，请将预约全部录入后再打卡下班',
+                            auth: [
+                                {
+                                    // 不存在此员工确认到店但没有录入数据的appointment
+                                    '#unexists': [
+                                        {
+                                            relation: 'userAppointmentAction',
+                                            condition: ({ user, actionData }) => {
+                                                const { checkIn } = actionData;
+                                                const { organizationId } = checkIn;
+                                                const startOfDay = new Date();
+                                                startOfDay.setHours(0, 0, 0, 0);
+                                                const query = {
+                                                    operatorId: user.id,
+                                                    action: appointmentAction.regist,
+                                                    appointment: {
+                                                        trade: {
+                                                            transportState: {
+                                                                $in: [TradeTransportState.checkInQueue],
+                                                            },
+                                                        },
+                                                        day: startOfDay,
+                                                    },
+                                                };
+                                                return query;
+                                            }
                                         }
-                                    }
-                                ],
-                            },
-                            {
-                                // 要么不存在还未进行的预约
-                                '#unexists': [
-                                    {
-                                        relation: 'appointment',
-                                        condition: ({ user, actionData }) => {
-                                            const { checkIn } = actionData;
-                                            const { organizationId } = checkIn;
-                                            const startOfDay = new Date();
-                                            startOfDay.setHours(0, 0, 0, 0);
-                                            const query = {
-                                                day: startOfDay,
-                                                organizationId,
-                                                state: appointmentState.normal,
-                                            };
-                                            return query;
+                                    ],
+                                },
+                                {
+                                    // 当天该工作人员没有确认到店
+                                    '#unexists': [
+                                        {
+                                            relation: 'userAppointmentAction',
+                                            condition: ({ user, actionData }) => {
+                                                const { checkIn } = actionData;
+                                                const { organizationId } = checkIn;
+                                                const startOfDay = new Date();
+                                                startOfDay.setHours(0, 0, 0, 0);
+                                                const query = {
+                                                    operatorId: user.id,
+                                                    action: appointmentAction.regist,
+                                                    appointment: {
+                                                        day: startOfDay,
+                                                    },
+                                                };
+                                                return query;
+                                            }
                                         }
-                                    }
-                                ]
-                            }
-                        ],
-                    }
+                                    ]
+                                }
+                            ],
+                        }
+                     ],
                 },
             ]
         },
@@ -1815,6 +1858,26 @@ const AUTH_MATRIX = {
                         relations: [BrandRelation.owner, BrandRelation.manager, BrandRelation.customerService, BrandRelation.worker, BrandRelation.financialStuff],
                     },
                 },
+                {
+                    "#relation": {
+                        attr: 'organization.brand',
+                        relations: [BrandRelation.seller],
+                    },
+                    '#data': [
+                        {
+                            check: ({ user, row, actionData }) => {
+                                if (actionData) {
+                                    const { checkIn } = actionData;
+                                    const checkIn2 = omit(checkIn, ['remark', 'id'])
+                                    if (Object.keys(checkIn2).length !== 0) {
+                                        return new Error('非管理人员不能修改备注以外的信息');
+                                    }
+                                }
+                                return true;
+                            },
+                        }
+                    ]
+                }
             ]
         },
         [CheckInAction.remove]: {
@@ -1945,9 +2008,13 @@ const AUTH_MATRIX = {
                 },
             ],
         },
+        [appointmentAction.remove]: {
+            auths: [
+                AppointmentBrandUserFn([appointmentState.normal, appointmentState.cancelled], false, true, false),
+            ],
+        },
         [appointmentAction.cancel]: {
             auths: [
-                AppointmentBrandUserFn([appointmentState.normal]),
                 {
                     "#relation": {
                         attr: 'patient',
@@ -1971,7 +2038,7 @@ const AUTH_MATRIX = {
         },
         [appointmentAction.regist]: {
             auths: [
-                AppointmentBrandUserFn([appointmentState.normal, appointmentState.late], true),
+                AppointmentBrandUserFn([appointmentState.normal, appointmentState.late], true, false, true),
             ],
         },
         [appointmentAction.checkEnd]: {
@@ -1983,12 +2050,12 @@ const AUTH_MATRIX = {
         },
         [appointmentAction.makeLate]: {
             auths: [
-                AppointmentBrandUserFn([appointmentState.normal], true),
+                AppointmentBrandUserFn([appointmentState.normal, appointmentState.late], true, false, true),
             ],
         },
         [appointmentAction.makeAbsent]: {
             auths: [
-                AppointmentBrandUserFn([appointmentState.normal, appointmentState.late], true),
+                AppointmentBrandUserFn([appointmentState.normal, appointmentState.late], true, false, true),
             ],
         },
         [appointmentAction.allocWeChatQrCode]: {
@@ -2088,7 +2155,8 @@ const AUTH_MATRIX = {
         }
     },
     report: {
-        [reportAction.create]: {
+        [reportAction.create]: AllowEveryoneAuth,
+        [reportAction.update]: {
             auths: [
                 {
                     '#exists': [
@@ -2097,6 +2165,9 @@ const AUTH_MATRIX = {
                             condition: ({user}) => {
                                 return {
                                     userId: user.id,
+                                    relation: {
+                                        $in: [BrandRelation.owner, BrandRelation.manager, BrandRelation.customerService, BrandRelation.worker, BrandRelation.seller],
+                                    }
                                 }
                             }
                         },
@@ -2104,87 +2175,33 @@ const AUTH_MATRIX = {
                 }
             ]
         },
-        [reportAction.update]: {
-            auths: [
-                {
-                    "#exists": [
-                        {
-                            relation: 'userBrand',
-                            condition: ({ user, row }) => {
-                                return {
-                                    userId: user.id,
-                                    brandId: {
-                                        $in: {
-                                            name: 'organization',
-                                            query: {
-                                                id: {
-                                                    $in: {
-                                                        name: 'diagnosis',
-                                                        query: {
-                                                            id: {
-                                                                $in: {
-                                                                    name: 'trade',
-                                                                    query: {
-                                                                        reportId: row.id,
-                                                                    },
-                                                                    projection: 'diagnosisId',
-                                                                }
-                                                            }
-                                                        },
-                                                        projection: 'organizationId',
-                                                    }
-                                                }
-                                            },
-                                            projection: 'brandId',
-                                        },
-                                    },
-                                }
-                            }
-                        },
-                    ]
-                },
-            ],
-        },
+        //     {
+        //     auths: [
+        //         {
+        //             "#relation": {
+        //                 attr: 'trade.organization.brand',
+        //             },
+        //         },
+        //         {
+        //             "#relation": {
+        //                 attr: 'trade.organization',
+        //             },
+        //         },
+        //     ]
+        // },
         [reportAction.remove]: {
             auths: [
                 {
-                    "#exists": [
-                        {
-                            relation: 'userBrand',
-                            condition: ({ user, row }) => {
-                                return {
-                                    userId: user.id,
-                                    brandId: {
-                                        $in: {
-                                            name: 'organization',
-                                            query: {
-                                                id: {
-                                                    $in: {
-                                                        name: 'diagnosis',
-                                                        query: {
-                                                            id: {
-                                                                $in: {
-                                                                    name: 'trade',
-                                                                    query: {
-                                                                        reportId: row.id,
-                                                                    },
-                                                                    projection: 'diagnosisId',
-                                                                }
-                                                            }
-                                                        },
-                                                        projection: 'organizationId',
-                                                    }
-                                                }
-                                            },
-                                            projection: 'brandId',
-                                        },
-                                    },
-                                }
-                            }
-                        },
-                    ]
+                    "#relation": {
+                        attr: 'trade.organization.brand',
+                    },
                 },
-            ],
+                {
+                    "#relation": {
+                        attr: 'trade.organization',
+                    },
+                },
+            ]
         }
     },
     question: {
@@ -2392,6 +2409,13 @@ const AUTH_MATRIX = {
                             }
                         }
                     ],
+                    '#data': [
+                        {
+                            check: ({ user, row }) => {
+                                return  row.state === screeningState.ongoing;
+                            },
+                        }
+                    ]
                 },
             ],
         },

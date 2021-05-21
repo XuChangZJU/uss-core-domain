@@ -51,11 +51,12 @@ const itemCompanyRelation = {
 
 const chatMessageUserSessionExists = {
     relation: 'userSession',
-    condition: ({ user, row }) => {
-        const { sessionId } = row;
+    condition: ({ user, actionData }) => {
+        const { chatMessage } = actionData;
+
         const query = {
             userId: user.id,
-            sessionId,
+            sessionId: chatMessage.sessionId,
         };
         return query;
     },
@@ -77,10 +78,27 @@ const chatMessageCreator = {
 const AUTH_MATRIX = {
     company: {
         [companyAction.create]: AllowEveryoneAuth,
-        [companyAction.update]: OwnerRelationAuth,
+        [companyAction.update]: {
+            auths: [
+                {
+                    '#relation': {
+                        relations: [companyRelation.owner, companyRelation.manager, companyRelation.service, companyRelation.technician, companyRelation.preSaleService, companyRelation.postSaleService],
+                    },
+                },
+            ],
+        },
         [companyAction.remove]: OwnerRelationAuth,
         [companyAction.enable]: OwnerRelationAuth,
         [companyAction.disable]: OwnerRelationAuth,
+        [companyAction.authRevoke]: {
+            auths: [
+                {
+                    '#relation': {
+                        relations: [companyRelation.owner, companyRelation.manager, companyRelation.service, companyRelation.technician, companyRelation.preSaleService, companyRelation.postSaleService],
+                    },
+                },
+            ],
+        },
     },
     subscribedService: {
         [subscribedServiceAction.create]: {
@@ -234,6 +252,11 @@ const AUTH_MATRIX = {
             auths: [itemCompanyRelation],
         },
     },
+    extraInfo: {
+        [commonAction.create]:AllowEveryoneAuth,
+        [commonAction.update]: AllowEveryoneAuth,
+        [commonAction.remove]: AllowEveryoneAuth,
+    }
 };
 
 const STATE_TRAN_MATRIX = {
