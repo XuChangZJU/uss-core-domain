@@ -196,8 +196,8 @@ const AppointmentBrandUserFn = (states, hasPatientId, hasNotPatientId, needCheck
         '#data': [
             {
                 check: ({ row, user }) => {
-                    if (!states.includes(row.state) || hasPatientId === true && !row.patientId
-                        || hasNotPatientId === true && row.patientId) {
+                    if (!states.includes(row.state) || (hasPatientId === true && !row.patientId)
+                        || (hasNotPatientId === true && row.patientId)) {
                         return ErrorCode.createErrorByCode(ErrorCode.errorDataInconsistency, '预约无效', {
                             name: 'appointment',
                             operation: 'update',
@@ -2092,13 +2092,27 @@ const AUTH_MATRIX = {
         },
         [appointmentAction.allocWeChatQrCode]: {
             auths: [
-                AppointmentBrandUserFn([appointmentState.normal], false, true, false),
+                AppointmentBrandUserFn([appointmentState.normal, appointmentState.late], false, true, false),
             ],
         },
     },
     activity: {
         [activityAction.create]: {
             auths: [
+                {
+                    '#exists': [
+                        {
+                            relation: 'userRole',
+                            needData: true,
+                            condition: ({ user }) => {
+                                const query = {
+                                    userId: user.id,
+                                };
+                                return query;
+                            },
+                        },
+                    ],
+                },
                 {
                     '#exists': [
                         {
