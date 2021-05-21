@@ -7,6 +7,7 @@
 const assert = require('assert');
 const omit = require('lodash/omit');
 const xor = require('lodash/xor');
+const assign = require('lodash/assign');
 const {
     action: CommonAction,
 } = require('../../constants/action');
@@ -187,14 +188,14 @@ const OrganizationManagement = {
     ],
 };
 
-const AppointmentBrandUserFn = (states, hasPatientId, hasNotPatientId) => (
-    {
+const AppointmentBrandUserFn = (states, hasPatientId, hasNotPatientId, needCheckIn) => {
+    const auth = {
         "#relation": {
             attr: 'organization.brand',
         },
         '#data': [
             {
-                check: ({ row }) => {
+                check: ({ row, user }) => {
                     if (!states.includes(row.state) || hasPatientId === true && !row.patientId
                         || hasNotPatientId === true && row.patientId) {
                         return ErrorCode.createErrorByCode(ErrorCode.errorDataInconsistency, '预约无效', {
@@ -207,8 +208,32 @@ const AppointmentBrandUserFn = (states, hasPatientId, hasNotPatientId) => (
                 },
             }
         ]
-    }
-);
+    };
+    if (needCheckIn) {
+        assign(
+            auth, {
+                "exists": [
+                    {
+                        relation: 'checkIn',
+                        condition: ({ user, row }) => {
+                            return {
+                                userId: user.id,
+                                organizationId: row.organizationId,
+                                time: {
+                                    $between: {
+                                        $left: new Date().setHours(0, 0),
+                                        $right: new Date().setHours(23, 59),
+                                    }
+                                }
+                            }
+                        }
+                    }
+                ],
+            }
+        )
+    };
+    return auth;
+}
 
 const RecheckRootFn = (states, msg) => {
     const auth = {
@@ -997,6 +1022,9 @@ const AUTH_MATRIX = {
         [BrandAction.authRevoke]: {
             auths: [
                 {
+                    "#role": [Roles.ROOT.name],
+                },
+                {
                     '#exists': [
                         {
                             relation: 'userBrand',
@@ -1056,14 +1084,6 @@ const AUTH_MATRIX = {
                 },
                 {
                     '#exists': [
-                        // {
-                        //     relation: 'userOrganization',
-                        //     condition: ({user, row}) => {
-                        //         return {
-                        //             userId: user.id,
-                        //         }
-                        //     },
-                        // },
                         {
                             relation: 'userBrand',
                             condition: ({user, row}) => {
@@ -1771,59 +1791,62 @@ const AUTH_MATRIX = {
                             },
                         },
                     ],
-                    '#or': {
-                        message: '还有未完成的检查预约，请确认顾客不会到场后再下班',
-                        auth: [
-                            {
-                                // 要么此员工不是最后一个打卡下班的
-                                '#exists': [
-                                    {
-                                        relation: 'checkIn',
-                                        condition: ({ user, actionData }) => {
-                                            const { checkIn } = actionData;
-                                            const { organizationId } = checkIn;
-                                            const startOfDay = new Date();
-                                            startOfDay.setHours(0, 0, 0, 0);
-                                            const query = {
-                                                userId: {
-                                                    $ne: user.id
-                                                },
-                                                time: {
-                                                    $gt: startOfDay.valueOf(),
-                                                },
-                                                organizationId,
-                                                workingTime: {
-                                                    $exists: false,     // 这个域用来表示是否打卡下班（见getWorkingTime函数）
-                                                },
-                                                category: CheckInCategory.start,
-                                            };
-                                            return query;
+                    '#or': [
+                        {
+                            message: '还有未录入的检查预约，请将预约全部录入后再打卡下班',
+                            auth: [
+                                {
+                                    // 不存在此员工确认到店但没有录入数据的appointment
+                                    '#unexists': [
+                                        {
+                                            relation: 'userAppointmentAction',
+                                            condition: ({ user, actionData }) => {
+                                                const { checkIn } = actionData;
+                                                const { organizationId } = checkIn;
+                                                const startOfDay = new Date();
+                                                startOfDay.setHours(0, 0, 0, 0);
+                                                const query = {
+                                                    operatorId: user.id,
+                                                    action: appointmentAction.regist,
+                                                    appointment: {
+                                                        trade: {
+                                                            transportState: {
+                                                                $in: [TradeTransportState.checkInQueue],
+                                                            },
+                                                        },
+                                                        day: startOfDay,
+                                                    },
+                                                };
+                                                return query;
+                                            }
                                         }
-                                    }
-                                ],
-                            },
-                            {
-                                // 要么不存在还未进行的预约
-                                '#unexists': [
-                                    {
-                                        relation: 'appointment',
-                                        condition: ({ user, actionData }) => {
-                                            const { checkIn } = actionData;
-                                            const { organizationId } = checkIn;
-                                            const startOfDay = new Date();
-                                            startOfDay.setHours(0, 0, 0, 0);
-                                            const query = {
-                                                day: startOfDay,
-                                                organizationId,
-                                                state: appointmentState.normal,
-                                            };
-                                            return query;
+                                    ],
+                                },
+                                {
+                                    // 当天该工作人员没有确认到店
+                                    '#unexists': [
+                                        {
+                                            relation: 'userAppointmentAction',
+                                            condition: ({ user, actionData }) => {
+                                                const { checkIn } = actionData;
+                                                const { organizationId } = checkIn;
+                                                const startOfDay = new Date();
+                                                startOfDay.setHours(0, 0, 0, 0);
+                                                const query = {
+                                                    operatorId: user.id,
+                                                    action: appointmentAction.regist,
+                                                    appointment: {
+                                                        day: startOfDay,
+                                                    },
+                                                };
+                                                return query;
+                                            }
                                         }
-                                    }
-                                ]
-                            }
-                        ],
-                    }
+                                    ]
+                                }
+                            ],
+                        }
+                     ],
                 },
             ]
         },
@@ -1987,7 +2010,7 @@ const AUTH_MATRIX = {
         },
         [appointmentAction.remove]: {
             auths: [
-                AppointmentBrandUserFn([appointmentState.normal, appointmentState.cancelled], false, true),
+                AppointmentBrandUserFn([appointmentState.normal, appointmentState.cancelled], false, true, false),
             ],
         },
         [appointmentAction.cancel]: {
@@ -2015,7 +2038,7 @@ const AUTH_MATRIX = {
         },
         [appointmentAction.regist]: {
             auths: [
-                AppointmentBrandUserFn([appointmentState.normal, appointmentState.late], true),
+                AppointmentBrandUserFn([appointmentState.normal, appointmentState.late], true, false, true),
             ],
         },
         [appointmentAction.checkEnd]: {
@@ -2027,12 +2050,12 @@ const AUTH_MATRIX = {
         },
         [appointmentAction.makeLate]: {
             auths: [
-                AppointmentBrandUserFn([appointmentState.normal, appointmentState.late], true),
+                AppointmentBrandUserFn([appointmentState.normal, appointmentState.late], true, false, true),
             ],
         },
         [appointmentAction.makeAbsent]: {
             auths: [
-                AppointmentBrandUserFn([appointmentState.normal, appointmentState.late], true),
+                AppointmentBrandUserFn([appointmentState.normal, appointmentState.late], true, false, true),
             ],
         },
         [appointmentAction.allocWeChatQrCode]: {
@@ -2386,6 +2409,13 @@ const AUTH_MATRIX = {
                             }
                         }
                     ],
+                    '#data': [
+                        {
+                            check: ({ user, row }) => {
+                                return  row.state === screeningState.ongoing;
+                            },
+                        }
+                    ]
                 },
             ],
         },
