@@ -1090,8 +1090,8 @@ const AUTH_MATRIX = {
                                 const { patient } = actionData;
                                 if (patient.mobile && patient.name) {
                                     return {
-                                        mobile: actionData.mobile,
-                                        name: actionData.name,
+                                        mobile: patient.mobile,
+                                        name: patient.name,
                                     }
                                 }
                                 return {
