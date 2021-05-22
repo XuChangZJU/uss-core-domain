@@ -37,10 +37,15 @@ const data = {
         currency: 'cny',
         amount: 12,
     },
-    aaa: 123,
 };
 
-const start = Date.now();
+let start = Date.now();
 const valid = ajv.validate(schema, data);
 if (!valid) console.log(ajv.errors);
 console.log(`cost ${Date.now() - start} ms`);
+
+const fn = ajv.compile(schema);
+start = Date.now();
+const valid2 = fn(data);
+if (!valid2) console.log(ajv.errors);
+console.log(`compiled cost ${Date.now() - start} ms`);
