@@ -1080,28 +1080,23 @@ const AUTH_MATRIX = {
                         {
                             relation: 'patient',
                             needData: true,
+                            message: '该就诊人已被创建，请勿重复创建就诊人',
                             condition: ({user, actionData}) => {
                                 if (!actionData) {
                                     return {
                                         id: -1,
                                     };
                                 }
-                                const query = {};
-                                if (actionData.name) {
-                                    assign(
-                                        query, {
-                                            name: actionData.name,
-                                        }
-                                    );
+                                const { patient } = actionData;
+                                if (patient.mobile && patient.name) {
+                                    return {
+                                        mobile: actionData.mobile,
+                                        name: actionData.name,
+                                    }
                                 }
-                                if (actionData.mobile) {
-                                    assign(
-                                        query, {
-                                            mobile: actionData.mobile,
-                                        }
-                                    )
-                                }
-                                return query;
+                                return {
+                                    id: -1,
+                                };
                             },
                         },
                     ],
@@ -1113,7 +1108,6 @@ const AUTH_MATRIX = {
                 {
                     "#relation": {
                         attr: '',
-                        relations: [PatientRelation.owner],
                     },
                 },
                 {
