@@ -9,8 +9,8 @@ const {
     decodeTransportAction: decodeCommonTransportAction,
     decodeState: decodeCommonState,
     transportAction: TransportAction,
-    relation,
-    decodeRelation,
+    relation: commonRelation,
+    decodeRelation: decodeCommonRelation,
 
 } = require('../action');
 
@@ -177,6 +177,8 @@ const categoryId = {
     'CareLiquid': 15,
     'Food': 16,
     'OkGlassFetch': 17,
+    'screening': 18,
+    'Compensation': 19,
 }
 const decodeCategoryId = (c) => {
     const C = {
@@ -197,6 +199,8 @@ const decodeCategoryId = (c) => {
         [categoryId.CareLiquid]: '护理液',
         [categoryId.Food]: '眼保健食品',
         [categoryId.OkGlassFetch]: '角膜塑形镜取镜',
+        [categoryId.screening]: '筛查',
+        [categoryId.Compensation]: '补件',
     }
     return C[c];
 }
@@ -217,6 +221,28 @@ const decodeMainCategoryId = (mc) => {
     return MC[mc];
 }
 
+const relation = Object.assign({}, commonRelation, {
+    seller: 1001,        // 营业员
+    customer: 301,
+    doctor: 401,
+    VIP: 501,
+    regularCostomer: 601,
+    hospitalInsider: 701,
+    others: 801,
+});
+
+const decodeRelation = (r) => {
+    const T = {
+        [relation.seller]: '营业员',
+        [relation.customer]: '顾客',
+        [relation.doctor]: '验光医生',
+        [relation.VIP]: 'VIP顾客',
+        [relation.regularCostomer]: '熟客',
+        [relation.hospitalInsider]: '医院内部人士',
+        [relation.others]: '其他',
+    };
+    return T[r] || decodeCommonRelation(r);
+};
 
 module.exports = {
     action,

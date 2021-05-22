@@ -90,6 +90,15 @@ const AUTH_MATRIX = {
         [companyAction.remove]: OwnerRelationAuth,
         [companyAction.enable]: OwnerRelationAuth,
         [companyAction.disable]: OwnerRelationAuth,
+        [companyAction.authRevoke]: {
+            auths: [
+                {
+                    '#relation': {
+                        relations: [companyRelation.owner, companyRelation.manager, companyRelation.service, companyRelation.technician, companyRelation.preSaleService, companyRelation.postSaleService],
+                    },
+                },
+            ],
+        },
     },
     subscribedService: {
         [subscribedServiceAction.create]: {
