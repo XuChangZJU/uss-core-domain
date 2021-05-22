@@ -9,6 +9,10 @@ const action = {
     createSub: 4,
     getList: 5,
     updateRelationData: 6,
+    getItem: 7,
+    count: 8,
+    stat: 9,
+    download: 10,
 
     authGrant: 11,
     authRevoke: 12,
@@ -48,12 +52,6 @@ const action = {
     refundCancel: 55,           // 取消退款（恢复到legal状态）
 
 
-
-    getList: 60,
-    getItem: 61,
-    count: 62,
-    stat: 63,
-    download: 64,
 
     changePrice: 71,
 };
