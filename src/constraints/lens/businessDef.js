@@ -2006,7 +2006,55 @@ const AUTH_MATRIX = {
         },
     },
     appointment: {
-        [appointmentAction.create]: AllowEveryoneAuth,
+        [appointmentAction.create]: {
+            auths: [
+                {
+                    '#exists': [
+                        {
+                            relation: 'schedule',
+                            message: '当日暂无排班',
+                            condition: ({ user, actionData }) => {
+                                if (!actionData) {
+                                    return {
+                                        dutyTime: {
+                                            $gt: new Date().setHours(0, 0),
+                                        }
+                                    }
+                                }
+                                const { appointment } = actionData;
+                                const query = {
+                                    organizationId: appointment.organizationId,
+                                };
+                                if (appointment.startTime) {
+                                    assign(
+                                        query, {
+                                            dutyTime: {
+                                                $between: {
+                                                    $left: new Date(appointment.startTime).setHours(0, 0),
+                                                    $right: new Date(appointment.startTime).setHours(23, 59),
+                                                }
+                                            }
+                                        }
+                                    );
+                                } else {
+                                    assign(
+                                        query, {
+                                            dutyTime: {
+                                                $between: {
+                                                    $left: new Date().setHours(0, 0),
+                                                    $right: new Date().setHours(23, 59),
+                                                }
+                                            }
+                                        }
+                                    );
+                                }
+                                return query;
+                            },
+                        }
+                    ]
+                }
+            ],
+        },
         [appointmentAction.update]: {
             auths: [
                 {
