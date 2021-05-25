@@ -2093,11 +2093,11 @@ const AUTH_MATRIX = {
                                             dutyTime: {
                                                 $between: {
                                                     $left: {
-                                                        $close: true,
+                                                        $closed: true,
                                                         $value: new Date(appointment.startTime).setHours(0, 0),
                                                     },
                                                     $right: {
-                                                        $close: true,
+                                                        $closed: true,
                                                         $value: new Date(appointment.startTime).setHours(23, 59),
                                                     },
                                                 }
@@ -2110,11 +2110,11 @@ const AUTH_MATRIX = {
                                             dutyTime: {
                                                 $between: {
                                                     $left: {
-                                                        $close: true,
+                                                        $closed: true,
                                                         $value: new Date().setHours(0, 0),
                                                     },
                                                     $right: {
-                                                        $close: true,
+                                                        $closed: true,
                                                         $value: new Date().setHours(23, 59),
                                                     },
                                                 }
