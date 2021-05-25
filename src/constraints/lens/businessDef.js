@@ -1820,7 +1820,7 @@ const AUTH_MATRIX = {
                         },
                     ],
                     '#or': {
-                        message: '还有未录入的检查预约，请将预约全部录入后再打卡下班',
+                        message: '还有未录入或未到店的检查预约，请将到店预约全部录入，未到店的全部爽约后再打卡下班',
                         auth: [
                             {
                                 // 不存在此员工确认到店但没有录入数据的appointment
@@ -1846,6 +1846,23 @@ const AUTH_MATRIX = {
                                             };
                                             return query;
                                         }
+                                    },
+                                    {
+                                        relation: 'appointment',
+                                        condition: ({ user, actionData }) => {
+                                            const { checkIn } = actionData;
+                                            const { organizationId } = checkIn;
+                                            const startOfDay = new Date();
+                                            startOfDay.setHours(0, 0, 0, 0);
+                                            const query = {
+                                                state: {
+                                                    $in: [appointmentState.normal, appointmentState.late],
+                                                },
+                                                organizationId,
+                                                day: startOfDay,
+                                            };
+                                            return query;
+                                        }
                                     }
                                 ],
                             },
@@ -1865,6 +1882,23 @@ const AUTH_MATRIX = {
                                                 appointment: {
                                                     day: startOfDay,
                                                 },
+                                            };
+                                            return query;
+                                        }
+                                    },
+                                    {
+                                        relation: 'appointment',
+                                        condition: ({ user, actionData }) => {
+                                            const { checkIn } = actionData;
+                                            const { organizationId } = checkIn;
+                                            const startOfDay = new Date();
+                                            startOfDay.setHours(0, 0, 0, 0);
+                                            const query = {
+                                                state: {
+                                                    $in: [appointmentState.normal, appointmentState.late],
+                                                },
+                                                organizationId,
+                                                day: startOfDay,
                                             };
                                             return query;
                                         }
