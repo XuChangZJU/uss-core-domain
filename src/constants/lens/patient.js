@@ -7,6 +7,18 @@ const {
 } = require('../action');
 
 
+const action = Object.assign({}, commonAction, {
+    sendMessage: 311,
+});
+
+const decodeAction = (r) => {
+    const S = {
+        [action.sendMessage]: '发消息'
+    };
+
+    return S[r] || decodeCommonRelation(r);
+};
+
 const relation = Object.assign({}, commonRelation, {
     parent: 111,
     eldership: 112,
@@ -55,6 +67,6 @@ module.exports = {
     decodeRelation,
     tag,
     decodeTag,
-    action: commonAction,
-    decodeAction: decodeCommonAction,
+    action,
+    decodeAction,
 };

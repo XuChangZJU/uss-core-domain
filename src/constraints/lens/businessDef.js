@@ -1103,6 +1103,34 @@ const AUTH_MATRIX = {
                 },
             ],
         },
+        [PatientAction.sendMessage]: {
+            auths: [
+                {
+                    '#exists': [
+                        {
+                            relation: 'userBrand',
+                            condition: ({user, row}) => {
+                                return {
+                                    userId: user.id,
+                                }
+                            },
+                        },
+                    ],
+                },
+                {
+                    '#exists': [
+                        {
+                            relation: 'userRole',
+                            condition: ({user, row}) => {
+                                return {
+                                    userId: user.id,
+                                }
+                            },
+                        },
+                    ],
+                },
+            ]
+        },
         [PatientAction.update]: {
             auths: [
                 {
