@@ -2079,7 +2079,7 @@ const AUTH_MATRIX = {
                                 if (!actionData) {
                                     return {
                                         dutyTime: {
-                                            $gt: new Date().setHours(0, 0),
+                                            $gte: new Date().setHours(0, 0),
                                         }
                                     }
                                 }
@@ -2092,8 +2092,14 @@ const AUTH_MATRIX = {
                                         query, {
                                             dutyTime: {
                                                 $between: {
-                                                    $left: new Date(appointment.startTime).setHours(0, 0),
-                                                    $right: new Date(appointment.startTime).setHours(23, 59),
+                                                    $left: {
+                                                        $close: true,
+                                                        $value: new Date(appointment.startTime).setHours(0, 0),
+                                                    },
+                                                    $right: {
+                                                        $close: true,
+                                                        $value: new Date(appointment.startTime).setHours(23, 59),
+                                                    },
                                                 }
                                             }
                                         }
@@ -2103,8 +2109,14 @@ const AUTH_MATRIX = {
                                         query, {
                                             dutyTime: {
                                                 $between: {
-                                                    $left: new Date().setHours(0, 0),
-                                                    $right: new Date().setHours(23, 59),
+                                                    $left: {
+                                                        $close: true,
+                                                        $value: new Date().setHours(0, 0),
+                                                    },
+                                                    $right: {
+                                                        $close: true,
+                                                        $value: new Date().setHours(23, 59),
+                                                    },
                                                 }
                                             }
                                         }
