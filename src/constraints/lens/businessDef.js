@@ -2248,9 +2248,42 @@ const AUTH_MATRIX = {
         [activityAction.update]: {
             auths: [
                 {
-                    "#relation": {
-                        attr: 'brand',
-                    },
+                    '#exists': [
+                        {
+                            relation: 'userRole',
+                            condition: ({ user }) => {
+                                const query = {
+                                    userId: user.id,
+                                };
+                                return query;
+                            },
+                        },
+                    ],
+                    '#data': [
+                        {
+                            check: ({ user, row }) => {
+                                return  row.state === activityState.ongoing;
+                            },
+                        }
+                    ]
+                },
+                {
+                    '#exists': [
+                        {
+                            relation: 'userBrand',
+                            condition: ({ user, row }) => {
+                                const query = {
+                                    userId: user.id,
+                                };
+                                if (row.brandId) {
+                                    assign(query, { brandId: row.brandId });
+                                } else {
+                                    assign(query, { brandId: -1 });
+                                }
+                                return query;
+                            },
+                        },
+                    ],
                     '#data': [
                         {
                             check: ({ user, row }) => {
@@ -2264,9 +2297,42 @@ const AUTH_MATRIX = {
         [activityAction.cancel]: {
             auths: [
                 {
-                    "#relation": {
-                        attr: 'brand',
-                    },
+                    '#exists': [
+                        {
+                            relation: 'userRole',
+                            condition: ({ user }) => {
+                                const query = {
+                                    userId: user.id,
+                                };
+                                return query;
+                            },
+                        },
+                    ],
+                    '#data': [
+                        {
+                            check: ({ user, row }) => {
+                                return  row.state === activityState.ongoing;
+                            },
+                        }
+                    ]
+                },
+                {
+                    '#exists': [
+                        {
+                            relation: 'userBrand',
+                            condition: ({ user, row }) => {
+                                const query = {
+                                    userId: user.id,
+                                };
+                                if (row.brandId) {
+                                    assign(query, { brandId: row.brandId });
+                                } else {
+                                    assign(query, { brandId: -1 });
+                                }
+                                return query;
+                            },
+                        },
+                    ],
                     '#data': [
                         {
                             check: ({ user, row }) => {
@@ -2280,9 +2346,42 @@ const AUTH_MATRIX = {
         [activityAction.restart]: {
             auths: [
                 {
-                    "#relation": {
-                        attr: 'brand',
-                    },
+                    '#exists': [
+                        {
+                            relation: 'userRole',
+                            condition: ({ user }) => {
+                                const query = {
+                                    userId: user.id,
+                                };
+                                return query;
+                            },
+                        },
+                    ],
+                    '#data': [
+                        {
+                            check: ({ user, row }) => {
+                                return  row.state === activityState.cancelled;
+                            },
+                        }
+                    ]
+                },
+                {
+                    '#exists': [
+                        {
+                            relation: 'userBrand',
+                            condition: ({ user, row }) => {
+                                const query = {
+                                    userId: user.id,
+                                };
+                                if (row.brandId) {
+                                    assign(query, { brandId: row.brandId });
+                                } else {
+                                    assign(query, { brandId: -1 });
+                                }
+                                return query;
+                            },
+                        },
+                    ],
                     '#data': [
                         {
                             check: ({ user, row }) => {
@@ -2296,9 +2395,42 @@ const AUTH_MATRIX = {
         [activityAction.allocWeChatQrCode]: {
             auths: [
                 {
-                    "#relation": {
-                        attr: 'brand',
-                    },
+                    '#exists': [
+                        {
+                            relation: 'userRole',
+                            condition: ({ user }) => {
+                                const query = {
+                                    userId: user.id,
+                                };
+                                return query;
+                            },
+                        },
+                    ],
+                    '#data': [
+                        {
+                            check: ({ user, row }) => {
+                                return  row.state === activityState.cancelled;
+                            },
+                        }
+                    ]
+                },
+                {
+                    '#exists': [
+                        {
+                            relation: 'userBrand',
+                            condition: ({ user, row }) => {
+                                const query = {
+                                    userId: user.id,
+                                };
+                                if (row.brandId) {
+                                    assign(query, { brandId: row.brandId });
+                                } else {
+                                    assign(query, { brandId: -1 });
+                                }
+                                return query;
+                            },
+                        },
+                    ],
                     '#data': [
                         {
                             check: ({ user, row }) => {
