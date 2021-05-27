@@ -2087,18 +2087,18 @@ const AUTH_MATRIX = {
                                 const query = {
                                     organizationId: appointment.organizationId,
                                 };
-                                if (appointment.startTime) {
+                                if (appointment.startTime || appointment.day) {
                                     assign(
                                         query, {
                                             dutyTime: {
                                                 $between: {
                                                     $left: {
                                                         $closed: true,
-                                                        $value: new Date(appointment.startTime).setHours(0, 0),
+                                                        $value: new Date(appointment.startTime || appointment.day).setHours(0, 0),
                                                     },
                                                     $right: {
                                                         $closed: true,
-                                                        $value: new Date(appointment.startTime).setHours(23, 59),
+                                                        $value: new Date(appointment.startTime || appointment.day).setHours(23, 59),
                                                     },
                                                 }
                                             }
