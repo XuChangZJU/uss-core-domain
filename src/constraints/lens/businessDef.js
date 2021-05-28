@@ -221,7 +221,7 @@ const AppointmentBrandUserFn = (states, hasPatientId, hasNotPatientId, needCheck
                                 organizationId: row.organizationId,
                                 time: {
                                     $between: {
-                                        $left: new Date().setHours(0, 0),
+                                        $left: new Date().setHours(0, 0, 0, 0),
                                         $right: new Date().setHours(23, 59),
                                     }
                                 }
@@ -2079,7 +2079,7 @@ const AUTH_MATRIX = {
                                 if (!actionData) {
                                     return {
                                         dutyTime: {
-                                            $gte: new Date().setHours(0, 0),
+                                            $gte: new Date().setHours(0, 0, 0, 0),
                                         }
                                     }
                                 }
@@ -2094,7 +2094,7 @@ const AUTH_MATRIX = {
                                                 $between: {
                                                     $left: {
                                                         $closed: true,
-                                                        $value: new Date(appointment.startTime || appointment.day).setHours(0, 0),
+                                                        $value: new Date(appointment.startTime || appointment.day).setHours(0, 0, 0, 0),
                                                     },
                                                     $right: {
                                                         $closed: true,
@@ -2111,7 +2111,7 @@ const AUTH_MATRIX = {
                                                 $between: {
                                                     $left: {
                                                         $closed: true,
-                                                        $value: new Date().setHours(0, 0),
+                                                        $value: new Date().setHours(0, 0, 0, 0),
                                                     },
                                                     $right: {
                                                         $closed: true,
