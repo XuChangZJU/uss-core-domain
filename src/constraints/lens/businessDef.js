@@ -2188,6 +2188,33 @@ const AUTH_MATRIX = {
                         }
                     ]
                 },
+                {
+                    '#exists': [
+                        {
+                            relation: 'userBrand',
+                            message: '非工作人员不能取消预约',
+                            condition: ({ user }) => {
+                                return {
+                                    userId: user.id,
+                                }
+                            },
+                        }
+                    ],
+                    '#data': [
+                        {
+                            check: ({ user, row }) => {
+                                if (row.state !== appointmentState.normal) {
+                                    return ErrorCode.createErrorByCode(ErrorCode.errorDataInconsistency, '只能取消尚未到店的预约', {
+                                        name: 'appointment',
+                                        operation: 'update',
+                                        data: row,
+                                    });
+                                }
+                                return true;
+                            },
+                        }
+                    ]
+                },
             ],
         },
         [appointmentAction.regist]: {
