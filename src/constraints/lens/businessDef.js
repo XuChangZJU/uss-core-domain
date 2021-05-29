@@ -1869,6 +1869,9 @@ const AUTH_MATRIX = {
                                                             $in: [TradeTransportState.checkInQueue],
                                                         },
                                                     },
+                                                    categoryId: {
+                                                        $nin: [TradeCategoryId.OkGlassFetch]
+                                                    },
                                                     day: startOfDay,
                                                 },
                                             };
@@ -1885,6 +1888,9 @@ const AUTH_MATRIX = {
                                             const query = {
                                                 state: {
                                                     $in: [appointmentState.normal, appointmentState.late],
+                                                },
+                                                categoryId: {
+                                                    $nin: [TradeCategoryId.OkGlassFetch]
                                                 },
                                                 organizationId,
                                                 day: startOfDay,
