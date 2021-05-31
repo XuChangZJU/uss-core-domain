@@ -2090,6 +2090,13 @@ const AUTH_MATRIX = {
                                     }
                                 }
                                 const { appointment } = actionData;
+                                if (appointment.activityId) {
+                                    return {
+                                        id: {
+                                            $gt: 0,
+                                        }
+                                    }
+                                }
                                 const query = {
                                     organizationId: appointment.organizationId,
                                 };
