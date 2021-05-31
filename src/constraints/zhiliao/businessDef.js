@@ -256,7 +256,12 @@ const AUTH_MATRIX = {
         [commonAction.create]:AllowEveryoneAuth,
         [commonAction.update]: AllowEveryoneAuth,
         [commonAction.remove]: AllowEveryoneAuth,
-    }
+    },
+    phoneCall: {
+        [commonAction.create]:AllowEveryoneAuth,
+        [commonAction.update]: AllowEveryoneAuth,
+        [commonAction.remove]: AllowEveryoneAuth,
+    },
 };
 
 const STATE_TRAN_MATRIX = {
