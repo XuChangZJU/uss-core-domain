@@ -2158,7 +2158,7 @@ const AUTH_MATRIX = {
                                 if (actionData) {
                                     const { appointment } = actionData;
                                     const appointment2 = omit(appointment, ['patientId', 'id'])
-                                    if (Object.keys(appointment2).length !== 0 || !appointment.hasOwnProperty('patientId')) {
+                                    if (Object.keys(appointment2).length !== 0) {
                                         return new Error('数据非法');
                                     }
                                 }
