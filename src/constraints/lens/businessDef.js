@@ -2493,9 +2493,9 @@ const AUTH_MATRIX = {
                             condition: ({user}) => {
                                 return {
                                     userId: user.id,
-                                    relation: {
-                                        $in: [BrandRelation.owner, BrandRelation.manager, BrandRelation.customerService, BrandRelation.worker, BrandRelation.seller],
-                                    }
+                                    // relation: {
+                                    //     $in: [BrandRelation.owner, BrandRelation.manager, BrandRelation.customerService, BrandRelation.worker, BrandRelation.seller],
+                                    // }
                                 }
                             }
                         },
