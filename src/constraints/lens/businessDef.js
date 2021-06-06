@@ -1869,6 +1869,9 @@ const AUTH_MATRIX = {
                                                             $in: [TradeTransportState.checkInQueue],
                                                         },
                                                     },
+                                                    activityId: {
+                                                        $exists: false,
+                                                    },
                                                     categoryId: {
                                                         $nin: [TradeCategoryId.OkGlassFetch]
                                                     },
@@ -1888,6 +1891,9 @@ const AUTH_MATRIX = {
                                             const query = {
                                                 state: {
                                                     $in: [appointmentState.normal, appointmentState.late],
+                                                },
+                                                activityId: {
+                                                    $exists: false,
                                                 },
                                                 categoryId: {
                                                     $nin: [TradeCategoryId.OkGlassFetch]
@@ -1915,6 +1921,9 @@ const AUTH_MATRIX = {
                                                 action: appointmentAction.regist,
                                                 appointment: {
                                                     day: startOfDay,
+                                                    activityId: {
+                                                        $exists: false,
+                                                    },
                                                 },
                                             };
                                             return query;
@@ -1930,6 +1939,9 @@ const AUTH_MATRIX = {
                                             const query = {
                                                 state: {
                                                     $in: [appointmentState.normal, appointmentState.late],
+                                                },
+                                                activityId: {
+                                                    $exists: false,
                                                 },
                                                 organizationId,
                                                 day: startOfDay,
