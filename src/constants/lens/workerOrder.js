@@ -43,6 +43,7 @@ const action = Object.assign({}, commonAction, {
     accept: 301,
     refuse: 310,
     resubmit: 401,
+    reply: 501
     // finish: 501,
 });
 
@@ -51,6 +52,7 @@ const decodeAction = (a) => {
         [action.accept]: '同意',
         [action.refuse]: '拒绝',
         [action.resubmit]: '重新提交',
+        [action.reply]: '回复',
         // [action.finish]: '完成',
     };
 
@@ -61,6 +63,7 @@ const STATE_TRAN_MATRIX = {
     [action.accept]: [state.pending, state.accepted],
     [action.refuse]: [state.pending, state.refused],
     [action.resubmit]: [state.refused, state.pending],
+    [action.reply]: [state.refused, state.accepted],
     // [action.finish]: [[state.accepted, state.refused], state.finished],
 };
 module.exports = {
