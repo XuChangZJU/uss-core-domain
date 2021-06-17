@@ -1013,9 +1013,8 @@ const AUTH_MATRIX = {
                     },
                     '#data': [                 // 表示对现有对象或者用户的数据有要求，可以有多项，每项之间是AND的关系
                         {
-
                             check: ({user, row}) => {
-                                return  [WorkerOrderState.refused, WorkerOrderAction.accept].includes(row.state);
+                                return  [WorkerOrderState.refused, WorkerOrderState.accept].includes(row.state);
                             },
                         }
                     ],
@@ -1026,7 +1025,7 @@ const AUTH_MATRIX = {
                     '#data': [                 // 表示对现有对象或者用户的数据有要求，可以有多项，每项之间是AND的关系
                         {
                             check: ({user, row}) => {
-                                return  [WorkerOrderState.refused, WorkerOrderAction.accept].includes(row.state);
+                                return  [WorkerOrderState.refused, WorkerOrderState.accept].includes(row.state);
                             },
                         }
                     ],
@@ -1039,7 +1038,7 @@ const AUTH_MATRIX = {
                     '#data': [                 // 表示对现有对象或者用户的数据有要求，可以有多项，每项之间是AND的关系
                         {
                             check: ({user, row}) => {
-                                return  [WorkerOrderState.refused, WorkerOrderAction.accept].includes(row.state);
+                                return  [WorkerOrderState.refused, WorkerOrderState.accept].includes(row.state);
                             },
                         }
                     ],
