@@ -63,7 +63,7 @@ const STATE_TRAN_MATRIX = {
     [action.accept]: [state.pending, state.accepted],
     [action.refuse]: [state.pending, state.refused],
     [action.resubmit]: [state.refused, state.pending],
-    [action.reply]: [state.refused, state.accepted],
+    // [action.reply]: [state.refused, state.accepted],
     // [action.finish]: [[state.accepted, state.refused], state.finished],
 };
 module.exports = {
