@@ -2286,6 +2286,39 @@ const AUTH_MATRIX = {
                 {
                     "#role": [Roles.ROOT.name],
                 },
+                {
+                    "#relation": {
+                        attr: 'organization.brand',
+                    },
+                    '#data': [
+                        {
+                            check: ({ row, user }) => {
+                                if (![appointmentState.completed].includes(row.state) && row.patientId) {
+                                    return ErrorCode.createErrorByCode(ErrorCode.errorDataInconsistency, '预约无效', {
+                                        name: 'appointment',
+                                        operation: 'update',
+                                        data: row,
+                                    });
+                                }
+                                return true;
+                            },
+                        }
+                    ],
+                    '#exists': [
+                        {
+                            relation: 'category',
+                            message: '该类型的预约需要录入数据',
+                            condition: ({ user, row }) => {
+                                return {
+                                    id: row.categoryId,
+                                    reportCategoryId: {
+                                        $exists: false,
+                                    }
+                                }
+                            },
+                        }
+                    ]
+                }
             ],
         },
         [appointmentAction.makeLate]: {
