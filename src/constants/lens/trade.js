@@ -208,7 +208,7 @@ const decodeCategoryId = (c) => {
         [categoryId.Compensation]: '补件',
         [categoryId.activityCheck]: '活动验光',
         [categoryId.teenagerScreening]: '筛查（青少年）',
-        [categoryId.OkGlassLearning]: '角膜塑形镜摘戴学习',
+        [categoryId.OKGlassesStudy]: '角膜塑形镜摘戴学习',
     }
     return C[c];
 }
