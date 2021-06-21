@@ -2313,7 +2313,6 @@ const AUTH_MATRIX = {
                         }
                     ]
                 },
-                AppointmentBrandUserFn([appointmentState.normal, appointmentState.late], true, false, true),
             ],
         },
         [appointmentAction.checkEnd]: {
