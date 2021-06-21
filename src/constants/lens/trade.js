@@ -181,8 +181,8 @@ const categoryId = {
     'OkGlassFetch': 17,
     'Screening': 18,
     'Compensation': 19,
-    'activityCheck': 20,
-    'teenagerScreening': 21,
+    'ActivityCheck': 20,
+    'TeenagerScreening': 21,
     'OKGlassesStudy': 22,
 }
 const decodeCategoryId = (c) => {
@@ -206,8 +206,8 @@ const decodeCategoryId = (c) => {
         [categoryId.OkGlassFetch]: '角膜塑形镜取镜',
         [categoryId.Screening]: '筛查(幼儿)',
         [categoryId.Compensation]: '补件',
-        [categoryId.activityCheck]: '活动验光',
-        [categoryId.teenagerScreening]: '筛查（青少年）',
+        [categoryId.ActivityCheck]: '活动验光',
+        [categoryId.TeenagerScreening]: '筛查（青少年）',
         [categoryId.OKGlassesStudy]: '角膜塑形镜摘戴学习',
     }
     return C[c];
