@@ -88,7 +88,7 @@ const decodeTransportState = (ts) => {
     const TS = {
         [transportState.wdd]: '未到店',
         [transportState.dqj]: '已到店',
-        [transportState.dgkqr]: '待顾客确认',
+        [transportState.dgkqr]: '待完成取货',
         [transportState.yqj]: '已取件',
         [transportState.yth]: '已退货',
         // [transportState.yzf]: '已作废',
@@ -104,7 +104,7 @@ const getMethodId = {
     HelpYourself: 1,
     Express: 2,
     AtOnce: 3,
-    packageDeliver: 4,
+    Agent: 4,
 };
 
 const decodeGetMethodId = (gm) => {
@@ -112,7 +112,7 @@ const decodeGetMethodId = (gm) => {
         [getMethodId.HelpYourself]: '顾客自取',
         [getMethodId.Express]: '快递',
         [getMethodId.AtOnce]: '当场立取',
-        [getMethodId.packageDeliver]: '委托代收',
+        [getMethodId.Agent]: '委托代收',
     };
 
     return GM[gm];
@@ -136,7 +136,7 @@ const decodeAction = (a) => {
     const S = {
         [action.financialRefund]: '财务退款',
         [action.confirmArriveAtShop]: '确认到店',
-        [action.customConfirm]: '顾客确认',
+        [action.customConfirm]: '完成取货',
         [action.confirmPick]: '确认取货',
         [action.completeCheck]: '完成',
         [action.cancelCheck]: '取消',
@@ -179,11 +179,11 @@ const categoryId = {
     'CareLiquid': 15,
     'Food': 16,
     'OkGlassFetch': 17,
-    'screening': 18,
+    'Screening': 18,
     'Compensation': 19,
     'activityCheck': 20,
     'teenagerScreening': 21,
-    'OkGlassLearning': 22,
+    'OKGlassesStudy': 22,
 }
 const decodeCategoryId = (c) => {
     const C = {
@@ -204,7 +204,7 @@ const decodeCategoryId = (c) => {
         [categoryId.CareLiquid]: '护理液',
         [categoryId.Food]: '眼保健食品',
         [categoryId.OkGlassFetch]: '角膜塑形镜取镜',
-        [categoryId.screening]: '筛查',
+        [categoryId.Screening]: '筛查(幼儿)',
         [categoryId.Compensation]: '补件',
         [categoryId.activityCheck]: '活动验光',
         [categoryId.teenagerScreening]: '筛查（青少年）',
