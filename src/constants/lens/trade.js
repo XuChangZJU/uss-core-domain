@@ -104,6 +104,7 @@ const getMethodId = {
     HelpYourself: 1,
     Express: 2,
     AtOnce: 3,
+    packageDeliver: 4,
 };
 
 const decodeGetMethodId = (gm) => {
@@ -111,6 +112,7 @@ const decodeGetMethodId = (gm) => {
         [getMethodId.HelpYourself]: '顾客自取',
         [getMethodId.Express]: '快递',
         [getMethodId.AtOnce]: '当场立取',
+        [getMethodId.packageDeliver]: '委托代收',
     };
 
     return GM[gm];
@@ -179,6 +181,9 @@ const categoryId = {
     'OkGlassFetch': 17,
     'screening': 18,
     'Compensation': 19,
+    'activityCheck': 20,
+    'teenagerScreening': 21,
+    'OkGlassLearning': 22,
 }
 const decodeCategoryId = (c) => {
     const C = {
@@ -201,6 +206,9 @@ const decodeCategoryId = (c) => {
         [categoryId.OkGlassFetch]: '角膜塑形镜取镜',
         [categoryId.screening]: '筛查',
         [categoryId.Compensation]: '补件',
+        [categoryId.activityCheck]: '活动验光',
+        [categoryId.teenagerScreening]: '筛查（青少年）',
+        [categoryId.OkGlassLearning]: '角膜塑形镜摘戴学习',
     }
     return C[c];
 }
