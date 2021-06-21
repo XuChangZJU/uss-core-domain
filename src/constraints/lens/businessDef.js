@@ -2286,14 +2286,17 @@ const AUTH_MATRIX = {
                     '#data': [
                         {
                             check: ({ row, user }) => {
-                                if (![appointmentState.normal, appointmentState.late].includes(row.state) || !row.patientId) {
-                                    return ErrorCode.createErrorByCode(ErrorCode.errorDataInconsistency, '预约无效', {
-                                        name: 'appointment',
-                                        operation: 'update',
-                                        data: row,
-                                    });
+                                if ([appointmentState.normal, appointmentState.late].includes(row.state) && row.patientId) {
+                                    // 老的前端框架选取按钮时不会判断#exists,这里先放入data，迁移到新框架时改掉
+                                    if(![TradeCategoryId.OkGlassLearning, TradeCategoryId.OkGlassFetch].includes(row.categoryId)) {
+                                        return true;
+                                    }
                                 }
-                                return true;
+                                return ErrorCode.createErrorByCode(ErrorCode.errorDataInconsistency, '预约无效', {
+                                    name: 'appointment',
+                                    operation: 'update',
+                                    data: row,
+                                });
                             },
                         }
                     ],
@@ -2328,7 +2331,10 @@ const AUTH_MATRIX = {
                         {
                             check: ({ row, user }) => {
                                 if ([appointmentState.normal].includes(row.state) && row.patientId) {
-                                    return true;
+                                    // 老的前端框架选取按钮时不会判断#exists,这里先放入data，迁移到新框架时改掉
+                                    if([TradeCategoryId.OkGlassLearning, TradeCategoryId.OkGlassFetch].includes(row.categoryId)) {
+                                        return true;
+                                    }
                                 }
                                 return ErrorCode.createErrorByCode(ErrorCode.errorDataInconsistency, '预约无效', {
                                     name: 'appointment',
