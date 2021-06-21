@@ -60,6 +60,7 @@ const {
     STATE_TRAN_MATRIX: TRADE_STATE_TRAN_MATRIX,
     transportState: TradeTransportState,
     billState: tradeBillState,
+    mainCategoryId: TradeMainCategoryId,
 } = require('../../constants/lens/trade');
 const {
     action: WorkerOrderAction,
@@ -2310,6 +2311,7 @@ const AUTH_MATRIX = {
                             message: '该类型的预约需要录入数据',
                             condition: ({ user, row }) => {
                                 return {
+                                    mainCategoryId: TradeMainCategoryId.Check,
                                     id: row.categoryId,
                                     reportCategoryId: {
                                         $exists: false,
