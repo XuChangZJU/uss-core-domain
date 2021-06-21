@@ -183,7 +183,7 @@ const categoryId = {
     'Compensation': 19,
     'ActivityCheck': 20,
     'TeenagerScreening': 21,
-    'OKGlassesStudy': 22,
+    'OkGlassLearning': 22,
 }
 const decodeCategoryId = (c) => {
     const C = {
@@ -208,7 +208,7 @@ const decodeCategoryId = (c) => {
         [categoryId.Compensation]: '补件',
         [categoryId.ActivityCheck]: '活动验光',
         [categoryId.TeenagerScreening]: '筛查（青少年）',
-        [categoryId.OKGlassesStudy]: '角膜塑形镜摘戴学习',
+        [categoryId.OkGlassLearning]: '角膜塑形镜摘戴学习',
     }
     return C[c];
 }

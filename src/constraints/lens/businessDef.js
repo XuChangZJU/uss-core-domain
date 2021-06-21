@@ -2294,14 +2294,14 @@ const AUTH_MATRIX = {
                     '#data': [
                         {
                             check: ({ row, user }) => {
-                                if (![appointmentState.completed].includes(row.state) && row.patientId) {
-                                    return ErrorCode.createErrorByCode(ErrorCode.errorDataInconsistency, '预约无效', {
-                                        name: 'appointment',
-                                        operation: 'update',
-                                        data: row,
-                                    });
+                                if ([appointmentState.normal].includes(row.state) && row.patientId) {
+                                    return true;
                                 }
-                                return true;
+                                return ErrorCode.createErrorByCode(ErrorCode.errorDataInconsistency, '预约无效', {
+                                    name: 'appointment',
+                                    operation: 'update',
+                                    data: row,
+                                });
                             },
                         }
                     ],
