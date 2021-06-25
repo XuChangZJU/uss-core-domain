@@ -2320,9 +2320,9 @@ const AUTH_MATRIX = {
         },
         [appointmentAction.checkEnd]: {
             auths: [
-                // {
-                //     "#role": [Roles.ROOT.name],
-                // },
+                {
+                    "#role": [Roles.ROOT.name],
+                },
                 {
                     "#relation": {
                         attr: 'organization.brand',
