@@ -2919,6 +2919,29 @@ const AUTH_MATRIX = {
                 },
             ],
         },
+        [screeningAction.finish]: {
+            auths: [
+                {
+                    '#exists': [
+                        {
+                            relation: 'userRole',
+                            condition: ({ user, row }) => {
+                                return {
+                                    userId: user.id,
+                                }
+                            }
+                        }
+                    ],
+                    '#data': [
+                        {
+                            check: ({ user, row }) => {
+                                return  row.state === screeningState.ongoing;
+                            },
+                        }
+                    ]
+                },
+            ],
+        },
         [screeningAction.allocWeChatQrCode]: {
             auths: [
                 {

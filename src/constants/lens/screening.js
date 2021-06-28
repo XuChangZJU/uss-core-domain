@@ -25,12 +25,14 @@ const decodeState = (s) => {
 const action = Object.assign({},commonAction,{
     cancel: 301,
     restart: 401,
+    finish: 501,
 });
 
 const decodeAction = (a) => {
     const A = {
         [action.cancel]: '取消',
         [action.restart]: '重新开始',
+        [action.finish]: '完成',
     };
 
     return A[a]|| decodeCommonAction(a);
@@ -38,6 +40,7 @@ const decodeAction = (a) => {
 const STATE_TRANS_MATRIX = {
     [action.cancel]: [state.ongoing, state.cancelled],
     [action.restart]: [state.cancelled, state.ongoing],
+    [action.finish]: [state.ongoing, state.finished],
 };
 
 module.exports = {
