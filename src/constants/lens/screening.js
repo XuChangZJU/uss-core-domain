@@ -16,7 +16,7 @@ const state = {
 const decodeState = (s) => {
     const S = {
         [state.ongoing]: '进行中',
-        [state.finished]: '已结束',
+        [state.finished]: '已完成',
         [state.cancelled]: '已取消'
     };
     return S[s];
