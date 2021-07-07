@@ -13,7 +13,7 @@ const type = {
 
 const decodeType = (t) => {
     const T = {
-        [type.normal]: '正常',
+        [type.normal]: '正常上班',
         [type.askForLeave]: '请假',
         [type.workOvertime]: '加班',
         [type.outside]: '外勤',
