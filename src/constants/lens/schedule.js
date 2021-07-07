@@ -5,13 +5,15 @@ const {
 } = require('../action');
 
 const type = {
-    askForLeave: 1,
-    workOvertime: 2,
-    outside: 3,
+    normal: 1,
+    askForLeave: 2,
+    workOvertime: 3,
+    outside: 4,
 }
 
 const decodeType = (t) => {
     const T = {
+        [type.normal]: '正常',
         [type.askForLeave]: '请假',
         [type.workOvertime]: '加班',
         [type.outside]: '外勤',
