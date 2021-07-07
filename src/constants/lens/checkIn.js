@@ -28,6 +28,7 @@ const state = {
     business: 16,
     noCheckIn: 32,
     askForLeave: 40,
+    workOvertime: 41,
 }
 const decodeState = (s) => {
     const S = {
@@ -38,7 +39,8 @@ const decodeState = (s) => {
         [state.different]: '打卡门店与排班门店不同',
         [state.business]: '出差',
         [state.noCheckIn]: '缺卡',
-        [state.askForLeave]: '请假'
+        [state.askForLeave]: '请假',
+        [state.workOvertime]: '加班',
     }
     return S[s];
 }
