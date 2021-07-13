@@ -471,7 +471,7 @@ const DepositExistsPaddleVendue = {
     needData: true,
     condition: ({ actionData }) => {
         const { deposit } = actionData;
-        const { paddleId } = deposit;
+        const { paddleId, price } = deposit;
         return {
             id: paddleId,
             vendue: {
@@ -2557,11 +2557,19 @@ const AUTH_MATRIX = {
                         relation: 'paddle',
                         needData: true,
                         condition: ({ user, actionData }) => {
-                            const { deposit } = actionData;
+                            const { deposit, price } = actionData;
                             const { paddleId } = deposit;
                             return {
                                 id: paddleId,
+                                vendue: {
+                                    state: {
+                                        $in: [vendueState.ready, vendueState.ongoing],
+                                    },
+                                },
                                 userId: user.id,
+                                totalDeposit: {
+                                    $gt: 2000 - price,
+                                }
                             };
                         },
                     }],
