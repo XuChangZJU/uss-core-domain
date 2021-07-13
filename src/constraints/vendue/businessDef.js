@@ -61,6 +61,7 @@ const {
     state: vendueState,
     STATE_TRAN_MATRIX: VENDUE_STATE_TRAN_MATRIX,
     relation: vendueRelation,
+    category: vendueCategory,
 } = require('../../constants/vendue/vendue');
 const {
     action: sessionAction,
@@ -1811,8 +1812,28 @@ const AUTH_MATRIX = {
                     "#data": [
                         {
                             check: ({ user, row }) => {
-                                return row.state === auctionState.unsold;
+                                if (row.state !== auctionState.unsold) {
+                                    return ErrorCode.createErrorByCode(ErrorCode.errorDataInconsistency,
+                                        `当前状态不支持此操作`, {
+                                            name: 'bid',
+                                            operation: 'update',
+                                            data: row,
+                                        });
+                                }
+                                return true;
                             },
+                        }
+                    ],
+                    '#exists': [
+                        {
+                            relation: 'vendue',
+                            condition: ({ user, row }) => {
+                                return {
+                                    id: row.session.vendueId,
+                                    category: vendueCategory.delayed,
+                                }
+                            },
+                            message: '当前拍卖类型不允许重拍',
                         }
                     ],
                 }
