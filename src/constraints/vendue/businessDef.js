@@ -1801,6 +1801,23 @@ const AUTH_MATRIX = {
         [auctionAction.makeReady]: {
             auths: AuctionGeneralStateChangeFn([auctionState.unsold], '非流拍的展品不能重拍'),
         },
+        [auctionAction.resold]: {
+            auths: [
+                {
+                    "#relation": {
+                        attr: 'session.vendue.auctionHouse',
+                        relations: [auctionRelation.owner, auctionRelation.manager],
+                    },
+                    "#data": [
+                        {
+                            check: ({ user, row }) => {
+                                return row.state === auctionState.unsold;
+                            },
+                        }
+                    ],
+                }
+            ],
+        },
     },
     bid: {
         [bidAction.create]: {
