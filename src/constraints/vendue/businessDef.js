@@ -2556,9 +2556,10 @@ const AUTH_MATRIX = {
                     '#exists': [DepositExistsPaddleVendue, {
                         relation: 'paddle',
                         needData: true,
+                        message: '网拍保证金余额需大于2000元',
                         condition: ({ user, actionData }) => {
-                            const { deposit, price } = actionData;
-                            const { paddleId } = deposit;
+                            const { deposit } = actionData;
+                            const { paddleId, price } = deposit;
                             return {
                                 id: paddleId,
                                 vendue: {
