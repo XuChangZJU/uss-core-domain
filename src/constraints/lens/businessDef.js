@@ -1055,7 +1055,7 @@ const AUTH_MATRIX = {
                 {
                     "#relation": {
                         attr: '',
-                        relations: [BrandRelation.owner, BrandRelation.manager, BrandRelation.customerService, BrandRelation.worker],
+                        relations: [BrandRelation.owner, BrandRelation.manager, BrandRelation.customerService, BrandRelation.worker, BrandRelation.financialStuff],
                     },
                 }
             ]
@@ -1091,7 +1091,7 @@ const AUTH_MATRIX = {
                                     userId: user.id,
                                     brandId: row.id,
                                     relation: {
-                                        $in: [BrandRelation.owner, BrandRelation.manager, BrandRelation.customerService],
+                                        $in: [BrandRelation.owner, BrandRelation.manager, BrandRelation.customerService, BrandRelation.financialStuff],
                                     },
                                 }
                             },
@@ -1107,7 +1107,7 @@ const AUTH_MATRIX = {
                 {
                     "#relation": {
                         attr: '',
-                        relations: [BrandRelation.owner, BrandRelation.manager, BrandRelation.customerService, BrandRelation.worker],
+                        relations: [BrandRelation.owner, BrandRelation.manager, BrandRelation.customerService, BrandRelation.worker, BrandRelation.financialStuff],
                     },
                 }
             ]
