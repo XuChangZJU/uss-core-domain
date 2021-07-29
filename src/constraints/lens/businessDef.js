@@ -2717,6 +2717,12 @@ const AUTH_MATRIX = {
                         relations: [BrandRelation.owner, BrandRelation.manager, BrandRelation.customerService, BrandRelation.worker, BrandRelation.supporter],
                     },
                 },
+                {
+                    "#relation": {
+                        attr: 'organization',
+                        relations: [OrganizationRelation.tester],
+                    },
+                },
             ],
         },
         [revisitAction.manage]: {
@@ -2725,6 +2731,19 @@ const AUTH_MATRIX = {
                     "#relation": {
                         attr: 'organization.brand',
                         relations: [BrandRelation.owner, BrandRelation.manager, BrandRelation.customerService, BrandRelation.worker, BrandRelation.supporter],
+                    },
+                    '#data': [                 // 表示对现有对象或者用户的数据有要求，可以有多项，每项之间是AND的关系
+                        {
+                            check: ({user, row}) => {
+                                return [revisitState.pending].includes(row.state);
+                            },
+                        }
+                    ],
+                },
+                {
+                    "#relation": {
+                        attr: 'organization',
+                        relations: [OrganizationRelation.tester],
                     },
                     '#data': [                 // 表示对现有对象或者用户的数据有要求，可以有多项，每项之间是AND的关系
                         {

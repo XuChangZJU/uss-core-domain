@@ -46,7 +46,8 @@ const decodeAction = (a) => {
 
 const relation = omit(Object.assign({}, commonRelation, {
     doctor: 401,
-    keeper: 501
+    keeper: 501,
+    tester: 601
 }), ['financial']);
 
 
@@ -54,6 +55,7 @@ const decodeRelation = (r) => {
     const S = {
         [relation.doctor]: '医生',
         [relation.keeper]: '店长',
+        [relation.tester]: '测试者',
     };
 
     return S[r] || decodeCommonRelation(r);
