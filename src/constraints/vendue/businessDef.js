@@ -2569,7 +2569,7 @@ const AUTH_MATRIX = {
                                 },
                                 userId: user.id,
                                 totalDeposit: {
-                                    $gte: 2000 - price,
+                                    $gt: 1999.9 - price,
                                 }
                             };
                         },
