@@ -2567,7 +2567,6 @@ const AUTH_MATRIX = {
                                         $in: [vendueState.ready, vendueState.ongoing],
                                     },
                                 },
-                                userId: user.id,
                                 totalDeposit: {
                                     $gt: 1999.9 - price,
                                 }
