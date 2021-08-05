@@ -43,8 +43,8 @@ const action = Object.assign({}, commonAction, {
     accept: 301,
     refuse: 310,
     resubmit: 401,
-    reply: 501
-    // finish: 501,
+    reply: 501,
+    finish: 501,
 });
 
 const decodeAction = (a) => {
