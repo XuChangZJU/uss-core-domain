@@ -53,7 +53,7 @@ const decodeAction = (a) => {
         [action.refuse]: '拒绝',
         [action.resubmit]: '重新提交',
         [action.reply]: '回复',
-        // [action.finish]: '完成',
+        [action.finish]: '完成',
     };
 
     return S[a] || decodeCommonAction(a);
@@ -64,7 +64,7 @@ const STATE_TRAN_MATRIX = {
     [action.refuse]: [state.pending, state.refused],
     [action.resubmit]: [state.refused, state.pending],
     // [action.reply]: [state.refused, state.accepted],
-    // [action.finish]: [[state.accepted, state.refused], state.finished],
+    [action.finish]: [state.accepted, state.finished],
 };
 module.exports = {
     action,

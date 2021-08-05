@@ -1046,6 +1046,23 @@ const AUTH_MATRIX = {
                 },
             ]
         },
+        [WorkerOrderAction.finish]: {
+            auths: [
+                {
+                    "#relation": {
+                        attr: 'trade.diagnosis.organization.brand',
+                        relations: [BrandRelation.owner, BrandRelation.manager, BrandRelation.customerService, BrandRelation.financialStuff],
+                    },
+                    '#data': [                 // 表示对现有对象或者用户的数据有要求，可以有多项，每项之间是AND的关系
+                        {
+                            check: ({user, row}) => {
+                                return  [WorkerOrderState.accepted].includes(row.state);
+                            },
+                        }
+                    ],
+                },
+            ]
+        },
     },
     brand: {
         [BrandAction.update]: OwnerRelationAuth,
