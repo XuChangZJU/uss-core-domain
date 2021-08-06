@@ -2654,6 +2654,13 @@ const AUTH_MATRIX = {
                 }
             ],
         },
+        [checkOutAction.update]: {
+            auths: [
+                CheckOutGuestCheckFn(checkOutAction.update, [checkOutState.legal, checkOutState.legal2], [checkOutTransportState.shipping]),
+                CheckOutVendueWorkerCheckFn(checkOutAction.update, [checkOutState.legal, checkOutState.legal2], [checkOutTransportState.shipping]),
+                CheckOutVendueAuctionHouseWorkerCheckFn(checkOutAction.update, [checkOutState.legal, checkOutState.legal2], [checkOutTransportState.shipping]),
+            ]
+        },
         [checkOutAction.changePrice]: {
             auths: [
                 CheckOutVendueWorkerCheckFn(checkOutAction.changePrice, [checkOutState.init, checkOutState.unpaid, checkOutState.legal2], null),
