@@ -2556,7 +2556,7 @@ const AUTH_MATRIX = {
                     '#exists': [DepositExistsPaddleVendue, {
                         relation: 'paddle',
                         needData: true,
-                        message: '网拍保证金余额需大于2000元',
+                        message: '同步拍保证金余额需大于2000元',
                         condition: ({ user, actionData }) => {
                             const { deposit } = actionData;
                             const { paddleId, price } = deposit;
@@ -2570,6 +2570,26 @@ const AUTH_MATRIX = {
                                 totalDeposit: {
                                     $gt: 1999.9 - price,
                                 }
+                            };
+                        },
+                    }],
+                },
+                {
+                    '#exists': [DepositExistsPaddleVendue, {
+                        relation: 'paddle',
+                        needData: true,
+                        message: '同步拍保证金余额需大于2000元',
+                        condition: ({ user, actionData }) => {
+                            const { deposit } = actionData;
+                            const { paddleId, price } = deposit;
+                            return {
+                                id: paddleId,
+                                vendue: {
+                                    state: {
+                                        $in: [vendueState.ready, vendueState.ongoing],
+                                    },
+                                    category: vendueCategory.delayed,
+                                },
                             };
                         },
                     }],
