@@ -2019,7 +2019,7 @@ const AUTH_MATRIX = {
                             needData: true,
                             condition: ({ user, actionData }) => {
                                 return {
-                                    userId: actionData.paddle.userId,
+                                    userId: actionData.paddle.userId || user.id,
                                     vendueId: actionData.paddle.vendueId,
                                 }
                             },
@@ -2054,7 +2054,7 @@ const AUTH_MATRIX = {
                             needData: true,
                             condition: ({ user, actionData }) => {
                                 return {
-                                    userId: actionData.paddle.userId,
+                                    userId: actionData.paddle.userId || user.id,
                                     vendueId: actionData.paddle.vendueId,
                                 }
                             },
