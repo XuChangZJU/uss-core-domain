@@ -2579,7 +2579,7 @@ const AUTH_MATRIX = {
                     '#exists': [DepositExistsPaddleVendue, {
                         relation: 'paddle',
                         needData: true,
-                        message: '同步拍保证金余额需大于1000元',
+                        message: '同步拍保证金余额需大于2000元',
                         condition: ({ user, actionData }) => {
                             const { deposit } = actionData;
                             const { paddleId, price } = deposit;
