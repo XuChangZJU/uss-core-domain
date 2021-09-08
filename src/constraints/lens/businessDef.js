@@ -2339,6 +2339,21 @@ const AUTH_MATRIX = {
             auths: [
                 {
                     "#role": [Roles.ROOT.name],
+                    '#data': [
+                        {
+                            check: ({ row, user }) => {
+                                if ([appointmentState.normal, appointmentState.completed].includes(row.state)) {
+                                    // 老的前端框架选取按钮时不会判断#exists,这里先放入data，迁移到新框架时改掉
+                                    return true;
+                                }
+                                return ErrorCode.createErrorByCode(ErrorCode.errorDataInconsistency, '预约无效', {
+                                    name: 'appointment',
+                                    operation: 'update',
+                                    data: row,
+                                });
+                            },
+                        }
+                    ],
                 },
                 {
                     "#relation": {
