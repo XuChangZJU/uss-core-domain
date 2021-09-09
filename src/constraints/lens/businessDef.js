@@ -1385,17 +1385,19 @@ const AUTH_MATRIX = {
                     "#relation": {
                         attr: 'trade.diagnosis.organization.brand',
                     },
-                    '#data': ({ actionData, row }) => {
-                        const { recheck } = actionData;
-                        assert (recheck);
-                        const beginsAt = recheck.beginsAt || row.beginsAt;
-                        const endsAt = recheck.endsAt || row.endsAt;
-                        assert(beginsAt < endsAt);
-                        const allowUpdateAttrs = ['beginsAt', 'endsAt'];
-                        assert (xor(Object.keys(recheck), allowUpdateAttrs).length === 0);
+                    '#data': [{
+                        check: ({ actionData, row }) => {
+                            const { recheck } = actionData;
+                            assert (recheck);
+                            const beginsAt = recheck.beginsAt || row.beginsAt;
+                            const endsAt = recheck.endsAt || row.endsAt;
+                            assert(beginsAt < endsAt);
+                            const allowUpdateAttrs = ['beginsAt', 'endsAt'];
+                            assert (xor(Object.keys(recheck), allowUpdateAttrs).length === 0);
 
-                        return true;
-                    }
+                            return true;
+                        }
+                    }]
                 }
             ],
         },
