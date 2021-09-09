@@ -384,9 +384,9 @@ const CheckContractDataState = (states, msg) => [
     {
         check: ({ row, actionData }) => {
             const { contract } = actionData;
-            if (contract.hasOwnProperty('price')) {
-                assert(contract.price >= 0, `合同「${row.id}」的价格必须大于等于0`);
-            }
+            // if (contract.hasOwnProperty('price')) {
+            //     assert(contract.price >= 0, `合同「${row.id}」的价格必须大于等于0`);
+            // }
             if (!states.includes(row.state)) {
                 return ErrorCode.createErrorByCode(ErrorCode.errorDataInconsistency, msg, {
                     name: 'contract',
