@@ -1388,13 +1388,14 @@ const AUTH_MATRIX = {
                     '#data': [{
                         check: ({ actionData, row }) => {
                             const { recheck } = actionData;
-                            assert (recheck);
-                            const beginsAt = recheck.beginsAt || row.beginsAt;
-                            const endsAt = recheck.endsAt || row.endsAt;
-                            assert(beginsAt < endsAt);
-                            const allowUpdateAttrs = ['beginsAt', 'endsAt'];
-                            assert (xor(Object.keys(recheck), allowUpdateAttrs).length === 0);
-
+                            if (recheck) {
+                                const beginsAt = recheck.beginsAt || row.beginsAt;
+                                const endsAt = recheck.endsAt || row.endsAt;
+                                assert(beginsAt < endsAt);
+                                const allowUpdateAttrs = ['beginsAt', 'endsAt'];
+                                assert (xor(Object.keys(recheck), allowUpdateAttrs).length === 0);
+                                return true;
+                            }
                             return true;
                         }
                     }]
