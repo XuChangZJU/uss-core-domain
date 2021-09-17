@@ -2728,6 +2728,9 @@ const AUTH_MATRIX = {
         [revisitAction.create]: {
             auths: [
                 {
+                    "#role": [Roles.ROOT.name],
+                },
+                {
                     '#exists': [
                         {
                             relation: 'userBrand',
@@ -2747,6 +2750,9 @@ const AUTH_MATRIX = {
         [revisitAction.update]: {
             auths: [
                 {
+                    "#role": [Roles.ROOT.name],
+                },
+                {
                     "#relation": {
                         attr: 'organization.brand',
                         relations: [BrandRelation.owner, BrandRelation.manager, BrandRelation.customerService, BrandRelation.worker, BrandRelation.supporter],
@@ -2762,6 +2768,9 @@ const AUTH_MATRIX = {
         },
         [revisitAction.manage]: {
             auths: [
+                {
+                    "#role": [Roles.ROOT.name],
+                },
                 {
                     "#relation": {
                         attr: 'organization.brand',
