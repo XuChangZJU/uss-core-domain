@@ -29,12 +29,12 @@ const decodeState = (s) => {
     return S[s];
 };
 
-const action = Object.assign({}, pick(commonAction, 'create', 'update', 'remove'), {
+const action = Object.assign({}, pick(commonAction, ['create', 'update', 'remove']), {
     activate: 2002,
     confirm: 2003,
     complete: 2004,
-    expire: 100001,
-    makeDead: 100002,
+    expire: 2005,
+    makeDead: 2006,
 });
 
 const decodeAction = (a) => {

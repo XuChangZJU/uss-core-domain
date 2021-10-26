@@ -1385,17 +1385,20 @@ const AUTH_MATRIX = {
                     "#relation": {
                         attr: 'trade.diagnosis.organization.brand',
                     },
-                    '#data': ({ actionData, row }) => {
-                        const { recheck } = actionData;
-                        assert (recheck);
-                        const beginsAt = recheck.beginsAt || row.beginsAt;
-                        const endsAt = recheck.endsAt || row.endsAt;
-                        assert(beginsAt < endsAt);
-                        const allowUpdateAttrs = ['beginsAt', 'endsAt'];
-                        assert (xor(Object.keys(recheck), allowUpdateAttrs).length === 0);
-
-                        return true;
-                    }
+                    '#data': [{
+                        check: ({ actionData, row }) => {
+                            const { recheck } = actionData;
+                            if (recheck) {
+                                const beginsAt = recheck.beginsAt || row.beginsAt;
+                                const endsAt = recheck.endsAt || row.endsAt;
+                                assert(beginsAt < endsAt);
+                                const allowUpdateAttrs = ['beginsAt', 'endsAt'];
+                                assert (xor(Object.keys(recheck), allowUpdateAttrs).length === 0);
+                                return true;
+                            }
+                            return true;
+                        }
+                    }]
                 }
             ],
         },
@@ -2339,6 +2342,21 @@ const AUTH_MATRIX = {
             auths: [
                 {
                     "#role": [Roles.ROOT.name],
+                    '#data': [
+                        {
+                            check: ({ row, user }) => {
+                                if ([appointmentState.normal, appointmentState.completed].includes(row.state)) {
+                                    // 老的前端框架选取按钮时不会判断#exists,这里先放入data，迁移到新框架时改掉
+                                    return true;
+                                }
+                                return ErrorCode.createErrorByCode(ErrorCode.errorDataInconsistency, '预约无效', {
+                                    name: 'appointment',
+                                    operation: 'update',
+                                    data: row,
+                                });
+                            },
+                        }
+                    ],
                 },
                 {
                     "#relation": {
@@ -2710,6 +2728,9 @@ const AUTH_MATRIX = {
         [revisitAction.create]: {
             auths: [
                 {
+                    "#role": [Roles.ROOT.name],
+                },
+                {
                     '#exists': [
                         {
                             relation: 'userBrand',
@@ -2729,6 +2750,9 @@ const AUTH_MATRIX = {
         [revisitAction.update]: {
             auths: [
                 {
+                    "#role": [Roles.ROOT.name],
+                },
+                {
                     "#relation": {
                         attr: 'organization.brand',
                         relations: [BrandRelation.owner, BrandRelation.manager, BrandRelation.customerService, BrandRelation.worker, BrandRelation.supporter],
@@ -2744,6 +2768,9 @@ const AUTH_MATRIX = {
         },
         [revisitAction.manage]: {
             auths: [
+                {
+                    "#role": [Roles.ROOT.name],
+                },
                 {
                     "#relation": {
                         attr: 'organization.brand',

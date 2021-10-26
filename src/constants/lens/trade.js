@@ -184,7 +184,7 @@ const categoryId = {
     'ActivityCheck': 20,
     'TeenagerScreening': 21,
     'OkGlassLearning': 22,
-    'screening2': 23,
+    'ChildrenScreening': 23,
 }
 const decodeCategoryId = (c) => {
     const C = {
@@ -210,7 +210,11 @@ const decodeCategoryId = (c) => {
         [categoryId.ActivityCheck]: '活动验光',
         [categoryId.TeenagerScreening]: '筛查（青少年）',
         [categoryId.OkGlassLearning]: '角膜塑形镜摘戴学习',
+<<<<<<< HEAD
         [categoryId.screening2]: '验光筛查',
+=======
+        [categoryId.ChildrenScreening]: '儿童屈光检查',
+>>>>>>> d52f35f20000cdfb08a63ebcb023c70fcdc6286c
     }
     return C[c];
 }
