@@ -12,8 +12,6 @@ module.exports = {
     decodeAction,
     state,
     decodeState,
-    type,
-    decodeType,
     relation,
     decodeRelation,
 };
