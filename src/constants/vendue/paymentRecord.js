@@ -12,6 +12,7 @@ const type = {
     'in': 1,
     'out': 2,
     'internal': 3,
+    'others': 4,
 }
 
 const decodeType = (t) => {
@@ -19,6 +20,7 @@ const decodeType = (t) => {
         [type.in]: '入账',
         [type.out]: '出账',
         [type.internal]: '抵扣',
+        [type.others]: '其他',
     };
     return T[t];
 };
