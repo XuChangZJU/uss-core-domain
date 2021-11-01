@@ -24,9 +24,25 @@ const decodeType = (t) => {
     };
     return T[t];
 };
+
+const property = {
+    'settlement': 1,
+    'record': 2,
+};
+
+const decodeProperty = (p) => {
+    const P = {
+        [property.settlement]: '款项',
+        [property.record]: '记录',
+    };
+    return T[t];
+};
+
 module.exports = {
     action,
     decodeAction,
+    property,
+    decodeProperty,
     state,
     decodeState,
     type,
