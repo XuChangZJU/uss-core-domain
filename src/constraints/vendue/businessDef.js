@@ -3071,6 +3071,17 @@ const AUTH_MATRIX = {
                 },
             ]
         },
+    },
+    auctionRefund: {
+        [CommonAction.create]: {
+            auths: [
+                {
+                    '#relation': {
+                        attr: 'checkOut.vendue.auctionHouse',
+                    },
+                },
+            ]
+        },
     }
 };
 
