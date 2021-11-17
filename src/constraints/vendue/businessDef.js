@@ -3077,7 +3077,7 @@ const AUTH_MATRIX = {
             auths: [
                 {
                     '#relation': {
-                        attr: 'checkOut.vendue.auctionHouse',
+                        attr: 'checkOut.paddle.vendue.auctionHouse',
                     },
                 },
             ]
