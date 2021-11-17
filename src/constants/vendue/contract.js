@@ -13,7 +13,8 @@ const state = {
      completed: 1201,
      cancelled: 2001,
      aborted: 2002,
-     buyerRefund: 3001
+     buyerRefund: 3001,
+     contractRefunded: 4001,
 };
 
 const decodeState = (s) => {
@@ -24,6 +25,7 @@ const decodeState = (s) => {
         [state.cancelled]: '已取消',
         [state.aborted]: '已中止',
         [state.buyerRefund]: '买家已退款',
+        [state.contractRefunded]: '委托方已退款'
     };
     return DICT[s] || decodeCommonState(s);
 };
