@@ -3088,7 +3088,7 @@ const AUTH_MATRIX = {
             auths: [
                 {
                     '#relation': {
-                        attr: 'vendue.auctionHouse',
+                        attr: 'cashIn.auctionHouse',
                     },
                 },
             ]
