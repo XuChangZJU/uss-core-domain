@@ -3096,6 +3096,46 @@ const AUTH_MATRIX = {
                 },
             ]
         },
+    },
+    blackList: {
+        [CommonAction.create]: {
+            auths: [
+                {
+                    "#role": [Roles.ROOT.name],
+                    '#exists': [
+                        {
+                            relation: 'userAuctionHouse',
+                            condition: ({ user }) => {
+                                const query = {
+                                    userId: user.id,
+                                    relation: auctionRelation.owner,
+                                };
+                                return query;
+                            },
+                        },
+                    ],
+                }
+            ]
+        },
+        [CommonAction.remove]: {
+            auths: [
+                {
+                    "#role": [Roles.ROOT.name],
+                    '#exists': [
+                        {
+                            relation: 'userAuctionHouse',
+                            condition: ({ user }) => {
+                                const query = {
+                                    userId: user.id,
+                                    relation: auctionRelation.owner,
+                                };
+                                return query;
+                            },
+                        },
+                    ],
+                }
+            ]
+        },
     }
 };
 
