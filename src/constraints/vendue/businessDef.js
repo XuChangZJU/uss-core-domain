@@ -3102,7 +3102,6 @@ const AUTH_MATRIX = {
         [CommonAction.create]: {
             auths: [
                 {
-                    "#role": [Roles.ROOT.name],
                     '#exists': [
                         {
                             relation: 'userAuctionHouse',
@@ -3115,13 +3114,15 @@ const AUTH_MATRIX = {
                             },
                         },
                     ],
-                }
+                },
+                {
+                    "#role": [Roles.ROOT.name],
+                },
             ]
         },
         [CommonAction.remove]: {
             auths: [
                 {
-                    "#role": [Roles.ROOT.name],
                     '#exists': [
                         {
                             relation: 'userAuctionHouse',
@@ -3134,7 +3135,10 @@ const AUTH_MATRIX = {
                             },
                         },
                     ],
-                }
+                },
+                {
+                    "#role": [Roles.ROOT.name],
+                },
             ]
         },
     }
