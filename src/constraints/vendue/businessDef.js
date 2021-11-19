@@ -175,6 +175,7 @@ const AuctionDataCheck = (states, msg) => [
                     });
                 }
             }
+            return true;
         },
     }
 ];
