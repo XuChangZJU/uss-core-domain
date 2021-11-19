@@ -1803,7 +1803,7 @@ const AUTH_MATRIX = {
             auths: AuctionGeneralStateChangeFn([auctionState.unsold], '非流拍的展品不能重拍'),
         },
         [auctionAction.revoke]: {
-            auths: AuctionGeneralStateChangeFn([state.ready, state.resolded], '已开拍的拍品不能撤拍'),
+            auths: AuctionGeneralStateChangeFn([auctionState.ready, auctionState.resolded], '已开拍的拍品不能撤拍'),
         },
         [auctionAction.resold]: {
             auths: [
