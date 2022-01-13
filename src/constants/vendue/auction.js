@@ -44,6 +44,22 @@ const decodeState = (s) => {
     return S[s] || decodeCommonState(s);
 };
 
+const decodeStateForC = (s) => {
+    const S = {
+        // [state.preparing]: '准备中',
+        [state.ready]: '预展中',
+        [state.ongoing]: '拍卖中',
+        [state.sold]: '已成交',
+        [state.unsold]: '已流拍',
+        [state.breakUp]: '已成交',
+        [state.pausing]: '暂停',
+        [state.revoke]: '撤销',
+        [state.resolded]: '已重新上架',
+    };
+
+    return S[s] || decodeCommonState(s);
+};
+
 const action = Object.assign({}, commonAction, {
     ready: 501,
     makeReady: 502,
@@ -123,4 +139,5 @@ module.exports = {
     STATE_TRAN_MATRIX,
     category,
     decodeCategory,
+    decodeStateForC,
 };
