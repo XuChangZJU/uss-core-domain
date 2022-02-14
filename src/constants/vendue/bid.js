@@ -55,6 +55,8 @@ const decodeState = (s) => {
     };
     return S[s] || decodeCommonState(s);
 };
+
+
 const decodeStateForC = (s) => {
     const S = {
         [state.bidding]: '竞拍中',
@@ -65,6 +67,8 @@ const decodeStateForC = (s) => {
     };
     return S[s] || decodeCommonState(s);
 };
+
+
 const STATE_TRAN_MATRIX = {
     [action.rollbackMakeFailure]: [state.failure, state.bidding],
     [action.success]: [state.bidding, state.success],
