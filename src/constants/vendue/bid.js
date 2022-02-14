@@ -47,10 +47,20 @@ const state = Object.assign({}, commonState, {
 });
 const decodeState = (s) => {
     const S = {
-        [state.bidding]: '竞拍',
+        [state.bidding]: '竞拍中',
         [state.success]: '成交',
         [state.confirmed]: '已核对',
         [state.violated]: '已违约',
+        [state.failure]: '已失败',
+    };
+    return S[s] || decodeCommonState(s);
+};
+const decodeStateForC = (s) => {
+    const S = {
+        [state.bidding]: '竞拍中',
+        [state.success]: '成交',
+        [state.confirmed]: '已核对',
+        [state.violated]: '成交',
         [state.failure]: '已失败',
     };
     return S[s] || decodeCommonState(s);
@@ -69,6 +79,7 @@ module.exports = {
     decodeRelation,
     state,
     decodeState,
+    decodeStateForC,
     action,
     decodeAction,
     category,
