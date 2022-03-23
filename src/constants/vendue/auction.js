@@ -128,20 +128,6 @@ const decodeCategory = (c) => {
     return C[c];
 }
 
-const type = {
-    normal: 1,
-    vip: 10,
-};
-
-const decodeType = (t) => {
-    const TEXT = {
-        [type.normal]: '普通拍品',
-        [type.vip]: 'vip拍品',
-    };
-
-    return TEXT[t];
-};
-
 module.exports = {
     relation,
     decodeRelation,
@@ -153,8 +139,6 @@ module.exports = {
     decodeMode,
     STATE_TRAN_MATRIX,
     category,
-    type,
-    decodeType,
     decodeCategory,
     decodeStateForC,
 };
