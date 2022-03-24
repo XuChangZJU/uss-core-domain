@@ -36,6 +36,7 @@ function decodeVipType(t) {
     return T[t];
 }
 
+
 module.exports = {
     type,
     decodeType,
