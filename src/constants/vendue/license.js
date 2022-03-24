@@ -23,9 +23,24 @@ function decodeType(o) {
     return STRINGS_OF_ORIGINS[o];
 }
 
+const vipType = {
+    normal: 1,
+    vip: 2,
+};
+
+function decodeVipType(t) {
+    const T = {
+        [vipType.normal]: '普通优惠',
+        [vipType.vip]: 'vip优惠',
+    }
+    return T[t];
+}
+
 module.exports = {
     type,
     decodeType,
+    vipType,
+    decodeVipType,
     action,
     decodeAction,
     state,
