@@ -10,51 +10,51 @@ const {
 } = require('../../constants/action');
 const {
     action: bannerAction,
-} = require('../../constants/vendue/banner');
+} = require('../../constants/tc/banner');
 const {
     action: agentAction,
     state: agentState,
-} = require('../../constants/vendue/agent');
+} = require('../../constants/tc/agent');
 const {
     action: depositAction,
     state: depositState,
     STATE_TRAN_MATRIX: DEPOSIT_STATE_TRAN_MATRIX,
-} = require('../../constants/vendue/deposit');
+} = require('../../constants/tc/deposit');
 const {
     action: checkOutAction,
     state: checkOutState,
     transportState: checkOutTransportState,
     STATE_TRAN_MATRIX: CHECKOUT_STATE_TRAN_MATRIX,
     decodeAction: decodeCheckOutAction,
-} = require('../../constants/vendue/checkOut');
+} = require('../../constants/tc/checkOut');
 const {
     action: cashInAction,
     state: cashInState,
     STATE_TRAN_MATRIX: CASHIN_STATE_TRAN_MATRIX,
-} = require('../../constants/vendue/cashIn');
+} = require('../../constants/tc/cashIn');
 const {
     action: auctionHouseAction,
     state: auctionHouseState,
     STATE_TRAN_MATRIX: AUCTIONHOUSE_STATE_TRAN_MATRIX,
     relation: auctionHouseRelation,
-} = require('../../constants/vendue/auctionHouse');
+} = require('../../constants/tc/auctionHouse');
 const {
     action: collectionAction,
     state: collectionState,
     relation: collectionRelation,
-} = require('../../constants/vendue/collection');
+} = require('../../constants/tc/collection');
 
 const {
     action: contractAction,
     state: contractState,
     STATE_TRAN_MATRIX: CONTRACT_STATE_TRAN_MATRIX,
-} = require('../../constants/vendue/contract');
+} = require('../../constants/tc/contract');
 
 const {
     action: stockAction,
     state: stockState,
     STATE_TRAN_MATRIX: STOCK_STATE_TRAN_MATRIX,
-} = require('../../constants/vendue/stock');
+} = require('../../constants/tc/stock');
 
 const {
     action: vendueAction,
@@ -62,50 +62,50 @@ const {
     STATE_TRAN_MATRIX: VENDUE_STATE_TRAN_MATRIX,
     relation: vendueRelation,
     category: vendueCategory,
-} = require('../../constants/vendue/vendue');
+} = require('../../constants/tc/vendue');
 const {
     action: sessionAction,
     state: sessionState,
     STATE_TRAN_MATRIX: SESSION_STATE_TRAN_MATRIX,
     relation: sessionRelation,
-} = require('../../constants/vendue/session');
+} = require('../../constants/tc/session');
 const {
     action: auctionAction,
     state: auctionState,
     STATE_TRAN_MATRIX: AUCTION_STATE_TRAN_MATRIX,
     relation: auctionRelation,
-} = require('../../constants/vendue/auction');
+} = require('../../constants/tc/auction');
 const {
     action: bidAction,
     state: bidState,
     relation: bidRelation,
     STATE_TRAN_MATRIX: BID_STATE_TRAN_MATRIX,
     category: bidCategory,
-} = require('../../constants/vendue/bid');
+} = require('../../constants/tc/bid');
 const {
     action: paddleAction,
     relation: paddleRelation,
     isPaddleOnline,
-} = require('../../constants/vendue/paddle');
+} = require('../../constants/tc/paddle');
 const {
     action: licenseAction,
     STATE_TRAN_MATRIX: license_STATE_TRAN_MATRIX,
-} = require('../../constants/vendue/license');
+} = require('../../constants/tc/license');
 const {
     action: contractTermsAction,
     state: contractTermsState,
     COMMON_STATE_TRAN_MATRIX: CONTRACTTERMS_STATE_TRAN_MATRIX,
-} = require('../../constants/vendue/contractTerms');
+} = require('../../constants/tc/contractTerms');
 const {
     action: qiniuFileAction,
     state: qiniuFileState,
-} = require('../../constants/vendue/qiniuFile');
+} = require('../../constants/tc/qiniuFile');
 const {
     action: paymentRecordAction,
-} = require('../../constants/vendue/paymentRecord');
+} = require('../../constants/tc/paymentRecord');
 const {
     action: expressAction,
-} = require('../../constants/vendue/express');
+} = require('../../constants/tc/express');
 
 const { AUTH_MATRIX: EXPRESS_AUTH_MATRIX, STATE_TRANS_MATRIX: EXPRESS_STATE_TRANS_MATRIX } = require('../../constants/express');
 const ErrorCode = require('../../constants/errorCode');
