@@ -1790,6 +1790,9 @@ const AUTH_MATRIX = {
                         condition: ({ row }) => {
                             return {
                                 auctionId: row.id,
+                                state: {
+                                    $in: [bidState.bidding, bidState.success, bidState.confirmed],
+                                }
                             }
                         },
                         message: '拍品上已有出价，无法流拍',
