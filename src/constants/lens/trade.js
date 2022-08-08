@@ -110,7 +110,7 @@ const getMethodId = {
 const decodeGetMethodId = (gm) => {
     const GM = {
         [getMethodId.HelpYourself]: '顾客自取',
-        [getMethodId.Express]: '快递',
+        [getMethodId.Express]: '邮寄',
         [getMethodId.AtOnce]: '当场立取',
         [getMethodId.Agent]: '委托代收',
     };
