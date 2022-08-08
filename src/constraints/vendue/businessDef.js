@@ -1790,9 +1790,6 @@ const AUTH_MATRIX = {
                         condition: ({ row }) => {
                             return {
                                 auctionId: row.id,
-                                state: {
-                                    $in: [bidState.bidding, bidState.success, bidState.confirmed],
-                                }
                             }
                         },
                         message: '拍品上已有出价，无法流拍',
@@ -1819,7 +1816,7 @@ const AUTH_MATRIX = {
                     "#data": [
                         {
                             check: ({ user, row }) => {
-                                if (row.state !== auctionState.unsold) {
+                                if (![auctionState.unsold, auctionState.sold].includes(row.state)) {
                                     return ErrorCode.createErrorByCode(ErrorCode.errorDataInconsistency,
                                         `当前状态不支持此操作`, {
                                             name: 'bid',
@@ -1841,7 +1838,21 @@ const AUTH_MATRIX = {
                                 }
                             },
                             message: '当前拍卖类型不允许重拍',
-                        }
+                        },
+                    ],
+                    '#unexists': [
+                        {
+                            relation: 'bid',
+                            condition: ({ user, row }) => {
+                                return {
+                                    auctionId: row.id,
+                                    checkOutId: {
+                                        $exists: true,
+                                    }
+                                }
+                            },
+                            message: '已结算的拍品不允许重拍',
+                        },
                     ],
                 }
             ],
