@@ -1828,7 +1828,34 @@ const AUTH_MATRIX = {
         [auctionAction.assign]: AllowEveryoneAuth,
         [auctionAction.authRevoke]: AllowEveryoneAuth,
         [auctionAction.makeReady]: {
-            auths: AuctionGeneralStateChangeFn([auctionState.unsold], '非流拍的展品不能重拍'),
+            auths: AuctionGeneralStateChangeFn([auctionState.unsold, auctionState.sold], '该展品不能重拍', {
+                '#exists': [
+                    {
+                        relation: 'vendue',
+                        condition: ({ user, row }) => {
+                            return {
+                                id: row.session.vendueId,
+                                category: vendueCategory.delayed,
+                            }
+                        },
+                        message: '当前拍卖类型不允许重拍',
+                    },
+                ],
+                '#unexists': [
+                    {
+                        relation: 'bid',
+                        condition: ({ user, row }) => {
+                            return {
+                                auctionId: row.id,
+                                checkOutId: {
+                                    $exists: true,
+                                }
+                            }
+                        },
+                        message: '已结算的拍品不允许重拍',
+                    },
+                ],
+            }),
         },
         [auctionAction.revoke]: {
             auths: AuctionGeneralStateChangeFn([auctionState.ready, auctionState.resolded], '已开拍的拍品不能撤拍'),
