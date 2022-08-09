@@ -1770,7 +1770,34 @@ const AUTH_MATRIX = {
             auths: AuctionGeneralStateChangeFn([auctionState.ready, auctionState.pausing], '非预展和暂停的展品不能进入拍卖'),
         },
         [auctionAction.restart]: {
-            auths: AuctionGeneralStateChangeFn([auctionState.unsold], '非流拍的展品不能重拍'),
+            auths: AuctionGeneralStateChangeFn([auctionState.unsold, auctionState.sold], '本展品不能重拍', {
+                '#exists': [
+                    {
+                        relation: 'vendue',
+                        condition: ({ user, row }) => {
+                            return {
+                                id: row.session.vendueId,
+                                category: vendueCategory.delayed,
+                            }
+                        },
+                        message: '当前拍卖类型不允许重拍',
+                    },
+                ],
+                '#unexists': [
+                    {
+                        relation: 'bid',
+                        condition: ({ user, row }) => {
+                            return {
+                                auctionId: row.id,
+                                checkOutId: {
+                                    $exists: true,
+                                }
+                            }
+                        },
+                        message: '已结算的拍品不允许重拍',
+                    },
+                ],
+            }),
         },
         [auctionAction.pause]: {
             auths: AuctionGeneralStateChangeFn([auctionState.ongoing], '非拍卖状态的展品不能暂停'),

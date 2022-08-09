@@ -107,7 +107,7 @@ const STATE_TRAN_MATRIX = {
     [action.sold]: [state.ongoing, state.sold],
     [action.unsold]: [[state.ongoing, state.sold], state.unsold],
     [action.pause]: [state.ongoing, state.pausing],
-    [action.restart]: [state.unsold, state.ongoing],
+    [action.restart]: [[state.unsold, state.sold], state.ongoing],
     [action.makeReady]: [state.unsold, state.ready],
     [action.resold]: [state.unsold, state.resolded],
     [action.revoke]: [[state.ready, state.resolded], state.revoke]
