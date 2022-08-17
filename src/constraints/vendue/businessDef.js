@@ -2752,7 +2752,7 @@ const AUTH_MATRIX = {
         },
         [checkOutAction.update]: {
             auths: [
-                CheckOutGuestCheckFn(checkOutAction.update, [checkOutState.legal, checkOutState.legal2], [checkOutTransportState.shipping]),
+                CheckOutGuestCheckFn(checkOutAction.update, null, [checkOutTransportState.shipping]),
                 CheckOutVendueWorkerCheckFn(checkOutAction.update, [checkOutState.legal, checkOutState.legal2], [checkOutTransportState.shipping]),
                 CheckOutVendueAuctionHouseWorkerCheckFn(checkOutAction.update, [checkOutState.legal, checkOutState.legal2], [checkOutTransportState.shipping]),
             ]
