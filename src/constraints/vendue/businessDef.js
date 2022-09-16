@@ -1771,18 +1771,6 @@ const AUTH_MATRIX = {
         },
         [auctionAction.restart]: {
             auths: AuctionGeneralStateChangeFn([auctionState.unsold, auctionState.sold], '本展品不能重拍', {
-                '#exists': [
-                    {
-                        relation: 'vendue',
-                        condition: ({ user, row }) => {
-                            return {
-                                id: row.session.vendueId,
-                                category: vendueCategory.delayed,
-                            }
-                        },
-                        message: '当前拍卖类型不允许重拍',
-                    },
-                ],
                 '#unexists': [
                     {
                         relation: 'bid',
