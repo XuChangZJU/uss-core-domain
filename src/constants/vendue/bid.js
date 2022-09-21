@@ -61,7 +61,7 @@ const decodeStateForC = (s) => {
     const S = {
         [state.bidding]: '竞拍中',
         [state.success]: '成交',
-        [state.confirmed]: '已核对',
+        [state.confirmed]: '成交',
         [state.violated]: '成交',
         [state.failure]: '已失败',
     };
