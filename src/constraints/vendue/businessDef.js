@@ -582,6 +582,9 @@ const paddleRefundUnexistsAuth = [
                 checkOutId: {
                     $exists: false,
                 },
+                cashInId: {
+                    $exists: false,
+                }
             };
         },
         message: '该号牌上有待进行结算的拍卖',
@@ -2224,7 +2227,7 @@ const AUTH_MATRIX = {
                     ],
                     '#data': paddleRefundDataCheck(false),
                     '#unexists': paddleRefundUnexistsAuth,
-                }
+                },
             ]
         },
     },
