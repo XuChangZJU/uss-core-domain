@@ -309,7 +309,7 @@ const AuctionUnexistsBid = [
         condition: ({ row, actionData }) => {
             const { auction } = actionData;
 
-            if (auction.hasOwnProperty('id') && Object.keys.length === 1){
+            if (auction.hasOwnProperty('id') && Object.keys.length === 1) {
                 return {
                     id: -1,
                 }
@@ -463,7 +463,7 @@ const BidGeneralUpdateControl = (states, extra, checkDataFn) => {
     }, extra);
 
     return {
-        auths: [ Auth1, Auth2, Auth3],
+        auths: [Auth1, Auth2, Auth3],
     };
 };
 
@@ -1819,10 +1819,10 @@ const AUTH_MATRIX = {
                                 if (row.state !== auctionState.unsold) {
                                     return ErrorCode.createErrorByCode(ErrorCode.errorDataInconsistency,
                                         `当前状态不支持此操作`, {
-                                            name: 'bid',
-                                            operation: 'update',
-                                            data: row,
-                                        });
+                                        name: 'bid',
+                                        operation: 'update',
+                                        data: row,
+                                    });
                                 }
                                 return true;
                             },
@@ -1943,7 +1943,7 @@ const AUTH_MATRIX = {
                 },
             ],
         }, ({ row }) => {
-            if (row.isOnline || row.agentId)  {
+            if (row.isOnline || row.agentId) {
                 return ErrorCode.createErrorByCode(ErrorCode.errorDataInconsistency,
                     `只能移除来自现场的出价`, {
                     name: 'bid',
@@ -1954,39 +1954,39 @@ const AUTH_MATRIX = {
             return true;
         }),
         [bidAction.update]: BidGeneralUpdateControl([bidState.bidding, bidState.success, bidState.confirmed]),
-        [bidAction.changePrice]: BidGeneralUpdateControl([bidState.success, bidState.confirmed],{},
-            ({row}) => {
+        [bidAction.changePrice]: BidGeneralUpdateControl([bidState.success, bidState.confirmed], {},
+            ({ row }) => {
                 if (row.checkOutId) {
                     return ErrorCode.createErrorByCode(ErrorCode.errorDataInconsistency,
                         '已结算的拍品不能再修改价格', {
-                            name: 'bid',
-                            operation: 'update',
-                            data: row,
-                        });
+                        name: 'bid',
+                        operation: 'update',
+                        data: row,
+                    });
                 }
                 return true;
             }),
-        [bidAction.confirm]: BidGeneralUpdateControl([bidState.success, bidState.confirmed],{},
-            ({row}) => {
+        [bidAction.confirm]: BidGeneralUpdateControl([bidState.success, bidState.confirmed], {},
+            ({ row }) => {
                 if (row.checkOutId) {
                     return ErrorCode.createErrorByCode(ErrorCode.errorDataInconsistency,
                         '已结算的拍品不能再进行核对', {
-                            name: 'bid',
-                            operation: 'update',
-                            data: row,
-                        });
+                        name: 'bid',
+                        operation: 'update',
+                        data: row,
+                    });
                 }
                 return true;
             }),
         [bidAction.violate]: BidGeneralUpdateControl([bidState.success, bidState.confirmed], {},
-            ({row}) => {
+            ({ row }) => {
                 if (row.checkOutId) {
                     return ErrorCode.createErrorByCode(ErrorCode.errorDataInconsistency,
                         '已结算的拍品不能再进行弃标', {
-                            name: 'bid',
-                            operation: 'update',
-                            data: row,
-                        });
+                        name: 'bid',
+                        operation: 'update',
+                        data: row,
+                    });
                 }
                 return true;
             }),
@@ -2560,7 +2560,7 @@ const AUTH_MATRIX = {
                     '#exists': [DepositExistsPaddleVendue, {
                         relation: 'paddle',
                         needData: true,
-                        message: '同步拍保证金余额需大于2000元',
+                        message: '同步拍保证金余额需大于1000元',
                         condition: ({ user, actionData }) => {
                             const { deposit } = actionData;
                             const { paddleId, price } = deposit;
@@ -2573,7 +2573,7 @@ const AUTH_MATRIX = {
                                     category: vendueCategory.synchronous,
                                 },
                                 totalDeposit: {
-                                    $gt: 1999.9 - price,
+                                    $gt: 999.99 - price,
                                 }
                             };
                         },
@@ -2583,7 +2583,7 @@ const AUTH_MATRIX = {
                     '#exists': [DepositExistsPaddleVendue, {
                         relation: 'paddle',
                         needData: true,
-                        message: '同步拍保证金余额需大于2000元',
+                        message: '同步拍保证金余额需大于1000元',
                         condition: ({ user, actionData }) => {
                             const { deposit } = actionData;
                             const { paddleId, price } = deposit;
@@ -2596,7 +2596,7 @@ const AUTH_MATRIX = {
                                     category: vendueCategory.delayed,
                                 },
                                 totalDeposit: {
-                                    $gt: 999.9 - price,
+                                    $gt: 999.99 - price,
                                 }
                             };
                         },
